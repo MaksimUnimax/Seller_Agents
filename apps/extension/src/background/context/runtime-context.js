@@ -156,66 +156,36 @@ async function runComposedBatchQueue(options) {
   try {
     if (options.ownerKind === "manual")
       context = await createBatchExecutionGuard(await options.getOwner());
-    const check = async () => {
-      if (context) await context.assertCurrent();
-    };
-    const guarded =
-      (fn) =>
-      async (...args) => {
-        await check();
-        const result = await fn(...args);
-        await check();
-        return result;
-      };
-    options = {
-      ...options,
-      getOwner: guarded(original.getOwner),
-      mutateOwner: (fn) =>
-        original.mutateOwner(async (current) => {
-          await check();
-          return fn(current);
-        }),
-      finalizeOwner: guarded(original.finalizeOwner),
-    };
     const ports = {
       normalizeKey: normalizeConversationKey,
       singleFlight,
       flights: batchCollectionRequests,
       workerId: WORKER_SESSION_ID,
-      preparePolicy: guarded((o) =>
+      preparePolicy: (o) =>
         ensureBatchLocalPolicy({ ...o, executionContext: context }),
-      ),
-      prepareCapability: guarded((o) =>
+      prepareCapability: (o) =>
         ensureBatchCapabilityAndPlanning({ ...o, executionContext: context }),
-      ),
-      prepareQueries: guarded(ensureBatchQueryPlanning),
-      diagnostic: guarded(diagnostic),
+      prepareQueries: ensureBatchQueryPlanning,
+      diagnostic,
       guidanceResult: localGuidanceResult,
       policyErrorResult: buildPersonalDataPolicyErrorResult,
       planningErrorResult: buildCapabilityPlanningErrorResult,
       findGroup: findBatchQueryGroup,
-      readCache: guarded((command) =>
-        readAnalyticsResultCacheForCurrentSettings(command, context),
-      ),
+      readCache: (command) => readAnalyticsResultCacheForCurrentSettings(command, context),
       projectGroup: buildCoalescedLogicalResult,
-      prepareQuota: guarded((command) =>
-        prepareProviderQuotaForCommand(command, context),
-      ),
+      prepareQuota: (command) => prepareProviderQuotaForCommand(command, context),
       groupError: buildCoalescedExecutionErrorResult,
-      persistQuotaWait: guarded(persistBatchQuotaWait),
+      persistQuotaWait: persistBatchQuotaWait,
       quotaMetadata: safeQuotaMetadata,
-      execute: guarded((text, opts) =>
-        executeOzonCore(text, { ...opts, executionContext: context }),
-      ),
+      execute: (text, opts) => executeOzonCore(text, { ...opts, executionContext: context }),
       groupPlanning: coalescedPlanningForEntry,
-      storeCache: guarded((command, result, profile) =>
+      storeCache: (command, result, profile) =>
         storeAnalyticsResultCacheForCurrentSettings(
           command,
           result,
           profile,
           context,
         ),
-      ),
       cachedResult: buildCachedSingleResult,
       acquisitionPlanning,
       executionError: buildExecutionErrorResult,
@@ -226,7 +196,7 @@ async function runComposedBatchQueue(options) {
       coalescedOperation: "analytics_data",
       bridgeErrorCode: "OZON_BRIDGE_ERROR",
     };
-    return await SellerAgentsBatchQueue.create(ports).process(options);
+    return await SellerAgentsGuardedBatchQueue.run(options, { context, ports });
   } catch (error) {
     if (!error?.execution_context_error) throw error;
     const current = await original.getOwner();

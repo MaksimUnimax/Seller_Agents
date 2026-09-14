@@ -7,6 +7,10 @@ Provider-neutral migration: **REOPENED / COMPLETENESS NOT PROVEN**.
 Источник snapshot и исторический отчёт: [SOURCES](../../migration/SOURCES.md).
 Предыдущие 102 capabilities и 1075/0 проверок не аннулируются как результаты своей среды, но не доказывают полноту переноса или installed acceptance.
 
+## D2.3 в Seller_Agents
+
+[Внутренний adapter/shared queue](../../development/EXTENSION_WB_ADAPTER.md) проверен на source и ZIP. Это не WB popup/content route и не installed PASS. Сохранённый registry не пересертифицирован, R1–R8 закрыты.
+
 ## Что сохраняем
 
 WB_API_V1, WB auth/token/hosts, registry/схемы/сериализацию, read-only gates и подтверждённую WB-семантику.

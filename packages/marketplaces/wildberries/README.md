@@ -1,6 +1,7 @@
-# packages/marketplaces/wildberries
+# Wildberries adapter
 
-WB-specific слой. 0.3.0 INSTALLED FAIL, provider-neutral полнота не доказана; R1–R8 закрыты. Ozon business semantics не переносить.
+WB-specific authority, credentials, serializer, HELP и fixed-host transport находятся в изолированном bundle. src/adapter.js добавляет строгую границу контекста; src/batch-adapter.js вызывает единственную очередь bridge-core.
 
-Состояние D0: назначение каталога зафиксировано; production-реализация не перенесена.
-Границы: [архитектура](../../../docs/architecture/OVERVIEW.md), [размещение](../../../docs/architecture/REPOSITORY.md), [текущий статус](../../../docs/STATUS.md).
+D2.3: internal adapter SOURCE/PACKAGE/REMOTE CI/READBACK PASS. Реальные WB popup/content/Start/delivery не подключены. 0.3.0 INSTALLED FAIL и R1–R8 BLOCKED сохраняются. API registry — сохранённый snapshot, не live certification.
+
+[Контракты, зависимости, границы и команды](../../../docs/development/EXTENSION_WB_ADAPTER.md).

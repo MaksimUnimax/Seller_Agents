@@ -1,0 +1,884 @@
+{
+  "status": "PASS",
+  "method": "Remote recursive Git tree / per-file Git blob SHA, local SHA-256 against tested composition receipt",
+  "candidate_commit": "be8f949f03240a02060abb3d896d62737afd3710",
+  "candidate_tree": "6796b402c47668d659f172064658bb42337e4bd5",
+  "base_remote_commit": "f73d2b448e5189476b06bf1a2a25e528241e750d",
+  "files": 97,
+  "production_inputs": 77,
+  "rows": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 11438,
+      "production_input": false,
+      "sha": "b6aa5de6b667170ab3909d25aed3e97ed72a7323",
+      "sha256": "b3954c5d6290f453fe1e3b7dc5c057e1dd5136716e7910c1c02f6e35fdce3a5a",
+      "remote_blob": "b6aa5de6b667170ab3909d25aed3e97ed72a7323",
+      "status": "MATCH"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 7636,
+      "production_input": false,
+      "sha": "2476c3e2330dbab9d26060e8a9a59528c4d252da",
+      "sha256": "0933fa6daef8eadf988ffc364b03ccb2cceb0d9359dee3ac7af61c3582743d63",
+      "remote_blob": "2476c3e2330dbab9d26060e8a9a59528c4d252da",
+      "status": "MATCH"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4501,
+      "production_input": false,
+      "sha": "b36ac26bc507940167151d29f8cb296db193af3b",
+      "sha256": "d2edac5c26e5f20bf2d9224560f268a4491f10a2143214a6f49beea0dc2453f2",
+      "remote_blob": "b36ac26bc507940167151d29f8cb296db193af3b",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/composition.json",
+      "bytes": 6633,
+      "production_input": true,
+      "sha": "3fa742c0bbbd7d503e2253a80d39e043a09e7c4e",
+      "sha256": "c0c257da4f7fa40fc76df183b6733b86e952d3c3dd89825cd512dfd42e2bba3e",
+      "remote_blob": "3fa742c0bbbd7d503e2253a80d39e043a09e7c4e",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/compat/delivery-model.js",
+      "bytes": 184,
+      "production_input": true,
+      "sha": "bb87b9681d5de2e045f0bb26c329b64831a13275",
+      "sha256": "9f2394dab7cadadea5d562e0cf95ced708f4d4fe3c6330597736548ee2165730",
+      "remote_blob": "bb87b9681d5de2e045f0bb26c329b64831a13275",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/compat/getManualOperation.js",
+      "bytes": 135,
+      "production_input": true,
+      "sha": "79fcf5111ccd384e61a6be7c7a107df4f5727081",
+      "sha256": "363b1400f8d1a8e267cd6f2e31fb066098a82196ff96fa5164c5ca8fe4a38568",
+      "remote_blob": "79fcf5111ccd384e61a6be7c7a107df4f5727081",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/compat/manual-record-initializer.js",
+      "bytes": 312,
+      "production_input": true,
+      "sha": "443d368699142e9decc76a828979219d2ed95c6f",
+      "sha256": "cb334a2df861052fea81e06d908bc31f6ca688f96d309063317ca7d772252a6f",
+      "remote_blob": "443d368699142e9decc76a828979219d2ed95c6f",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/compat/mutateManualOperation.js",
+      "bytes": 172,
+      "production_input": true,
+      "sha": "b7ac7cd6da94d07bc705f9638fffe8d1aa662cbe",
+      "sha256": "b305da21353283bff835b3bcaff4dbd15eb14a5b67a92b2f963f4ee88ab05bbb",
+      "remote_blob": "b7ac7cd6da94d07bc705f9638fffe8d1aa662cbe",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/compat/singleFlight.js",
+      "bytes": 116,
+      "production_input": true,
+      "sha": "83a5d5a1b957c59de927fc6e36468c0a397800ba",
+      "sha256": "e4a6f585248bcf7a69706b5f85273ba50f53e129b92e5a03192b81fae05f0109",
+      "remote_blob": "83a5d5a1b957c59de927fc6e36468c0a397800ba",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/compat/withManualOperationsWrite.js",
+      "bytes": 90,
+      "production_input": true,
+      "sha": "e9e875ca4beda314c4953addfcff652dbaf78c54",
+      "sha256": "ca8382013e3f94e5c5e2d4675978d1b3513a7d02d5c0ed18a4e6e77a5f4b58b1",
+      "remote_blob": "e9e875ca4beda314c4953addfcff652dbaf78c54",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/compat/work-model.js",
+      "bytes": 75,
+      "production_input": true,
+      "sha": "77438d8574e78b1684cab677cb278eaacaae8074",
+      "sha256": "5516279ce15488f2016e71c71ad49e19831c4f642f7699310cf155fe283cd369",
+      "remote_blob": "77438d8574e78b1684cab677cb278eaacaae8074",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/context/attemptManualBatchDelivery.js",
+      "bytes": 2301,
+      "production_input": true,
+      "sha": "7a6d2d26fb8127f6ca2783ad8bc4a0a50a32e52c",
+      "sha256": "0ff45b9666874e6775e23d0e36b1d31357957d1a917db9f397563f41d23f420e",
+      "remote_blob": "7a6d2d26fb8127f6ca2783ad8bc4a0a50a32e52c",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/context/commitManualBatchDeliveryInsert.js",
+      "bytes": 4203,
+      "production_input": true,
+      "sha": "c8a270f2112808e5ab247cd0138424109ec1f0a5",
+      "sha256": "e8743f2576b898431c2d16233944ef35f6114d41d33d13ed4c4414b5ab317073",
+      "remote_blob": "c8a270f2112808e5ab247cd0138424109ec1f0a5",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/context/ensureBatchCapabilityAndPlanning.js",
+      "bytes": 11433,
+      "production_input": true,
+      "sha": "e1d74125f9ee328477119820fd60c625bc98e6a7",
+      "sha256": "9d181959ab7a22c7c6bc25cc4060a4a0bb88e9b468cb0ef5a459fd66ebaa6bb5",
+      "remote_blob": "e1d74125f9ee328477119820fd60c625bc98e6a7",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/context/ensureBatchLocalPolicy.js",
+      "bytes": 3422,
+      "production_input": true,
+      "sha": "1a22dea3f8f27e4e24b99d17150490364dcfb711",
+      "sha256": "b8fcd5f2aaaefd92119867e3645c2d7ade9b0cf0117c3cbba5df21a71e605120",
+      "remote_blob": "1a22dea3f8f27e4e24b99d17150490364dcfb711",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/context/executeManualCommand.js",
+      "bytes": 6303,
+      "production_input": true,
+      "sha": "9f0ed1b0d3b01635299693f3046b7b14559b13e4",
+      "sha256": "02ee400ffec5c5832bb6cd0328ae6009c7b724f660bc39bcb49fc68a668f7b1d",
+      "remote_blob": "9f0ed1b0d3b01635299693f3046b7b14559b13e4",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/context/executeOzonCore.js",
+      "bytes": 3976,
+      "production_input": true,
+      "sha": "a42003fb99c9b0aaa0a92d3c0100d2c5d9ede2b8",
+      "sha256": "0b3286a85901939537276b86eda03fa2a8930b2f582d8dae1e1ad7957cc90909",
+      "remote_blob": "a42003fb99c9b0aaa0a92d3c0100d2c5d9ede2b8",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/context/finalizeManualBatch.js",
+      "bytes": 2305,
+      "production_input": true,
+      "sha": "332ba81e2e21ef6f40587039329324560fc051cc",
+      "sha256": "b96aaa69f449e4a78ab1594fd2333d18eb2d07989193828dea94a8ad9c99372d",
+      "remote_blob": "332ba81e2e21ef6f40587039329324560fc051cc",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/context/manualRecoveryForContent.js",
+      "bytes": 3554,
+      "production_input": true,
+      "sha": "d8ac362e749674b7fad2e9d28eb839eeebbe46c2",
+      "sha256": "c2754a99741b4373a072568cf4ec59320ca92846f13837520c6cc9f95a47ceaf",
+      "remote_blob": "d8ac362e749674b7fad2e9d28eb839eeebbe46c2",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/context/prepareProviderQuotaForCommand.js",
+      "bytes": 2325,
+      "production_input": true,
+      "sha": "28aadc7ca669a0bb0727308247c289eebebfbde9",
+      "sha256": "7e4e878a645cc1ac0bc80f5f2dfa4314f3f0bad411dcc6ba3913573c97bb3bfb",
+      "remote_blob": "28aadc7ca669a0bb0727308247c289eebebfbde9",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/context/processBatchQueue.js",
+      "bytes": 81,
+      "production_input": true,
+      "sha": "bdfd0bda181ccd98a74baaafc57c729244b5e81b",
+      "sha256": "fc0df5d7dfd8924b309b4694dbc12bb8b4aa50011a4bc70aa1f2939d9954e152",
+      "remote_blob": "bdfd0bda181ccd98a74baaafc57c729244b5e81b",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/context/readAnalyticsResultCacheForCurrentSettings.js",
+      "bytes": 688,
+      "production_input": true,
+      "sha": "a54221078d9dc3b0ddc735d01d9a246d96c1d81d",
+      "sha256": "d9a5bc04b48da0402053c7ebbea14ee658783586f7465ba06d793b770ac46c85",
+      "remote_blob": "a54221078d9dc3b0ddc735d01d9a246d96c1d81d",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/context/runtime-context.js",
+      "bytes": 7554,
+      "production_input": true,
+      "sha": "bb4e8166845e1812f49a035a2a629290bd80a1fe",
+      "sha256": "e456b22564181d2b0b0ddd51e37be99740a0ed6bd92ce7068403faefd2f83de5",
+      "remote_blob": "bb4e8166845e1812f49a035a2a629290bd80a1fe",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/context/storeAnalyticsResultCache.js",
+      "bytes": 3180,
+      "production_input": true,
+      "sha": "73627369bd0f4f9b60aeecccf3aa74273f640e2f",
+      "sha256": "544c910ac4f612f2410f6c4910a45b046d3f21c5793fa22b418fe0bcb508b987",
+      "remote_blob": "73627369bd0f4f9b60aeecccf3aa74273f640e2f",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/context/storeAnalyticsResultCacheForCurrentSettings.js",
+      "bytes": 701,
+      "production_input": true,
+      "sha": "bec3d5c21ba5c2dc62642cdb440fe72ca40542fe",
+      "sha256": "a9043428911b669ae6d317f3a677ec2d673d662d33f380aff0339f2a79d3a646",
+      "remote_blob": "bec3d5c21ba5c2dc62642cdb440fe72ca40542fe",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/attachment_delivery_port_content.js",
+      "bytes": 28451,
+      "production_input": true,
+      "sha": "15680a19c0fe75f709ab2c790ff250a34b7afc76",
+      "sha256": "f244e0bac2f9bed953a50058259beff89efbf765f5f54c664f11ffe1dbc4977a",
+      "remote_blob": "15680a19c0fe75f709ab2c790ff250a34b7afc76",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/attachment_delivery_wake_content.js",
+      "bytes": 759,
+      "production_input": true,
+      "sha": "bab7331c112ca960e9f7852a04873146d0a60efe",
+      "sha256": "6b3a7a4b25ce6a86a9e7b54c0a71a29c02aad9480cfbe7d2a0007e9ca4c9aa11",
+      "remote_blob": "bab7331c112ca960e9f7852a04873146d0a60efe",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/content_script.js",
+      "bytes": 133067,
+      "production_input": true,
+      "sha": "bc047968246261a078260dee469bf4f435d9b901",
+      "sha256": "fd86f2d04984defa8c22dcfc66c2d9f449b62b486816668f192326b1339879f2",
+      "remote_blob": "bc047968246261a078260dee469bf4f435d9b901",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/manifest.json",
+      "bytes": 1860,
+      "production_input": true,
+      "sha": "e4913f8bf5c9d2426c81c6e33f928c9c91a1804a",
+      "sha256": "7019a672a78ac87c85617d1444721ac01158fe5a50f0329a8e7ca6758de5178c",
+      "remote_blob": "e4913f8bf5c9d2426c81c6e33f928c9c91a1804a",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/popup.css",
+      "bytes": 5195,
+      "production_input": true,
+      "sha": "8c6e4e6b87af0644c7b41368b4f9cd53dc107185",
+      "sha256": "1befabf8a3650dfe01a5980b0d5ff2fcd34666d507baad8e79f3873358d7a726",
+      "remote_blob": "8c6e4e6b87af0644c7b41368b4f9cd53dc107185",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/popup.html",
+      "bytes": 15736,
+      "production_input": true,
+      "sha": "6577667fc798f48e3a0b39bd90414eea87782adf",
+      "sha256": "b9b1a8d5f5c5248a98f0b8c9622fde00acb241940469040718f802754d11f86c",
+      "remote_blob": "6577667fc798f48e3a0b39bd90414eea87782adf",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/popup.js",
+      "bytes": 41087,
+      "production_input": true,
+      "sha": "7b725605957b507abf9b99c867d28ea53b534cb2",
+      "sha256": "938ec8468cb17a7e5b31c08ce510ea46c2e4d9c6b7e39a7360a55bd65825dff6",
+      "remote_blob": "7b725605957b507abf9b99c867d28ea53b534cb2",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/service_worker.js",
+      "bytes": 323015,
+      "production_input": true,
+      "sha": "284c9ac92bb613f90ed27f6abd94e5c9935a92e3",
+      "sha256": "0aefd9b86a9e9adc66b9a6dfb6fa4ef41e786a9988d1a6e8c3cd19fc864b3486",
+      "remote_blob": "284c9ac92bb613f90ed27f6abd94e5c9935a92e3",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/service_worker_entry.js",
+      "bytes": 1729,
+      "production_input": true,
+      "sha": "e9796eb07b85ceade5601193a1d9fcceb5a5e741",
+      "sha256": "3d30d776f1d8bb5db461c4551fa59e57dc6e9f74c3804cdee989798c19d4533b",
+      "remote_blob": "e9796eb07b85ceade5601193a1d9fcceb5a5e741",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ai_adapters.js",
+      "bytes": 22597,
+      "production_input": true,
+      "sha": "4c750308712fa630990e2cb20407240c5907d63a",
+      "sha256": "4b9423666cf7bed03f89edb3c23d535bd02143e85c1a1b7317d184f25cc1bb72",
+      "remote_blob": "4c750308712fa630990e2cb20407240c5907d63a",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ai_delivery_capabilities.js",
+      "bytes": 9753,
+      "production_input": true,
+      "sha": "a0af80bc7bf7c4da73a9a37c80370462be36839c",
+      "sha256": "dca544904ae1aac578e52f60883c603cee4129fe56089f807ec175cef4e2e83a",
+      "remote_blob": "a0af80bc7bf7c4da73a9a37c80370462be36839c",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/bridge_autorun_model.js",
+      "bytes": 15919,
+      "production_input": true,
+      "sha": "658ba507f3eeabc81c8aedefee0a8ebe971c110d",
+      "sha256": "d321cf49a1972ffe205bd3bb14f7b160c48158be14cf29a0e9878e2c48450983",
+      "remote_blob": "658ba507f3eeabc81c8aedefee0a8ebe971c110d",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/composer_send.js",
+      "bytes": 8267,
+      "production_input": true,
+      "sha": "9c1737863b10779cb825e648b95ef1648a937f5d",
+      "sha256": "3e9421e8e1bc209af635e2b90d957e558301763572a42875b95c8973ca75b736",
+      "remote_blob": "9c1737863b10779cb825e648b95ef1648a937f5d",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/conversation_identity.js",
+      "bytes": 4027,
+      "production_input": true,
+      "sha": "3fe3b99d42eeccc729d003733daac8b377df4066",
+      "sha256": "939036acd95ccb3dfe00f05b5d49568615f6d798a023a0ec995e38267fb68f57",
+      "remote_blob": "3fe3b99d42eeccc729d003733daac8b377df4066",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/direct_binary_file_delivery_patch.js",
+      "bytes": 10095,
+      "production_input": true,
+      "sha": "56f84677eb3137391a624e32f0136a611babc890",
+      "sha256": "e66dfd9bb91be078de9b08d86ac1acc124eabb3a22fb29fac77f59e7d036ab96",
+      "remote_blob": "56f84677eb3137391a624e32f0136a611babc890",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/file_delivery_model_policy.js",
+      "bytes": 4021,
+      "production_input": true,
+      "sha": "3af939db489fbbcfdac2013b000f2f42d928bc15",
+      "sha256": "caba2a05701d74879bc699316530575c63106a62f8f782eee694ef1c3b4b5aab",
+      "remote_blob": "3af939db489fbbcfdac2013b000f2f42d928bc15",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/file_delivery_port_worker.js",
+      "bytes": 39030,
+      "production_input": true,
+      "sha": "eb11b977ea1a8205671da654d00dc777c81691ae",
+      "sha256": "c9b5fdbc8661828c17145519395bde1a2eab1af9b434b99ae13c1d8ccda0c6dd",
+      "remote_blob": "eb11b977ea1a8205671da654d00dc777c81691ae",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/file_delivery_wake_worker.js",
+      "bytes": 1750,
+      "production_input": true,
+      "sha": "3025f05e6be890372e2ed8845d2f2de54c7d88f4",
+      "sha256": "ec1b59ba7243bf4a5591bdbe10b0b5f6e727f8769b08833da156378d202acffd",
+      "remote_blob": "3025f05e6be890372e2ed8845d2f2de54c7d88f4",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/live_runtime_v0122_patch.js",
+      "bytes": 21046,
+      "production_input": true,
+      "sha": "bf0c331bf0827e34c56c91a1057ad68fb13c0ee2",
+      "sha256": "e9470607fc401dbf1e479d3a487cce4d3d6b9fa75f1b508aaa8bd8d58d4940de",
+      "remote_blob": "bf0c331bf0827e34c56c91a1057ad68fb13c0ee2",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/llm_output_report_workflow_patch.js",
+      "bytes": 15664,
+      "production_input": true,
+      "sha": "e10b0933c74e98970d32476e0a1aec9cd543f255",
+      "sha256": "a564e2dbafb3980bd406e82744c177a34df2279b63c3198395c13126520dbbff",
+      "remote_blob": "e10b0933c74e98970d32476e0a1aec9cd543f255",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/manual_controls.js",
+      "bytes": 10269,
+      "production_input": true,
+      "sha": "116e226ad6a6b0d898a4224319a6222e6a3f64e6",
+      "sha256": "81f302487da7b5ff7c1b746298353438b2cfec100a5bb8f7fa2c80d1e033c81e",
+      "remote_blob": "116e226ad6a6b0d898a4224319a6222e6a3f64e6",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/mixed_batch_discovery.js",
+      "bytes": 4772,
+      "production_input": true,
+      "sha": "f8504a5e363df78651de977aba5fbe0b3eb62767",
+      "sha256": "8afc5cd5399fe5734a1178d88bd18125cddb6be1593c7939f79e9bb5ec577357",
+      "remote_blob": "f8504a5e363df78651de977aba5fbe0b3eb62767",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_contract.js",
+      "bytes": 321333,
+      "production_input": true,
+      "sha": "25ea330ae621969efeba8cbcbae87af031438289",
+      "sha256": "8dfe90545f8499d1f1938dcdf932ef5e15618d4f1dd4008565f91d03679896ac",
+      "remote_blob": "25ea330ae621969efeba8cbcbae87af031438289",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_credentials.js",
+      "bytes": 4085,
+      "production_input": true,
+      "sha": "e74d2a130771a2d3f769a01a4f9e892f89f81b13",
+      "sha256": "286c6021f958e41912842569bcfa0d0dfe920eed8ce1646014899a1de064415d",
+      "remote_blob": "e74d2a130771a2d3f769a01a4f9e892f89f81b13",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_entitlements.js",
+      "bytes": 58578,
+      "production_input": true,
+      "sha": "a219577c131fa64525d685b50d7c6a03c1fc918a",
+      "sha256": "f8b9222368a2e3bbfb323ab5cd0fe1c3238742d5c06ef9afac752861d4c7422b",
+      "remote_blob": "a219577c131fa64525d685b50d7c6a03c1fc918a",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_guidance.js",
+      "bytes": 10927,
+      "production_input": true,
+      "sha": "65f51531d584f9398ae0bd6db684c90f8a7df586",
+      "sha256": "654b330ec90069351104d1cf5add8afb979fe7daddaf3a3cbdf3fd4117bef094",
+      "remote_blob": "65f51531d584f9398ae0bd6db684c90f8a7df586",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_operation_registry.js",
+      "bytes": 225182,
+      "production_input": true,
+      "sha": "8e91dba347075d910621078692716494de77b9d7",
+      "sha256": "b42b51f815c0f88e89e1cd193d28cc4f72949d5dd1738ab35d473b226fd0a832",
+      "remote_blob": "8e91dba347075d910621078692716494de77b9d7",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_provider.js",
+      "bytes": 30599,
+      "production_input": true,
+      "sha": "995866e4ea69dd3a9e5d4ea60a217ad804f24f57",
+      "sha256": "de528808ed1d18e77ac0f9cb48ef7db8d7ff267ee299928e0207387adc7c7f7f",
+      "remote_blob": "995866e4ea69dd3a9e5d4ea60a217ad804f24f57",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/performance_report_continuation_patch.js",
+      "bytes": 5181,
+      "production_input": true,
+      "sha": "98a1c4ad9a6acaef5c8250944e00d931b7d7445b",
+      "sha256": "f42115e8ac4197fef8b7f5ba463bc6303e3d425a9202c95605edc3844b34a9b5",
+      "remote_blob": "98a1c4ad9a6acaef5c8250944e00d931b7d7445b",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/proven_writing_block_capture.js",
+      "bytes": 14614,
+      "production_input": true,
+      "sha": "067ebaf093ae4199b3c134baca0e30ac42a94d15",
+      "sha256": "5b0eaac9619cb827d1e74c61f53e2755c084a1d4b60c64d23f5fd4a5354c3aef",
+      "remote_blob": "067ebaf093ae4199b3c134baca0e30ac42a94d15",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/provider_transport_core.js",
+      "bytes": 37467,
+      "production_input": true,
+      "sha": "346332d6e298c461e225487ba75faf41b0d51288",
+      "sha256": "97f9a8bed0427753168c8ff083191338225cbe3abd026b471876daf19e04bba4",
+      "remote_blob": "346332d6e298c461e225487ba75faf41b0d51288",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/runtime_names.js",
+      "bytes": 10642,
+      "production_input": true,
+      "sha": "597fe9db3af3ef5b17b45b327b85d3ce2bd6cf87",
+      "sha256": "b5ca31b9e5479f2b60fff0e6d03007eb83a28e2e3bd84152c52f40b13c162b7c",
+      "remote_blob": "597fe9db3af3ef5b17b45b327b85d3ce2bd6cf87",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/swagger_read_surface_patch.js",
+      "bytes": 57275,
+      "production_input": true,
+      "sha": "552ccac132cedf1c47b915f2ca34a2f42eae0a0d",
+      "sha256": "ff87a566f28003fa41ab83c91e2ef696c259ecc81ac12975d1609a2718a5de4d",
+      "remote_blob": "552ccac132cedf1c47b915f2ca34a2f42eae0a0d",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/web_file_attachment.js",
+      "bytes": 4750,
+      "production_input": true,
+      "sha": "a51663b991a6a969a0696f5d2f127378a18a00f6",
+      "sha256": "a1d91cb7b6aa5b1b26bf780e29f3d42895510b04d55d37569cfc3d3cf4db3010",
+      "remote_blob": "a51663b991a6a969a0696f5d2f127378a18a00f6",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/work_session_model.js",
+      "bytes": 1985,
+      "production_input": true,
+      "sha": "e696ae6d7ee061723c75bd02d9f994d6951861bc",
+      "sha256": "11e91d850a3d69711fefdaadb6617b825350d9382b9bc55cabdbbc9b255c9855",
+      "remote_blob": "e696ae6d7ee061723c75bd02d9f994d6951861bc",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/xlsx_direct_binary_delivery_patch.js",
+      "bytes": 12156,
+      "production_input": true,
+      "sha": "aaaf88396ad176937be179d97f65d11f86d5dbad",
+      "sha256": "5e61f6d749cf69d980b4d9bdae8b32bb0937e48a298abd4afd9793241252c3fa",
+      "remote_blob": "aaaf88396ad176937be179d97f65d11f86d5dbad",
+      "status": "MATCH"
+    },
+    {
+      "path": "docs/README.md",
+      "bytes": 4852,
+      "production_input": false,
+      "sha": "fead601739a3c946fa71b00bdb9d707096d5d7a3",
+      "sha256": "ada097a8a54e54cd9c757bc27ff4bf5a9f3ff8d0963e5c37434e1e20446f84cc",
+      "remote_blob": "fead601739a3c946fa71b00bdb9d707096d5d7a3",
+      "status": "MATCH"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "bytes": 8252,
+      "production_input": false,
+      "sha": "924b5043cabde2cdac4cb9354c17d8666adffd16",
+      "sha256": "b1c43b2143b8d12363e28960497a6d862b31a34efe7db965d5439e32b180031c",
+      "remote_blob": "924b5043cabde2cdac4cb9354c17d8666adffd16",
+      "status": "MATCH"
+    },
+    {
+      "path": "docs/STATUS.md",
+      "bytes": 8455,
+      "production_input": false,
+      "sha": "ee5140de65be2ffcae7de95fa477a56fc660ff09",
+      "sha256": "e657b168ffd97197bb2ee16ad55545638d545c87e06b082b7a97d9e6ea62e60e",
+      "remote_blob": "ee5140de65be2ffcae7de95fa477a56fc660ff09",
+      "status": "MATCH"
+    },
+    {
+      "path": "docs/architecture/OVERVIEW.md",
+      "bytes": 6832,
+      "production_input": false,
+      "sha": "d79f30a31bf0da11b331a823eca816e514b3e6cb",
+      "sha256": "48fd653286c2a3cc27d10c66538d1b9102659014b5f0883f981b75fb614add2c",
+      "remote_blob": "d79f30a31bf0da11b331a823eca816e514b3e6cb",
+      "status": "MATCH"
+    },
+    {
+      "path": "docs/development/EXTENSION_CORE.md",
+      "bytes": 11631,
+      "production_input": false,
+      "sha": "5fa4955199f322af4b9f44bee6ec6f40ccc0f047",
+      "sha256": "485a00c767297df551ceb9fd43fe1dbf18d427cd204a30bbf22da5b9428bebce",
+      "remote_blob": "5fa4955199f322af4b9f44bee6ec6f40ccc0f047",
+      "status": "MATCH"
+    },
+    {
+      "path": "docs/development/EXTENSION_WB_ADAPTER.md",
+      "bytes": 10274,
+      "production_input": false,
+      "sha": "d650c8323a2d443ffca5b01ad12aaf4763c5f09e",
+      "sha256": "4c5d4066fd8df9dbfd5ac77695756ce86b4612dc84f41ca6ad7182643226c061",
+      "remote_blob": "d650c8323a2d443ffca5b01ad12aaf4763c5f09e",
+      "status": "MATCH"
+    },
+    {
+      "path": "docs/integrations/wildberries/README.md",
+      "bytes": 3630,
+      "production_input": false,
+      "sha": "8900638f8f87d48aae805a433d6b246380c2c907",
+      "sha256": "8a700ef04943a817877b61dadb3d0c5274b28148e4b6eea25a71683843759cca",
+      "remote_blob": "8900638f8f87d48aae805a433d6b246380c2c907",
+      "status": "MATCH"
+    },
+    {
+      "path": "docs/migration/evidence/extension-wb-adapter-d2-3-2026-09-14/LOCAL_RESULTS.json",
+      "bytes": 72576,
+      "production_input": false,
+      "sha": "7c89240f308579d3af74f0b3e4175706e7c2097f",
+      "sha256": "c498ef41bc7a0060d72ecf2301204516ce15c732d15bb1054a6c93872db7f526",
+      "remote_blob": "7c89240f308579d3af74f0b3e4175706e7c2097f",
+      "status": "MATCH"
+    },
+    {
+      "path": "docs/migration/evidence/extension-wb-adapter-d2-3-2026-09-14/NEGATIVE_CONTROLS.json",
+      "bytes": 9817,
+      "production_input": false,
+      "sha": "59ec2bc26a3b2eca86472d9d377999abe663905a",
+      "sha256": "e63da4e96dc02dbd5228a6756428733d24db5c7f6d1addc3340f7adb021ea001",
+      "remote_blob": "59ec2bc26a3b2eca86472d9d377999abe663905a",
+      "status": "MATCH"
+    },
+    {
+      "path": "docs/migration/evidence/extension-wb-adapter-d2-3-2026-09-14/README.md",
+      "bytes": 5744,
+      "production_input": false,
+      "sha": "2deb0f6098da4266ca03d973c1d3f0798a39d27d",
+      "sha256": "048d5a47772b87f38fe95a65712d0ed60c3fe4f35fcddf86db860a5199c4838a",
+      "remote_blob": "2deb0f6098da4266ca03d973c1d3f0798a39d27d",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/provider_transport_core.js",
+      "bytes": 10128,
+      "production_input": true,
+      "sha": "fab68b61667e888183b277eafbb17e2dda669c08",
+      "sha256": "b1e5c7ac666dbf0e4ebf26f6fd67d327aa38a244364a8e50e00ae1d5828cb890",
+      "remote_blob": "fab68b61667e888183b277eafbb17e2dda669c08",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/wb_contract.js",
+      "bytes": 15487,
+      "production_input": true,
+      "sha": "51137d0a0517c7412ebfec005bb03e19b2fe644a",
+      "sha256": "f7bcd6b14d6313374afee77d3ae80ed2d04569996589878c802e236a34a1c60a",
+      "remote_blob": "51137d0a0517c7412ebfec005bb03e19b2fe644a",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/wb_credentials.js",
+      "bytes": 2313,
+      "production_input": true,
+      "sha": "0525a3a01c9f94b2b07495bf534d94a6e43f1f93",
+      "sha256": "c731be6b35914ba6b1f0dc5a156dbfd8eb24709f52456c3f6623c83d3d5584a4",
+      "remote_blob": "0525a3a01c9f94b2b07495bf534d94a6e43f1f93",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/wb_guidance.js",
+      "bytes": 10217,
+      "production_input": true,
+      "sha": "92a8b36fdc48c720f55b664698ddd9bcf4670214",
+      "sha256": "3d23d074bdb3b8cce87dbc393f27a64e448ae3bce824302879bee469cb3494d3",
+      "remote_blob": "92a8b36fdc48c720f55b664698ddd9bcf4670214",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/wb_guidance_registry.js",
+      "bytes": 1780,
+      "production_input": true,
+      "sha": "737f37a4a8ef6e3cc6794c7920a211572a4007a7",
+      "sha256": "44d1bfa4c0cc659fe795678632e89c4e88a71712fe31799422fa608ed750b5f9",
+      "remote_blob": "737f37a4a8ef6e3cc6794c7920a211572a4007a7",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/wb_operations.js",
+      "bytes": 107901,
+      "production_input": true,
+      "sha": "ea052bf9f231b52fe871d2b41901e7b555ba2ea9",
+      "sha256": "08e8a2ad1f325a4bdc0a909b37220b7abaa0be1d94d6b53192666ed5f22c2c75",
+      "remote_blob": "ea052bf9f231b52fe871d2b41901e7b555ba2ea9",
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/bridge-core/README.md",
+      "bytes": 1009,
+      "production_input": false,
+      "sha": "fa9e7d3091cd0f027d050c34bf32faecafc2129b",
+      "sha256": "65200ffa2ed0aca54ed0d041b151a42ba3327db115c2e6ecd19f962cf1bb7609",
+      "remote_blob": "fa9e7d3091cd0f027d050c34bf32faecafc2129b",
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/bridge-core/src/delivery/model.js",
+      "bytes": 15972,
+      "production_input": true,
+      "sha": "c4310102afc1cba3d9093962fa8c5a1be02764f0",
+      "sha256": "2f716233d0262419e15005f6f3c86b508079207bc1a91951e7b7dbd109aed8d6",
+      "remote_blob": "c4310102afc1cba3d9093962fa8c5a1be02764f0",
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/bridge-core/src/execution/batch-queue.js",
+      "bytes": 45379,
+      "production_input": true,
+      "sha": "468941d012c2ba9ccb244556a94d4a93f650c511",
+      "sha256": "ecf96a2c3ac4925428ccecc35ad2d680299cfc41a016ba5bb8f1e976acb6fa59",
+      "remote_blob": "468941d012c2ba9ccb244556a94d4a93f650c511",
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/bridge-core/src/execution/context.js",
+      "bytes": 1819,
+      "production_input": true,
+      "sha": "7bb78b453a46aa1251bd17081e6092c91b434907",
+      "sha256": "4208b48cd88a0b751272d3078f341e52da6e67ae6d5ac9a75eae4d55f90e590b",
+      "remote_blob": "7bb78b453a46aa1251bd17081e6092c91b434907",
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/bridge-core/src/execution/guarded-queue.js",
+      "bytes": 1563,
+      "production_input": true,
+      "sha": "9a1bd32018c8dbb37fcfaffc0064fc7e59cc261f",
+      "sha256": "413483176b7d0623b195bb0e0d3991db39644896716bf0660fbb425f798b22ff",
+      "remote_blob": "9a1bd32018c8dbb37fcfaffc0064fc7e59cc261f",
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/bridge-core/src/execution/local-operations.js",
+      "bytes": 1966,
+      "production_input": true,
+      "sha": "c5fca866713d9794c28e9ef5663810dd8ce827fe",
+      "sha256": "9287c3e99f97e8af7dcc0c22352027a7d51ad558f2465f24103abd2093b1d46c",
+      "remote_blob": "c5fca866713d9794c28e9ef5663810dd8ce827fe",
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/bridge-core/src/execution/observed-quota.js",
+      "bytes": 1929,
+      "production_input": true,
+      "sha": "8c0d919f099c3267057273fc98b4e788764f53e2",
+      "sha256": "34dfcec4e875f6a9547059376294eedca7dc24ebf6d40567f1cf6f7933d24fe6",
+      "remote_blob": "8c0d919f099c3267057273fc98b4e788764f53e2",
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/bridge-core/src/protocol/mixed-discovery.js",
+      "bytes": 5487,
+      "production_input": true,
+      "sha": "baed03684667a95d7e49ec9359a7c4eb2488bb0a",
+      "sha256": "0a4968c56d391b5b5d38c044628a7662b20a8b47ef088e2d9e687007be830b96",
+      "remote_blob": "baed03684667a95d7e49ec9359a7c4eb2488bb0a",
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/bridge-core/src/work/session-model.js",
+      "bytes": 2353,
+      "production_input": true,
+      "sha": "fa44048e45124ea9f53d659673259c16ce35347c",
+      "sha256": "bca0b640b3f630e75d2e46bb9f582cca6992a6bb99d049119926232770b64a1c",
+      "remote_blob": "fa44048e45124ea9f53d659673259c16ce35347c",
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/marketplaces/README.md",
+      "bytes": 783,
+      "production_input": false,
+      "sha": "82b3d20260875e5a2cf8a8323c893706680bb392",
+      "sha256": "d7f669ff36b7907d0a5c46f5b8f3bf807956bc80083a170ac900e37f3dec063a",
+      "remote_blob": "82b3d20260875e5a2cf8a8323c893706680bb392",
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/marketplaces/ozon/src/delivery-plan.js",
+      "bytes": 5064,
+      "production_input": true,
+      "sha": "db6ecb7b367259e00cceea8861ab330181873b15",
+      "sha256": "cd1a2194101df3d7fabb34282ecfd8df01a72a269dc0fb45b8b17fb3f05d31f0",
+      "remote_blob": "db6ecb7b367259e00cceea8861ab330181873b15",
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/marketplaces/ozon/src/mixed-discovery.js",
+      "bytes": 564,
+      "production_input": true,
+      "sha": "a2528b0be313a50a473fcc6fcb20637beb6d2756",
+      "sha256": "007a2da658231d63995e6cdf1c6f1958d7397adf86e795e942bc100155a4a7ce",
+      "remote_blob": "a2528b0be313a50a473fcc6fcb20637beb6d2756",
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/marketplaces/ozon/src/provider-runtime.js",
+      "bytes": 35796,
+      "production_input": true,
+      "sha": "e25adc51d679072ece938ce598eecfa030eb7837",
+      "sha256": "7afcd03731950cde9e5374eb0e85663cfee81713e98efbec28867ce3153373b0",
+      "remote_blob": "e25adc51d679072ece938ce598eecfa030eb7837",
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/marketplaces/wildberries/README.md",
+      "bytes": 768,
+      "production_input": false,
+      "sha": "f7cecf9555d4af6a55dd6d3aa47b4abe153a2979",
+      "sha256": "a217d53555db04cf47dcc61168af12b127ff5fdc4495e78b706dae2859aa63ac",
+      "remote_blob": "f7cecf9555d4af6a55dd6d3aa47b4abe153a2979",
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/marketplaces/wildberries/src/adapter.js",
+      "bytes": 12039,
+      "production_input": true,
+      "sha": "b93ef091c90b5ca974ef647d514d04292be3240d",
+      "sha256": "0bb080b8022adf51ed1408c95b9e89588ea9d265d0e0b330240e26d5b8824d11",
+      "remote_blob": "b93ef091c90b5ca974ef647d514d04292be3240d",
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/marketplaces/wildberries/src/batch-adapter.js",
+      "bytes": 6621,
+      "production_input": true,
+      "sha": "a335bcd44f76a9f89ba604eb664f89a79d285ffc",
+      "sha256": "4fd264c57ff830748f06cffcc4d28c4095880afcd1ff45e222512ca68bcdf3c4",
+      "remote_blob": "a335bcd44f76a9f89ba604eb664f89a79d285ffc",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/extension-core/wb-adapter.mjs",
+      "bytes": 15023,
+      "production_input": false,
+      "sha": "620f63240f208ad1ee29440eb316f0d941fc0fb2",
+      "sha256": "b0a6a6e0aedc7fe56317fb89fba253653f62309ad7603cc456e9e162b1182864",
+      "remote_blob": "620f63240f208ad1ee29440eb316f0d941fc0fb2",
+      "status": "MATCH"
+    },
+    {
+      "path": "tooling/build/extension_composed.py",
+      "bytes": 6086,
+      "production_input": false,
+      "sha": "9a628b62a28804745e66fdaf0db836e126432658",
+      "sha256": "37b23811b9e0d264492c563b6cd700511f5b597b3924e44f8ae3cbbfd8cb6319",
+      "remote_blob": "9a628b62a28804745e66fdaf0db836e126432658",
+      "status": "MATCH"
+    },
+    {
+      "path": "tooling/checks/extension_core.py",
+      "bytes": 3022,
+      "production_input": false,
+      "sha": "0402b6cff76baad04ea70f5a5e2292a3c48eeebc",
+      "sha256": "a384be5e79630fda26a1741938390e90d055c991c9809044067aedd945bf467a",
+      "remote_blob": "0402b6cff76baad04ea70f5a5e2292a3c48eeebc",
+      "status": "MATCH"
+    },
+    {
+      "path": "tooling/checks/extension_import.py",
+      "bytes": 13713,
+      "production_input": false,
+      "sha": "bf5d1d808fd382b1eb5c06f475434b0b5974256d",
+      "sha256": "92f909e05d4a56a4dda065249e7774870abed35517d103225b648ff8060c9d60",
+      "remote_blob": "bf5d1d808fd382b1eb5c06f475434b0b5974256d",
+      "status": "MATCH"
+    }
+  ]
+}

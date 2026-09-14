@@ -1,0 +1,350 @@
+{
+  "status": "PASS",
+  "candidate_commit": "be8f949f03240a02060abb3d896d62737afd3710",
+  "candidate_tree": "6796b402c47668d659f172064658bb42337e4bd5",
+  "run_id": 34839904748,
+  "run_url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34839904748",
+  "jobs": [
+    {
+      "conclusion": "success",
+      "id": 103962187404,
+      "logs_url": null,
+      "name": "Common core / source and package",
+      "run_id": 34839904748,
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Verify actual common-core composition and extracted ZIP",
+          "number": 5,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Preserve common-core evidence and development archive",
+          "number": 6,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 10,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+          "number": 11,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 12,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 13,
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "success",
+      "id": 103962187544,
+      "logs_url": null,
+      "name": "Baseline / ozon",
+      "run_id": 34839904748,
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install frozen browser fixture tools",
+          "number": 5,
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Select and record Chrome for fixtures",
+          "number": 6,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Execute preserved source and extracted-package routes",
+          "number": 7,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Preserve evidence and baseline archives",
+          "number": 8,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 14,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+          "number": 15,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 16,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 17,
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "success",
+      "id": 103962187619,
+      "logs_url": null,
+      "name": "Baseline / wb-browsers",
+      "run_id": 34839904748,
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Install frozen browser fixture tools",
+          "number": 5,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Select and record Chrome for fixtures",
+          "number": 6,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Execute preserved source and extracted-package routes",
+          "number": 7,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Preserve evidence and baseline archives",
+          "number": 8,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 14,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+          "number": 15,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 16,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 17,
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "success",
+      "id": 103962187746,
+      "logs_url": null,
+      "name": "Baseline / wb-nodes",
+      "run_id": 34839904748,
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install frozen browser fixture tools",
+          "number": 5,
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Select and record Chrome for fixtures",
+          "number": 6,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Execute preserved source and extracted-package routes",
+          "number": 7,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Preserve evidence and baseline archives",
+          "number": 8,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+          "number": 14,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+          "number": 15,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 16,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 17,
+          "status": "completed"
+        }
+      ]
+    }
+  ],
+  "artifact": {
+    "status": "PASS",
+    "artifact_id": 10345283455,
+    "artifact_sha256": "288b64dda990c1cfc9e97f35d0682ef5ce00691ac577575fd2c968bd8bd3c3b7",
+    "candidate_commit": "be8f949f03240a02060abb3d896d62737afd3710",
+    "package": {
+      "name": "SELLER_AGENTS_D2_3_v0.2.2_DEVELOPMENT.zip",
+      "bytes": 1731310,
+      "sha256": "419a5eecb8adbf4d0ef851240730cca07af4b2495b86cdf7dbc1a95ae318d64e",
+      "repeat_archive_match": true,
+      "source_extracted_bytes_match": true
+    },
+    "production_inputs": 77,
+    "packaged_files": 37,
+    "gate_processes": 105,
+    "local_remote_receipts": "MATCH",
+    "local_remote_zip_bytes": "MATCH",
+    "all_inner_files": "MATCH"
+  },
+  "readback_files": 97,
+  "production_inputs": 77,
+  "acceptance_scope": "INTERNAL_WB_ADAPTER_SOURCE_PACKAGE_REMOTE_CI_READBACK",
+  "wb_application_route_connected": false,
+  "installed_acceptance": false,
+  "live_provider_calls": 0
+}
