@@ -50,6 +50,18 @@ export type {
   H3RunPlan,
 } from "./h3-contracts.js";
 export {
+  H3PackagedActionSchema,
+  H3_PACKAGED_ACTION_KIND_ORDER,
+  compileH3PackagedActions,
+  getPackagedH3Profile,
+  parseH3PackagedAction,
+} from "./h3-actions.js";
+export type {
+  H3PackagedAction,
+  H3PackagedActionSequence,
+  H3SurfaceProfile,
+} from "./h3-actions.js";
+export {
   H3EvidenceOutcomeSchema,
   H3SafeEvidenceEventSchema,
   H3SafeEvidenceBundleSchema,
