@@ -666,7 +666,13 @@ export const BootstrapSnapshotPayloadV1Schema = z
     expiresAt: IsoTimestampV1Schema,
     offlineGraceUntil: IsoTimestampV1Schema,
     serverTime: IsoTimestampV1Schema,
-    account: z.object({ status: z.literal("ACTIVE") }).strict(),
+    account: z
+      .object({
+        /** Stable canonical Seller Agents account identity (never a store ID). */
+        id: z.uuid(),
+        status: z.literal("ACTIVE"),
+      })
+      .strict(),
     accessBasis: AccessBasisV1Schema.optional(),
     subscription: SubscriptionV1Schema,
     // The pre-P4 device limit is an internal device-management rule.  It is

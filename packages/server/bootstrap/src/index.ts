@@ -127,7 +127,10 @@ export class BootstrapService {
       issuedAt,
       expiresAt: expiresAt.toISOString(),
       offlineGraceUntil: offlineGraceUntil.toISOString(),
-      account: { status: "ACTIVE" },
+      // The account identity is derived exclusively from the authenticated
+      // server subject. It is part of the signed payload and cannot be
+      // selected by BootstrapRequest.
+      account: { id: subject.accountId, status: "ACTIVE" },
       accessBasis,
       subscription: currentSubscription
         ? {

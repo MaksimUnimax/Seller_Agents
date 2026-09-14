@@ -136,7 +136,10 @@ function payload(ai: BootstrapAiResolutionV1): BootstrapSnapshotPayloadV1 {
     expiresAt: "2026-01-01T00:05:00.000Z",
     offlineGraceUntil: "2026-01-01T00:10:00.000Z",
     serverTime: "2026-01-01T00:00:00.000Z",
-    account: { status: "ACTIVE" },
+    account: {
+      id: "123e4567-e89b-42d3-a456-426614174000",
+      status: "ACTIVE",
+    },
     subscription: { state: "NONE", planRevision: null },
     devicePolicy: { status: "ACTIVE" },
     compatibility: {

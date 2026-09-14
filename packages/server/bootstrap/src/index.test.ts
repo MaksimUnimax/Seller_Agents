@@ -400,6 +400,60 @@ describe("BootstrapService", () => {
       });
     }
   });
+  it("signs the canonical account identity from the authenticated subject", async () => {
+    const pair = generateKeyPairSync("ed25519");
+    const service = new BootstrapService(
+      policy,
+      {
+        sign: async (_keyId, p) =>
+          signBootstrapSnapshot(p, "config-key", pair.privateKey),
+      },
+      { now: () => new Date("2026-01-01T00:00:00.000Z") },
+    );
+    const keys = new Map([["config-key", pair.publicKey]]);
+    const first = verifyBootstrapEnvelope(
+      await service.issue(subject, request),
+      keys,
+    );
+    const second = verifyBootstrapEnvelope(
+      await service.issue(
+        { ...subject, deviceId: "cccccccc-cccc-4ccc-8ccc-cccccccccccc" },
+        { ...request, deviceId: "cccccccc-cccc-4ccc-8ccc-cccccccccccc" },
+      ),
+      keys,
+    );
+    const different = verifyBootstrapEnvelope(
+      await service.issue(
+        {
+          accountId: "dddddddd-dddd-4ddd-8ddd-dddddddddddd",
+          deviceId: "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee",
+        },
+        {
+          ...request,
+          deviceId: "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee",
+        },
+      ),
+      keys,
+    );
+    expect(first).toMatchObject({
+      ok: true,
+      payload: { account: { id: subject.accountId, status: "ACTIVE" } },
+    });
+    expect(second).toMatchObject({
+      ok: true,
+      payload: { account: { id: subject.accountId, status: "ACTIVE" } },
+    });
+    expect(different).toMatchObject({
+      ok: true,
+      payload: {
+        account: {
+          id: "dddddddd-dddd-4ddd-8ddd-dddddddddddd",
+          status: "ACTIVE",
+        },
+      },
+    });
+    if (first.ok) expect(first.payload).not.toHaveProperty("deviceId");
+  });
   it("fails closed when the resolved configuration selects another signer", async () => {
     const pair = generateKeyPairSync("ed25519");
     const service = new BootstrapService(

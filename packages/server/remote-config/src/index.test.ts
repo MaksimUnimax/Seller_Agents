@@ -92,7 +92,10 @@ const payload: BootstrapSnapshotPayloadV1 = {
   expiresAt: "2026-09-04T00:05:00.000Z",
   offlineGraceUntil: "2026-09-04T00:10:00.000Z",
   serverTime: "2026-09-04T00:00:01.000Z",
-  account: { status: "ACTIVE" },
+  account: {
+    id: "11111111-1111-4111-8111-111111111111",
+    status: "ACTIVE",
+  },
   subscription: { state: "NONE", planRevision: null },
   devicePolicy: { status: "ACTIVE" },
   compatibility: {
@@ -239,6 +242,12 @@ describe("bootstrap V1 schemas", () => {
         detectedAi: { family: "ChatGPT", surface: "standard" },
       }).success,
     ).toBe(false);
+    expect(
+      BootstrapRequestV1Schema.safeParse({
+        ...request,
+        accountId: "22222222-2222-4222-8222-222222222222",
+      }).success,
+    ).toBe(false);
   });
 
   it("requires time ordering and the truthful pre-commercial baseline", () => {
@@ -311,6 +320,24 @@ describe("signed bootstrap envelope", () => {
     expect(
       verifyBootstrapEnvelope(
         { ...envelope, signature: flipBase64Url(envelope.signature) },
+        ring,
+      ),
+    ).toEqual({ ok: false, error: "INVALID_SIGNATURE" });
+    const tamperedPayload = JSON.parse(
+      Buffer.from(envelope.payload, "base64url").toString("utf8"),
+    ) as Record<string, unknown>;
+    tamperedPayload.account = {
+      id: "22222222-2222-4222-8222-222222222222",
+      status: "ACTIVE",
+    };
+    expect(
+      verifyBootstrapEnvelope(
+        {
+          ...envelope,
+          payload: Buffer.from(canonicalizeJson(tamperedPayload)).toString(
+            "base64url",
+          ),
+        },
         ring,
       ),
     ).toEqual({ ok: false, error: "INVALID_SIGNATURE" });

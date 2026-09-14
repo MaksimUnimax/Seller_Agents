@@ -246,7 +246,10 @@ describe.sequential(
         expiresAt: "2026-09-04T00:05:00.000Z",
         offlineGraceUntil: "2026-09-04T00:10:00.000Z",
         serverTime: "2026-09-04T00:00:01.000Z",
-        account: { status: "ACTIVE" as const },
+        account: {
+          id: "11111111-1111-4111-8111-111111111111",
+          status: "ACTIVE" as const,
+        },
         subscription: { state: "NONE" as const, planRevision: null },
         devicePolicy: { status: "ACTIVE" as const },
         compatibility: {
