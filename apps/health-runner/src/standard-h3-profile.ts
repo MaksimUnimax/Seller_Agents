@@ -35,8 +35,9 @@ export const CHATGPT_STANDARD_H3_PROFILE = Object.freeze({
     }),
     stopControl: Object.freeze({
       testId: "stop-button",
-      primary: 'button[data-testid="stop-button"], [aria-busy="true"]',
+      primary: 'button[data-testid="stop-button"]',
     }),
+    busySignal: '[aria-busy="true"]',
     assistantMessage:
       'section[data-turn="assistant"], [data-message-author-role="assistant"]',
     userMessage: 'section[data-turn="user"], [data-message-author-role="user"]',
@@ -125,6 +126,10 @@ export function standardStopControls(root: Locator): Locator {
   return root.locator(
     CHATGPT_STANDARD_H3_PROFILE.selectors.stopControl.primary,
   );
+}
+
+export function standardBusySignals(root: Locator): Locator {
+  return root.locator(CHATGPT_STANDARD_H3_PROFILE.selectors.busySignal);
 }
 
 export function standardCodeSurfaces(message: Locator): Locator {

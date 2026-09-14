@@ -35,6 +35,12 @@ describe("packaged ChatGPT Standard H3 profile", () => {
     expect(CHATGPT_STANDARD_H3_PROFILE.selectors.sendControl.primary).toContain(
       'data-testid="send-button"',
     );
+    expect(CHATGPT_STANDARD_H3_PROFILE.selectors.stopControl.primary).toBe(
+      'button[data-testid="stop-button"]',
+    );
+    expect(CHATGPT_STANDARD_H3_PROFILE.selectors.busySignal).toBe(
+      '[aria-busy="true"]',
+    );
     expect(CHATGPT_STANDARD_H3_PROFILE.selectors.assistantMessage).toContain(
       'data-turn="assistant"',
     );

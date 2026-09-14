@@ -26,6 +26,7 @@ import {
   standardCodeSurfaces,
   standardComposerRoots,
   standardCopyControls,
+  standardBusySignals,
   standardInputIsInsideAssistantEditor,
   standardPromptInputs,
   standardSendControls,
@@ -152,7 +153,7 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
   #baselineMessageCount = 0;
   #promptInserted = false;
   #sendInvoked = false;
-  #busyObserved = false;
+  #associatedResponseId: string | null = null;
 
   public constructor(
     page: Page,
@@ -288,20 +289,22 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
           .first()
           .isVisible({ timeout: 250 })
           .catch(() => false);
+        const busyPresent =
+          (await standardBusySignals(this.#surface).count()) > 0;
         const messages = this.#assistantMessages;
         if (
           bound &&
           (stopVisible ||
+            busyPresent ||
             (messages && (await messages.count()) > this.#baselineMessageCount))
         ) {
-          this.#busyObserved = true;
           return pass(1, true);
         }
         const responseObserved =
           messages && (await messages.count()) > this.#baselineMessageCount;
         if (
           !bound &&
-          (stopVisible || responseObserved) &&
+          (stopVisible || busyPresent || responseObserved) &&
           Date.now() >= freshBindingDeadline
         )
           return fail();
@@ -334,6 +337,7 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
         if (!(await this.#belongsToConversation(candidate, conversationId)))
           continue;
         this.#associatedResponse = candidate;
+        this.#associatedResponseId = id;
         return pass(1, true);
       }
       return fail(boundedCount(count));
@@ -343,22 +347,23 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
   public async observeCompletion(): Promise<H3StrategyStepResult> {
     return this.#safe(async () => {
       const response = this.#associatedResponse;
-      if (!response || !this.#surface) return fail();
-      const stop = standardStopControls(this.#surface);
-      try {
-        await response.waitFor({ state: "visible", timeout: 30_000 });
-        await response
-          .locator('[aria-busy="true"]')
-          .waitFor({ state: "detached", timeout: 30_000 })
-          .catch(() => undefined);
-        await stop
-          .first()
-          .waitFor({ state: "hidden", timeout: 30_000 })
-          .catch(() => undefined);
-      } catch {
-        return fail();
+      const surface = this.#surface;
+      if (!response || !surface) return fail();
+      const deadline = Date.now() + 30_000;
+      while (Date.now() < deadline) {
+        if (!(await this.#hasStableBoundIdentity())) return fail();
+        if (!(await this.#associatedResponseIsAttached(response)))
+          return fail();
+
+        const generationActive = await this.#standardGenerationActive(surface);
+        const responseHasContent = await this.#responseHasContent(response);
+        if (!generationActive && responseHasContent) return pass(1, true);
+
+        // This is a bounded observation poll. Completion is established only
+        // by the current response, generation signals, content, and identity.
+        await new Promise((resolve) => setTimeout(resolve, 25));
       }
-      return this.#busyObserved ? pass(1, true) : fail();
+      return fail();
     });
   }
 
@@ -431,7 +436,7 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
     this.#baselineMessageCount = 0;
     this.#promptInserted = false;
     this.#sendInvoked = false;
-    this.#busyObserved = false;
+    this.#associatedResponseId = null;
     await closeSession?.();
   }
 
@@ -600,6 +605,56 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
     if (identity.kind !== "BOUND" || identity.id !== conversationId)
       return false;
     return (await standardMessageId(locator)) !== null;
+  }
+
+  async #hasStableBoundIdentity(): Promise<boolean> {
+    const page = this.#page;
+    const target = this.#target;
+    const conversationId = this.#boundConversationId();
+    if (
+      !page ||
+      !target ||
+      !conversationId ||
+      !this.#isAllowedOrigin(page, target)
+    )
+      return false;
+    const identity = await this.#resolveConversationIdentity(page);
+    return identity.kind === "BOUND" && identity.id === conversationId;
+  }
+
+  async #associatedResponseIsAttached(response: Locator): Promise<boolean> {
+    if (!this.#associatedResponseId) return false;
+    try {
+      return (
+        (await response.count()) === 1 &&
+        (await standardMessageId(response)) === this.#associatedResponseId
+      );
+    } catch {
+      return false;
+    }
+  }
+
+  async #standardGenerationActive(surface: Locator): Promise<boolean> {
+    const stop = standardStopControls(surface);
+    for (let index = 0; index < (await stop.count()); index += 1) {
+      if (
+        await stop
+          .nth(index)
+          .isVisible({ timeout: 250 })
+          .catch(() => false)
+      )
+        return true;
+    }
+    return (await standardBusySignals(surface).count()) > 0;
+  }
+
+  async #responseHasContent(response: Locator): Promise<boolean> {
+    try {
+      const text = await response.textContent();
+      return Boolean(text?.trim());
+    } catch {
+      return false;
+    }
   }
 
   #isAllowedOrigin(page: Page, target: ControlledTarget): boolean {

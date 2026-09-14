@@ -26,10 +26,15 @@ export type HealthStandardH3FixtureVariant =
   | "BUSY_TIMEOUT"
   | "RESPONSE_MISSING"
   | "COMPLETION_MISSING"
+  | "RESPONSE_SELF_BUSY_STUCK"
+  | "STOP_CLEARS_BUT_OTHER_BUSY_REMAINS"
+  | "BUSY_CLEARS_BUT_STOP_REMAINS"
+  | "EMPTY_RESPONSE_AFTER_GENERATION"
   | "CODE_BLOCK_MISSING"
   | "COPY_MISSING"
   | "COPY_MISMATCHED"
   | "CONVERSATION_CHANGED"
+  | "IDENTITY_CHANGES_DURING_COMPLETION"
   | "DELIVERY_MISSING";
 
 export type HealthStandardH3Fixture = Readonly<{
@@ -102,12 +107,21 @@ function historicalResponse(): string {
 }
 
 function newResponseMarkup(variant: HealthStandardH3FixtureVariant): string {
-  const incomplete = variant === "COMPLETION_MISSING";
+  const responseSelfBusy = [
+    "COMPLETION_MISSING",
+    "RESPONSE_SELF_BUSY_STUCK",
+    "IDENTITY_CHANGES_DURING_COMPLETION",
+  ].includes(variant);
+  const otherBusyRemains = variant === "STOP_CLEARS_BUT_OTHER_BUSY_REMAINS";
+  const emptyResponse = variant === "EMPTY_RESPONSE_AFTER_GENERATION";
   const code =
-    variant === "CODE_BLOCK_MISSING"
+    variant === "CODE_BLOCK_MISSING" || emptyResponse
       ? ""
       : `<div data-writing-block-fullscreen-editor-region><button aria-label="${variant === "COPY_MISSING" ? "Copy unavailable" : "Copy"}" type="button">Copy</button><pre><code>${variant === "COPY_MISMATCHED" ? "UNEXPECTED_HEALTH_TOKEN" : "BRIDGE_HEALTHCHECK_V1"}</code></pre></div>`;
-  return `<section data-turn="assistant" data-turn-id="turn-response"${incomplete ? ' aria-busy="true"' : ""}><p>Completed response</p>${code}</section>`;
+  const busyMarker = otherBusyRemains
+    ? '<div aria-busy="true" data-generation-marker="other"></div>'
+    : "";
+  return `${busyMarker}<section data-turn="assistant" data-turn-id="turn-response"${responseSelfBusy ? ' aria-busy="true"' : ""}><p>${emptyResponse ? "" : "Completed response"}</p>${code}</section>`;
 }
 
 function checkpointMarkup(kind: string): string {
@@ -184,8 +198,12 @@ function fixtureHtml(
         setTimeout(() => bindConversation(${JSON.stringify(FRESH_BOUND_CONVERSATION_ID)}), 5);
         setTimeout(() => bindConversation(${JSON.stringify(CHANGED_CONVERSATION_ID)}), 120);
       }
-      if (${JSON.stringify(variant === "EXISTING_IDENTITY_CHANGES" || variant === "CONVERSATION_CHANGED")})
+      if (${JSON.stringify(variant === "EXISTING_IDENTITY_CHANGES")})
         setTimeout(() => bindConversation(${JSON.stringify(CHANGED_CONVERSATION_ID)}), 5);
+      if (${JSON.stringify(variant === "CONVERSATION_CHANGED")})
+        bindConversation(${JSON.stringify(CHANGED_CONVERSATION_ID)});
+      if (${JSON.stringify(variant === "IDENTITY_CHANGES_DURING_COMPLETION")})
+        setTimeout(() => bindConversation(${JSON.stringify(CHANGED_CONVERSATION_ID)}), 500);
       const stop = document.querySelector('button[data-testid="stop-button"]');
       if (stop && ${JSON.stringify(variant !== "BUSY_TIMEOUT")}) stop.hidden = false;
       if (${JSON.stringify(variant === "DELIVERY_MISSING")}) document.querySelector('#composer-submit-button')?.remove();
@@ -195,7 +213,8 @@ function fixtureHtml(
         main?.querySelector('section[data-fixture-conversation="active"]')?.insertAdjacentHTML('beforeend', ${JSON.stringify(newResponseMarkup(variant))});
         const response = document.querySelector('section[data-turn="assistant"][data-turn-id="turn-response"]');
         if (!response) return;
-        if (${JSON.stringify(variant !== "COMPLETION_MISSING")}) { response.removeAttribute('aria-busy'); if (stop) stop.hidden = true; }
+        if (${JSON.stringify(!["COMPLETION_MISSING", "RESPONSE_SELF_BUSY_STUCK", "IDENTITY_CHANGES_DURING_COMPLETION"].includes(variant))}) response.removeAttribute('aria-busy');
+        if (${JSON.stringify(variant !== "COMPLETION_MISSING" && variant !== "BUSY_CLEARS_BUT_STOP_REMAINS")}) { if (stop) stop.hidden = true; }
       }, 40);
     });
   });
@@ -258,10 +277,15 @@ export async function startHealthStandardH3Fixture(): Promise<HealthStandardH3Fi
       "BUSY_TIMEOUT",
       "RESPONSE_MISSING",
       "COMPLETION_MISSING",
+      "RESPONSE_SELF_BUSY_STUCK",
+      "STOP_CLEARS_BUT_OTHER_BUSY_REMAINS",
+      "BUSY_CLEARS_BUT_STOP_REMAINS",
+      "EMPTY_RESPONSE_AFTER_GENERATION",
       "CODE_BLOCK_MISSING",
       "COPY_MISSING",
       "COPY_MISMATCHED",
       "CONVERSATION_CHANGED",
+      "IDENTITY_CHANGES_DURING_COMPLETION",
       "DELIVERY_MISSING",
     ];
     if (!variants.includes(variant) || request.method !== "GET") {
@@ -298,6 +322,7 @@ export async function startHealthStandardH3Fixture(): Promise<HealthStandardH3Fi
         "EXISTING_CONVERSATION",
         "EXISTING_IDENTITY_CHANGES",
         "ROUTE_CANONICAL_CONFLICT",
+        "IDENTITY_CHANGES_DURING_COMPLETION",
       ].includes(variant);
       const path =
         variant === "LOGIN_EXPIRED"

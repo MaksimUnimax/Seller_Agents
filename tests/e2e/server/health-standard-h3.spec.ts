@@ -343,5 +343,29 @@ test.describe("B3 packaged ChatGPT Standard H3", () => {
         }
       });
     }
+
+    for (const [variant, failureCode] of [
+      ["RESPONSE_SELF_BUSY_STUCK", "COMPLETION_TIMEOUT"],
+      ["STOP_CLEARS_BUT_OTHER_BUSY_REMAINS", "COMPLETION_TIMEOUT"],
+      ["BUSY_CLEARS_BUT_STOP_REMAINS", "COMPLETION_TIMEOUT"],
+      ["EMPTY_RESPONSE_AFTER_GENERATION", "COMPLETION_TIMEOUT"],
+      ["IDENTITY_CHANGES_DURING_COMPLETION", "COMPLETION_OBSERVATION_FAILED"],
+    ] as const) {
+      test(`${variant} fails at OBSERVE_COMPLETION without retry`, async () => {
+        const fixture = await startHealthStandardH3Fixture();
+        try {
+          const result = await runVariant(fixture, variant);
+          expect(result.failureCode).toBe(failureCode);
+          expect(result.failureStep).toBe("OBSERVE_COMPLETION");
+          expect(result.completedSteps).not.toContain("OBSERVE_COMPLETION");
+          await waitForFixtureState(fixture, {
+            promptMatches: 1,
+            sendActivations: 1,
+          });
+        } finally {
+          await fixture.close();
+        }
+      });
+    }
   });
 });
