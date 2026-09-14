@@ -45,6 +45,8 @@
 
 Локальная среда: Linux x86_64, Node 24.19.0, Python 3.12.14. [Сбой локальной установки Chromium](LOCAL_BROWSER_SETUP.json) — timeout/HTTP 502 до начала browser suites. Это ограничение этого прогона, а не результат тестирования WB. Для remote fixture run фиксируется фактический Chrome/Chromium и Python Playwright в artifact.
 
+Первая remote попытка [34828658429](https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34828658429), commit `4ee9c0a96bbeeb317e66f2118c17830b4e93ce90`, завершилась до создания jobs. В новом workflow обнаружено недопустимое использование `runner.temp` в job-level env; переменная перенесена в step-level env. Допустимость контекста подтверждается [таблицей GitHub Actions](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#context-availability). Это исправление конфигурации CI; production-код и исходные тесты не менялись. Неудачная попытка не считается product test FAIL или PASS.
+
 | Новый baseline ZIP | Размер, bytes | SHA-256 |
 |---|---:|---|
 | `SELLER_AGENTS_IMPORT_ozon_0.1.22_baseline.zip` | 1517679 | `88c390792cfd2074d7837050c19a4a232f6a3698729530dae5ffedef978316f2` |
