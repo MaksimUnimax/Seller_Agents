@@ -288,7 +288,10 @@ describe.sequential("P2.3 real PostgreSQL device authorization matrix", () => {
     const migration = (name: string) =>
       readFile(
         fileURLToPath(
-          new URL(`../../../packages/server/db/drizzle/${name}`, import.meta.url),
+          new URL(
+            `../../../packages/server/db/drizzle/${name}`,
+            import.meta.url,
+          ),
         ),
       ).then((x) => createHash("sha256").update(x).digest("hex"));
     await runMigrations({ connectionString: url! });

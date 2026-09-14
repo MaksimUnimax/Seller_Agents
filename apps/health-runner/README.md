@@ -1,6 +1,7 @@
 # apps/health-runner
 
-Изолированные проверки тестовых AI-аккаунтов. Сохраняет границы source P8; расписание и live behavior ещё не реализованы здесь.
+Перенесены P8.3 и P8.4 Foundation. H3 browser actions, P8.5 и P8.6 остаются NOT_STARTED.
 
-Состояние D0: назначение каталога зафиксировано; production-реализация не перенесена.
-Границы: [архитектура](../../docs/architecture/OVERVIEW.md), [размещение](../../docs/architecture/REPOSITORY.md), [текущий статус](../../docs/STATUS.md).
+Точка импорта: blood_sand@3f16bbf6387cc62303e292fcfe61449c8f243b92.
+Фактический результат проверок — [квитанция переноса](../../docs/migration/evidence/SERVER_IMPORT_ACCEPTANCE.md).
+Запуск и команды — [локальная разработка](../../docs/server/LOCAL_DEVELOPMENT.md).

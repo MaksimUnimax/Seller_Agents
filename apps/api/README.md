@@ -1,6 +1,7 @@
 # apps/api
 
-HTTP composition root модульного сервера. Существующий Fastify API переносится отдельно; доменная логика остаётся в packages/server.
+Перенесён исходный Fastify API и его тесты. Beta access/admission и реальное подключение единого расширения — следующие задачи.
 
-Состояние D0: назначение каталога зафиксировано; production-реализация не перенесена.
-Границы: [архитектура](../../docs/architecture/OVERVIEW.md), [размещение](../../docs/architecture/REPOSITORY.md), [текущий статус](../../docs/STATUS.md).
+Точка импорта: blood_sand@3f16bbf6387cc62303e292fcfe61449c8f243b92.
+Фактический результат проверок — [квитанция переноса](../../docs/migration/evidence/SERVER_IMPORT_ACCEPTANCE.md).
+Запуск и команды — [локальная разработка](../../docs/server/LOCAL_DEVELOPMENT.md).

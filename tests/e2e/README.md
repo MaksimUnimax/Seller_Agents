@@ -1,6 +1,7 @@
 # tests/e2e
 
-Сквозные пользовательские сценарии и installed evidence по browser/OS/AI/package. Пустой каталог не означает PASS.
+В server/ перенесены portal/admin/controlled H2 Playwright suites. Это не установленная приёмка единого расширения и не live H3.
 
-Состояние D0: назначение каталога зафиксировано; production-реализация не перенесена.
-Границы: [архитектура](../../docs/architecture/OVERVIEW.md), [размещение](../../docs/architecture/REPOSITORY.md), [текущий статус](../../docs/STATUS.md).
+Точка импорта: blood_sand@3f16bbf6387cc62303e292fcfe61449c8f243b92.
+Фактический результат проверок — [квитанция переноса](../../docs/migration/evidence/SERVER_IMPORT_ACCEPTANCE.md).
+Запуск и команды — [локальная разработка](../../docs/server/LOCAL_DEVELOPMENT.md).

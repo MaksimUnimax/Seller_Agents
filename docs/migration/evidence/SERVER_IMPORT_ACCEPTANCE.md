@@ -28,3 +28,7 @@ Production deployment/live AI/live marketplace requests: NOT_RUN.
 
 После успешного нового CI и удалённой сверки — SERVER_IMPORT_ACCEPTED, серверный Codex получает [поручение](../../development/SERVER_CODEX_HANDOFF.md).
 Ozon/WB остаются отдельными последующими этапами переноса.
+
+## Первый CI candidate
+
+[f1daff90](https://github.com/MaksimUnimax/Seller_Agents/commit/f1daff90ab7694b18b84c08a778034d11b1f7dfe): import inventory/frozen boundaries, frozen install и lint PASS; format check FAIL для четырёх перемещённых файлов. Следующие stages не запускались. Documentation CI PASS. Исправляется только формат длинных новых путей и workspace YAML; этот неуспешный прогон не выдан за product PASS.

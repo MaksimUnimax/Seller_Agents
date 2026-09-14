@@ -1467,7 +1467,9 @@ describe.sequential(
       expect(source).not.toContain("/v1/webhooks");
     });
     it("STATIC-71 OpenAPI current repository artifact has 102 operations and exact hash", async () => {
-      const artifact = JSON.parse(await text("packages/contracts/openapi/openapi.json")) as {
+      const artifact = JSON.parse(
+        await text("packages/contracts/openapi/openapi.json"),
+      ) as {
         paths: Record<string, Record<string, unknown>>;
       };
       const count = Object.values(artifact.paths).reduce(
@@ -1482,9 +1484,9 @@ describe.sequential(
       expect(
         createHash("sha256")
           .update(
-            await readFile(resolve(serverRoot, "packages/contracts/openapi/openapi.json")).then(
-              (value) => value,
-            ),
+            await readFile(
+              resolve(serverRoot, "packages/contracts/openapi/openapi.json"),
+            ).then((value) => value),
           )
           .digest("hex"),
       ).toBe(
@@ -1583,7 +1585,9 @@ describe.sequential(
         expect(
           createHash("sha256")
             .update(
-              await readFile(resolve(serverRoot, "packages/server/db/drizzle", name)),
+              await readFile(
+                resolve(serverRoot, "packages/server/db/drizzle", name),
+              ),
             )
             .digest("hex"),
         ).toBe(hash);

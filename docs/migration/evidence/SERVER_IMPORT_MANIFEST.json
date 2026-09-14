@@ -16,8 +16,8 @@
     "PATH_ADAPTED": 68,
     "WORKSPACE_CONFIGURATION": 4,
     "EXCLUDED_EMPTY_PLACEHOLDER": 1,
-    "BYTE_IDENTICAL": 430,
-    "DOCUMENTATION_ADAPTED": 8,
+    "BYTE_IDENTICAL": 429,
+    "DOCUMENTATION_ADAPTED": 9,
     "WORKSPACE_PATHS_ONLY": 1
   },
   "entries": [
@@ -2114,7 +2114,7 @@
       "source_blob_sha": "9a880b7f2efc287476459f878fbce259985ab063",
       "source_bytes": 1688,
       "target_path": "docs/server/README.md",
-      "target_blob_sha": "b9a07eb2f72839d9f4fdaab99f2d08748fe5358f",
+      "target_blob_sha": "b2ca787d3524025375c2ea704212c40ec87d94d6",
       "disposition": "DOCUMENTATION_ADAPTED",
       "reason": "Authority index, current migration scope or final newline; historical source remains pinned."
     },
@@ -2366,7 +2366,7 @@
       "source_blob_sha": "b290eb1186d00795af78cf19f022970d6a37251c",
       "source_bytes": 21917,
       "target_path": "tests/integration/server/p2-3-device-authorization.integration.test.ts",
-      "target_blob_sha": "650b763a990d5a07007210b7893d4b4e713aa031",
+      "target_blob_sha": "d88b8ac757f308f563edbc98aa6884d54aa274ab",
       "disposition": "PATH_ADAPTED",
       "reason": "Relative module/artifact/test/root paths or server-only boundary roots relocated."
     },
@@ -2402,7 +2402,7 @@
       "source_blob_sha": "bca171006b728c7af00f7f755c41d62af03aa29e",
       "source_bytes": 16796,
       "target_path": "tests/integration/server/p2-auth.integration.test.ts",
-      "target_blob_sha": "8d721bac47b3877cb1a462a126926a7a6cb87c6c",
+      "target_blob_sha": "5ca1f516811143fc6cd49bb4f9d98013aa2f1546",
       "disposition": "PATH_ADAPTED",
       "reason": "Relative module/artifact/test/root paths or server-only boundary roots relocated."
     },
@@ -2600,7 +2600,7 @@
       "source_blob_sha": "66d1279c6df9ed08fd185d7144724f7728f01a2e",
       "source_bytes": 63227,
       "target_path": "tests/integration/server/p5-7-p5-final-acceptance.integration.test.ts",
-      "target_blob_sha": "78be66fee4701cd2d39b691b296e6ef81cef7798",
+      "target_blob_sha": "42215505d8616fe0835cd21959c130f69971f2ea",
       "disposition": "PATH_ADAPTED",
       "reason": "Relative module/artifact/test/root paths or server-only boundary roots relocated."
     },
@@ -2663,8 +2663,8 @@
       "source_blob_sha": "4a8d2b9828c5d2d7e49de376d76f6be65efe1763",
       "source_bytes": 470,
       "target_path": "packages/server/README.md",
-      "target_blob_sha": "4a8d2b9828c5d2d7e49de376d76f6be65efe1763",
-      "disposition": "BYTE_IDENTICAL",
+      "target_blob_sha": "9ec65d5f59da75709c08b4237fd7e290c73db4e2",
+      "disposition": "DOCUMENTATION_ADAPTED",
       "reason": "Only repository placement changed."
     },
     {
@@ -4571,7 +4571,7 @@
       "source_blob_sha": "286cf7f5643db97142c425abe7c8e5d5663f5d65",
       "source_bytes": 36,
       "target_path": "pnpm-workspace.yaml",
-      "target_blob_sha": "5890ecad17e6f628ec1efa2b322c76b900e28eeb",
+      "target_blob_sha": "1dba6c8ae545336808492147f6b7353102c7eb78",
       "disposition": "WORKSPACE_CONFIGURATION",
       "reason": "Root workspace and existing scaffold merged; dependency versions preserved."
     },

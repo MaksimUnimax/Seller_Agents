@@ -510,7 +510,10 @@ describe.sequential("P2.2 real PostgreSQL authentication matrix", () => {
               await (
                 await import("node:fs/promises")
               ).readFile(
-                new URL(`../../../packages/server/db/drizzle/${name}`, import.meta.url),
+                new URL(
+                  `../../../packages/server/db/drizzle/${name}`,
+                  import.meta.url,
+                ),
               ),
             )
             .digest("hex"),
