@@ -1,0 +1,10 @@
+packages:
+  - 'apps/*'
+  - 'packages/bridge-core'
+  - 'packages/control-client'
+  - 'packages/contracts'
+  - 'packages/shared'
+  - 'packages/marketplaces/*'
+  - 'packages/ai-adapters/*'
+  - 'packages/browser-platform/*'
+  - 'packages/server/*'

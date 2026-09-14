@@ -1,0 +1,42 @@
+# Матрица приёмки целевого продукта
+
+Все сценарии ниже — NOT_RUN_IN_SELLER_AGENTS на этапе D0. Исторические результаты источников не переносят их автоматически в PASS.
+Requirement IDs соответствуют [SPEC](../product/SPEC.md). При реализации к строке добавляются commit/package/environment/evidence и наблюдаемый итог.
+
+| Test ID | Требования | Сценарий и обязательный результат |
+|---|---|---|
+| A01 | SA-UX-01, SA-SHOP-01 | Переключатель Ozon/WB перерисовывает popup; несколько магазинов, переименование не меняет кабинет |
+| A02 | SA-SHOP-02, SA-SHOP-03 | Seller работает без Performance; expiry/нет прав/сеть различаются; другой кабинет распознаётся либо честно unconfirmed |
+| A03 | SA-SHOP-04 | Удаление активного магазина завершает локальную работу; поздний ответ не прикрепляется к другому магазину |
+| A04 | SA-WORK-01, SA-AI-01 | Start в новом и историческом диалоге; старые команды не исполняются; правильный AI/account/surface |
+| A05 | SA-WORK-02 | Смена Ozon→WB и магазина внутри Ozon: предупреждение, новый Start/промпт, старый callback отклонён |
+| A06 | SA-WORK-03 | Finish до запроса, во время ожидания квоты, после dispatch и перед Send; остаток пакета отменён |
+| A07 | SA-CMD-01 | Один блок с несколькими явными командами → один клик → строгая последовательность; autorun отсутствует |
+| A08 | SA-CMD-02, SA-CMD-03 | HELP+API, неверная схема, неизвестная операция/host, business mutation: безопасный результат, запрещённая сеть 0 |
+| A09 | SA-CMD-02 | Отчёт не готов/следующая страница: нет скрытого polling/pagination/retry; ИИ получает причину |
+| A10 | SA-DATA-01, SA-CMD-03 | Большой JSON/XLSX/оригинальный файл доставлен целиком и в правильный диалог; размер/целостность проверены |
+| A11 | SA-DATA-01, SA-DATA-02 | request success→transaction abort: не выдаётся ложная ссылка; часовой expiry всех копий, после wake очистка |
+| A12 | SA-WORK-01, SA-CMD-01, SA-DATA-02 | Reload/worker restart/double click/send unknown: нет скрытого API/Send replay; состояние правдиво |
+| A13 | SA-AUTH-01 | Logout retain/delete и смена аккаунта; чужие ключи/буфер недоступны, фоновые действия старого аккаунта прекращены |
+| A14 | SA-BETA-01 | Два новых подтверждения на последний слот → ровно один admission; повтор не списывает второй слот |
+| A15 | SA-BETA-01, SA-BETA-02 | Закрытый набор и capacity reached не мешают existing login/new device; +100 идемпотентно и auditable |
+| A16 | SA-BETA-02 | Бесплатный BETA access без checkout/таймера платной пробы и без коммерческого лимита установок |
+| A17 | SA-SYNC-01, SA-QUOTA-01 | Один диалог в двух вкладках локально → один executor; разные диалоги одного кабинета делят квоту без сервера |
+| A18 | SA-SYNC-01, SA-SYNC-02 | Два браузера, недоступный сервер, продолжение разрешённой работы, затем bounded reconcile; допускаемый дубль не скрывается |
+| A19 | SA-SYNC-02 | Ошибка/таймаут optional sync, большой pending backlog или конфликт одного диалога не блокируют обычный другой диалог |
+| A20 | SA-SYNC-01, SA-WORK-02 | Поздний старый report, clock skew, out-of-order ACK: не отменяют новую привязку/Finish и не создают переключение по кругу |
+| A21 | SA-QUOTA-01 | Локальный минутный лимит/429/Retry-After/другой браузер: нет скрытого retry; факт и предположение различаются |
+| A22 | SA-KEY-01 | Перенос с согласием только получателя; source offline понятен; серверные DB/log/queue не содержат секретный payload |
+| A23 | SA-KEY-01, SA-AUTH-01 | Recipient/account substitution, expiry, logout/revoke, повтор packet отвергаются; чужие ключи не сохраняются |
+| A24 | SA-KEY-02 | Один файл все магазины; пароль/целостность/version/старый формат/конфликт проверены; импорт не запускает Work |
+| A25 | SA-AI-01, SA-CMD-03 | Composer replacement, user draft, empty composer без нового turn, attachment readiness: честный send proof/UNKNOWN |
+| A26 | SA-BROWSER-01 | Каждый целевой browser/OS/AI package проходит popup, lifecycle, files, update; Safari без real Mac не PASS |
+| A27 | SA-ADMIN-01 | RBAC/CSRF/admin session/audit; support не меняет квоту и не получает секреты; статистика задерживается без сбоя сервиса |
+| A28 | SA-OBS-01 | DOM drift vs login/CAPTCHA/UNKNOWN; API report-start vs order-create, nested privacy/shared schema; никакого auto publish |
+| A29 | SA-RELEASE-01 | Preprod/prod изолированы; backup восстановлен; финальный package/contract/profile совместим; rollback предусмотрен |
+| A30 | SA-AUTH-01, SA-SYNC-02 | Fresh/offlineGrace/expired/tampered/online revoked snapshot; часы назад не продлевают доступ; refresh single-flight |
+| A31 | SA-SYNC-01, SA-SYNC-02 | Измерение ordinary command/delivery: 0 обязательных control API calls; retry traffic только pending installations |
+| A32 | SA-SHOP-01, SA-WORK-01 | Два магазина одной площадки и Ozon/WB в отдельных диалогах параллельно: данные, ключи, квоты и результаты не смешаны |
+
+Матрица не является исполняемым тестом. Нельзя выдавать наличие строк A01–A32 за 32 пройденных сценария.
+Installed acceptance записывается отдельно по браузерам/ИИ и по точному пакету. R1–R8 WB открываются отдельным решением после положенного gate.
