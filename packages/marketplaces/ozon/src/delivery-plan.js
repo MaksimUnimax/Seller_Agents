@@ -45,6 +45,10 @@
           entry?.command?.operation || entry?.operation || "",
         );
         let ref = "";
+        if (run?.execution_context?.marketplace === "wildberries" && /^sa_file_[A-Za-z0-9-]+$/.test(entry.provider_file_ref || "")) {
+          if (!seen.has(entry.provider_file_ref)) { seen.add(entry.provider_file_ref); refs.push(entry.provider_file_ref); }
+          continue;
+        }
         if (operation === "report_file_get")
           ref = String(entry?.command?.params?.file_ref || "").trim();
         else ref = directInlineFileRefFromReportText(entry) || "";
@@ -98,7 +102,7 @@
       const generatedDocument = needsGeneratedDocument
         ? {
             artifact_id: `generated-${deliveryId}`,
-            filename: `ozon-bridge-result-${deliveryId}.txt`,
+            filename: `${run?.execution_context?.marketplace === "wildberries" ? "wb" : "ozon"}-bridge-result-${deliveryId}.txt`,
             mime_type: "text/plain;charset=utf-8",
             extension: "txt",
             unicode_char_length: Number(textDecision.unicode_chars || 0),

@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "stage": "D2.3",
-  "version": "0.2.2",
-  "purpose": "DEVELOPMENT_OZON_CARRIER_WITH_INTERNAL_WB_ADAPTER_NOT_COMBINED_BETA",
+  "stage": "D2.4",
+  "version": "0.2.3",
+  "purpose": "DEVELOPMENT_COMBINED_APPLICATION_NOT_BETA",
   "baseline": "apps/extension/src/imported/ozon-v0.1.22",
   "bundles": {
     "shared/work_session_model.js": [
@@ -122,13 +122,10 @@
     }
   ],
   "preserved_boundaries": [
+    "frozen donor byte identity",
+    "Ozon Work/AI/delivery via reviewed application patches",
     "provider registry/transport",
-    "patch load order",
-    "storage namespaces",
-    "content/message protocol",
-    "Ozon prompts and UI except package version",
-    "WB reference immutable",
-    "server untouched"
+    "server and wire contracts untouched"
   ],
   "isolated_bundles": {
     "shared/wb_adapter.js": {
@@ -147,6 +144,40 @@
     }
   },
   "worker_postload": [
-    "shared/wb_adapter.js"
+    "shared/wb_adapter.js",
+    "shared/application.js"
+  ],
+  "application_patches": "apps/extension/application-patches.json",
+  "application_files": {
+    "shared/application.js": [
+      "packages/bridge-core/src/stores/catalog.js",
+      "apps/extension/src/application/runtime.js",
+      "apps/extension/src/application/delivery.js"
+    ],
+    "popup.html": [
+      "apps/extension/src/application/popup.html"
+    ],
+    "popup.js": [
+      "apps/extension/src/application/popup.js"
+    ],
+    "popup.css": [
+      "apps/extension/src/application/popup.css"
+    ]
+  },
+  "marketplace_hosts": [
+    "https://content-api.wildberries.ru/*",
+    "https://discounts-prices-api.wildberries.ru/*",
+    "https://marketplace-api.wildberries.ru/*",
+    "https://seller-analytics-api.wildberries.ru/*",
+    "https://statistics-api.wildberries.ru/*",
+    "https://finance-api.wildberries.ru/*",
+    "https://documents-api.wildberries.ru/*",
+    "https://common-api.wildberries.ru/*",
+    "https://supplies-api.wildberries.ru/*",
+    "https://advert-api.wildberries.ru/*",
+    "https://advert-media-api.wildberries.ru/*",
+    "https://dp-calendar-api.wildberries.ru/*",
+    "https://feedbacks-api.wildberries.ru/*",
+    "https://returns-api.wildberries.ru/*"
   ]
 }

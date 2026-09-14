@@ -24,6 +24,8 @@ Live provider tests in this stage: NOT_RUN.
 
 ## Текущий результат
 
+D2.4 IN_PROGRESS: каталог/общий popup и прикладная Work/delivery Ozon/WB реализованы в кандидате 0.2.3; [описание](development/EXTENSION_APPLICATION.md), [приёмка кандидата](migration/evidence/extension-application-d2-4-2026-09-14/README.md). Новая публикация не принята до remote CI/readback.
+
 D2.3: [квитанция](migration/evidence/extension-wb-adapter-d2-3-2026-09-14/README.md), [границы и зависимости](development/EXTENSION_WB_ADAPTER.md). 105 source/ZIP gate processes PASS, включая 17 групп WB. Один shared guarded queue для Ozon/WB. Сохранены WB API authority и запреты, добавлены context fences и наблюдённый Retry-After. WB выполняется во внутреннем adapter API с локальными application ports в harness; настоящие popup/Start/delivery ещё не соединены. Это не единая установленная сборка. Remote CI 34839904748 SUCCESS; скачанный ZIP побайтово совпал, 97 Git-файлов и все 77 production inputs сверены. Внутренний adapter API принят.
 
 D2.2: [квитанция](migration/evidence/extension-context-d2-2-2026-09-14/README.md). Общая очередь, pinned context и защита от смены реквизитов/привязки во время выполнения. Статус: ACCEPTED; 101 процесс source/ZIP PASS, полный remote CI PASS, скачанный package и 67 production inputs MATCH. Это один Ozon slot, не реализованный каталог аккаунтов/магазинов.

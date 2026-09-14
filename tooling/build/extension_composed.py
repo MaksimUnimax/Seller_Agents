@@ -29,7 +29,7 @@ def compose(directory):
     directory.mkdir(parents=True, exist_ok=False)
     baseline.verify_import()
     recipe = baseline.read_json(RECIPE)
-    assert recipe["version"] == "0.2.2" and recipe["stage"] == "D2.3"
+    assert recipe["version"] == "0.2.3" and recipe["stage"] == "D2.4"
     inputs = {}
     read_input("apps/extension/composition.json", inputs)
     output = {}
@@ -46,6 +46,8 @@ def compose(directory):
         suffix = b"\n})(scope); globalThis.SellerAgentsWBReference = Object.freeze({contract: scope.WBContract, credentials: scope.WBCredentials, guidance: scope.WBGuidance, transport: scope.ProviderTransportCore}); })();\n"
         output[target] = prefix + b"\n;\n".join(read_input(p, inputs) for p in bundle["reference_sources"]) + suffix
         output[target] += b"\n;\n".join(read_input(p, inputs) for p in bundle["sources"])
+    for target, sources in recipe.get("application_files", {}).items():
+        output[target] = b"\n;\n".join(read_input(source, inputs) for source in sources)
     for target in recipe.get("worker_postload", []):
         assert target in output
         output["service_worker_entry.js"] += ("\nimportScripts(" + json.dumps(target) + ");\n").encode()
@@ -62,6 +64,10 @@ def compose(directory):
     assert worker.count(init["old"]) == 1
     worker = worker.replace(init["old"], read_input(init["replacement"], inputs).decode().rstrip())
     output["service_worker.js"] = b"\n;\n".join(read_input(path, inputs) for path in recipe["worker_prelude"]) + b"\n;\n" + worker.encode()
+    for patch in json.loads(read_input(recipe["application_patches"], inputs)):
+        text = output[patch["target"]].decode()
+        assert text.count(patch["old"]) == 1, (patch["target"], patch["old"][:100], text.count(patch["old"]))
+        output[patch["target"]] = text.replace(patch["old"], patch["new"]).encode()
     # This is a distinct development package. The frozen donor stays untouched.
     for relative, data in output.items():
         data = data.replace(b"0.1.22", recipe["version"].encode())
@@ -70,11 +76,14 @@ def compose(directory):
         target.write_bytes(data)
     manifest_path = directory / "manifest.json"
     manifest = baseline.read_json(manifest_path)
-    manifest["name"] = "Seller Agents Development (Ozon)"
+    manifest["name"] = "Seller Agents Development — Ozon + WB"
+    manifest["action"]["default_title"] = "Seller Agents"
+    manifest["description"] = "Данные магазинов Ozon и Wildberries в вашем ИИ. Development-сборка."
+    manifest["host_permissions"] += recipe["marketplace_hosts"]
     baseline.write_json(manifest_path, manifest)
     files = [{"path": p.relative_to(directory).as_posix(), "sha256": baseline.sha256(p.read_bytes()),
               "bytes": p.stat().st_size} for p in sorted(directory.rglob("*")) if p.is_file()]
-    assert len(files) == 36 + len(recipe.get("isolated_bundles", {}))
+    assert len(files) == len(output)
     return {"stage": recipe["stage"], "version": recipe["version"], "purpose": recipe["purpose"],
             "inputs": inputs, "files": files, "installed_acceptance": False}
 
@@ -86,7 +95,7 @@ def build(output):
     receipt = compose(runtime)
     second = output / "repeat-runtime"
     assert compose(second) == receipt
-    name = "SELLER_AGENTS_D2_3_v0.2.2_DEVELOPMENT.zip"
+    name = "SELLER_AGENTS_D2_4_v0.2.3_DEVELOPMENT.zip"
     archive = output / name
     repeat = output / "repeat.zip"
     for source, target in [(runtime, archive), (second, repeat)]:

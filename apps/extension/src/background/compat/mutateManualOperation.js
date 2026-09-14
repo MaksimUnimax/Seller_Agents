@@ -1,6 +1,6 @@
 async function mutateManualOperation(conversationKey, mutator) {
   return manualOperationRecords.mutate(
     normalizeConversationKey(conversationKey),
-    mutator,
+    async (current) => saPrunePayload(await mutator(saPrunePayload(current))),
   );
 }

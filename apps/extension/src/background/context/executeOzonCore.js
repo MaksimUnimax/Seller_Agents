@@ -19,6 +19,7 @@ async function executeOzonCore(
       new Error("Planned physical operation не совпадает с logical operation."),
       { code: "PLANNED_OPERATION_MISMATCH" },
     );
+  await saCheckOzonFileRef(command, executionContext);
   const fingerprint = OzonContract.commandFingerprint(command);
   const physicalFingerprint = OzonContract.commandFingerprint(physicalCommand);
   await diagnostic("OZON_REQUEST_STARTED", {
@@ -54,6 +55,7 @@ async function executeOzonCore(
             settings.performanceCredentials,
           );
     if (executionContext) await executionContext.assertCurrent();
+    await saRememberOzonFileRefs(response, executionContext);
     await diagnostic(
       "OZON_REQUEST_FINISHED",
       {

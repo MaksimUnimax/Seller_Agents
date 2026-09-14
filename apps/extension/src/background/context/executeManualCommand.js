@@ -70,7 +70,8 @@ async function executeManualCommand(
       ];
     } else {
       try {
-        entries = discoverBatchEntries(commandText);
+        entries = binding.store_context?.marketplace === "wildberries" ? SellerAgentsWBAdapter.discover(commandText) : discoverBatchEntries(commandText);
+        if (binding.store_context?.marketplace === "ozon" && /\bWB_(?:API|HELP|FILE)_V[12]\b/.test(commandText)) throw saError("MIXED_MARKETPLACE_BLOCK");
       } catch (error) {
         entries = [
           batchErrorEntry(
@@ -103,7 +104,15 @@ async function executeManualCommand(
   const operationId = `ozmanual-${crypto.randomUUID()}`;
   const now = new Date().toISOString();
   let duplicateOperation = null;
-  const operation = await mutateManualOperation(key, (current) => {
+  const operation = await mutateManualOperation(key, async (current) => {
+    let seen = [];
+    if (await saEnabled()) {
+      const guard = SellerAgentsExecutionContext.createGuard(executionContext, () => readBatchContextState(key, { commandHash: executionContext.commandHash, requestId: requestToken }));
+      await guard.assertCurrent();
+      seen = current?.execution_context?.workSessionId === executionContext.workSessionId ? (current.seen_request_ids || []) : [];
+      if (seen.includes(requestToken)) throw saError("MANUAL_REQUEST_DUPLICATE");
+      if (seen.length >= 2000) throw saError("WORK_MARKER_CAPACITY_START_REQUIRED");
+    }
     if (current?.manual_request_id === requestToken) {
       duplicateOperation = current;
       return current;
@@ -117,6 +126,8 @@ async function executeManualCommand(
       conversation_id: liveIdentity.conversation_id,
       binding_snapshot: bindingSnapshot(binding),
       execution_context: executionContext,
+      seen_request_ids: [...seen, requestToken],
+      payload_expires_at_ms: Date.now() + 3600000,
       tab_id: senderTabId,
       status: MANUAL_OPERATION_STATUSES.REQUESTING,
       operation: null,

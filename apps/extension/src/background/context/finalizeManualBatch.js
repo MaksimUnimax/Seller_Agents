@@ -6,8 +6,10 @@ async function finalizeManualBatch(
 ) {
   const key = normalizeConversationKey(conversationKey);
   await assertManualBatchContext(key, operationId);
-  const combinedReport = formatCombinedBatchReport(entries, batchSnapshot);
-  const prefixed = await applyPrefixToReport(key, combinedReport);
+  const owner = await getManualOperation(key);
+  entries = await saPrepareDelivery(entries, owner);
+  const combinedReport = owner?.execution_context && await saEnabled() ? saCombinedReport(entries, owner) : formatCombinedBatchReport(entries, batchSnapshot);
+  const prefixed = await saEnabled() ? { outgoing_text: combinedReport, report_prefix_applied: false } : await applyPrefixToReport(key, combinedReport);
   const deliveryId = `manual-delivery-${crypto.randomUUID()}`;
   await assertManualBatchContext(key, operationId);
   let claimed = false;
@@ -29,7 +31,7 @@ async function finalizeManualBatch(
     if (currentEntries.some((entry) => entry?.status !== "complete"))
       return current;
     claimed = true;
-    const next = BridgeAutorunModel.claimDelivery(current, {
+    const next = BridgeAutorunModel.claimDelivery({ ...current, batch: { ...current.batch, entries } }, {
       deliveryId,
       requestId: "",
       outgoingText: prefixed.outgoing_text,
@@ -37,12 +39,15 @@ async function finalizeManualBatch(
       reportPrefixApplied: prefixed.report_prefix_applied === true,
       mode: "batch_watch_v1",
     });
+    next.delivery.payload_expires_at_ms = current.payload_expires_at_ms;
+    next.delivery.marketplace = current.execution_context?.marketplace;
     next.delivery_id = deliveryId;
     next.outgoing_text = prefixed.outgoing_text;
     next.report_prefix_applied = prefixed.report_prefix_applied === true;
     next.request_worker_session_id = null;
     next.batch = {
       ...current.batch,
+      entries,
       phase: "collected",
       request_state: "idle",
       request_worker_session_id: null,

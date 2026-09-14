@@ -63,3 +63,5 @@
 - [Серверная точка входа](server/README.md).
 - [Квитанция переноса](migration/evidence/SERVER_IMPORT_ACCEPTANCE.md).
 - [Поручение серверному Codex](development/SERVER_CODEX_HANDOFF.md).
+
+Текущий D2.4: [общий пользовательский маршрут Ozon/WB](development/EXTENSION_APPLICATION.md).
