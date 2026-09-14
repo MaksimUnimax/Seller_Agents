@@ -1,7 +1,7 @@
 # Текущее состояние
 
 Дата проверки: 2026-09-14.
-Этап: D0 — каркас и полная спецификация.
+Этап: D0 COMPLETED — каркас и спецификация опубликованы и проверены.
 Product implementation: NOT_IMPORTED.
 Deployment: NOT_STARTED.
 Browser releases: NOT_CREATED.
@@ -24,7 +24,7 @@ Live provider tests in this stage: NOT_RUN.
 
 ## Текущий результат
 
-Документационный пакет D0 подготовлен; публикация и удалённая сверка являются завершающим шагом. Проверки структуры и ссылок относятся только к документации; окончательная квитанция — [DOCUMENTATION_ACCEPTANCE](migration/evidence/DOCUMENTATION_ACCEPTANCE.md). Удалённую публикацию подтверждает фактический коммит и его readback.
+Документационный пакет опубликован. Проверены 81/81 удалённых файлов: содержимое совпало с подготовленным набором; Documentation CI прошёл на точном опубликованном коммите. Квитанция — [DOCUMENTATION_ACCEPTANCE](migration/evidence/DOCUMENTATION_ACCEPTANCE.md). Эти проверки относятся к документации, а не к работе будущего продукта.
 
 ## Следующий этап
 
