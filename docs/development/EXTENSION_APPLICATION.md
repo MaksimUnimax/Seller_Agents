@@ -1,6 +1,6 @@
 # D2.4 — каталог и единый прикладной маршрут
 
-Поручение владельца «Делай» после D2.3 открывает настоящий каталог магазинов, общий popup и Work/delivery Ozon/WB. Исходная удалённая база: `de41f33646d5dd61bcae66624225e16538fd8f3a`, tree `8d41cd3c376885db6f2bccdfa51c529ad114ee2b`. Development-версия 0.2.3; не beta/release. Текущая [квитанция](../migration/evidence/extension-application-d2-4-2026-09-14/README.md).
+Поручение владельца «Делай» после D2.3 открывает настоящий каталог магазинов, общий popup и Work/delivery Ozon/WB. Исходная удалённая база: `de41f33646d5dd61bcae66624225e16538fd8f3a`, tree `8d41cd3c376885db6f2bccdfa51c529ad114ee2b`. Development-версия 0.2.3; не beta/release. Code `96af54f1d67c20f6eca2ade552fde20948f1e66d`: DEVELOPMENT_APPLICATION_VERIFIED, полный CI 34846554237 SUCCESS; source/ZIP/native fixture/readback PASS. Текущая [квитанция](../migration/evidence/extension-application-d2-4-2026-09-14/README.md).
 
 ## Реализация и зависимые подсистемы
 
@@ -18,6 +18,8 @@
 | Файлы | WB binary сохраняется в том же native IDB, передаётся через общий chunk/File/attach/send порт; исходное безопасное имя сохраняется | Метаданные/полные байты не подменяют факт отправки. Ссылки Ozon дополнительно закреплены за account/store/credential; чужая локальная ссылка отклоняется |
 | TTL | Срок пакета максимум час от admission (не позже часа от получения); все производные WB файлы/текст наследуют deadline; чтение просроченного закрыто | Wake/пятиминутная housekeeping-задача удаляет payload; сон браузера может задерживать физическую очистку. Повтор доставки не продлевает срок |
 | Sender/storage | Секреты не выдаются content script; privileged UI messages требуют popup sender; `storage.local` доступен TRUSTED_CONTEXTS | Аккаунт разработки явно показан в popup; это не реализация обязательной авторизации беты |
+
+Проверенные части требований SA-UX/SHOP/WORK/CMD/DATA/QUOTA и сценариев A01–A32 сопоставлены отдельно в [матрице приёмки](ACCEPTANCE_MATRIX.md). Полные installed статусы этим сопоставлением не назначаются.
 
 ## Сборка и проверки
 

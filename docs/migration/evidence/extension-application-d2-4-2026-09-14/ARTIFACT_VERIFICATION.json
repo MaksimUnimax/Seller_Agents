@@ -1,0 +1,30 @@
+{
+  "status": "MATCH",
+  "candidate": "96af54f1d67c20f6eca2ade552fde20948f1e66d",
+  "run_id": 34846554237,
+  "artifacts": [
+    {
+      "id": 10348198865,
+      "name": "extension-core-96af54f1d67c20f6eca2ade552fde20948f1e66d",
+      "outer_sha256": "8c74d462eef4c0c493f18ecdb91dd0bf7ab018707abdbca009f6186636fa2238",
+      "outer_digest_matches": true,
+      "inner_package_bytes_match": true,
+      "composition_receipt_matches": true
+    },
+    {
+      "id": 10348194008,
+      "name": "extension-application-browser-96af54f1d67c20f6eca2ade552fde20948f1e66d",
+      "outer_sha256": "666438e4b1312abee6cc564d0c53e3d8ede9d4061f55c6d9ba7fca4317a21657",
+      "outer_digest_matches": true,
+      "inner_package_bytes_match": true,
+      "source_and_extracted_native_results": "PASS"
+    }
+  ],
+  "package": {
+    "name": "SELLER_AGENTS_D2_4_v0.2.3_DEVELOPMENT.zip",
+    "bytes": 1726363,
+    "sha256": "baa3d726c212e96cb5757aece646496860e1550115502ca1def4e535f15e8276",
+    "repeat_archive_match": true,
+    "source_extracted_bytes_match": true
+  }
+}
