@@ -1,6 +1,6 @@
-# Следующий шаг: D1.E1 — перенос исходников и проверок
+# D1.E1 — выполненный перенос исходников и проверок
 
-Статус: **IMPORT CANDIDATE / REMOTE ACCEPTANCE PENDING**. [Фактическая квитанция](evidence/extension-import-2026-09-14/README.md). Исполнитель: архитектор объединения расширений.
+Статус: **IMPORT ACCEPTED / COMPLETED**. [Фактическая квитанция](evidence/extension-import-2026-09-14/README.md). Исполнитель: архитектор объединения расширений.
 Основание: [карта D1.E0](EXTENSION_IMPORT_MAP.md). Этап открыт поручением владельца после отчёта о карте. Ниже сохранены его критерии; фактические результаты фиксируются отдельно.
 
 ## Результат
@@ -12,7 +12,7 @@
 1. Повторно прочитать актуальный `main`, AGENTS, STATUS и [SOURCES](SOURCES.md). Проверить выбранные source commits и ZIP SHA-256 из [квитанции](evidence/extensions-2026-09-14/README.md). Изменение source branch не подменяет закреплённый источник автоматически; новая принятая версия требует явной замены карты.
 2. Перенести 36/40 production-файлов точно по `planned_d1_path` в [RUNTIME_FILE_MAP](evidence/extensions-2026-09-14/RUNTIME_FILE_MAP.json). Сравнить каждый Git blob/SHA-256 и полный набор файлов. Source-ветки Blood & Sand не изменять.
 3. Перенести заявленные тестовые входы по [TEST_AND_AUTHORITY_INPUTS](evidence/extensions-2026-09-14/TEST_AND_AUTHORITY_INPUTS.json). Для 20 исторических документов с `SOURCE_AUTHORITY_REFERENCE_ONLY` сохранить ссылки и хеши; не копировать старые отчёты с реальными данными аккаунтов. Проверить безопасность fixtures до включения в Git.
-4. Добавить скрипты сборки/тестового layout и постоянный extension CI. Рабочие папки: `apps/extension`, `migration/reference`, extension-части `tests/regression`, `tests/fixtures/migration`, `tooling/build`, `tooling/checks`, соответствующий workflow и документация. Изменения workspace/lockfile — только если реально нужны инструментам, отдельным обозримым diff; внешние зависимости не обновлять попутно.
+4. Добавить скрипты сборки/тестового layout и постоянный extension CI. Рабочие папки: `apps/extension`, `migration/reference`, extension-части `tests/regression`, `tests/fixtures/imported`, `tooling/build`, `tooling/checks`, соответствующий workflow и документация. Изменения workspace/lockfile — только если реально нужны инструментам, отдельным обозримым diff; внешние зависимости не обновлять попутно.
 5. Оставить Ozon globals, manifest, storage keys и patch load order неизменёнными. Не добавлять новый UI, многомагазинность или серверную авторизацию в baseline-импорт. Это следующие вертикальные изменения D2/I1.
 
 ## Проверки переноса

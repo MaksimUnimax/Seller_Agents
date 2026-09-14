@@ -1,0 +1,1119 @@
+{
+  "schema_version": 1,
+  "status": "IMPORT_ACCEPTED",
+  "stage": "D1.E1",
+  "tested_commit": "cc8bc2aec580cfb29528f207370c93cbe04a4641",
+  "tested_tree": "6b6c61af1629bc622363412f865afc636d86e677",
+  "extension_ci": {
+    "id": 34828849627,
+    "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34828849627",
+    "conclusion": "success",
+    "jobs": {
+      "ozon": 103927146567,
+      "wb_nodes": 103927146341,
+      "wb_browsers": 103927146693
+    }
+  },
+  "docs_ci": {
+    "id": 34828849631,
+    "conclusion": "success"
+  },
+  "artifacts": {
+    "ozon": {
+      "artifact_id": 10341083078,
+      "outer_archive_sha256": "d981925240a21ef1b2fb78c8a68d9b74189939a38a6cb85ea85fc22786b23850",
+      "summary": {
+        "status": "PASS",
+        "suite": "ozon",
+        "python": "3.12.14",
+        "node": "v24.19.0",
+        "os": "Linux",
+        "source_runtime_changes": 0,
+        "installed_acceptance": false,
+        "identity": {
+          "status": "PASS",
+          "imported_files": 232,
+          "runtime_files": 76,
+          "support_files": 156,
+          "source_byte_changes": 0,
+          "import_manifest_sha256": "b30ace693db946b34265b60dd28af1980f0da0fb7daa1cb2de286f8eb5327b52"
+        },
+        "ozon_package": {
+          "component": "ozon",
+          "version": "0.1.22",
+          "files": 36,
+          "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+          "archive": "SELLER_AGENTS_IMPORT_ozon_0.1.22_baseline.zip",
+          "bytes": 1517679,
+          "sha256": "88c390792cfd2074d7837050c19a4a232f6a3698729530dae5ffedef978316f2",
+          "repeat_archive_match": true,
+          "source_extracted_bytes_match": true,
+          "format": "ZIP_STORED, sorted files only, UTC-independent 1980 timestamp, Unix 0644",
+          "purpose": "MIGRATION_BASELINE_NOT_COMBINED_PRODUCT",
+          "installed_acceptance": false
+        },
+        "gate_processes": 91
+      },
+      "package_independently_downloaded_and_hashed": true,
+      "packaged_source_byte_matches": 36,
+      "runner_negative_control": {
+        "status": "PASS",
+        "observed_exit": 7,
+        "later_command_executed": false
+      },
+      "ozon-source": {
+        "version_and_permission_checks": "PASS",
+        "route_invocations": 14,
+        "source_route": true,
+        "runtime_file_count": 36
+      },
+      "ozon-package": {
+        "version_and_permission_checks": "PASS",
+        "route_invocations": 11,
+        "source_route": false,
+        "runtime_file_count": 36
+      }
+    },
+    "wildberries": {
+      "artifact_id": 10341162802,
+      "outer_archive_sha256": "79f70d250b74b9ccf97089559f995a9c45b391b55f12c3f65a4395d6fe982c91",
+      "summary": {
+        "status": "PASS",
+        "suite": "wb-nodes",
+        "python": "3.12.14",
+        "node": "v24.19.0",
+        "os": "Linux",
+        "source_runtime_changes": 0,
+        "installed_acceptance": false,
+        "identity": {
+          "status": "PASS",
+          "imported_files": 232,
+          "runtime_files": 76,
+          "support_files": 156,
+          "source_byte_changes": 0,
+          "import_manifest_sha256": "b30ace693db946b34265b60dd28af1980f0da0fb7daa1cb2de286f8eb5327b52"
+        },
+        "wildberries_package": {
+          "component": "wildberries",
+          "version": "0.3.0",
+          "files": 40,
+          "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+          "archive": "SELLER_AGENTS_IMPORT_wildberries_0.3.0_baseline.zip",
+          "bytes": 722299,
+          "sha256": "4c69d42ad55236646093921f85e54231de7854dd2ce41ad9b7f4e59cd97adafb",
+          "repeat_archive_match": true,
+          "source_extracted_bytes_match": true,
+          "format": "ZIP_STORED, sorted files only, UTC-independent 1980 timestamp, Unix 0644",
+          "purpose": "MIGRATION_BASELINE_NOT_COMBINED_PRODUCT",
+          "installed_acceptance": false
+        },
+        "gate_processes": 2
+      },
+      "package_independently_downloaded_and_hashed": true,
+      "packaged_source_byte_matches": 40,
+      "runner_negative_control": {
+        "status": "PASS",
+        "observed_exit": 7,
+        "later_command_executed": false
+      },
+      "wb-source-nodes": {
+        "summary": {
+          "status": "PASS",
+          "suites": 35,
+          "passed": 754,
+          "failed": 0,
+          "suite_failures": 0,
+          "mode": "nodes",
+          "source_manifest": "source_manifest.json",
+          "installed_acceptance": false
+        },
+        "suites": [
+          {
+            "suite": "cache_projection",
+            "exit_code": 0,
+            "passed": 10,
+            "failed": 0,
+            "scope": "Current donor candidate ranking/projection semantics with synthetic policies only. No WB cache policy and no fetch mechanism.",
+            "status": "PASS"
+          },
+          {
+            "suite": "ai_registry_differential",
+            "exit_code": 0,
+            "passed": 9,
+            "failed": 0,
+            "scope": "Current exact donor capability/identity functions versus WB functions; no browser or provider acceptance claim",
+            "status": "PASS"
+          },
+          {
+            "suite": "ai_mode_transaction",
+            "exit_code": 0,
+            "passed": 5,
+            "failed": 0,
+            "scope": "Per-tab AI apply/rollback with real worker; donor OZ_SET_TAB_AI_MODE contract plus durable pending mode; no provider traffic",
+            "status": "PASS"
+          },
+          {
+            "suite": "calendar_policy",
+            "exit_code": 0,
+            "passed": 8,
+            "failed": 0,
+            "scope": "Generic calendar validation only; no WB date-window values activated; current donor arithmetic differential",
+            "status": "PASS"
+          },
+          {
+            "suite": "entitlement_framework",
+            "exit_code": 0,
+            "passed": 12,
+            "failed": 0,
+            "scope": "Provider-neutral endpoint/parameter/account-evidence mechanism. Only synthetic rule values; no WB entitlements activated and no network probe.",
+            "status": "PASS"
+          },
+          {
+            "suite": "file_budget_worker",
+            "exit_code": 0,
+            "passed": 14,
+            "failed": 0,
+            "scope": "Actual worker, mocked WB JSON/binary responses and local artifact backend; provider-call counter counts fixtures only",
+            "status": "PASS"
+          },
+          {
+            "suite": "delivery_worker",
+            "exit_code": 0,
+            "passed": 39,
+            "failed": 0,
+            "scope": "Real production worker/dispatcher + simulated Chrome/UI proof. No live marketplace; no native MV3 claim.",
+            "status": "PASS"
+          },
+          {
+            "suite": "manual_error_content",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "exact handleCopy control flow with injected worker result/delivery; not browser/live acceptance",
+            "real_provider_calls": 0,
+            "status": "PASS"
+          },
+          {
+            "suite": "insertion_transaction",
+            "exit_code": 0,
+            "passed": 7,
+            "failed": 0,
+            "scope": "Actual worker insertion commit/storage/restart/owner transaction; simulated UI proof; no real provider requests",
+            "status": "PASS"
+          },
+          {
+            "suite": "p5_artifact_store",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Actual artifact_store module with deterministic in-memory backend; integrity/owner/chunk/cleanup; zero provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "p6_ai_file",
+            "exit_code": 0,
+            "passed": 10,
+            "failed": 0,
+            "scope": "provider-neutral capability/artifact tests; zero marketplace calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "p7_bootstrap_worker",
+            "exit_code": 0,
+            "passed": 3,
+            "failed": 0,
+            "scope": "Actual worker bootstrap code; simulated Chrome identity/storage; zero provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "p8_policy",
+            "exit_code": 0,
+            "passed": 17,
+            "failed": 0,
+            "scope": "Actual runtime_policy plus real worker quota rejection; zero live provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "parameter_guidance",
+            "exit_code": 0,
+            "passed": 5,
+            "failed": 0,
+            "scope": "Current WB contract-derived partial schema visibility and real worker local error; no provider schema invented or request executed",
+            "status": "PASS"
+          },
+          {
+            "suite": "popup_diagnostics_durability",
+            "exit_code": 0,
+            "passed": 5,
+            "failed": 0,
+            "scope": "Actual popup and worker source; messaging/storage/clock fixtures; real provider requests=0",
+            "status": "PASS"
+          },
+          {
+            "suite": "parity_error_worker",
+            "exit_code": 0,
+            "target": "source",
+            "source_sha256": "15f6ba10f2fa61968859cde99e9c27d8b62f5ad123aba5c1cd17a7e0f18bf117",
+            "passed": 22,
+            "failed": 0,
+            "real_provider_calls": 0,
+            "scope": "synthetic-real-worker-and-extracted-Ozon-discovery; not installed chat delivery",
+            "status": "PASS"
+          },
+          {
+            "suite": "popup_work_worker",
+            "exit_code": 0,
+            "passed": 21,
+            "failed": 0,
+            "real_provider_calls": 0,
+            "scope": "exact worker functions and real dispatcher with mocked Chrome/DOM acknowledgement",
+            "worker_sha256": "15f6ba10f2fa61968859cde99e9c27d8b62f5ad123aba5c1cd17a7e0f18bf117",
+            "status": "PASS"
+          },
+          {
+            "suite": "production_scope",
+            "exit_code": 0,
+            "passed": 13,
+            "failed": 0,
+            "scope": "Actual production worker dispatcher and named Port. Explicit NON_PROD project authority; synthetic state transitions; no real provider traffic.",
+            "status": "PASS"
+          },
+          {
+            "suite": "prompt_inheritance",
+            "exit_code": 0,
+            "passed": 9,
+            "failed": 0,
+            "scope": "Actual worker prompt/storage/Start dispatch; synthetic browser acknowledgements; provider calls=0",
+            "status": "PASS"
+          },
+          {
+            "suite": "query_planner",
+            "exit_code": 0,
+            "passed": 10,
+            "failed": 0,
+            "scope": "Generic planner with explicit synthetic policies; shipped WB policy remains absent/disabled; actual worker identity-plan persistence, fixture fetch only",
+            "status": "PASS"
+          },
+          {
+            "suite": "provider_serialization",
+            "exit_code": 0,
+            "checks": 197,
+            "passed": 197,
+            "failed": 0,
+            "real_wb_requests": 0,
+            "scope": "contract ingress + mocked request serialization, NOT full Phase1 or live acceptance",
+            "files": {
+              "wb_contract.js": "f7bcd6b14d6313374afee77d3ae80ed2d04569996589878c802e236a34a1c60a",
+              "wb_operations.js": "08e8a2ad1f325a4bdc0a909b37220b7abaa0be1d94d6b53192666ed5f22c2c75"
+            },
+            "runner_sha256": "ea0a21e81dad5e0f350463c79c090c252b7e3e099670f361101216d4ce0384e0",
+            "status": "PASS"
+          },
+          {
+            "suite": "guidance",
+            "exit_code": 0,
+            "passed": 205,
+            "failed": 0,
+            "scope": "Real worker and registry, synthetic Chrome/fetch; Ozon scanner differential. No live WB calls.",
+            "status": "PASS"
+          },
+          {
+            "suite": "quota_alarm",
+            "exit_code": 0,
+            "passed": 3,
+            "failed": 0,
+            "scope": "Actual worker alarm listener with durable quota, no provider requests",
+            "status": "PASS"
+          },
+          {
+            "suite": "request_accounting",
+            "exit_code": 0,
+            "passed": 3,
+            "failed": 0,
+            "scope": "Actual worker/provider dispatch with mocked fetch and an account change during durable dispatch; fixture calls only",
+            "status": "PASS"
+          },
+          {
+            "suite": "refresh_races",
+            "exit_code": 0,
+            "passed": 18,
+            "failed": 0,
+            "scope": "Actual production dispatcher and durable storage recreation; adversarial mocks only; zero marketplace calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "response_verification",
+            "exit_code": 0,
+            "passed": 8,
+            "failed": 0,
+            "scope": "Actual worker/provider pipeline with synthetic response bodies/schema/error adapters; no real WB calls; no WB schema activated",
+            "status": "PASS"
+          },
+          {
+            "suite": "runtime_durability",
+            "exit_code": 0,
+            "passed": 6,
+            "failed": 0,
+            "scope": "Actual worker; storage, DOM proof and shortened timeout clock mocked; no provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_account_lifecycle",
+            "exit_code": 0,
+            "passed": 5,
+            "failed": 0,
+            "scope": "Actual worker, mocked storage and DOM proof; zero real provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "refresh_integration",
+            "exit_code": 0,
+            "passed": 20,
+            "failed": 0,
+            "scope": "real dispatcher, mocked Chrome transport; no live APIs; full Refresh/Finish targeted",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_ownership_fences",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Actual Work Start transaction; adversarial storage/diagnostic timing; fixture UI; real provider requests=0",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_integration",
+            "exit_code": 0,
+            "passed": 12,
+            "failed": 0,
+            "scope": "real worker dispatcher, simulated Chrome/DOM proof; no live API",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_retired_autorun",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Current NON_PROD autorun authority; explicit Work Start only; prior result retained; no provider requests",
+            "status": "PASS"
+          },
+          {
+            "suite": "transport_deadline",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Pure transport/provider fixtures; no real provider network; response headers are not complete-body success",
+            "status": "PASS"
+          },
+          {
+            "suite": "work_visibility_lifecycle",
+            "exit_code": 0,
+            "passed": 8,
+            "failed": 0,
+            "scope": "Current donor Work Resume/Show/Hide/Refresh semantics; late Start acknowledgement vs Finish; fixture browser APIs; no provider traffic",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_guards",
+            "exit_code": 0,
+            "passed": 30,
+            "failed": 0,
+            "scope": "real dispatcher, simulated Chrome storage/transport/DOM proof; no installed tests",
+            "status": "PASS"
+          }
+        ]
+      },
+      "wb-package-nodes": {
+        "summary": {
+          "status": "PASS",
+          "suites": 35,
+          "passed": 754,
+          "failed": 0,
+          "suite_failures": 0,
+          "mode": "nodes",
+          "source_manifest": "source_manifest.json",
+          "installed_acceptance": false
+        },
+        "suites": [
+          {
+            "suite": "cache_projection",
+            "exit_code": 0,
+            "passed": 10,
+            "failed": 0,
+            "scope": "Current donor candidate ranking/projection semantics with synthetic policies only. No WB cache policy and no fetch mechanism.",
+            "status": "PASS"
+          },
+          {
+            "suite": "ai_mode_transaction",
+            "exit_code": 0,
+            "passed": 5,
+            "failed": 0,
+            "scope": "Per-tab AI apply/rollback with real worker; donor OZ_SET_TAB_AI_MODE contract plus durable pending mode; no provider traffic",
+            "status": "PASS"
+          },
+          {
+            "suite": "ai_registry_differential",
+            "exit_code": 0,
+            "passed": 9,
+            "failed": 0,
+            "scope": "Current exact donor capability/identity functions versus WB functions; no browser or provider acceptance claim",
+            "status": "PASS"
+          },
+          {
+            "suite": "calendar_policy",
+            "exit_code": 0,
+            "passed": 8,
+            "failed": 0,
+            "scope": "Generic calendar validation only; no WB date-window values activated; current donor arithmetic differential",
+            "status": "PASS"
+          },
+          {
+            "suite": "entitlement_framework",
+            "exit_code": 0,
+            "passed": 12,
+            "failed": 0,
+            "scope": "Provider-neutral endpoint/parameter/account-evidence mechanism. Only synthetic rule values; no WB entitlements activated and no network probe.",
+            "status": "PASS"
+          },
+          {
+            "suite": "file_budget_worker",
+            "exit_code": 0,
+            "passed": 14,
+            "failed": 0,
+            "scope": "Actual worker, mocked WB JSON/binary responses and local artifact backend; provider-call counter counts fixtures only",
+            "status": "PASS"
+          },
+          {
+            "suite": "delivery_worker",
+            "exit_code": 0,
+            "passed": 39,
+            "failed": 0,
+            "scope": "Real production worker/dispatcher + simulated Chrome/UI proof. No live marketplace; no native MV3 claim.",
+            "status": "PASS"
+          },
+          {
+            "suite": "manual_error_content",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "exact handleCopy control flow with injected worker result/delivery; not browser/live acceptance",
+            "real_provider_calls": 0,
+            "status": "PASS"
+          },
+          {
+            "suite": "p5_artifact_store",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Actual artifact_store module with deterministic in-memory backend; integrity/owner/chunk/cleanup; zero provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "insertion_transaction",
+            "exit_code": 0,
+            "passed": 7,
+            "failed": 0,
+            "scope": "Actual worker insertion commit/storage/restart/owner transaction; simulated UI proof; no real provider requests",
+            "status": "PASS"
+          },
+          {
+            "suite": "p6_ai_file",
+            "exit_code": 0,
+            "passed": 10,
+            "failed": 0,
+            "scope": "provider-neutral capability/artifact tests; zero marketplace calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "p7_bootstrap_worker",
+            "exit_code": 0,
+            "passed": 3,
+            "failed": 0,
+            "scope": "Actual worker bootstrap code; simulated Chrome identity/storage; zero provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "p8_policy",
+            "exit_code": 0,
+            "passed": 17,
+            "failed": 0,
+            "scope": "Actual runtime_policy plus real worker quota rejection; zero live provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "parameter_guidance",
+            "exit_code": 0,
+            "passed": 5,
+            "failed": 0,
+            "scope": "Current WB contract-derived partial schema visibility and real worker local error; no provider schema invented or request executed",
+            "status": "PASS"
+          },
+          {
+            "suite": "popup_diagnostics_durability",
+            "exit_code": 0,
+            "passed": 5,
+            "failed": 0,
+            "scope": "Actual popup and worker source; messaging/storage/clock fixtures; real provider requests=0",
+            "status": "PASS"
+          },
+          {
+            "suite": "parity_error_worker",
+            "exit_code": 0,
+            "target": "source",
+            "source_sha256": "15f6ba10f2fa61968859cde99e9c27d8b62f5ad123aba5c1cd17a7e0f18bf117",
+            "passed": 22,
+            "failed": 0,
+            "real_provider_calls": 0,
+            "scope": "synthetic-real-worker-and-extracted-Ozon-discovery; not installed chat delivery",
+            "status": "PASS"
+          },
+          {
+            "suite": "popup_work_worker",
+            "exit_code": 0,
+            "passed": 21,
+            "failed": 0,
+            "real_provider_calls": 0,
+            "scope": "exact worker functions and real dispatcher with mocked Chrome/DOM acknowledgement",
+            "worker_sha256": "15f6ba10f2fa61968859cde99e9c27d8b62f5ad123aba5c1cd17a7e0f18bf117",
+            "status": "PASS"
+          },
+          {
+            "suite": "production_scope",
+            "exit_code": 0,
+            "passed": 13,
+            "failed": 0,
+            "scope": "Actual production worker dispatcher and named Port. Explicit NON_PROD project authority; synthetic state transitions; no real provider traffic.",
+            "status": "PASS"
+          },
+          {
+            "suite": "prompt_inheritance",
+            "exit_code": 0,
+            "passed": 9,
+            "failed": 0,
+            "scope": "Actual worker prompt/storage/Start dispatch; synthetic browser acknowledgements; provider calls=0",
+            "status": "PASS"
+          },
+          {
+            "suite": "query_planner",
+            "exit_code": 0,
+            "passed": 10,
+            "failed": 0,
+            "scope": "Generic planner with explicit synthetic policies; shipped WB policy remains absent/disabled; actual worker identity-plan persistence, fixture fetch only",
+            "status": "PASS"
+          },
+          {
+            "suite": "provider_serialization",
+            "exit_code": 0,
+            "checks": 197,
+            "passed": 197,
+            "failed": 0,
+            "real_wb_requests": 0,
+            "scope": "contract ingress + mocked request serialization, NOT full Phase1 or live acceptance",
+            "files": {
+              "wb_contract.js": "f7bcd6b14d6313374afee77d3ae80ed2d04569996589878c802e236a34a1c60a",
+              "wb_operations.js": "08e8a2ad1f325a4bdc0a909b37220b7abaa0be1d94d6b53192666ed5f22c2c75"
+            },
+            "runner_sha256": "ea0a21e81dad5e0f350463c79c090c252b7e3e099670f361101216d4ce0384e0",
+            "status": "PASS"
+          },
+          {
+            "suite": "guidance",
+            "exit_code": 0,
+            "passed": 205,
+            "failed": 0,
+            "scope": "Real worker and registry, synthetic Chrome/fetch; Ozon scanner differential. No live WB calls.",
+            "status": "PASS"
+          },
+          {
+            "suite": "quota_alarm",
+            "exit_code": 0,
+            "passed": 3,
+            "failed": 0,
+            "scope": "Actual worker alarm listener with durable quota, no provider requests",
+            "status": "PASS"
+          },
+          {
+            "suite": "request_accounting",
+            "exit_code": 0,
+            "passed": 3,
+            "failed": 0,
+            "scope": "Actual worker/provider dispatch with mocked fetch and an account change during durable dispatch; fixture calls only",
+            "status": "PASS"
+          },
+          {
+            "suite": "refresh_races",
+            "exit_code": 0,
+            "passed": 18,
+            "failed": 0,
+            "scope": "Actual production dispatcher and durable storage recreation; adversarial mocks only; zero marketplace calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "response_verification",
+            "exit_code": 0,
+            "passed": 8,
+            "failed": 0,
+            "scope": "Actual worker/provider pipeline with synthetic response bodies/schema/error adapters; no real WB calls; no WB schema activated",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_account_lifecycle",
+            "exit_code": 0,
+            "passed": 5,
+            "failed": 0,
+            "scope": "Actual worker, mocked storage and DOM proof; zero real provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "runtime_durability",
+            "exit_code": 0,
+            "passed": 6,
+            "failed": 0,
+            "scope": "Actual worker; storage, DOM proof and shortened timeout clock mocked; no provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "refresh_integration",
+            "exit_code": 0,
+            "passed": 20,
+            "failed": 0,
+            "scope": "real dispatcher, mocked Chrome transport; no live APIs; full Refresh/Finish targeted",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_ownership_fences",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Actual Work Start transaction; adversarial storage/diagnostic timing; fixture UI; real provider requests=0",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_integration",
+            "exit_code": 0,
+            "passed": 12,
+            "failed": 0,
+            "scope": "real worker dispatcher, simulated Chrome/DOM proof; no live API",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_retired_autorun",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Current NON_PROD autorun authority; explicit Work Start only; prior result retained; no provider requests",
+            "status": "PASS"
+          },
+          {
+            "suite": "transport_deadline",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Pure transport/provider fixtures; no real provider network; response headers are not complete-body success",
+            "status": "PASS"
+          },
+          {
+            "suite": "work_visibility_lifecycle",
+            "exit_code": 0,
+            "passed": 8,
+            "failed": 0,
+            "scope": "Current donor Work Resume/Show/Hide/Refresh semantics; late Start acknowledgement vs Finish; fixture browser APIs; no provider traffic",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_guards",
+            "exit_code": 0,
+            "passed": 30,
+            "failed": 0,
+            "scope": "real dispatcher, simulated Chrome storage/transport/DOM proof; no installed tests",
+            "status": "PASS"
+          }
+        ]
+      }
+    },
+    "wildberries_browsers": {
+      "artifact_id": 10341432543,
+      "outer_archive_sha256": "ae1bb747aa2f4f60c2e6926a745bafe7aef3a0e0d66f4e0e56412e14e5326e28",
+      "summary": {
+        "status": "PASS",
+        "suite": "wb-browsers",
+        "python": "3.12.14",
+        "node": "v24.19.0",
+        "os": "Linux",
+        "source_runtime_changes": 0,
+        "installed_acceptance": false,
+        "identity": {
+          "status": "PASS",
+          "imported_files": 232,
+          "runtime_files": 76,
+          "support_files": 156,
+          "source_byte_changes": 0,
+          "import_manifest_sha256": "b30ace693db946b34265b60dd28af1980f0da0fb7daa1cb2de286f8eb5327b52"
+        },
+        "wildberries_package": {
+          "component": "wildberries",
+          "version": "0.3.0",
+          "files": 40,
+          "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+          "archive": "SELLER_AGENTS_IMPORT_wildberries_0.3.0_baseline.zip",
+          "bytes": 722299,
+          "sha256": "4c69d42ad55236646093921f85e54231de7854dd2ce41ad9b7f4e59cd97adafb",
+          "repeat_archive_match": true,
+          "source_extracted_bytes_match": true,
+          "format": "ZIP_STORED, sorted files only, UTC-independent 1980 timestamp, Unix 0644",
+          "purpose": "MIGRATION_BASELINE_NOT_COMBINED_PRODUCT",
+          "installed_acceptance": false
+        },
+        "gate_processes": 2
+      },
+      "package_independently_downloaded_and_hashed": true,
+      "packaged_source_byte_matches": 40,
+      "runner_negative_control": {
+        "status": "PASS",
+        "observed_exit": 7,
+        "later_command_executed": false
+      },
+      "environment": {
+        "playwright_python": "1.62.0",
+        "chromium_version": "Google Chrome 152.0.7977.82",
+        "executable": "/usr/bin/google-chrome",
+        "installed_extension_acceptance": false
+      },
+      "wb-source-browsers": {
+        "summary": {
+          "status": "PASS",
+          "suites": 17,
+          "passed": 321,
+          "failed": 0,
+          "suite_failures": 0,
+          "mode": "browsers",
+          "source_manifest": "source_manifest.json",
+          "installed_acceptance": false
+        },
+        "suites": [
+          {
+            "suite": "ai_mode_browser",
+            "exit_code": 0,
+            "passed": 8,
+            "failed": 0,
+            "scope": "Actual WB worker and actual content in Chromium; simulated ChatGPT/Alice; fixture Chrome transport; zero send/provider calls; not installed acceptance",
+            "status": "PASS"
+          },
+          {
+            "suite": "attachment_send_boundary_browser",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Real content/worker; file removed at asynchronous stage/commit boundary; synthetic UI/provider; no installed acceptance",
+            "status": "PASS"
+          },
+          {
+            "suite": "calibration_browser",
+            "exit_code": 0,
+            "passed": 8,
+            "failed": 0,
+            "scope": "Actual content and worker; safe calibration with synthetic ChatGPT/Alice DOM; no network",
+            "status": "PASS"
+          },
+          {
+            "suite": "composer_wait_browser",
+            "exit_code": 0,
+            "passed": 6,
+            "failed": 0,
+            "scope": "Actual content/worker/File/DataTransfer in Chromium; fixture provider only; no installed acceptance",
+            "status": "PASS"
+          },
+          {
+            "suite": "document_browser",
+            "exit_code": 0,
+            "passed": 28,
+            "failed": 0,
+            "scope": "Synthetic local files in real Chromium; no native extension, no provider traffic",
+            "status": "PASS"
+          },
+          {
+            "suite": "file_browser_integrated",
+            "exit_code": 0,
+            "passed": 9,
+            "failed": 0,
+            "selected_case": null,
+            "scope": "Actual command capture + worker + named Port + browser File/DataTransfer + UI send/proof; synthetic AI DOM, Chrome transport and provider responses; not installed MV3 acceptance",
+            "real_provider_calls": 0,
+            "status": "PASS"
+          },
+          {
+            "suite": "insertion_browser",
+            "exit_code": 0,
+            "passed": 8,
+            "failed": 0,
+            "scope": "Actual worker/content in Chromium; insertion channel and page loss; synthetic UI/provider only; no installed acceptance",
+            "status": "PASS"
+          },
+          {
+            "suite": "own_button_browser",
+            "exit_code": 0,
+            "passed": 13,
+            "failed": 0,
+            "real_provider_calls": 0,
+            "network_attempts": [],
+            "scope": "Actual production content in Chromium synthetic ChatGPT/Alice DOM, mocked runtime; not installed profile acceptance",
+            "status": "PASS"
+          },
+          {
+            "suite": "p5_artifact_browser",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Actual IndexedDB artifact store in Chromium; no provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "p6_alice_browser",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "real_provider_calls": 0,
+            "scope": "actual production AI modules in local Chromium synthetic Alice DOM",
+            "status": "PASS"
+          },
+          {
+            "suite": "p7_bootstrap_browser",
+            "exit_code": 0,
+            "passed": 1,
+            "failed": 0,
+            "scope": "Actual content script in Chromium synthetic ChatGPT new-chat DOM; no provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "p9_xlsx_browser",
+            "exit_code": 0,
+            "passed": 3,
+            "failed": 0,
+            "scope": "Provider-neutral local XLSX parser in Chromium; no WB report lifecycle/provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "package_security",
+            "exit_code": 0,
+            "passed": 176,
+            "failed": 0,
+            "scope": "Canonical source security/dependency audit and six rejection controls; no provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "popup_browser",
+            "exit_code": 0,
+            "passed": 12,
+            "failed": 0,
+            "network_attempts": [],
+            "real_provider_calls": 0,
+            "scope": "actual popup scripts in Chromium with synthetic runtime state, not integrated worker",
+            "popup_sha256": "c5f97098d31dad2b8049002eb8a1edd78ff11b32667c59bad62fffb706b6a1f7",
+            "status": "PASS"
+          },
+          {
+            "suite": "preinsert_visibility_browser",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Initial composer wait versus actual Work Hide/Show/Finish in Chromium; fixture provider; no installed acceptance",
+            "status": "PASS"
+          },
+          {
+            "suite": "refresh_browser_integrated",
+            "exit_code": 0,
+            "passed": 12,
+            "failed": 0,
+            "scope": "Real content plus real worker in Chromium; synthetic AI DOM and mocked Chrome transport/storage; no real provider; not native MV3 or installed acceptance",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_browser_integrated",
+            "exit_code": 0,
+            "passed": 21,
+            "failed": 0,
+            "scope": "Actual dispatcher + actual content in Chromium; synthetic AI DOM; simulated Chrome storage/transport; native MV3 not proved; no provider calls",
+            "status": "PASS"
+          }
+        ]
+      },
+      "wb-package-browsers": {
+        "summary": {
+          "status": "PASS",
+          "suites": 17,
+          "passed": 321,
+          "failed": 0,
+          "suite_failures": 0,
+          "mode": "browsers",
+          "source_manifest": "source_manifest.json",
+          "installed_acceptance": false
+        },
+        "suites": [
+          {
+            "suite": "ai_mode_browser",
+            "exit_code": 0,
+            "passed": 8,
+            "failed": 0,
+            "scope": "Actual WB worker and actual content in Chromium; simulated ChatGPT/Alice; fixture Chrome transport; zero send/provider calls; not installed acceptance",
+            "status": "PASS"
+          },
+          {
+            "suite": "attachment_send_boundary_browser",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Real content/worker; file removed at asynchronous stage/commit boundary; synthetic UI/provider; no installed acceptance",
+            "status": "PASS"
+          },
+          {
+            "suite": "calibration_browser",
+            "exit_code": 0,
+            "passed": 8,
+            "failed": 0,
+            "scope": "Actual content and worker; safe calibration with synthetic ChatGPT/Alice DOM; no network",
+            "status": "PASS"
+          },
+          {
+            "suite": "composer_wait_browser",
+            "exit_code": 0,
+            "passed": 6,
+            "failed": 0,
+            "scope": "Actual content/worker/File/DataTransfer in Chromium; fixture provider only; no installed acceptance",
+            "status": "PASS"
+          },
+          {
+            "suite": "document_browser",
+            "exit_code": 0,
+            "passed": 28,
+            "failed": 0,
+            "scope": "Synthetic local files in real Chromium; no native extension, no provider traffic",
+            "status": "PASS"
+          },
+          {
+            "suite": "file_browser_integrated",
+            "exit_code": 0,
+            "passed": 9,
+            "failed": 0,
+            "selected_case": null,
+            "scope": "Actual command capture + worker + named Port + browser File/DataTransfer + UI send/proof; synthetic AI DOM, Chrome transport and provider responses; not installed MV3 acceptance",
+            "real_provider_calls": 0,
+            "status": "PASS"
+          },
+          {
+            "suite": "insertion_browser",
+            "exit_code": 0,
+            "passed": 8,
+            "failed": 0,
+            "scope": "Actual worker/content in Chromium; insertion channel and page loss; synthetic UI/provider only; no installed acceptance",
+            "status": "PASS"
+          },
+          {
+            "suite": "own_button_browser",
+            "exit_code": 0,
+            "passed": 13,
+            "failed": 0,
+            "real_provider_calls": 0,
+            "network_attempts": [],
+            "scope": "Actual production content in Chromium synthetic ChatGPT/Alice DOM, mocked runtime; not installed profile acceptance",
+            "status": "PASS"
+          },
+          {
+            "suite": "p5_artifact_browser",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Actual IndexedDB artifact store in Chromium; no provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "p6_alice_browser",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "real_provider_calls": 0,
+            "scope": "actual production AI modules in local Chromium synthetic Alice DOM",
+            "status": "PASS"
+          },
+          {
+            "suite": "p7_bootstrap_browser",
+            "exit_code": 0,
+            "passed": 1,
+            "failed": 0,
+            "scope": "Actual content script in Chromium synthetic ChatGPT new-chat DOM; no provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "p9_xlsx_browser",
+            "exit_code": 0,
+            "passed": 3,
+            "failed": 0,
+            "scope": "Provider-neutral local XLSX parser in Chromium; no WB report lifecycle/provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "package_security",
+            "exit_code": 0,
+            "passed": 176,
+            "failed": 0,
+            "scope": "Canonical source security/dependency audit and six rejection controls; no provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "popup_browser",
+            "exit_code": 0,
+            "passed": 12,
+            "failed": 0,
+            "network_attempts": [],
+            "real_provider_calls": 0,
+            "scope": "actual popup scripts in Chromium with synthetic runtime state, not integrated worker",
+            "popup_sha256": "c5f97098d31dad2b8049002eb8a1edd78ff11b32667c59bad62fffb706b6a1f7",
+            "status": "PASS"
+          },
+          {
+            "suite": "preinsert_visibility_browser",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Initial composer wait versus actual Work Hide/Show/Finish in Chromium; fixture provider; no installed acceptance",
+            "status": "PASS"
+          },
+          {
+            "suite": "refresh_browser_integrated",
+            "exit_code": 0,
+            "passed": 12,
+            "failed": 0,
+            "scope": "Real content plus real worker in Chromium; synthetic AI DOM and mocked Chrome transport/storage; no real provider; not native MV3 or installed acceptance",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_browser_integrated",
+            "exit_code": 0,
+            "passed": 21,
+            "failed": 0,
+            "scope": "Actual dispatcher + actual content in Chromium; synthetic AI DOM; simulated Chrome storage/transport; native MV3 not proved; no provider calls",
+            "status": "PASS"
+          }
+        ]
+      }
+    }
+  },
+  "wb_per_route": {
+    "suites": 52,
+    "passed": 1075,
+    "failed": 0
+  },
+  "known_diagnostic": {
+    "context": "CI runner Playwright connection teardown after successful source/package fixture routes",
+    "message": "Task was destroyed but it is pending / TargetClosedError",
+    "route_failures": 0,
+    "disposition": "Recorded; not installed product acceptance; no production or original suite changes."
+  },
+  "boundaries": {
+    "live_provider_calls": 0,
+    "installed_acceptance": false,
+    "ozon_live": "PENDING_POST_INSTALL",
+    "wb_installed": "FAIL_OWNER_REPORTED",
+    "wb_migration": "REOPENED_COMPLETENESS_NOT_PROVEN",
+    "R1_R8": "BLOCKED"
+  }
+}

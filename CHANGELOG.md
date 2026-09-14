@@ -34,3 +34,11 @@
 - Перенесены 232 точных файла: Ozon 0.1.22, WB 0.3.0 reference, тесты и закреплённые inputs; runtime-байты не изменены.
 - Добавлены независимые от сервера сборка и scoped Extension CI, исходные и распакованные package routes, контроль ошибки промежуточного шага.
 - Упаковка baseline воспроизводима; новый ZIP_STORED имеет собственные hashes. Текущие результаты и ограничения сохранены в квитанции D1.E1.
+
+## 2026-09-14 — D1.E1 extension import accepted
+
+- Remote CI на cc8bc2a: Ozon source/extracted-package PASS; 52 WB suites, 1075/0 на каждом маршруте.
+- Все три CI artifacts скачаны и независимо сверены; 232 Git-файла совпали с закреплёнными sources.
+- Добавлены REMOTE_RESULTS и REMOTE_READBACK; D1 завершён, D2 ещё не начат.
+- Зафиксированы неудачная первая конфигурация CI и диагностические сообщения Playwright teardown; исходный runtime и assertions не изменены.
+- Ozon LIVE CERTIFICATION PENDING, WB INSTALLED FAIL и R1–R8 BLOCKED сохраняются. Сервер не менялся.

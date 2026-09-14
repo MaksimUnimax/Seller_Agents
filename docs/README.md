@@ -41,7 +41,7 @@
 - [DECISIONS](decisions/DECISIONS.md): принятые решения и заменённые варианты.
 - [OPEN_ITEMS](decisions/OPEN_ITEMS.md): внешние проверки и намеренно отложенные детали.
 - [SOURCES](migration/SOURCES.md), [PLAN](migration/PLAN.md).
-- [Карта расширений D1.E0](migration/EXTENSION_IMPORT_MAP.md), [следующий импорт D1.E1](migration/EXTENSION_IMPORT_NEXT_STEP.md).
+- [Карта расширений D1.E0](migration/EXTENSION_IMPORT_MAP.md), [выполненный импорт D1.E1](migration/EXTENSION_IMPORT_NEXT_STEP.md).
 - [Квитанция D1.E0](migration/evidence/extensions-2026-09-14/README.md), [расхождения исходников](migration/evidence/extensions-2026-09-14/FINDINGS.md).
 - [SOURCE_STATUS](migration/evidence/SOURCE_STATUS.md): границы доказательств.
 - [DOCUMENTATION_ACCEPTANCE](migration/evidence/DOCUMENTATION_ACCEPTANCE.md): проверка текущего этапа.

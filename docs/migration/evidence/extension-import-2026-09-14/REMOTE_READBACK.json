@@ -1,0 +1,1175 @@
+{
+  "schema_version": 1,
+  "repository": "MaksimUnimax/Seller_Agents",
+  "remote_branch": "migration/extensions-import-2026-09-14",
+  "remote_commit": "cc8bc2aec580cfb29528f207370c93cbe04a4641",
+  "remote_tree": "6b6c61af1629bc622363412f865afc636d86e677",
+  "method": "Git-fetched remote commit; git show for every imported path; independent source blob, SHA-256 and byte-count comparison",
+  "imported_files": 232,
+  "runtime_files": 76,
+  "support_files": 156,
+  "all_files": "MATCH",
+  "source_byte_changes": 0,
+  "files": [
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/attachment_delivery_port_content.js",
+      "blob": "15680a19c0fe75f709ab2c790ff250a34b7afc76",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/attachment_delivery_wake_content.js",
+      "blob": "bab7331c112ca960e9f7852a04873146d0a60efe",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/content_script.js",
+      "blob": "bc047968246261a078260dee469bf4f435d9b901",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/manifest.json",
+      "blob": "e4913f8bf5c9d2426c81c6e33f928c9c91a1804a",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/popup.css",
+      "blob": "8c6e4e6b87af0644c7b41368b4f9cd53dc107185",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/popup.html",
+      "blob": "6577667fc798f48e3a0b39bd90414eea87782adf",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/popup.js",
+      "blob": "7b725605957b507abf9b99c867d28ea53b534cb2",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/service_worker.js",
+      "blob": "284c9ac92bb613f90ed27f6abd94e5c9935a92e3",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/service_worker_entry.js",
+      "blob": "e9796eb07b85ceade5601193a1d9fcceb5a5e741",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ai_adapters.js",
+      "blob": "4c750308712fa630990e2cb20407240c5907d63a",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ai_delivery_capabilities.js",
+      "blob": "a0af80bc7bf7c4da73a9a37c80370462be36839c",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/bridge_autorun_model.js",
+      "blob": "658ba507f3eeabc81c8aedefee0a8ebe971c110d",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/composer_send.js",
+      "blob": "9c1737863b10779cb825e648b95ef1648a937f5d",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/conversation_identity.js",
+      "blob": "3fe3b99d42eeccc729d003733daac8b377df4066",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/direct_binary_file_delivery_patch.js",
+      "blob": "56f84677eb3137391a624e32f0136a611babc890",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/file_delivery_model_policy.js",
+      "blob": "3af939db489fbbcfdac2013b000f2f42d928bc15",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/file_delivery_port_worker.js",
+      "blob": "eb11b977ea1a8205671da654d00dc777c81691ae",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/file_delivery_wake_worker.js",
+      "blob": "3025f05e6be890372e2ed8845d2f2de54c7d88f4",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/live_runtime_v0122_patch.js",
+      "blob": "bf0c331bf0827e34c56c91a1057ad68fb13c0ee2",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/llm_output_report_workflow_patch.js",
+      "blob": "e10b0933c74e98970d32476e0a1aec9cd543f255",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/manual_controls.js",
+      "blob": "116e226ad6a6b0d898a4224319a6222e6a3f64e6",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/mixed_batch_discovery.js",
+      "blob": "f8504a5e363df78651de977aba5fbe0b3eb62767",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_contract.js",
+      "blob": "25ea330ae621969efeba8cbcbae87af031438289",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_credentials.js",
+      "blob": "e74d2a130771a2d3f769a01a4f9e892f89f81b13",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_entitlements.js",
+      "blob": "a219577c131fa64525d685b50d7c6a03c1fc918a",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_guidance.js",
+      "blob": "65f51531d584f9398ae0bd6db684c90f8a7df586",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_operation_registry.js",
+      "blob": "8e91dba347075d910621078692716494de77b9d7",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_provider.js",
+      "blob": "995866e4ea69dd3a9e5d4ea60a217ad804f24f57",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/performance_report_continuation_patch.js",
+      "blob": "98a1c4ad9a6acaef5c8250944e00d931b7d7445b",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/proven_writing_block_capture.js",
+      "blob": "067ebaf093ae4199b3c134baca0e30ac42a94d15",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/provider_transport_core.js",
+      "blob": "346332d6e298c461e225487ba75faf41b0d51288",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/runtime_names.js",
+      "blob": "597fe9db3af3ef5b17b45b327b85d3ce2bd6cf87",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/swagger_read_surface_patch.js",
+      "blob": "552ccac132cedf1c47b915f2ca34a2f42eae0a0d",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/web_file_attachment.js",
+      "blob": "a51663b991a6a969a0696f5d2f127378a18a00f6",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/work_session_model.js",
+      "blob": "e696ae6d7ee061723c75bd02d9f994d6951861bc",
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/xlsx_direct_binary_delivery_patch.js",
+      "blob": "aaaf88396ad176937be179d97f65d11f86d5dbad",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/content_script.js",
+      "blob": "94f541718be48253bad5157cc4a207419f38deb6",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/manifest.json",
+      "blob": "290b424c8656176e74c536bf37b15de0f29392cf",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/popup.css",
+      "blob": "559b50f2924e4dbd1455071b34f6f3eb38a01539",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/popup.html",
+      "blob": "ebe972d6281a9b95f1162fdf23a00028c1c98e91",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/popup.js",
+      "blob": "c1da480158e8ccbc651258a1e568c6c47546d2f2",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/service_worker.js",
+      "blob": "853f5c64a5a56772399f27da4450c4ee2d18aa34",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/ai_adapters.js",
+      "blob": "a2fbf5a0ab913bb8fa05e84fd471d8cb6d7a4251",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/ai_delivery_capabilities.js",
+      "blob": "b12a0580734e35d89c8eca06b4ba7e7a58a195e1",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/artifact_store.js",
+      "blob": "517fde121f79678778ee61ae78ee039a75f55c80",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/bridge_autorun_model.js",
+      "blob": "6e1854fe7a39aa5de666ca555914385650c64241",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/composer_send.js",
+      "blob": "98a021693866d9e45f68dd96d0a41a8d63e454d6",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/conversation_identity.js",
+      "blob": "ff205f996b6740584f3d5204a540e3a0481210e4",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/delivery_policy.js",
+      "blob": "4f1a292ccd6cf4be72d47e17ec559523b6b8d33e",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/delivery_transaction_worker.js",
+      "blob": "69c2619f7ba961aff7b07d0a7792e328b96c6f47",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/document_reader.js",
+      "blob": "92b338c814852da12eb60c1a0fb8fbeac22aeda6",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/entitlement_policy.js",
+      "blob": "a4ae62a3883c0a4f06b17a4906f050b1fd62334a",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/file_delivery.js",
+      "blob": "8d7108bfd700f3c0d23a79ed15b25438c6dec441",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/manual_controls.js",
+      "blob": "116e226ad6a6b0d898a4224319a6222e6a3f64e6",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/mixed_batch_discovery.js",
+      "blob": "a9ffee8820124838b9d75cf9f0c9d9048eda324f",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/parameter_guidance.js",
+      "blob": "10a00900064521d9c743ed30fe1788188fdd1c27",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/proven_writing_block_capture.js",
+      "blob": "83214079e605b91fd11494ff57eccd4cff386913",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/provider_transport_core.js",
+      "blob": "fab68b61667e888183b277eafbb17e2dda669c08",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/query_planner.js",
+      "blob": "2c0ffac082ba8227464c6e6fd0ab0ef62f3c1770",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/response_verifier.js",
+      "blob": "a5cf72fd0eed9a451abe7bd1650633c4c7204ca4",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/runtime_names.js",
+      "blob": "6b7da8e0bf80b9fe170a30025a82e24792d61d05",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/runtime_policy.js",
+      "blob": "0ea58e174ba4a2c78288f3bd41ca8b0e5bb31e02",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/runtime_worker.js",
+      "blob": "d68b6cebed66c1db6c8f8bbadae2eaf01f686e7f",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/wb_batch_runtime.js",
+      "blob": "b830f587cb668828850369d78ac2a1816bb052c9",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/wb_command_protocol.js",
+      "blob": "fb496f5e55144fc50c8ad6f00e004ff6327f58a1",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/wb_contract.js",
+      "blob": "51137d0a0517c7412ebfec005bb03e19b2fe644a",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/wb_credentials.js",
+      "blob": "0525a3a01c9f94b2b07495bf534d94a6e43f1f93",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/wb_guidance.js",
+      "blob": "92a8b36fdc48c720f55b664698ddd9bcf4670214",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/wb_guidance_registry.js",
+      "blob": "737f37a4a8ef6e3cc6794c7920a211572a4007a7",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/wb_operations.js",
+      "blob": "ea052bf9f231b52fe871d2b41901e7b555ba2ea9",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/wb_provider.js",
+      "blob": "9243554b1b95bba85485f39301017fdd2312e6c9",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/web_file_attachment.js",
+      "blob": "d112f7b4b83f31dbd285b8b1a16a926442ebeb25",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/work_recovery_worker.js",
+      "blob": "b623fba2ec5a6da07e620b1dbe7f259fb017b2c0",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/work_session_model.js",
+      "blob": "75b0cad5419fa3e61861893d2cc79dffadc0c283",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/work_start_worker.js",
+      "blob": "c6ea15de8f874e557b60c2c691338bc6bc9860bf",
+      "status": "MATCH"
+    },
+    {
+      "path": "migration/reference/wildberries-v0.3.0/runtime/shared/xlsx_reader.js",
+      "blob": "610df7c78a940eb26cf6182fae93110b484093b1",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/ozon-v0.1.22/validation/v0122-live-defects-2026-09-14/run_v0122_live_defects_gate.mjs",
+      "blob": "12122398eb222c65b4ff7fab85daf1bff4666ad6",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/ozon-v0.1.22/validation/v0122-live-defects-2026-09-14/run_v0122_dependency_closure_gate.mjs",
+      "blob": "5f6738e2cf412b3d76363badafed05281fd49712",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/ozon-v0.1.22/validation/swagger-read-surface-patch-2026-09-13/run_patch_gate.mjs",
+      "blob": "e1e748fe5f5c2b5b0f17a95af4a890c4f5caef01",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/ozon-v0.1.22/validation/swagger-read-surface-patch-2026-09-13/run_final_514_registry_gate.mjs",
+      "blob": "efd20644ff4b0e4739f866b0eaf8266594921e3b",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/ozon-v0.1.22/validation/read-effect-repair-v1/run_defect_015_date_repair_gate.mjs",
+      "blob": "ed21c2831e5b8e421bc9508990673267474ec3c5",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/ozon-v0.1.22/validation/read-effect-repair-v1/run_effect_read_repair_gate.mjs",
+      "blob": "6094498df4d14509de06e65482de3b8523e78f66",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/ozon-v0.1.22/validation/swagger-read-surface-live-repair-2026-09-13/run_shared_consumer_parity_gate.mjs",
+      "blob": "fc8c6aaab8549334f7e454aebfe31d86dad85e19",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/ozon-v0.1.22/validation/swagger-read-surface-live-repair-2026-09-13/run_dependency_closure_gate.mjs",
+      "blob": "5353ef5aa881430b46b4213db3053ed17f10585b",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/ozon-v0.1.22/validation/swagger-read-surface-live-repair-2026-09-13/run_runtime_predispatch_gate.mjs",
+      "blob": "12497f1d8317468f7413df063e38cdcd8933db68",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/ozon-v0.1.22/validation/swagger-read-surface-live-repair-2026-09-13/run_full_worker_batch_gate.mjs",
+      "blob": "6365fe2fbb5e939a27751bb6fb6e49700fc97544",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/ozon-v0.1.22/validation/read-effect-repair-v1/run_live_gate_corrective_regression.mjs",
+      "blob": "4b114ce4961ba4a67af1f267ffecbe3443f13491",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/ozon-v0.1.22/validation/read-effect-repair-v1/run_provider_taxonomy_gate.mjs",
+      "blob": "d9df78aeab6a0898c605cf26880c69bc25fd3502",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/ozon-v0.1.22/validation/read-effect-repair-v1/run_report_file_lifecycle_gate.mjs",
+      "blob": "6a7e18cba293471584407cf7a5cb4a982121722f",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/ozon-v0.1.22/validation/read-effect-repair-v1/run_report_file_session_fail_closed_gate.mjs",
+      "blob": "a3736fc87dc4ebe6c005175df4da03ca37de41b3",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/ozon-v0.1.22/validation/build_ozon_seller_step7_terminal_matrix.py",
+      "blob": "bd2ff116d76c35a3970fdf7288e010fe96d92852",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/ozon-v0.1.22/validation/indexeddb-transaction-durability-v1/run_prefix_transaction_abort_gate.mjs",
+      "blob": "3a7089709f4185d1f38734bd8c00eb0c0d67e88b",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/ozon-v0.1.22/validation/indexeddb-transaction-durability-v1/run_secondary_dependency_sweep.mjs",
+      "blob": "7dea02fe605272bb364977afb82810e53414710e",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/ozon-v0.1.22/validation/read-effect-repair-v1/run_report_xlsx_implicit_cell_ref_regression_2026-09-07.mjs",
+      "blob": "ed57d14f5d7566f496ce88e6f8837b6c6572982d",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/ozon-v0.1.22/validation/read-effect-repair-v1/run_report_xlsx_namespace_parser_regression_2026-09-07.mjs",
+      "blob": "8ddcc7e03525d1f309c7e54ff218e31430eebe28",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/ozon-v0.1.22/validation/read-effect-repair-v1/run_report_xlsx_relationship_target_regression_2026-09-06.mjs",
+      "blob": "4e8c3f7749fc444174be7321a4dc315f6421f39b",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/ozon-v0.1.22/validation/regression/run_direct_binary_provider_attachment_gate.mjs",
+      "blob": "a3279b8d5f6de243a4c60a7cbcbe3958fd19d04a",
+      "status": "MATCH"
+    },
+    {
+      "path": "docs/migration/reference/ozon-v0.1.22/ozon-v0122-final-package-2026-09-14.yml",
+      "blob": "1a11856e724ff048bc444ab8b1f6642e98cc64cb",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/ai_mode_browser.py",
+      "blob": "6d28afd758307ad4db6d58930b4a43d4ed59ead5",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/ai_mode_transaction.mjs",
+      "blob": "a46fdffc94144689dbae79df819b997ca8c28017",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/ai_registry_differential.mjs",
+      "blob": "43a8d15b3af7d3d16d635d24e2fbac0bb582184b",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/attachment_send_boundary_browser.py",
+      "blob": "72f30264e758bfa43bc29535b5e313b8bfb37dce",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/cache_projection.mjs",
+      "blob": "c1207d832fadd5901fce78309c4868e4947df12d",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/calendar_policy.mjs",
+      "blob": "a57225ef9eaae601aaf1aaa0db28aa68fdeb05b5",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/calibration_browser.py",
+      "blob": "816fd320bf3e477d46ace218d394c23edff52085",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/composer_wait_browser.py",
+      "blob": "9c49a31cf32a23057ca533a004ae2c5bf82de2b3",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/delivery_worker.mjs",
+      "blob": "cc9e0fd4be5bbbb9ae3caec32126638fb6feed43",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/document_browser.py",
+      "blob": "401aa699a8ad6aad1eb32760697efc83a83e4208",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/entitlement_framework.mjs",
+      "blob": "7e1429a9d316761861d27a8c8b9f19ed49ace14f",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/file_browser_integrated.py",
+      "blob": "a5d66bd09e9a2d0eba8a7208c0b068fc3e71fd36",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/file_budget_worker.mjs",
+      "blob": "d1f7138c89d715b5252356be9e4d547c2a2ca1c0",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/fixtures/wb024_manifest.json",
+      "blob": "4c51a74ffe7b3c0e8145c58c6724fcbe51e6d2ba",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/fixtures/wb024_provider/manifest.json",
+      "blob": "91587bf8829ac120154f65edd8d7d3afa37d938f",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/fixtures/wb024_provider/shared/wb_contract.js",
+      "blob": "671385c4caaae3e118308a23e344efc84794b5b2",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/fixtures/wb024_provider/shared/wb_credentials.js",
+      "blob": "0525a3a01c9f94b2b07495bf534d94a6e43f1f93",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/fixtures/wb024_provider/shared/wb_operations.js",
+      "blob": "ea052bf9f231b52fe871d2b41901e7b555ba2ea9",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/guidance.mjs",
+      "blob": "b05e5bb9414395fcbf50fc9fefa74cefb70fe16f",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/insertion_browser.py",
+      "blob": "b538b2e1162120d8e5e84e073a9281e8f3ce7014",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/insertion_transaction.mjs",
+      "blob": "57aad50ce57856535e55e2d643f1c114757969c2",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/manual_error_content.mjs",
+      "blob": "51f69f77065adcb69f968451b922a68c0f116d2f",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/own_button_browser.py",
+      "blob": "051f1fe487ba9d4fc329e0abd204b3be2ee19885",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/p5_artifact_browser.py",
+      "blob": "c6ad9f85e6117b5f8a5ea55f1875997279034fc5",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/p5_artifact_store.mjs",
+      "blob": "ee56d405b05803704da9f96b17115ce183fd60e4",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/p6_ai_file.mjs",
+      "blob": "68db2a701fd45908ed023c831f7525e93b344be3",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/p6_alice_browser.py",
+      "blob": "447568a7e19247315eb52101c02c8e9af9b020a7",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/p7_bootstrap_browser.py",
+      "blob": "072cc4e0de033397670bab2a61cd7780a6b6138c",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/p7_bootstrap_worker.mjs",
+      "blob": "4502a78e50931c34058edd0f80413588cb72b39a",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/p8_policy.mjs",
+      "blob": "e00467b7d4207b429be83aac556758ef412d0d43",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/p9_xlsx_browser.py",
+      "blob": "16c0104639910ade2b3bb427f82bc17b014c36b9",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/package_security.py",
+      "blob": "6c6b7f696829ddc41267be0c8f3e6e302bf9a285",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/parameter_guidance.mjs",
+      "blob": "708d3bf301af0da348c720cf9fbb4ba133a1deb3",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/parity_error_worker.mjs",
+      "blob": "1cf08971fa1ffecd5475dd05a5c4dfe70430ab21",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/popup_browser.py",
+      "blob": "31058d0761e542c6dda879a3580a7a4003225aa3",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/popup_diagnostics_durability.mjs",
+      "blob": "99f421a5838b38a65cd4df6e8400f4e674db76bf",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/popup_work_worker.mjs",
+      "blob": "40ee543e0e75631b8515bd612c6d7b7d4b86e209",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/preinsert_visibility_browser.py",
+      "blob": "6a01e41c9e4b90eeb1f322756840631a91cd34e3",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/production_scope.mjs",
+      "blob": "0b9abe130f3b289fd6ee36491c9c9c86ff32d735",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/prompt_inheritance.mjs",
+      "blob": "da29885b686db27b91a312f0e45b6eb62f864de7",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/provider_serialization.mjs",
+      "blob": "6f6f7f5d7e50908fb924a72fc270b6934917e225",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/query_planner.mjs",
+      "blob": "ed1469edb69584b5baea23a27113afcd1dd03c3e",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/quota_alarm.mjs",
+      "blob": "0428a9c048246e3490918c966cb56a31f419b9ed",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/refresh_browser_integrated.py",
+      "blob": "20dbb814c74173c21e368593d0cb7db890c444b8",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/refresh_integration.mjs",
+      "blob": "b9a410d98f2878c0beebe812a64aa42f0b6450cd",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/refresh_races.mjs",
+      "blob": "adfdd1f06e0182ce13ef25bf15b7919c3635c5b5",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/request_accounting.mjs",
+      "blob": "3d1af8091cf6a81ed4882693959debbbbb2c30cb",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/response_verification.mjs",
+      "blob": "309171fe3d29d201a9f250b6008875b993593fa7",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/run_browser_fixture.py",
+      "blob": "d4320985ff763cc5eea39586a0d88e9f16e9d593",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/run_family_gate.py",
+      "blob": "dc2b4e2c5f73113c42344d2a2d18d88c7addeaff",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/run_native_mv3_browser.py",
+      "blob": "0c6a34da88b26abffdd888d3dc175d87ded6ccd5",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/run_package_audit.py",
+      "blob": "a728c483c85c77f96fd22794d0bed96e7a7bcaca",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/run_recorded.py",
+      "blob": "174abdaad40f7d8b773d57e09e50550ddc4dbd87",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/runtime_durability.mjs",
+      "blob": "7fd5f0ca6fb213ab7dc004cae8c0b9a8be819ac1",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/start_account_lifecycle.mjs",
+      "blob": "526d15b42323e615ee10ce010da0fc57f3a40115",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/start_browser_integrated.py",
+      "blob": "7353c3ad791781d974a7c7e17d3a7cfc761746e1",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/start_guards.mjs",
+      "blob": "7f6c079978baffb9b2c93c96820dbf4dbbdf15c2",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/start_integration.mjs",
+      "blob": "ccd842d114951dfedfa971cf05f7fb2e7068db02",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/start_ownership_fences.mjs",
+      "blob": "170c26557122bb454a141ba951c74963993c2956",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/start_retired_autorun.mjs",
+      "blob": "4d017dca159d9b84c75f4f9962836ee2ce132cee",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/transport_deadline.mjs",
+      "blob": "4b66b9655889e9cd5d3788a7e44eea662998866a",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/work_visibility_lifecycle.mjs",
+      "blob": "1a4aa9d32a092ccdb791e6cd916f7ed042d12599",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/worker_harness.mjs",
+      "blob": "0079cf9d4d801939831c833a74ed5de8105891a1",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/worker_rpc.mjs",
+      "blob": "b8c2d8e0388a3e08872b8b3460cb108a867c435c",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/PRODUCTION_FILE_LIST.json",
+      "blob": "dce7f995bea3a7ccb2481cf19521cddd33964918",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/RECOVERED_SOURCE_MANIFEST.json",
+      "blob": "62404b72d3088402a20d3e6dc0f03f0a54e90a89",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/attachment_delivery_port_content.js",
+      "blob": "8725e11da2204e12304c0675a292396dd2ea71cb",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/attachment_delivery_wake_content.js",
+      "blob": "bab7331c112ca960e9f7852a04873146d0a60efe",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/content_script.js",
+      "blob": "03030e32a8b463bdde138686b62dd6eb2d06826e",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/manifest.json",
+      "blob": "b3570fa7bc01a8f93a82eae165df040f956228c5",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/popup.css",
+      "blob": "8c6e4e6b87af0644c7b41368b4f9cd53dc107185",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/popup.html",
+      "blob": "0eaf9f5f3a84702527592d09040eddc6aa1a4827",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/popup.js",
+      "blob": "fc86899bdb81781722b048cfc78c2d036941eb2c",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/service_worker.js",
+      "blob": "0b28de03701fd14a4313cccea604ab157c7780b1",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/service_worker_entry.js",
+      "blob": "af809fdd37190a2e4306d60b08c9fb769945f38e",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/ai_adapters.js",
+      "blob": "e8ab01f4bf51161f4cee1829f0f2e8957c6c9338",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/ai_delivery_capabilities.js",
+      "blob": "9fb649ba18bb5b00275ea28e9f54c976d5d0eacc",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/bridge_autorun_model.js",
+      "blob": "659ae4300e29d6af5c5fe22b8e86fefff7c4e8c8",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/composer_send.js",
+      "blob": "9c1737863b10779cb825e648b95ef1648a937f5d",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/conversation_identity.js",
+      "blob": "6175150a859ac6ab852ee320eca843c7e513a35b",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/direct_binary_file_delivery_patch.js",
+      "blob": "56f84677eb3137391a624e32f0136a611babc890",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/file_delivery_model_policy.js",
+      "blob": "8247f1b3d112b2bb18188b06e723dba6bb7efb2c",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/file_delivery_port_worker.js",
+      "blob": "587946c359b714bf78dd4877e5b4e527f0bd5b94",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/file_delivery_wake_worker.js",
+      "blob": "3025f05e6be890372e2ed8845d2f2de54c7d88f4",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/llm_output_report_workflow_patch.js",
+      "blob": "d92b4d9915629f952ceedab83837a7d1892b2235",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/manual_controls.js",
+      "blob": "116e226ad6a6b0d898a4224319a6222e6a3f64e6",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/mixed_batch_discovery.js",
+      "blob": "f8504a5e363df78651de977aba5fbe0b3eb62767",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/ozon_contract.js",
+      "blob": "d55ebea7b9f10d407ac8494484da459dc6cae22b",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/ozon_credentials.js",
+      "blob": "e74d2a130771a2d3f769a01a4f9e892f89f81b13",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/ozon_entitlements.js",
+      "blob": "a219577c131fa64525d685b50d7c6a03c1fc918a",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/ozon_guidance.js",
+      "blob": "36a9c39eca320ac303fb204640d1dd6e676a6701",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/ozon_operation_registry.js",
+      "blob": "8e91dba347075d910621078692716494de77b9d7",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/ozon_provider.js",
+      "blob": "3780310aa48020a7fc0f449f79c2dbd8857954ef",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/proven_writing_block_capture.js",
+      "blob": "067ebaf093ae4199b3c134baca0e30ac42a94d15",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/provider_transport_core.js",
+      "blob": "346332d6e298c461e225487ba75faf41b0d51288",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/runtime_names.js",
+      "blob": "ae12fa1f82bdb481d71f529c365eda290c978054",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/web_file_attachment.js",
+      "blob": "a51663b991a6a969a0696f5d2f127378a18a00f6",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/wb-donor-e01b051c/runtime/shared/work_session_model.js",
+      "blob": "e696ae6d7ee061723c75bd02d9f994d6951861bc",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/attachment_delivery_port_content.js",
+      "blob": "15680a19c0fe75f709ab2c790ff250a34b7afc76",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/attachment_delivery_wake_content.js",
+      "blob": "bab7331c112ca960e9f7852a04873146d0a60efe",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/content_script.js",
+      "blob": "11c0c3c822f1789099b3ff8d1e0ef033aaf77e0d",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/manifest.json",
+      "blob": "c629302e610fd19f0d3391d89fbbd216f2269dc8",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/popup.css",
+      "blob": "8c6e4e6b87af0644c7b41368b4f9cd53dc107185",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/popup.html",
+      "blob": "a1a45ce9adb475dd23faea3a331fe741d33a2311",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/popup.js",
+      "blob": "1f25f1877dea43388819bc8b4f394edcf0aee53f",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/service_worker.js",
+      "blob": "287accbe64efb30cae120321c2dbfa5fb2456519",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/service_worker_entry.js",
+      "blob": "19f1fc35e25e18d40532800fb36b3b468b3c08e5",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/ai_adapters.js",
+      "blob": "4c750308712fa630990e2cb20407240c5907d63a",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/ai_delivery_capabilities.js",
+      "blob": "a0af80bc7bf7c4da73a9a37c80370462be36839c",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/bridge_autorun_model.js",
+      "blob": "658ba507f3eeabc81c8aedefee0a8ebe971c110d",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/composer_send.js",
+      "blob": "9c1737863b10779cb825e648b95ef1648a937f5d",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/conversation_identity.js",
+      "blob": "3fe3b99d42eeccc729d003733daac8b377df4066",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/direct_binary_file_delivery_patch.js",
+      "blob": "56f84677eb3137391a624e32f0136a611babc890",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/file_delivery_model_policy.js",
+      "blob": "3af939db489fbbcfdac2013b000f2f42d928bc15",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/file_delivery_port_worker.js",
+      "blob": "eb11b977ea1a8205671da654d00dc777c81691ae",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/file_delivery_wake_worker.js",
+      "blob": "3025f05e6be890372e2ed8845d2f2de54c7d88f4",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/llm_output_report_workflow_patch.js",
+      "blob": "e10b0933c74e98970d32476e0a1aec9cd543f255",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/manual_controls.js",
+      "blob": "116e226ad6a6b0d898a4224319a6222e6a3f64e6",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/mixed_batch_discovery.js",
+      "blob": "f8504a5e363df78651de977aba5fbe0b3eb62767",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/ozon_contract.js",
+      "blob": "78d78eec2c1fc338f61a2ed259401dbb7d1ba59d",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/ozon_credentials.js",
+      "blob": "e74d2a130771a2d3f769a01a4f9e892f89f81b13",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/ozon_entitlements.js",
+      "blob": "a219577c131fa64525d685b50d7c6a03c1fc918a",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/ozon_guidance.js",
+      "blob": "fb2e3eaa079cdf7e0945ac12785b7b2c623ba6ca",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/ozon_operation_registry.js",
+      "blob": "8e91dba347075d910621078692716494de77b9d7",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/ozon_provider.js",
+      "blob": "995866e4ea69dd3a9e5d4ea60a217ad804f24f57",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/performance_report_continuation_patch.js",
+      "blob": "98a1c4ad9a6acaef5c8250944e00d931b7d7445b",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/proven_writing_block_capture.js",
+      "blob": "067ebaf093ae4199b3c134baca0e30ac42a94d15",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/provider_transport_core.js",
+      "blob": "346332d6e298c461e225487ba75faf41b0d51288",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/runtime_names.js",
+      "blob": "d68f2f1db197fb728dc811e5ee0f822998527373",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/swagger_read_surface_patch.js",
+      "blob": "e496987682827d16fa245f38291d92167ffc2599",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/web_file_attachment.js",
+      "blob": "a51663b991a6a969a0696f5d2f127378a18a00f6",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-red-309da471/runtime/shared/work_session_model.js",
+      "blob": "e696ae6d7ee061723c75bd02d9f994d6951861bc",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-permissions-0aa8f535/manifest.json",
+      "blob": "5ef839b901bb54e061c285e88adf40e90bd8008b",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/fixtures/imported/ozon-control-17aa0833/FINAL_CONTROL_SAFETY_MATRIX.jsonl",
+      "blob": "f979f92e28e70553a7d13904476908e8e4147951",
+      "status": "MATCH"
+    }
+  ]
+}

@@ -4,7 +4,7 @@
 
 | Часть | Выбранная ветка источника | Точный source commit | Состояние переноса |
 |---|---|---|---|
-| Ozon 0.1.22 | `repair/ozon-v0.1.22-live-defects-2026-09-14` | `3b102f68a96bee0d7d734d7e32d4fccba440e927` | D1.E1: baseline перенесён; приёмка ожидается |
+| Ozon 0.1.22 | `repair/ozon-v0.1.22-live-defects-2026-09-14` | `3b102f68a96bee0d7d734d7e32d4fccba440e927` | D1.E1: baseline перенесён и проверен; IMPORT_ACCEPTED |
 | WB 0.3.0 | `stage06-wb-terminal-2026-09-08` | `006af2724aafdf6589c16881c1ed06eb01cca281` | D1.E1: reference перенесён; INSTALLED FAIL сохраняется |
 | Сервер P8.4 Foundation | `feature/product-control-plane-p8-4-h3-2026-09-14` | `3f16bbf6387cc62303e292fcfe61449c8f243b92` | D1.S1 импортирован и проверен в Seller_Agents |
 
@@ -14,7 +14,7 @@ WB ZIP прочитан из Git: 722299 bytes, SHA-256 `218364999bba9739052c718
 
 Внешние проверочные inputs отдельно закреплены в [TEST_AND_AUTHORITY_INPUTS](evidence/extensions-2026-09-14/TEST_AND_AUTHORITY_INPUTS.json): старый WB donor `e01b051c…`, Ozon RED `309da471…`, permission manifest `0aa8f535…`, matrix 514 `17aa0833…`. Это test fixtures, не дополнительные runtime для production или указание объединять старые ветки.
 
-Этот pin использован в D1.E1; [фактические файлы и проверка](evidence/extension-import-2026-09-14/README.md). Если владелец примет новый Ozon/WB до импорта, сравнить изменения и обновить карту; не брать иной HEAD молча. Сервер после D1.S1 развивается в Seller_Agents отдельным исполнителем, его исходная branch больше не является точкой для повторного переноса.
+Этот pin использован в D1.E1; [фактические файлы и проверка](evidence/extension-import-2026-09-14/README.md). Если владелец примет новый Ozon/WB после этого импорта, сравнить изменения и обновить карту; не брать иной HEAD молча. Сервер после D1.S1 развивается в Seller_Agents отдельным исполнителем, его исходная branch больше не является точкой для повторного переноса.
 
 ## История D0 и замены серверного источника
 

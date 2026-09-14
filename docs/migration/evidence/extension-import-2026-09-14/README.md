@@ -1,6 +1,6 @@
 # D1.E1 — перенос исходников расширений
 
-Дата: 2026-09-14. Статус: **IMPORT CANDIDATE / REMOTE ACCEPTANCE PENDING**.
+Дата: 2026-09-14. Статус: **IMPORT ACCEPTED / COMPLETED**.
 Основание: новое поручение владельца «Делай» после опубликованной карты D1.E0. Исходный Seller_Agents main: `75c60ee8e4186c905f207710aa6eaa504a6f34a3`.
 
 ## Что перенесено
@@ -29,7 +29,7 @@
 
 ## Проверки и пакеты
 
-[LOCAL_RESULTS](LOCAL_RESULTS.json) содержит результаты предварительных локальных прогонов и команды. На этом candidate:
+[LOCAL_RESULTS](LOCAL_RESULTS.json) содержит результаты предварительных локальных прогонов и команды. В предварительном локальном прогоне:
 
 | Проверка | Локальный результат |
 |---|---|
@@ -38,7 +38,7 @@
 | Ozon extracted ZIP | 11 обязательных gate-вызовов PASS |
 | Ozon syntax / version / permissions | 33 JS-файла в каждом маршруте, версии и baseline permissions PASS |
 | WB Node source / ZIP | 35 suites, 754/0 в каждом прогоне |
-| WB browser source / ZIP | Локально NOT RUN; установка Chromium не завершилась, remote CI ожидается |
+| WB browser source / ZIP | Локально NOT RUN; remote CI PASS, 17 suites, 321/0 на source и ZIP |
 | Повторная упаковка | Два независимых ZIP каждого baseline совпали |
 | Source ↔ новый ZIP | 36/36 Ozon и 40/40 WB байтов MATCH |
 | Runner intermediate failure | Ожидаемый exit 7; следующий процесс не запущен — PASS |
@@ -54,6 +54,22 @@
 
 Это новые ZIP_STORED с отсортированными entries и фиксированными metadata. Их hashes не равны hashes исходных архивов. Содержимое runtime прежнее. Упаковка описана в [инструкции](../../../development/EXTENSION_BASELINE.md). ZIP хранятся в build/CI artifacts, не в Git.
 
+## Итоговая remote приёмка
+
+Проверенный commit: `cc8bc2aec580cfb29528f207370c93cbe04a4641`, tree: `6b6c61af1629bc622363412f865afc636d86e677`. После завершения приёмки этот commit опубликован fast-forward в `main` от `75c60ee8`; завершающая фиксация добавляет только документацию и evidence. Production, fixtures, инструменты и workflow остаются байт-в-байт теми же, что в проверенном commit.
+
+- [Extension CI 34828849627](https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34828849627): все три jobs SUCCESS.
+- [Docs CI 34828849631](https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34828849631): SUCCESS.
+- Ozon: 14 source + 11 package gate-вызовов и 66 syntax checks, всего 91 успешно завершённый процесс проверок.
+- WB: 35 Node suites / 754 PASS и 17 Python/browser suites / 321 PASS на каждом маршруте. Итого **52 suites, 1075/0 на source и 1075/0 на extracted ZIP**. Повтор не удваивает функциональное покрытие.
+- Remote среда: Ubuntu 24.04, Node 24.19.0, Python 3.12.14, Python Playwright 1.62.0, Google Chrome 152.0.7977.82. Другие браузеры/ОС этим прогоном не сертифицированы.
+- Скачаны все три CI artifacts, независимо пересчитаны их hashes, извлечены baseline ZIP; внутренние файлы совпали с исходными 36/40. Hash WB ZIP одинаков в Node и browser jobs.
+- [REMOTE_READBACK](REMOTE_READBACK.json): все 232 файла прочитаны из полученного с GitHub commit и сверены с source blob, SHA-256 и размером. Серверный diff отсутствует.
+
+[REMOTE_RESULTS](REMOTE_RESULTS.json) сохраняет номера jobs/artifacts, hashes, per-suite результаты и среду. CI artifacts хранятся 14 дней; закреплённые исходники, команды, результаты и package hashes остаются в Git и позволяют повторить проверку.
+
+В browser job после успешных маршрутов Playwright напечатал диагностические сообщения при завершении соединения (`Task was destroyed but it is pending`, `TargetClosedError`). Они сохранены в отчёте: оба набора завершились с 321/0 и exit 0, assertions не отключались. Причина не объявлена установленным дефектом расширения; это остаётся замечанием к завершению тестового процесса, а не доказательством живой приёмки.
+
 ## Сохраняющиеся ограничения
 
 - Ozon: PRE-HANDOFF PASS в источнике; **LIVE CERTIFICATION PENDING POST INSTALL**.
@@ -62,6 +78,6 @@
 - Полнота общего runtime, новый popup/магазины, auth нового расширения и поддержка браузеров не приняты этим переносом.
 - Живые API Ozon/WB и живые ChatGPT/Alice не тестировались; используются исходные offline fixtures. Production не развёрнут, расширения в магазины браузеров не публиковались.
 
-Приёмка D1.E1 требует успешного remote CI, всех 52 WB suites на source/ZIP и точного remote readback. Только после этого статус кандидата меняется на IMPORT ACCEPTED. Установленная приёмка продукта остаётся отдельной.
+Приёмка D1.E1 завершена: remote CI, все 52 WB suites на source/ZIP, независимая проверка CI artifacts и точный remote readback прошли. Установленная приёмка продукта остаётся отдельной.
 
 Следующий этап после переноса: D2 — извлечение одного общего ядра по сценариям, с сохранением проверок Ozon, отдельным WB adapter и исправлением [известных расхождений](../extensions-2026-09-14/FINDINGS.md). [План](../../EXTENSION_IMPORT_NEXT_STEP.md), [общий roadmap](../../../ROADMAP.md).
