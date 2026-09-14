@@ -93,8 +93,9 @@ verification attempt.
 ### `beta_admission_mutations`
 
 Idempotent admin mutation ledger keyed by HMAC request identity. It records
-safe action, actor, old/new mode/capacity/admitted/revision, and timestamp;
-the separate audit event records the bounded reason and correlation identity.
+safe action, actor, old/new mode/capacity/admitted/revision, and the resulting
+state timestamp; the separate audit event records the bounded reason and
+correlation identity.
 
 ## 3. Devices and sessions
 
