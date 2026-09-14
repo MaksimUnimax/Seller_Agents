@@ -73,12 +73,11 @@ strict v1 consumers.
   first-run failure was the P5.7 exact OpenAPI hash, which was updated to the
   regenerated artifact and passed in the focused 80-test P5.7 rerun. The P7.2
   lock-race suite passed 10/10 in the same database.
-- `pnpm test:e2e` could not start its web-server matrix because the concurrent
-  Stream B checkout occupied the required portal port 3200. No E2E test result
-  is claimed for this corrective run; the earlier candidate's focused run had
-  16/18 passing with two existing P3.6 cache expectations reporting
-  `UPDATE_REQUIRED`/`UNSUPPORTED_BROWSER`, and no account-identity assertion
-  failed.
+- `pnpm test:e2e` on the canonical 3100/3200/3300 harness could not start
+  because the concurrent Stream B checkout occupied portal port 3200. The
+  same 85-test harness passed 85/85 on isolated temporary ports against the
+  same disposable database; the temporary port edits were restored and are
+  not part of this branch.
 
 ## Deferred or out-of-scope work
 
