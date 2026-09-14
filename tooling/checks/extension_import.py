@@ -1,0 +1,200 @@
+"""Execute the preserved D1.E1 source/package routes with fail-fast exit codes."""
+from pathlib import Path
+import argparse
+import importlib.util
+import importlib.metadata
+import json
+import os
+import platform
+import re
+import shutil
+import subprocess
+import sys
+import time
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.dont_write_bytecode = True
+spec = importlib.util.spec_from_file_location("extension_baseline", ROOT / "tooling/build/extension_baseline.py")
+baseline = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(baseline)
+
+
+class GateFailure(RuntimeError):
+    pass
+
+
+class Runner:
+    def __init__(self, output):
+        self.output = Path(output)
+        self.rows = []
+        self.env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1", WB_TEST_PYTHON=sys.executable)
+        for name in ("CASE", "WB_TEST_CASE"):
+            self.env.pop(name, None)  # The full preserved suite must not be filtered.
+
+    def run(self, name, command, cwd=ROOT, timeout=600):
+        log = self.output / "logs" / (name + ".txt")
+        log.parent.mkdir(parents=True, exist_ok=True)
+        started = time.monotonic()
+        print("RUN " + name, flush=True)
+        with log.open("w", encoding="utf-8") as stream:
+            try:
+                process = subprocess.run([str(x) for x in command], cwd=cwd, env=self.env,
+                                         stdout=stream, stderr=subprocess.STDOUT, timeout=timeout)
+                code = process.returncode
+            except subprocess.TimeoutExpired:
+                code = 124
+                stream.write("\nGATE_TIMEOUT\n")
+        row = {"id": name, "command": [str(x) for x in command], "exit_code": code,
+               "seconds": round(time.monotonic() - started, 3), "log": str(log.relative_to(self.output)),
+               "status": "PASS" if code == 0 else "FAIL"}
+        self.rows.append(row)
+        baseline.write_json(self.output / "gates.json", self.rows)
+        print(row["status"] + " " + name, flush=True)
+        if code:
+            print(log.read_text(encoding="utf-8")[-8000:], flush=True)
+            raise GateFailure(f"{name}: exit {code}")
+
+
+def negative_control(output):
+    control = Runner(output / "runner-control")
+    marker = output / "must-not-execute"
+    try:
+        control.run("before", [sys.executable, "-c", "print('before')"])
+        control.run("middle-failure", [sys.executable, "-c", "raise SystemExit(7)"])
+        control.run("after", [sys.executable, "-c", "from pathlib import Path; Path('must-not-execute').touch()"], cwd=output)
+    except GateFailure:
+        assert [r["exit_code"] for r in control.rows] == [0, 7]
+        assert not marker.exists()
+    else:
+        raise AssertionError("Runner masked an intermediate failure")
+    baseline.write_json(output / "runner-negative-control.json",
+                        {"status": "PASS", "observed_exit": 7, "later_command_executed": False})
+
+
+def ozon_route(runner, work, runtime, label, source_route):
+    repo = work / label
+    ozon = baseline.prepare_ozon_layout(repo, runtime)
+    prod = ozon / "dist-step7-candidate"
+    manifest = baseline.read_json(prod / "manifest.json")
+    permission = baseline.read_json(ROOT / "tests/fixtures/imported/ozon-permissions-0aa8f535/manifest.json")
+    assert manifest["manifest_version"] == 3 and manifest["version"] == "0.1.22"
+    for key in ("permissions", "host_permissions"):
+        assert manifest[key] == permission[key], key
+    texts = {p.relative_to(prod).as_posix(): p.read_text(encoding="utf-8")
+             for p in prod.rglob("*") if p.is_file()}
+    old_lines = [(p, line) for p, text in texts.items() for line in text.splitlines() if "0.1.21" in line]
+    assert len(old_lines) == 1 and old_lines[0][0] == "service_worker_entry.js"
+    assert "Repair live v0.1.21 defects before downstream output/delivery wrappers capture contract/provider globals." in old_lines[0][1]
+    assert sum("0.1.22" in text for text in texts.values()) == 10
+    assert not any(re.search(r"0\.1\.(19|20)", text) for text in texts.values())
+    for p in sorted(prod.rglob("*.js")):
+        runner.run(label + "-syntax-" + p.stem, ["node", "--check", p])
+    v = ozon / "validation"
+    live = v / "v0122-live-defects-2026-09-14"
+    swagger = v / "swagger-read-surface-patch-2026-09-13"
+    repaired = v / "swagger-read-surface-live-repair-2026-09-13"
+    effect = v / "read-effect-repair-v1"
+    matrix = ROOT / "tests/fixtures/imported/ozon-control-17aa0833/FINAL_CONTROL_SAFETY_MATRIX.jsonl"
+    steps = [
+        ("v0122-red", [live / "run_v0122_live_defects_gate.mjs", "--baseline-red", ozon]),
+        ("v0122-green", [live / "run_v0122_live_defects_gate.mjs", "--candidate-green", ozon]),
+        ("v0122-closure", [live / "run_v0122_dependency_closure_gate.mjs", ozon]),
+    ]
+    if source_route:
+        steps.append(("swagger-red", [swagger / "run_patch_gate.mjs", "--baseline-red", ozon]))
+    steps += [
+        ("swagger-green", [swagger / "run_patch_gate.mjs", ozon]),
+        ("514", [swagger / "run_final_514_registry_gate.mjs", repo, matrix]),
+        ("date", [effect / "run_defect_015_date_repair_gate.mjs", repo]),
+        ("effect", [effect / "run_effect_read_repair_gate.mjs", repo]),
+        ("shared-consumers", [repaired / "run_shared_consumer_parity_gate.mjs", ozon]),
+        ("swagger-closure", [repaired / "run_dependency_closure_gate.mjs", ozon]),
+    ]
+    red_root = work / "red-ozon"
+    if source_route:
+        red_root.mkdir()
+        shutil.copytree(ROOT / "tests/fixtures/imported/ozon-red-309da471/runtime", red_root / "dist-step7-candidate")
+    for kind, filename in [("predispatch", "run_runtime_predispatch_gate.mjs"), ("full-worker", "run_full_worker_batch_gate.mjs")]:
+        if source_route:
+            steps.append((kind + "-red", [repaired / filename, "--expect-red", red_root]))
+        steps.append((kind + "-green", [repaired / filename, ozon]))
+    for name, args in steps:
+        runner.run(label + "-" + name, ["node", *args], cwd=repo)
+    baseline.write_json(runner.output / (label + "-authority.json"),
+                        {"version_and_permission_checks": "PASS", "route_invocations": len(steps),
+                         "source_route": source_route, "runtime_file_count": 36})
+
+
+def wb_route(runner, runtime, label, mode):
+    tests = ROOT / "tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests"
+    donor = ROOT / "tests/fixtures/imported/wb-donor-e01b051c/runtime"
+    declared = set(baseline.read_json(baseline.EVIDENCE / "TEST_AND_AUTHORITY_INPUTS.json")["wb_suites"])
+    actual = {p.stem for p in tests.iterdir() if p.suffix in (".py", ".mjs")
+              and not p.stem.startswith("run_") and p.stem not in ("worker_rpc", "worker_harness")}
+    assert actual == declared and len(actual) == 52
+    if mode == "browsers":
+        from playwright.sync_api import sync_playwright
+        with sync_playwright() as pw:
+            chromium = os.environ.get("WB_TEST_CHROMIUM") or pw.chromium.executable_path
+        assert Path(chromium).is_file(), f"Chromium missing: {chromium}"
+        runner.env["WB_TEST_CHROMIUM"] = chromium
+        baseline.write_json(runner.output / "browser-environment.json", {
+            "playwright_python": importlib.metadata.version("playwright"),
+            "chromium_version": subprocess.check_output([chromium, "--version"], text=True).strip(),
+            "executable": chromium, "installed_extension_acceptance": False,
+        })
+    result = runner.output / (label + "-" + mode)
+    runner.run(label + "-" + mode, [sys.executable, tests / "run_family_gate.py", runtime, result, mode, donor], timeout=1800)
+    summary = baseline.read_json(result / "summary.json")
+    expected = 35 if mode == "nodes" else 17
+    assert summary["status"] == "PASS" and summary["suites"] == expected and summary["failed"] == 0
+    rows = [json.loads(s) for s in (result / "suites.jsonl").read_text(encoding="utf-8").splitlines() if s]
+    wanted = {p.stem for p in tests.glob("*.mjs" if mode == "nodes" else "*.py")
+              if p.stem in declared}
+    assert len(rows) == expected and {r["suite"] for r in rows} == wanted
+    assert all(r["exit_code"] == 0 and r["status"] == "PASS" for r in rows)
+    print(label + " " + mode + ": " + json.dumps(summary), flush=True)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--suite", choices=("verify", "ozon", "wb-nodes", "wb-browsers", "all"), default="all")
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    output = args.output.resolve()
+    output.mkdir(parents=True, exist_ok=False)
+    runner = Runner(output)
+    summary = {"status": "RUNNING", "suite": args.suite, "python": platform.python_version(),
+               "node": subprocess.check_output(["node", "--version"], text=True).strip(),
+               "os": platform.system(), "source_runtime_changes": 0, "installed_acceptance": False}
+    try:
+        summary["identity"] = baseline.verify_import()
+        negative_control(output)
+        work = output / "work"
+        work.mkdir()
+        for component in ("ozon", "wildberries"):
+            if args.suite != "all" and args.suite != "verify" and not args.suite.startswith("wb" if component == "wildberries" else "ozon"):
+                continue
+            extracted, receipt = baseline.build_baseline(component, output / "packages" / component)
+            summary[component + "_package"] = receipt
+            if component == "ozon" and args.suite in ("ozon", "all"):
+                ozon_route(runner, work, ROOT / baseline.PREFIXES[component], "ozon-source", True)
+                ozon_route(runner, work, extracted, "ozon-package", False)
+            if component == "wildberries":
+                for mode in ("nodes", "browsers"):
+                    if args.suite in ("all", "wb-" + mode):
+                        wb_route(runner, ROOT / baseline.PREFIXES[component], "wb-source", mode)
+                        wb_route(runner, extracted, "wb-package", mode)
+        summary["status"] = "PASS"
+    except Exception as error:
+        summary["status"] = "FAIL"
+        summary["error"] = type(error).__name__ + ": " + str(error)
+    finally:
+        summary["gate_processes"] = len(runner.rows)
+        baseline.write_json(output / "summary.json", summary)
+    print(json.dumps(summary, ensure_ascii=False, indent=2), flush=True)
+    return 0 if summary["status"] == "PASS" else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

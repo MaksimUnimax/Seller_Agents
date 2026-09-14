@@ -1,0 +1,14 @@
+{
+  "status": "SETUP_FAILED_BEFORE_TESTS",
+  "command": "python -m playwright install chromium",
+  "python_playwright": "1.62.0",
+  "requested_chromium": "151.0.7922.34",
+  "requested_revision": "1234",
+  "exit_code": 1,
+  "observed_errors": [
+    "download timeout after 30000ms",
+    "HTTP 502 from browser download route"
+  ],
+  "test_suites_executed": 0,
+  "resolution": "Run the same preserved browser suites in GitHub Actions; local result is not a product defect or a PASS."
+}

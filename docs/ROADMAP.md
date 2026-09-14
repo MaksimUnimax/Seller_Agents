@@ -1,7 +1,7 @@
 # Общий roadmap
 
 Статусы относятся к Seller_Agents, а не автоматически к исходным проектам.
-D0 COMPLETED. D1.S1 (перенос сервера) COMPLETED. D1.E0 (карта расширений) COMPLETED; D1.E1 (импорт кода) NOT_STARTED. Общий D1 целиком не закрыт.
+D0 COMPLETED. D1.S1 (перенос сервера) COMPLETED. D1.E0 (карта расширений) COMPLETED; D1.E1 IMPORT_CANDIDATE: код перенесён, remote приёмка ожидается. Общий D1 целиком не закрыт.
 
 | Этап | Работа | Критерий завершения |
 |---|---|---|
@@ -18,7 +18,7 @@ D0 COMPLETED. D1.S1 (перенос сервера) COMPLETED. D1.E0 (карта
 
 ## D1 — границы
 
-Подэтапы расширений: [D1.E0 — источники/карта](migration/EXTENSION_IMPORT_MAP.md) завершён; [D1.E1 — неизменённый Ozon baseline, WB reference и исходные тесты](migration/EXTENSION_IMPORT_NEXT_STEP.md) подготовлен, не выполнен. D1.E0 выявил разный TTL WB и внешний matrix input Ozon; исправление поведения относится к D2, фиксация проверочного входа — к D1.E1.
+Подэтапы расширений: [D1.E0 — источники/карта](migration/EXTENSION_IMPORT_MAP.md) завершён; [D1.E1 — неизменённый Ozon baseline, WB reference и исходные тесты](migration/EXTENSION_IMPORT_NEXT_STEP.md) перенесён как кандидат, [приёмка](migration/evidence/extension-import-2026-09-14/README.md) ожидается. D1.E0 выявил разный TTL WB и внешний matrix input Ozon; исправление поведения относится к D2, фиксация проверочного входа — к D1.E1.
 
 Перенос не означает автоматическое принятие WB. Его текущий FAIL и незакрытая полнота сохраняются.
 При необходимости исходный WB помещается в изолированный reference-каталог по migration/PLAN.md, без подключения к production-графу.

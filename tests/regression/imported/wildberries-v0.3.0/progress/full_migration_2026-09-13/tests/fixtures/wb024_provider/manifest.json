@@ -1,0 +1,8 @@
+{
+  "source": "exact owner 0.2.4 ZIP SHA256 0c860ec6412bb8b8107382e0ba81b2a163c3ba2f547a491ef1a478f97218ebeb",
+  "files": {
+    "wb_operations.js": "08e8a2ad1f325a4bdc0a909b37220b7abaa0be1d94d6b53192666ed5f22c2c75",
+    "wb_contract.js": "ebe3f40239335ecbee2afe7e970af7ca0e2dc852d312a7cd9faaa03718c6de2c",
+    "wb_credentials.js": "c731be6b35914ba6b1f0dc5a156dbfd8eb24709f52456c3f6623c83d3d5584a4"
+  }
+}

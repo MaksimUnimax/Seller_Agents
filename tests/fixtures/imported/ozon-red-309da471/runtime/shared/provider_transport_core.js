@@ -1,0 +1,722 @@
+(() => {
+  "use strict";
+  function fail(code, message) {
+    const error = new Error(message);
+    error.code = code;
+    throw error;
+  }
+
+  function headerValue(headers, name) {
+    if (!headers) return null;
+    if (typeof headers.get === "function") return headers.get(name);
+    const target = String(name).toLowerCase();
+    for (const [key, value] of Object.entries(headers)) {
+      if (String(key).toLowerCase() === target) return String(value);
+    }
+    return null;
+  }
+
+  function safeResponseMeta(response) {
+    return Object.freeze({
+      content_type: headerValue(response?.headers, "content-type"),
+      content_length: headerValue(response?.headers, "content-length"),
+      request_id: headerValue(response?.headers, "x-request-id") || headerValue(response?.headers, "request-id"),
+      retry_after: headerValue(response?.headers, "retry-after")
+    });
+  }
+
+  function normalizedContentType(value) {
+    return String(value || "").split(";", 1)[0].trim().toLowerCase();
+  }
+
+  function bytesToBase64(bytes) {
+    const source = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes || []);
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    let out = "";
+    for (let index = 0; index < source.length; index += 3) {
+      const a = source[index];
+      const b = index + 1 < source.length ? source[index + 1] : 0;
+      const c = index + 2 < source.length ? source[index + 2] : 0;
+      const triple = (a << 16) | (b << 8) | c;
+      out += alphabet[(triple >> 18) & 63];
+      out += alphabet[(triple >> 12) & 63];
+      out += index + 1 < source.length ? alphabet[(triple >> 6) & 63] : "=";
+      out += index + 2 < source.length ? alphabet[triple & 63] : "=";
+    }
+    return out;
+  }
+
+  async function readResponse(response, { preserveBytes = false } = {}) {
+    if (!response) fail("EMPTY_RESPONSE", "Provider response отсутствует.");
+    const decoder = new TextDecoder();
+    if (response.body && typeof response.body.getReader === "function") {
+      const reader = response.body.getReader();
+      const chunks = [];
+      let total = 0;
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const bytes = value instanceof Uint8Array ? value : new Uint8Array(value || []);
+        total += bytes.byteLength;
+        chunks.push(bytes);
+      }
+      const merged = new Uint8Array(total);
+      let offset = 0;
+      for (const chunk of chunks) {
+        merged.set(chunk, offset);
+        offset += chunk.byteLength;
+      }
+      return preserveBytes
+        ? Object.freeze({ rawText: "", bytes: merged, byteLength: total })
+        : Object.freeze({ rawText: decoder.decode(merged), byteLength: total });
+    }
+    if (preserveBytes && typeof response.arrayBuffer === "function") {
+      const merged = new Uint8Array(await response.arrayBuffer());
+      return Object.freeze({ rawText: "", bytes: merged, byteLength: merged.byteLength });
+    }
+    const rawText = typeof response.text === "function" ? await response.text() : String(response.body ?? "");
+    const encoded = new TextEncoder().encode(rawText);
+    return preserveBytes
+      ? Object.freeze({ rawText: "", bytes: encoded, byteLength: encoded.byteLength })
+      : Object.freeze({ rawText, byteLength: encoded.byteLength });
+  }
+
+  async function executeJsonOnce({ fetchImpl, request, now = () => Date.now() }) {
+    if (typeof fetchImpl !== "function") fail("FETCH_IMPL_MISSING", "fetchImpl обязателен.");
+    if (!request || typeof request !== "object") fail("INVALID_REQUEST", "Trusted request object обязателен.");
+    if (!/^https:\/\/api-seller\.ozon\.ru\//.test(String(request.url || ""))) fail("UNTRUSTED_REQUEST_HOST", "Разрешён только fixed Ozon Seller API host.");
+    if (!/^(GET|POST)$/.test(String(request.method || ""))) fail("UNTRUSTED_REQUEST_METHOD", "Разрешены только заранее зафиксированные GET/POST read methods.");
+
+    const started = now();
+    let response;
+    try {
+      response = await fetchImpl(request.url, {
+        method: request.method,
+        headers: request.headers,
+        body: request.method === "GET" ? undefined : request.body
+      });
+    } catch (error) {
+      const wrapped = new Error(String(error?.message || error || "Provider fetch failed"));
+      wrapped.code = "PROVIDER_FETCH_FAILED";
+      wrapped.external_request_executed = true;
+      wrapped.request_attempted = true;
+      throw wrapped;
+    }
+
+    const binarySuccess = Boolean(response.ok) && String(request.response_style || "json") === "binary";
+    const received = await readResponse(response, { preserveBytes: binarySuccess });
+    let parsed = null;
+    let rawText = received.rawText || "";
+    if (binarySuccess) {
+      const expected = Array.isArray(request.response_content_types)
+        ? request.response_content_types.map(normalizedContentType).filter(Boolean)
+        : [];
+      const actual = normalizedContentType(headerValue(response?.headers, "content-type"));
+      if (expected.length && actual && !expected.includes(actual)) {
+        const error = new Error(`Ozon Seller API вернул неожиданный binary content-type: ${actual}.`);
+        error.code = "PROVIDER_BINARY_CONTENT_TYPE_MISMATCH";
+        error.http_status = Number(response.status || 0);
+        error.external_request_executed = true;
+        throw error;
+      }
+      parsed = Object.freeze({
+        content_type: actual || expected[0] || "application/octet-stream",
+        byte_length: received.byteLength,
+        encoding: "base64",
+        file_content_base64: bytesToBase64(received.bytes)
+      });
+    } else if (rawText.trim()) {
+      try { parsed = JSON.parse(rawText); }
+      catch (_) { parsed = null; }
+    }
+    return Object.freeze({
+      httpStatus: Number(response.status || 0),
+      ok: Boolean(response.ok),
+      rawText,
+      parsed,
+      byteLength: received.byteLength,
+      elapsedMs: Math.max(0, Number(now() - started) || 0),
+      responseMeta: safeResponseMeta(response)
+    });
+  }
+
+
+  function normalizeTrustedReportFileUrl(rawUrl) {
+    let parsed;
+    try { parsed = new URL(String(rawUrl || "")); }
+    catch (_) { fail("UNTRUSTED_REPORT_FILE_URL", "Report file URL от Ozon некорректен."); }
+    if (parsed.protocol !== "https:" || parsed.username || parsed.password || parsed.port) fail("UNTRUSTED_REPORT_FILE_URL", "Report file URL должен быть HTTPS без credentials/нестандартного порта.");
+    const host = String(parsed.hostname || "").toLowerCase();
+    const allowed = host === "ozone.ru" || host.endsWith(".ozone.ru") || host === "ozon.ru" || host.endsWith(".ozon.ru");
+    if (!allowed) fail("UNTRUSTED_REPORT_FILE_HOST", `Неподдерживаемый Ozon report file host: ${host || "empty"}.`);
+    return parsed.toString();
+  }
+
+
+
+  function reportBase64ToBytes(value) {
+    const input = String(value || "").replace(/\s+/g, "");
+    if (!input || input.length % 4 !== 0) fail("INVALID_BASE64", "Некорректный base64 документ.");
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    const lookup = new Map([...alphabet].map((ch, index) => [ch, index]));
+    const out = [];
+    for (let i = 0; i < input.length; i += 4) {
+      const a = lookup.get(input[i]), b = lookup.get(input[i + 1]);
+      const c = input[i + 2] === "=" ? 0 : lookup.get(input[i + 2]);
+      const d = input[i + 3] === "=" ? 0 : lookup.get(input[i + 3]);
+      if ([a,b,c,d].some((v) => v === undefined)) fail("INVALID_BASE64", "Некорректный base64 документ.");
+      const triple = (a << 18) | (b << 12) | (c << 6) | d;
+      out.push((triple >> 16) & 255);
+      if (input[i + 2] !== "=") out.push((triple >> 8) & 255);
+      if (input[i + 3] !== "=") out.push(triple & 255);
+    }
+    return new Uint8Array(out);
+  }
+
+  function reportLatin1(bytes) {
+    const source = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes || []);
+    let out = "";
+    const chunk = 0x4000;
+    for (let i = 0; i < source.length; i += chunk) out += String.fromCharCode(...source.subarray(i, Math.min(source.length, i + chunk)));
+    return out;
+  }
+
+  function pdfDecodeLiteral(raw) {
+    let out = "";
+    const text = String(raw || "");
+    for (let i = 0; i < text.length; i += 1) {
+      if (text[i] !== "\\") { out += text[i]; continue; }
+      i += 1;
+      if (i >= text.length) break;
+      const ch = text[i];
+      const mapped = { n:"\n", r:"\r", t:"\t", b:"\b", f:"\f", "(":"(", ")":")", "\\":"\\" }[ch];
+      if (mapped !== undefined) { out += mapped; continue; }
+      if (/[0-7]/.test(ch)) {
+        let oct = ch;
+        for (let j = 0; j < 2 && /[0-7]/.test(text[i + 1] || ""); j += 1) { i += 1; oct += text[i]; }
+        out += String.fromCharCode(parseInt(oct, 8));
+        continue;
+      }
+      if (ch === "\r" && text[i + 1] === "\n") i += 1;
+      else if (ch !== "\r" && ch !== "\n") out += ch;
+    }
+    return out;
+  }
+
+  function pdfDecodeHex(raw) {
+    let hex = String(raw || "").replace(/\s+/g, "");
+    if (hex.length % 2) hex += "0";
+    const bytes = new Uint8Array(hex.length / 2);
+    for (let i = 0; i < bytes.length; i += 1) bytes[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+    if (bytes.length >= 2 && bytes[0] === 0xfe && bytes[1] === 0xff) {
+      let out = "";
+      for (let i = 2; i + 1 < bytes.length; i += 2) out += String.fromCharCode((bytes[i] << 8) | bytes[i + 1]);
+      return out;
+    }
+    return reportLatin1(bytes);
+  }
+
+  function pdfExtractTextOperators(content) {
+    const text = String(content || "");
+    const pieces = [];
+    for (const match of text.matchAll(/\(((?:\\.|[^\\)])*)\)\s*Tj\b/g)) pieces.push(pdfDecodeLiteral(match[1]));
+    for (const match of text.matchAll(/<([0-9A-Fa-f\s]+)>\s*Tj\b/g)) pieces.push(pdfDecodeHex(match[1]));
+    for (const arrayMatch of text.matchAll(/\[([\s\S]*?)\]\s*TJ\b/g)) {
+      let joined = "";
+      for (const literal of arrayMatch[1].matchAll(/\(((?:\\.|[^\\)])*)\)/g)) joined += pdfDecodeLiteral(literal[1]);
+      for (const hex of arrayMatch[1].matchAll(/<([0-9A-Fa-f\s]+)>/g)) joined += pdfDecodeHex(hex[1]);
+      if (joined) pieces.push(joined);
+    }
+    return pieces.map((value) => String(value).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]+/g, " ").trim()).filter(Boolean);
+  }
+
+  async function parsePdfDocumentBytes(bytes, { maxTextChars = 30000 } = {}) {
+    const source = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes || []);
+    const latin = reportLatin1(source);
+    const pieces = pdfExtractTextOperators(latin);
+    const streamPattern = /<<([\s\S]{0,4096}?)>>\s*stream\r?\n/g;
+    let match;
+    while ((match = streamPattern.exec(latin)) !== null) {
+      const dataStart = streamPattern.lastIndex;
+      const end = latin.indexOf("endstream", dataStart);
+      if (end < 0) break;
+      let dataEnd = end;
+      while (dataEnd > dataStart && (latin[dataEnd - 1] === "\r" || latin[dataEnd - 1] === "\n")) dataEnd -= 1;
+      if (/\/FlateDecode\b/.test(match[1])) {
+        try {
+          if (typeof DecompressionStream !== "function") fail("PDF_DEFLATE_UNAVAILABLE", "Runtime не поддерживает PDF FlateDecode.");
+          const compressed = source.slice(dataStart, dataEnd);
+          const stream = new Blob([compressed]).stream().pipeThrough(new DecompressionStream("deflate"));
+          const inflated = new Uint8Array(await new Response(stream).arrayBuffer());
+          pieces.push(...pdfExtractTextOperators(reportLatin1(inflated)));
+        } catch (_) {
+          // Some PDFs use predictors/font encodings; fail-soft on text extraction while preserving document metadata.
+        }
+      } else pieces.push(...pdfExtractTextOperators(latin.slice(dataStart, dataEnd)));
+      streamPattern.lastIndex = end + 9;
+    }
+    const unique = [];
+    const seen = new Set();
+    for (const piece of pieces) {
+      const normalized = piece.replace(/\s+/g, " ").trim();
+      if (normalized && !seen.has(normalized)) { seen.add(normalized); unique.push(normalized); }
+    }
+    const joined = unique.join("\n");
+    return Object.freeze({
+      format: "pdf",
+      text_extract_available: Boolean(joined),
+      text_extract: joined.slice(0, maxTextChars),
+      text_truncated: joined.length > maxTextChars
+    });
+  }
+
+  function reportXmlDecode(value) {
+    return String(value || "")
+      .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
+      .replace(/&#([0-9]+);/g, (_, dec) => String.fromCodePoint(parseInt(dec, 10)))
+      .replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
+  }
+
+  function reportXmlAttr(tag, name) {
+    const escaped = String(name).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const match = String(tag || "").match(new RegExp(`(?:\\s|^)${escaped}\\s*=\\s*(?:"([^"]*)"|'([^']*)')`, "i"));
+    return match ? reportXmlDecode(match[1] ?? match[2] ?? "") : null;
+  }
+
+
+  function reportXmlQualifiedElementPattern(localName, flags = "gi") {
+    const escaped = String(localName).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const qname = `(?:[A-Za-z_][A-Za-z0-9_.-]*:)?${escaped}`;
+    return new RegExp(`<(${qname})\\b([^>]*?)(?:\\/\\s*>|>([\\s\\S]*?)<\\/\\1\\s*>)`, flags);
+  }
+
+  function reportXmlAttrLocalName(tag, localName) {
+    const escaped = String(localName).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const match = String(tag || "").match(new RegExp(`(?:\\s|^)(?:[A-Za-z_][A-Za-z0-9_.-]*:)?${escaped}\\s*=\\s*(?:"([^"]*)"|'([^']*)')`, "i"));
+    return match ? reportXmlDecode(match[1] ?? match[2] ?? "") : null;
+  }
+
+  function reportColumnIndex(cellRef) {
+    const letters = String(cellRef || "").match(/^[A-Za-z]+/);
+    if (!letters) return null;
+    let value = 0;
+    for (const ch of letters[0].toUpperCase()) value = value * 26 + (ch.charCodeAt(0) - 64);
+    return value - 1;
+  }
+
+  function reportHeaders(values) {
+    const seen = new Map();
+    return values.map((value, index) => {
+      let base = String(value ?? "").trim();
+      if (!base) base = `column_${index + 1}`;
+      const count = (seen.get(base) || 0) + 1;
+      seen.set(base, count);
+      return count === 1 ? base : `${base}_${count}`;
+    });
+  }
+
+  function parseDelimitedReportText(rawText, { offset = 0, limit = 200, name = "Report" } = {}) {
+    const text = String(rawText || "").replace(/^\uFEFF/, "");
+    const firstLine = text.split(/\r?\n/, 1)[0] || "";
+    const candidates = [";", ",", "\t"];
+    let delimiter = ";";
+    let best = -1;
+    for (const candidate of candidates) {
+      let count = 0, quoted = false;
+      for (let i = 0; i < firstLine.length; i += 1) {
+        const ch = firstLine[i];
+        if (ch === '"') {
+          if (quoted && firstLine[i + 1] === '"') i += 1;
+          else quoted = !quoted;
+        } else if (!quoted && ch === candidate) count += 1;
+      }
+      if (count > best) { best = count; delimiter = candidate; }
+    }
+    const parsedRows = [];
+    let row = [], field = "", quoted = false;
+    for (let i = 0; i < text.length; i += 1) {
+      const ch = text[i];
+      if (quoted) {
+        if (ch === '"' && text[i + 1] === '"') { field += '"'; i += 1; }
+        else if (ch === '"') quoted = false;
+        else field += ch;
+      } else if (ch === '"') quoted = true;
+      else if (ch === delimiter) { row.push(field); field = ""; }
+      else if (ch === "\n") { row.push(field.replace(/\r$/, "")); parsedRows.push(row); row = []; field = ""; }
+      else field += ch;
+    }
+    if (field.length || row.length) { row.push(field.replace(/\r$/, "")); parsedRows.push(row); }
+    while (parsedRows.length && parsedRows[parsedRows.length - 1].every((v) => String(v).trim() === "")) parsedRows.pop();
+    const headerIndex = parsedRows.findIndex((r) => r.some((v) => String(v).trim() !== ""));
+    if (headerIndex < 0) return Object.freeze({ name, columns: [], row_count: 0, offset, limit, rows: [], has_more: false, next_offset: null });
+    const columns = reportHeaders(parsedRows[headerIndex]);
+    const data = parsedRows.slice(headerIndex + 1).filter((r) => r.some((v) => String(v).trim() !== ""));
+    const boundedOffset = Math.min(offset, data.length);
+    const selected = data.slice(boundedOffset, boundedOffset + limit).map((r) => {
+      const out = Array(columns.length).fill("");
+      for (let i = 0; i < Math.min(columns.length, r.length); i += 1) out[i] = r[i];
+      return out;
+    });
+    const next = boundedOffset + selected.length;
+    return Object.freeze({ name, columns, row_count: data.length, offset: boundedOffset, limit, rows: selected, has_more: next < data.length, next_offset: next < data.length ? next : null });
+  }
+
+  function zipView(bytes) { return new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength); }
+  function zipU16(view, offset) { return view.getUint16(offset, true); }
+  function zipU32(view, offset) { return view.getUint32(offset, true); }
+
+  function createReportZipReader(bytes) {
+    const source = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes || []);
+    const view = zipView(source);
+    let eocd = -1;
+    const minimum = Math.max(0, source.length - 65557);
+    for (let pos = source.length - 22; pos >= minimum; pos -= 1) {
+      if (zipU32(view, pos) === 0x06054b50) { eocd = pos; break; }
+    }
+    if (eocd < 0) fail("REPORT_ZIP_INVALID", "ZIP/XLSX: EOCD не найден.");
+    const total = zipU16(view, eocd + 10);
+    const centralOffset = zipU32(view, eocd + 16);
+    if (total === 0xffff || centralOffset === 0xffffffff) fail("REPORT_ZIP64_UNSUPPORTED", "ZIP64 отчёты пока не поддерживаются.");
+    const entries = new Map();
+    let pos = centralOffset;
+    const decoder = new TextDecoder("utf-8");
+    for (let index = 0; index < total; index += 1) {
+      if (pos + 46 > source.length || zipU32(view, pos) !== 0x02014b50) fail("REPORT_ZIP_INVALID", "ZIP central directory повреждён.");
+      const flags = zipU16(view, pos + 8);
+      const method = zipU16(view, pos + 10);
+      const compressedSize = zipU32(view, pos + 20);
+      const uncompressedSize = zipU32(view, pos + 24);
+      const nameLength = zipU16(view, pos + 28);
+      const extraLength = zipU16(view, pos + 30);
+      const commentLength = zipU16(view, pos + 32);
+      const localOffset = zipU32(view, pos + 42);
+      if ((flags & 1) !== 0) fail("REPORT_ZIP_ENCRYPTED_UNSUPPORTED", "Зашифрованный ZIP не поддерживается.");
+      if ([compressedSize, uncompressedSize, localOffset].some((v) => v === 0xffffffff)) fail("REPORT_ZIP64_UNSUPPORTED", "ZIP64 отчёты пока не поддерживаются.");
+      const nameStart = pos + 46;
+      const name = decoder.decode(source.slice(nameStart, nameStart + nameLength));
+      entries.set(name.replace(/\\/g, "/"), Object.freeze({ method, compressedSize, uncompressedSize, localOffset }));
+      pos = nameStart + nameLength + extraLength + commentLength;
+    }
+    async function get(name) {
+      const meta = entries.get(String(name || "").replace(/^\//, ""));
+      if (!meta) return null;
+      const local = meta.localOffset;
+      if (local + 30 > source.length || zipU32(view, local) !== 0x04034b50) fail("REPORT_ZIP_INVALID", `ZIP local header повреждён: ${name}`);
+      const nameLength = zipU16(view, local + 26);
+      const extraLength = zipU16(view, local + 28);
+      const dataStart = local + 30 + nameLength + extraLength;
+      const compressed = source.slice(dataStart, dataStart + meta.compressedSize);
+      if (meta.method === 0) return compressed;
+      if (meta.method !== 8) fail("REPORT_ZIP_METHOD_UNSUPPORTED", `ZIP compression method ${meta.method} не поддерживается.`);
+      if (typeof DecompressionStream !== "function") fail("REPORT_DEFLATE_UNAVAILABLE", "Runtime не поддерживает DecompressionStream(deflate-raw).");
+      const stream = new Blob([compressed]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+      const output = new Uint8Array(await new Response(stream).arrayBuffer());
+      if (meta.uncompressedSize && output.byteLength !== meta.uncompressedSize) fail("REPORT_ZIP_SIZE_MISMATCH", `ZIP entry size mismatch: ${name}`);
+      return output;
+    }
+    return Object.freeze({ names: Object.freeze([...entries.keys()]), get });
+  }
+
+  function reportJoinZipPath(base, target) {
+    const parts = String(base || "").split("/").filter(Boolean);
+    for (const piece of String(target || "").replace(/^\//, "").split("/")) {
+      if (!piece || piece === ".") continue;
+      if (piece === "..") parts.pop(); else parts.push(piece);
+    }
+    return parts.join("/");
+  }
+
+  function reportResolveWorkbookRelationshipTarget(rawTarget, rawTargetMode = "") {
+    let target = String(rawTarget || "").trim();
+    const targetMode = String(rawTargetMode || "").trim().toLowerCase();
+    if (!target) fail("REPORT_XLSX_INVALID", "XLSX relationship target пуст.");
+    if (targetMode === "external") fail("REPORT_XLSX_INVALID", "XLSX external relationship target запрещён.");
+    if (target.includes("\\")) fail("REPORT_XLSX_INVALID", "XLSX relationship target содержит недопустимый separator.");
+    if (/^[A-Za-z][A-Za-z0-9+.-]*:/.test(target) || target.startsWith("//")) fail("REPORT_XLSX_INVALID", "XLSX external relationship target запрещён.");
+    while (target.startsWith("./")) target = target.slice(2);
+    const packageRooted = target.startsWith("/") || target.startsWith("xl/");
+    target = target.replace(/^\/+/, "");
+    const parts = packageRooted ? [] : ["xl"];
+    for (const piece of target.split("/")) {
+      if (!piece || piece === ".") continue;
+      if (piece === "..") {
+        if (!parts.length) fail("REPORT_XLSX_INVALID", "XLSX relationship target выходит за package root.");
+        parts.pop();
+      } else parts.push(piece);
+    }
+    const resolved = parts.join("/");
+    if (!resolved) fail("REPORT_XLSX_INVALID", "XLSX relationship target пуст после нормализации.");
+    return resolved;
+  }
+
+  function reportParseSharedStrings(xml) {
+    const values = [];
+    for (const match of String(xml || "").matchAll(reportXmlQualifiedElementPattern("si", "gi"))) {
+      let value = "";
+      const body = match[3] || "";
+      for (const text of body.matchAll(reportXmlQualifiedElementPattern("t", "gi"))) value += reportXmlDecode(text[3] || "");
+      values.push(value);
+    }
+    return values;
+  }
+
+  function reportParseSheet(xml, sharedStrings, name, { offset = 0, limit = 200 } = {}) {
+    const physicalRows = [];
+    let nextImplicitRow = 1;
+    for (const rowMatch of String(xml || "").matchAll(reportXmlQualifiedElementPattern("row", "gi"))) {
+      const rawRowRef = reportXmlAttr(rowMatch[2], "r");
+      let rowNumber = nextImplicitRow;
+      if (rawRowRef !== null && String(rawRowRef).trim() !== "") {
+        const normalizedRowRef = String(rawRowRef).trim();
+        if (!/^[1-9][0-9]*$/.test(normalizedRowRef)) fail("REPORT_XLSX_INVALID", `XLSX row reference некорректен: ${normalizedRowRef.slice(0, 40)}`);
+        rowNumber = Number(normalizedRowRef);
+        if (!Number.isSafeInteger(rowNumber) || rowNumber < 1 || rowNumber > 1048576) fail("REPORT_XLSX_INVALID", `XLSX row reference вне допустимого диапазона: ${normalizedRowRef.slice(0, 40)}`);
+      }
+      nextImplicitRow = Math.max(nextImplicitRow, rowNumber + 1);
+
+      const values = [];
+      const rowBody = rowMatch[3] || "";
+      let nextImplicitColumn = 0;
+      for (const cellMatch of rowBody.matchAll(reportXmlQualifiedElementPattern("c", "gi"))) {
+        const attrs = cellMatch[2], body = cellMatch[3] || "";
+        const rawCellRef = reportXmlAttr(attrs, "r");
+        let index = nextImplicitColumn;
+        if (rawCellRef !== null && String(rawCellRef).trim() !== "") {
+          const normalizedCellRef = String(rawCellRef).trim();
+          const cellRefMatch = normalizedCellRef.match(/^([A-Za-z]{1,3})([1-9][0-9]*)$/);
+          if (!cellRefMatch) fail("REPORT_XLSX_INVALID", `XLSX cell reference некорректен: ${normalizedCellRef.slice(0, 40)}`);
+          index = reportColumnIndex(normalizedCellRef);
+          const cellRow = Number(cellRefMatch[2]);
+          if (index === null || index < 0 || index >= 16384 || !Number.isSafeInteger(cellRow) || cellRow < 1 || cellRow > 1048576) {
+            fail("REPORT_XLSX_INVALID", `XLSX cell reference вне допустимого диапазона: ${normalizedCellRef.slice(0, 40)}`);
+          }
+        }
+        nextImplicitColumn = Math.max(nextImplicitColumn, index + 1);
+
+        const type = reportXmlAttr(attrs, "t") || "n";
+        let raw = "";
+        if (type === "inlineStr") {
+          for (const text of body.matchAll(reportXmlQualifiedElementPattern("t", "gi"))) raw += reportXmlDecode(text[3] || "");
+        } else {
+          const valueMatch = body.match(reportXmlQualifiedElementPattern("v", "i"));
+          raw = valueMatch ? reportXmlDecode(valueMatch[3] || "") : "";
+        }
+        let value = raw;
+        if (type === "s") value = sharedStrings[Number(raw)] ?? raw;
+        else if (type === "b") value = raw === "1";
+        else if ((type === "n" || !type) && raw !== "" && Number.isFinite(Number(raw))) value = Number(raw);
+        values[index] = value;
+      }
+      while (values.length && values[values.length - 1] === undefined) values.pop();
+      for (let i = 0; i < values.length; i += 1) if (values[i] === undefined) values[i] = "";
+      if (values.some((value) => String(value ?? "").trim() !== "")) physicalRows.push({ row_number: rowNumber, values });
+    }
+    if (!physicalRows.length) return Object.freeze({ name, columns: [], row_count: 0, offset, limit, rows: [], row_numbers: [], has_more: false, next_offset: null });
+    const columns = reportHeaders(physicalRows[0].values);
+    const data = physicalRows.slice(1);
+    const boundedOffset = Math.min(offset, data.length);
+    const page = data.slice(boundedOffset, boundedOffset + limit);
+    const rows = page.map(({ values }) => {
+      const out = Array(columns.length).fill("");
+      for (let i = 0; i < Math.min(columns.length, values.length); i += 1) out[i] = values[i];
+      return out;
+    });
+    const next = boundedOffset + rows.length;
+    return Object.freeze({ name, columns, row_count: data.length, offset: boundedOffset, limit, rows, row_numbers: page.map((r) => r.row_number), has_more: next < data.length, next_offset: next < data.length ? next : null });
+  }
+
+  async function parseXlsxReportBytes(bytes, options = {}) {
+    const reader = createReportZipReader(bytes);
+    const workbookBytes = await reader.get("xl/workbook.xml");
+    const relsBytes = await reader.get("xl/_rels/workbook.xml.rels");
+    if (!workbookBytes || !relsBytes) fail("REPORT_XLSX_INVALID", "XLSX workbook metadata отсутствует.");
+    const decoder = new TextDecoder("utf-8");
+    const workbookXml = decoder.decode(workbookBytes);
+    const relsXml = decoder.decode(relsBytes);
+    const relationships = new Map();
+    for (const match of relsXml.matchAll(reportXmlQualifiedElementPattern("Relationship", "gi"))) {
+      const attrs = match[2];
+      const id = reportXmlAttr(attrs, "Id"), target = reportXmlAttr(attrs, "Target"), targetMode = reportXmlAttr(attrs, "TargetMode");
+      if (id && target) relationships.set(id, reportResolveWorkbookRelationshipTarget(target, targetMode));
+    }
+    const sheets = [];
+    for (const match of workbookXml.matchAll(reportXmlQualifiedElementPattern("sheet", "gi"))) {
+      const attrs = match[2];
+      const name = reportXmlAttr(attrs, "name") || `Sheet${sheets.length + 1}`;
+      const rid = reportXmlAttrLocalName(attrs, "id");
+      const target = rid ? relationships.get(rid) : null;
+      if (target) sheets.push({ name, target });
+    }
+    if (!sheets.length) fail("REPORT_XLSX_INVALID", "XLSX worksheets отсутствуют.");
+    const requested = options.sheet == null ? sheets[0] : sheets.find((item) => item.name === String(options.sheet));
+    if (!requested) fail("REPORT_SHEET_NOT_FOUND", `XLSX sheet не найден: ${options.sheet}`);
+    const sharedBytes = await reader.get("xl/sharedStrings.xml");
+    const shared = sharedBytes ? reportParseSharedStrings(decoder.decode(sharedBytes)) : [];
+    const sheetBytes = await reader.get(requested.target);
+    if (!sheetBytes) fail("REPORT_XLSX_INVALID", `XLSX sheet entry отсутствует: ${requested.target}`);
+    const sheet = reportParseSheet(decoder.decode(sheetBytes), shared, requested.name, options);
+    return Object.freeze({ format: "xlsx", available_sheets: Object.freeze(sheets.map((item) => item.name)), sheet });
+  }
+
+  async function parseAiReadableReportBytes(bytes, { contentType = "", pathname = "", sheet = null, offset = 0, limit = 200 } = {}) {
+    const source = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes || []);
+    const ct = normalizedContentType(contentType);
+    const lower = String(pathname || "").toLowerCase();
+    const zipMagic = source.length >= 4 && source[0] === 0x50 && source[1] === 0x4b && source[2] === 0x03 && source[3] === 0x04;
+    if (ct === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" || lower.endsWith(".xlsx")) {
+      return await parseXlsxReportBytes(source, { sheet, offset, limit });
+    }
+    if (["text/csv", "application/csv", "text/plain", "application/json"].includes(ct) || lower.endsWith(".csv") || lower.endsWith(".txt")) {
+      const text = new TextDecoder("utf-8").decode(source);
+      return Object.freeze({ format: "csv", available_sheets: Object.freeze(["Report"]), sheet: parseDelimitedReportText(text, { offset, limit, name: "Report" }) });
+    }
+    if (zipMagic || ct === "application/zip" || lower.endsWith(".zip")) {
+      const reader = createReportZipReader(source);
+      if (reader.names.includes("xl/workbook.xml")) return await parseXlsxReportBytes(source, { sheet, offset, limit });
+      const csvName = reader.names.find((name) => /\.(csv|txt)$/i.test(name));
+      if (csvName) {
+        const csv = await reader.get(csvName);
+        return Object.freeze({ format: "zip_csv", archive_entry: csvName, available_sheets: Object.freeze([csvName]), sheet: parseDelimitedReportText(new TextDecoder("utf-8").decode(csv), { offset, limit, name: csvName }) });
+      }
+      fail("REPORT_ZIP_CONTENT_UNSUPPORTED", "ZIP отчёт не содержит поддерживаемый XLSX/CSV файл.");
+    }
+    if (ct === "application/pdf" || lower.endsWith(".pdf")) return await parsePdfDocumentBytes(source);
+    if (ct === "application/vnd.ms-excel" || lower.endsWith(".xls")) fail("REPORT_XLS_BINARY_UNSUPPORTED", "Старый XLS binary формат не поддерживается; ожидается XLSX из report_info.");
+    fail("REPORT_FILE_FORMAT_UNSUPPORTED", `Неподдерживаемый формат отчёта: ${ct || lower || "unknown"}.`);
+  }
+
+  function annotateReportFilePostFetchError(error, response) {
+    const wrapped = new Error(String(error?.message || error || "Report file processing failed"));
+    wrapped.code = String(error?.code || "REPORT_FILE_PROCESSING_FAILED");
+    wrapped.http_status = Number(response?.status || 0);
+    wrapped.external_request_executed = true;
+    wrapped.request_attempted = true;
+    return wrapped;
+  }
+
+  async function executeTrustedReportFileOnce({ fetchImpl, url, now = () => Date.now(), maxBytes = 16 * 1024 * 1024, parseOptions = {} }) {
+    if (typeof fetchImpl !== "function") fail("FETCH_IMPL_MISSING", "fetchImpl обязателен.");
+    const trustedUrl = normalizeTrustedReportFileUrl(url);
+    const started = now();
+    let response;
+    try {
+      response = await fetchImpl(trustedUrl, {
+        method: "GET",
+        headers: { Accept: "text/csv,text/plain,application/csv,application/octet-stream,application/zip,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" },
+        redirect: "error",
+        credentials: "omit"
+      });
+    } catch (error) {
+      const wrapped = new Error(String(error?.message || error || "Report file fetch failed"));
+      wrapped.code = "REPORT_FILE_FETCH_FAILED";
+      wrapped.external_request_executed = true;
+      wrapped.request_attempted = true;
+      throw wrapped;
+    }
+    let received;
+    try {
+      received = await readResponse(response, { preserveBytes: Boolean(response.ok) });
+    } catch (error) {
+      throw annotateReportFilePostFetchError(error, response);
+    }
+    if (received.byteLength > maxBytes) {
+      const error = new Error(`Report file превышает лимит bridge ${maxBytes} bytes.`);
+      error.code = "REPORT_FILE_TOO_LARGE";
+      error.http_status = Number(response.status || 0);
+      error.external_request_executed = true;
+      error.request_attempted = true;
+      throw error;
+    }
+    const contentType = normalizedContentType(headerValue(response?.headers, "content-type"));
+    let parsed = null;
+    let rawText = received.rawText || "";
+    if (response.ok) {
+      const pathname = (() => { try { return new URL(trustedUrl).pathname.toLowerCase(); } catch (_) { return ""; } })();
+      let report;
+      try {
+        report = await parseAiReadableReportBytes(received.bytes || new Uint8Array(), {
+          contentType, pathname, sheet: parseOptions.sheet ?? null, offset: Number(parseOptions.offset || 0), limit: Number(parseOptions.limit || 200)
+        });
+      } catch (error) {
+        throw annotateReportFilePostFetchError(error, response);
+      }
+      parsed = Object.freeze({ content_type: contentType || "application/octet-stream", byte_length: received.byteLength, ...report });
+    } else if (rawText.trim()) {
+      try { parsed = JSON.parse(rawText); } catch (_) { parsed = null; }
+    }
+    return Object.freeze({
+      httpStatus: Number(response.status || 0), ok: Boolean(response.ok), rawText, parsed,
+      byteLength: received.byteLength, elapsedMs: Math.max(0, Number(now() - started) || 0), responseMeta: safeResponseMeta(response)
+    });
+  }
+
+  async function executePerformanceJsonOnce({ fetchImpl, request, now = () => Date.now() }) {
+    if (typeof fetchImpl !== "function") fail("FETCH_IMPL_MISSING", "fetchImpl обязателен.");
+    if (!request || typeof request !== "object") fail("INVALID_REQUEST", "Trusted request object обязателен.");
+    if (!/^https:\/\/api-performance\.ozon\.ru\//.test(String(request.url || ""))) fail("UNTRUSTED_REQUEST_HOST", "Разрешён только fixed Ozon Performance API host.");
+    if (!/^(GET|POST)$/.test(String(request.method || ""))) fail("UNTRUSTED_REQUEST_METHOD", "Performance bridge допускает только заранее зафиксированные GET/POST read/auth methods.");
+
+    const started = now();
+    let response;
+    try {
+      response = await fetchImpl(request.url, {
+        method: request.method,
+        headers: request.headers,
+        body: request.method === "GET" ? undefined : request.body
+      });
+    } catch (error) {
+      const wrapped = new Error(String(error?.message || error || "Provider fetch failed"));
+      wrapped.code = "PROVIDER_FETCH_FAILED";
+      wrapped.external_request_executed = true;
+      wrapped.request_attempted = true;
+      throw wrapped;
+    }
+
+    const binarySuccess = Boolean(response.ok) && String(request.response_style || "json") === "binary";
+    const received = await readResponse(response, { preserveBytes: binarySuccess });
+    let parsed = null;
+    let rawText = received.rawText || "";
+    if (binarySuccess) {
+      const expected = Array.isArray(request.response_content_types)
+        ? request.response_content_types.map(normalizedContentType).filter(Boolean)
+        : [];
+      const actual = normalizedContentType(headerValue(response?.headers, "content-type"));
+      if (expected.length && actual && !expected.includes(actual)) {
+        const error = new Error(`Ozon Performance API вернул неожиданный binary content-type: ${actual}.`);
+        error.code = "PROVIDER_BINARY_CONTENT_TYPE_MISMATCH";
+        error.http_status = Number(response.status || 0);
+        error.external_request_executed = true;
+        throw error;
+      }
+      parsed = Object.freeze({
+        content_type: actual || expected[0] || "application/octet-stream",
+        byte_length: received.byteLength,
+        encoding: "base64",
+        file_content_base64: bytesToBase64(received.bytes)
+      });
+    } else if (rawText.trim()) {
+      try { parsed = JSON.parse(rawText); }
+      catch (_) { parsed = null; }
+    }
+    return Object.freeze({
+      httpStatus: Number(response.status || 0),
+      ok: Boolean(response.ok),
+      rawText,
+      parsed,
+      byteLength: received.byteLength,
+      elapsedMs: Math.max(0, Number(now() - started) || 0),
+      responseMeta: safeResponseMeta(response)
+    });
+  }
+
+  globalThis.ProviderTransportCore = Object.freeze({
+    readResponse,
+    normalizeTrustedReportFileUrl,
+    reportBase64ToBytes,
+    parsePdfDocumentBytes,
+    parseAiReadableReportBytes,
+    executeTrustedReportFileOnce,
+    executeJsonOnce,
+    executePerformanceJsonOnce
+  });
+})();

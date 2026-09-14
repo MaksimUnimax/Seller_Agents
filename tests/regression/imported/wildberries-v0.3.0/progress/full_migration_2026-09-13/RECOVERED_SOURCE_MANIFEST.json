@@ -1,0 +1,164 @@
+{
+  "inputs": [
+    {
+      "name": "OZON_BRIDGE_v0.1.19_MULTI_AI_FILE_DELIVERY_5aa1b4a21a0a.zip",
+      "bytes": 245479,
+      "sha256": "a5765f11148b921baeff5e18b64b428c9d598f9fbb41b8ff91fd9cef7cb8fb83"
+    },
+    {
+      "name": "wildberries-bridge-v0.2.4-work-state-migration.zip",
+      "bytes": 155004,
+      "sha256": "0c860ec6412bb8b8107382e0ba81b2a163c3ba2f547a491ef1a478f97218ebeb"
+    },
+    {
+      "name": "WB_v0.2.2_PARITY_PATCH_EVIDENCE_FINAL.zip",
+      "bytes": 793064,
+      "sha256": "f887cd50d882c85b6ada2ad36f08e89a052a1de2416db848436c61d983e0ae57"
+    }
+  ],
+  "source_root": "tooling/llm-api-bridges/wildberries/extension",
+  "version": "0.2.4",
+  "source_files": [
+    {
+      "path": "content_script.js",
+      "sha256": "72ccf002bad866a6bd381c1063fa9cb0b92094a81a5998177002a954b40318c1"
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "1b7ced0f8021da9c9bc0080894c5a5848b01f289204e8b0f89cb22a0190da3eb"
+    },
+    {
+      "path": "popup.css",
+      "sha256": "8347e0c768eb3014472550352e1cb9938126d1f25c9695dfb9a01782552d79c3"
+    },
+    {
+      "path": "popup.html",
+      "sha256": "9a481c9986a1ccb255b4bb9ac868ec1a506a4e50f56ff799b9dd07d4ae087dd5"
+    },
+    {
+      "path": "popup.js",
+      "sha256": "660b6426ddfe3958d99bafd677e03834b623a0ad0e7269fdd3cb4741e08b39ad"
+    },
+    {
+      "path": "popup_runtime.js",
+      "sha256": "eb95c8a5663a5cab3ece76c0fcc0a4e1157ba2af6d051aed0750feb4688cb19e"
+    },
+    {
+      "path": "service_worker.js",
+      "sha256": "50a649e789e6bc87a30e447d7d1a39879f9e77aa3051a4eeec0cc4965e230b7e"
+    },
+    {
+      "path": "shared/ai_adapters.js",
+      "sha256": "59a209e3e17e623934f632e503055cd84a8958780d3b3064a861d75997e35b2d"
+    },
+    {
+      "path": "shared/ai_delivery_capabilities.js",
+      "sha256": "a2594dd32e37389e61a27ca854ce9e6085e526de46b3aac5d056cf2a0aafe435"
+    },
+    {
+      "path": "shared/artifact_store.js",
+      "sha256": "bbf1e1bac12ebb4a64f379683f0f2eca130d9ed55b888026beded175e889b674"
+    },
+    {
+      "path": "shared/bridge_autorun_model.js",
+      "sha256": "dff5265640ec4b848b4dee6019261c7b230d015eeac6f12fd85b9b7c2e93c22c"
+    },
+    {
+      "path": "shared/composer_send.js",
+      "sha256": "6647f23296e8d1fcf22f8704cc4b91c733a1a17238ac985b511573a0edd5f116"
+    },
+    {
+      "path": "shared/conversation_identity.js",
+      "sha256": "939036acd95ccb3dfe00f05b5d49568615f6d798a023a0ec995e38267fb68f57"
+    },
+    {
+      "path": "shared/delivery_transaction_worker.js",
+      "sha256": "4ff855a126b57d6036b3906c1f8fca3fcaf0f4a3b59bfc4f85a0342de548765d"
+    },
+    {
+      "path": "shared/file_delivery.js",
+      "sha256": "0c360ff5275230711b0666d22a4bff35149d1c75b0988f97eb19fbf3e388bc96"
+    },
+    {
+      "path": "shared/manual_controls.js",
+      "sha256": "81f302487da7b5ff7c1b746298353438b2cfec100a5bb8f7fa2c80d1e033c81e"
+    },
+    {
+      "path": "shared/mixed_batch_discovery.js",
+      "sha256": "4f8c79c73f9801ae8c3952bd140380dfd1ed1f3c50c0c209404bfe1f78d5e569"
+    },
+    {
+      "path": "shared/proven_writing_block_capture.js",
+      "sha256": "d0f8e413ad6081890c0b93c5c5f33e53d209b4ffec217a6761f32745653ff8a1"
+    },
+    {
+      "path": "shared/provider_transport_core.js",
+      "sha256": "16bac4ddb2b202db2df984f1529b327b85da4f9dc0dfbe9ff36af593a7268d7e"
+    },
+    {
+      "path": "shared/runtime_names.js",
+      "sha256": "11ff6f8304a0b10836b917cf9730711734e3f6ce94d674ee8486e3a8b2360b42"
+    },
+    {
+      "path": "shared/runtime_policy.js",
+      "sha256": "d1d7a2efc888cd3e12540b06383de3920b189b6dfd1bc137786065b11b299d52"
+    },
+    {
+      "path": "shared/runtime_worker.js",
+      "sha256": "d4c6638166576335c29e08adc53869cc0fc3373ea65e2af7a19363767e049290"
+    },
+    {
+      "path": "shared/wb_batch_runtime.js",
+      "sha256": "6ddcc01674b03b4acf453a37798090405becdef4821dbf3fa22dde24924d3461"
+    },
+    {
+      "path": "shared/wb_command_protocol.js",
+      "sha256": "a45c0c67b87af5821c967b630153a37c003b3a0c0f0b92882f7f9ddf2f224b7e"
+    },
+    {
+      "path": "shared/wb_contract.js",
+      "sha256": "ebe3f40239335ecbee2afe7e970af7ca0e2dc852d312a7cd9faaa03718c6de2c"
+    },
+    {
+      "path": "shared/wb_credentials.js",
+      "sha256": "c731be6b35914ba6b1f0dc5a156dbfd8eb24709f52456c3f6623c83d3d5584a4"
+    },
+    {
+      "path": "shared/wb_guidance.js",
+      "sha256": "ab03c01d841d9f5da293fef8c941a6500d9cdf5ecbce70db3ba9a3b88d2a536f"
+    },
+    {
+      "path": "shared/wb_guidance_registry.js",
+      "sha256": "44d1bfa4c0cc659fe795678632e89c4e88a71712fe31799422fa608ed750b5f9"
+    },
+    {
+      "path": "shared/wb_operations.js",
+      "sha256": "08e8a2ad1f325a4bdc0a909b37220b7abaa0be1d94d6b53192666ed5f22c2c75"
+    },
+    {
+      "path": "shared/wb_provider.js",
+      "sha256": "bce98358906010f703f162105d80f105c75c6aa7960a3c5d1ab662063840daa5"
+    },
+    {
+      "path": "shared/web_file_attachment.js",
+      "sha256": "627b327ee6bf462f84d21f60c18bbebfe0ab0e7f8c0d551e45f6ec454e958d18"
+    },
+    {
+      "path": "shared/work_recovery_worker.js",
+      "sha256": "373bd796bf8fe3c5383397c2858c169b31250371d6f4220d40ed251acc7412ee"
+    },
+    {
+      "path": "shared/work_session_model.js",
+      "sha256": "42a93c9e61bbf5d4fe38e7ab91115bb67519abfc9018aa3038b639f16f5c1657"
+    },
+    {
+      "path": "shared/work_start_worker.js",
+      "sha256": "48b16300c50d1ff57853901190e792a62f019f0b2236eb5431d42ceca411c484"
+    },
+    {
+      "path": "shared/xlsx_reader.js",
+      "sha256": "2ad85662e472db1b244c23e6840841f3770435410944bb54645795fe3043e286"
+    }
+  ],
+  "tests": "Recovered unchanged from full 0.2.2 evidence; not assumed sufficient or rerun"
+}

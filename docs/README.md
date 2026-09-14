@@ -28,6 +28,7 @@
 ## Разработка и выпуск
 
 - [WORKFLOW](development/WORKFLOW.md), [QUALITY](development/QUALITY.md).
+- [Расширения после импорта](development/EXTENSION_BASELINE.md), [приёмка D1.E1](migration/evidence/extension-import-2026-09-14/README.md).
 - [ACCEPTANCE_MATRIX](development/ACCEPTANCE_MATRIX.md): обязательные сценарии.
 - [FAILURE_LEDGER](development/FAILURE_LEDGER.md): известные классы ошибок.
 - [RELEASE_AND_RECOVERY](operations/RELEASE_AND_RECOVERY.md).

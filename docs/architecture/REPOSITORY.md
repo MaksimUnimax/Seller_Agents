@@ -62,6 +62,6 @@ Root lockfile перенесён из источника с адаптацией
 
 ## Временное размещение расширений при D1.E1
 
-[Карта D1.E0](../migration/EXTENSION_IMPORT_MAP.md) уточняет первый перенос: 36 Ozon-файлов в `apps/extension/src/imported/ozon-v0.1.22/`; 40 WB-файлов в `migration/reference/wildberries-v0.3.0/runtime/` вне production/workspace graph. Каталоги пока не материализованы.
-Исходные gates размещаются в `tests/regression/imported/`, закреплённые donor/RED/matrix fixtures — в `tests/fixtures/migration/`. Проверочный runner собирает временный прежний layout из явно перечисленных входов.
+[Карта D1.E0](../migration/EXTENSION_IMPORT_MAP.md) уточняет первый перенос: 36 Ozon-файлов в `apps/extension/src/imported/ozon-v0.1.22/`; 40 WB-файлов в `migration/reference/wildberries-v0.3.0/runtime/` вне production/workspace graph. Каталоги материализованы в D1.E1; состояние приёмки см. в STATUS.
+Исходные gates размещаются в `tests/regression/imported/`, закреплённые donor/RED/matrix fixtures — в `tests/fixtures/imported/`. Проверочный runner собирает временный прежний layout из явно перечисленных входов.
 Это переходная структура для сохранения исходного поведения и проверки перемещения. D2 извлекает один runtime в целевые каталоги выше. После принятия замены старый production snapshot удаляется из рабочего дерева; test fixture сохраняется только при наличии конкретного потребителя. Постоянные две копии общего ядра не создаются.

@@ -1,0 +1,15 @@
+// Isolated exact handleCopy with injected runtime/delivery, not a browser UI claim.
+import fs from 'node:fs';import path from 'node:path';import vm from 'node:vm';import assert from 'node:assert/strict';import crypto from 'node:crypto';
+const root=path.resolve(process.argv[2]),out=path.resolve(process.argv[3]);fs.mkdirSync(out,{recursive:false});const fd=fs.openSync(path.join(out,'results.jsonl'),'wx');const rows=[];
+const source=fs.readFileSync(path.join(root,'content_script.js'),'utf8');const begin=source.indexOf('  async function handleCopy('),end=source.indexOf('\n  function decorateBinding(',begin);assert.ok(begin>0&&end>begin);const fn=source.slice(begin,end);
+for(const [id,text] of [['malformed','WB_API_V1 {'],['unknown','WB_API_V1 {"operation":"definitely_unknown_operation","params":{}}'],['disabled','WB_API_V1 {"operation":"subscriptions","params":{}}'],['mixed','WB_HELP_V1 {"operation":"catalog","params":{}}\nWB_API_V1 {"operation":"seller_info","params":{}}']]){
+ const calls=[],deliveries=[],fixtureReport='WB_RESULT_V1\n'+JSON.stringify({bridge_error:true,pre_execution_error:true,http_status:0,request_meta:{physical_request_count:0,external_request_executed:false}});
+ const context=vm.createContext({console,URL,URLSearchParams,TextEncoder,TextDecoder,crypto:crypto.webcrypto,manualEnabled:true,manualConversationKey:'fixture-key',current:()=>true,conversationKeyFromLocation:()=> 'fixture-key',syncManualState:async()=>{},commandText:()=>text,commandKey:()=>id,BUSY:new Set(),toast:()=>{},
+ sendRuntime:async(type,payload)=>{calls.push({type,payload});return type==='WB_EXECUTE_COMMAND'?{ok:false,bridge_error:true,pre_execution_error:true,report_text:fixtureReport,outgoing_text:fixtureReport,manual_operation_id:'fixture-op',delivery_id:'fixture-delivery',auto_send:true}:{ok:true}},
+ deliverReport:async(text)=>{deliveries.push(text);return {delivery_confirmed:true,confirmed_user_turn_id:'fixture-turn',composer_empty:true,click_attempts:1}},WBContract:null});
+ for(const file of ['shared/wb_operations.js','shared/wb_contract.js','shared/wb_command_protocol.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),context);
+ vm.runInContext(fn+'\nthis.invoke=handleCopy;',context);
+ let row;try{await context.invoke({},{});assert.equal(calls.filter(c=>c.type==='WB_EXECUTE_COMMAND').length,1,'Parser rejection must reach authoritative worker instead of toast-only early return');assert.deepEqual(deliveries,[fixtureReport],'Returned local report must enter the same chat delivery path');assert.equal(calls.filter(c=>c.type==='WB_MANUAL_DELIVERY_COMPLETE').length,1);row={id,status:'PASS'}}catch(e){row={id,status:'FAIL',error:e.message}}
+ rows.push(row);fs.writeSync(fd,JSON.stringify(row)+'\n');fs.fsyncSync(fd);console.log(row);
+}
+const summary={passed:rows.filter(r=>r.status==='PASS').length,failed:rows.filter(r=>r.status==='FAIL').length,scope:'exact handleCopy control flow with injected worker result/delivery; not browser/live acceptance',real_provider_calls:0};fs.writeFileSync(path.join(out,'summary.json'),JSON.stringify(summary,null,2));fs.closeSync(fd);process.exitCode=summary.failed?1:0;

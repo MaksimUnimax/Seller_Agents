@@ -1,0 +1,240 @@
+name: Package Ozon v0.1.22 live-defect repair
+run-name: Package Ozon v0.1.22 live-defect repair · ${{ github.ref_name }} · ${{ github.sha }}
+
+on:
+  push:
+    branches: [repair/ozon-v0.1.22-live-defects-2026-09-14]
+    paths:
+      - '.github/workflows/ozon-v0122-final-package-2026-09-14.yml'
+      - 'tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/PACKAGE_TRIGGER.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  ROOT: tooling/llm-api-bridges/ozon-seller
+  BASE_AUTHORITY: 0aa8f53528e304a91530f663060445e85e2af60b
+  FAILED_V020_HEAD: 309da4714fe39216c2e3b7d2ff59295160bb3a98
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Freeze exact candidate identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          HEAD_SHA=$(git rev-parse HEAD)
+          HEAD_TREE=$(git rev-parse HEAD^{tree})
+          SHORT=$(git rev-parse --short=12 HEAD)
+          echo "HEAD_SHA=$HEAD_SHA" >> "$GITHUB_ENV"
+          echo "HEAD_TREE=$HEAD_TREE" >> "$GITHUB_ENV"
+          echo "SHORT=$SHORT" >> "$GITHUB_ENV"
+          echo "PACKAGE_BASENAME=OZON_BRIDGE_v0.1.22_LIVE_DEFECT_REPAIR_${SHORT}" >> "$GITHUB_ENV"
+          echo "candidate_commit=$HEAD_SHA"
+          echo "candidate_tree=$HEAD_TREE"
+
+      - name: Final source gates before packaging
+        shell: bash
+        run: |
+          set -euo pipefail
+          E=/tmp/ozon-v0122-evidence
+          mkdir -p "$E"
+          PROD="$ROOT/dist-step7-candidate"
+          ENTRY="$PROD/service_worker_entry.js"
+
+          node -e 'const fs=require("fs");const m=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));if(m.version!=="0.1.22")process.exit(1);' "$PROD/manifest.json"
+          grep -R -n --exclude='*.map' '0\.1\.21' "$PROD" > "$E/remaining-v021.txt" || true
+          test "$(wc -l < "$E/remaining-v021.txt")" -eq 1
+          grep -F "$ENTRY:" "$E/remaining-v021.txt"
+          grep -F 'Repair live v0.1.21 defects before downstream output/delivery wrappers capture contract/provider globals.' "$ENTRY"
+          test "$(grep -R -l --exclude='*.map' '0\.1\.22' "$PROD" | wc -l)" -eq 10
+          if grep -R -n --exclude='*.map' -E '0\.1\.(19|20)' "$PROD"; then exit 1; fi
+          find "$PROD" -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check
+
+          node "$ROOT/validation/v0122-live-defects-2026-09-14/run_v0122_live_defects_gate.mjs" --baseline-red "$ROOT" | tee "$E/v0122-baseline-red.txt"
+          node "$ROOT/validation/v0122-live-defects-2026-09-14/run_v0122_live_defects_gate.mjs" --candidate-green "$ROOT" | tee "$E/v0122-candidate-green.txt"
+          node "$ROOT/validation/v0122-live-defects-2026-09-14/run_v0122_dependency_closure_gate.mjs" "$ROOT" | tee "$E/v0122-dependency-closure.txt"
+
+          node "$ROOT/validation/swagger-read-surface-patch-2026-09-13/run_patch_gate.mjs" --baseline-red "$ROOT" | tee "$E/swagger-red-baseline.txt"
+          node "$ROOT/validation/swagger-read-surface-patch-2026-09-13/run_patch_gate.mjs" "$ROOT" | tee "$E/swagger-candidate-green.txt"
+
+          MATRIX=/tmp/FINAL_CONTROL_SAFETY_MATRIX.jsonl
+          git show origin/main:tooling/llm-api-bridges/ozon-seller/validation/FINAL_CONTROL_SAFETY_MATRIX.jsonl > "$MATRIX"
+          test "$(wc -l < "$MATRIX")" -eq 514
+          node "$ROOT/validation/swagger-read-surface-patch-2026-09-13/run_final_514_registry_gate.mjs" . "$MATRIX" | tee "$E/final-514.txt"
+
+          node "$ROOT/validation/read-effect-repair-v1/run_defect_015_date_repair_gate.mjs" . | tee "$E/defect-015.txt"
+          node "$ROOT/validation/read-effect-repair-v1/run_effect_read_repair_gate.mjs" . | tee "$E/read-effect.txt"
+          node "$ROOT/validation/swagger-read-surface-live-repair-2026-09-13/run_shared_consumer_parity_gate.mjs" "$ROOT" | tee "$E/shared-consumer-parity.txt"
+          node "$ROOT/validation/swagger-read-surface-live-repair-2026-09-13/run_dependency_closure_gate.mjs" "$ROOT" | tee "$E/swagger-dependency-closure.txt"
+
+          git worktree add --detach /tmp/ozon-v020 "$FAILED_V020_HEAD"
+          node "$ROOT/validation/swagger-read-surface-live-repair-2026-09-13/run_runtime_predispatch_gate.mjs" --expect-red "/tmp/ozon-v020/$ROOT" | tee "$E/v020-runtime-red.txt"
+          node "$ROOT/validation/swagger-read-surface-live-repair-2026-09-13/run_runtime_predispatch_gate.mjs" "$ROOT" | tee "$E/current-runtime-green.txt"
+          node "$ROOT/validation/swagger-read-surface-live-repair-2026-09-13/run_full_worker_batch_gate.mjs" --expect-red "/tmp/ozon-v020/$ROOT" | tee "$E/v020-full-worker-red.txt"
+          node "$ROOT/validation/swagger-read-surface-live-repair-2026-09-13/run_full_worker_batch_gate.mjs" "$ROOT" | tee "$E/current-full-worker-green.txt"
+          echo FINAL_SOURCE_GATES_PASS
+
+      - name: Manifest permissions and fixed-host preservation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' | tee /tmp/ozon-v0122-evidence/manifest-security.txt
+          import json, subprocess
+          from pathlib import Path
+          root=Path('tooling/llm-api-bridges/ozon-seller')
+          cur=json.loads((root/'dist-step7-candidate/manifest.json').read_text(encoding='utf-8'))
+          raw=subprocess.check_output(['git','show','0aa8f53528e304a91530f663060445e85e2af60b:tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/manifest.json'], text=True)
+          base=json.loads(raw)
+          assert cur['manifest_version']==3
+          assert cur['version']=='0.1.22'
+          assert cur.get('permissions')==base.get('permissions')
+          assert cur.get('host_permissions')==base.get('host_permissions')
+          assert 'https://api-seller.ozon.ru/*' in cur['host_permissions']
+          assert 'https://api-performance.ozon.ru/*' in cur['host_permissions']
+          print('MANIFEST_VERSION_0_1_22_PASS')
+          print('MANIFEST_PERMISSIONS_UNCHANGED_PASS')
+          print('MANIFEST_HOST_PERMISSIONS_UNCHANGED_PASS')
+          PY
+
+      - name: Build deterministic installation ZIP and prove byte parity
+        shell: bash
+        run: |
+          set -euo pipefail
+          WORK=/tmp/ozon-v0.1.22-package
+          SRC="$ROOT/dist-step7-candidate"
+          NORM="$WORK/normalized"
+          VERIFY="$WORK/verify"
+          OUT="$GITHUB_WORKSPACE/$ROOT/artifacts-v0.1.22-live-defect-repair"
+          rm -rf "$WORK" "$OUT"
+          mkdir -p "$NORM" "$VERIFY" "$OUT"
+          cp -a "$SRC/." "$NORM/"
+          find "$SRC" -type f -printf '%P\n' | sort > /tmp/ozon-v0122-evidence/source-files.txt
+          if find "$NORM" -type f \( -name '.DS_Store' -o -name '*.pyc' -o -name '*.map' \) | grep -q .; then
+            echo 'unexpected non-production file in candidate directory' >&2; exit 1
+          fi
+          find "$NORM" -type f -exec touch -t 202609140000 {} +
+          (cd "$NORM" && zip -X -q -r "$OUT/$PACKAGE_BASENAME.zip" .)
+          SHA=$(sha256sum "$OUT/$PACKAGE_BASENAME.zip" | awk '{print $1}')
+          BYTES=$(stat -c '%s' "$OUT/$PACKAGE_BASENAME.zip")
+          FILES=$(wc -l < /tmp/ozon-v0122-evidence/source-files.txt)
+          printf '%s  %s\n' "$SHA" "$PACKAGE_BASENAME.zip" > "$OUT/$PACKAGE_BASENAME.zip.sha256.txt"
+          unzip -q "$OUT/$PACKAGE_BASENAME.zip" -d "$VERIFY"
+          find "$VERIFY" -type f -printf '%P\n' | sort > /tmp/ozon-v0122-evidence/package-files.txt
+          diff -u /tmp/ozon-v0122-evidence/source-files.txt /tmp/ozon-v0122-evidence/package-files.txt
+          while IFS= read -r f; do
+            test "$(sha256sum "$SRC/$f" | awk '{print $1}')" = "$(sha256sum "$VERIFY/$f" | awk '{print $1}')"
+          done < /tmp/ozon-v0122-evidence/source-files.txt
+          cp /tmp/ozon-v0122-evidence/source-files.txt "$OUT/$PACKAGE_BASENAME.files.txt"
+          cat > "$OUT/$PACKAGE_BASENAME.BUILDINFO.txt" <<EOF
+          version=0.1.22
+          source_authority=$BASE_AUTHORITY
+          frozen_pre_swagger_runtime_baseline=$FAILED_V020_HEAD
+          frozen_v0.1.21_live_defects=PASS
+          candidate_commit=$HEAD_SHA
+          candidate_tree=$HEAD_TREE
+          artifact=$PACKAGE_BASENAME.zip
+          artifact_bytes=$BYTES
+          artifact_sha256=$SHA
+          production_files=$FILES
+          v0122_red_green=PASS
+          v0122_dependency_lifecycle_closure=PASS
+          final_514_gate=PASS
+          shared_consumer_parity=PASS
+          swagger_dependency_closure=PASS
+          full_worker_regression=PASS
+          packaged_file_inventory_match=PASS
+          packaged_bytes_match_source=PASS
+          live_provider_calls=0
+          live_certification=PENDING_POST_INSTALL
+          EOF
+          sed -i 's/^          //' "$OUT/$PACKAGE_BASENAME.BUILDINFO.txt"
+          echo "PACKAGE_SHA256=$SHA" >> "$GITHUB_ENV"
+          echo "PACKAGE_BYTES=$BYTES" >> "$GITHUB_ENV"
+          echo "PACKAGE_FILES=$FILES" >> "$GITHUB_ENV"
+          echo "PACKAGE_OUT=$OUT" >> "$GITHUB_ENV"
+          echo "PACKAGE_SHA256=$SHA"
+          echo "PACKAGE_BYTES=$BYTES"
+          echo "PACKAGE_FILES=$FILES"
+          echo PACKAGED_BYTES_MATCH_SOURCE_PASS
+
+      - name: Re-run all mandatory gates against extracted ZIP bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          WORK=/tmp/ozon-v0.1.22-package
+          VERIFY="$WORK/verify"
+          TESTROOT="$WORK/test-root"
+          TESTOZ="$TESTROOT/tooling/llm-api-bridges/ozon-seller"
+          rm -rf "$TESTROOT"
+          mkdir -p "$TESTOZ"
+          cp -a "$VERIFY" "$TESTOZ/dist-step7-candidate"
+          cp -a "$ROOT/validation" "$TESTOZ/validation"
+          cp -a "$ROOT/development" "$TESTOZ/development"
+          find "$VERIFY" -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check
+
+          node "$TESTOZ/validation/v0122-live-defects-2026-09-14/run_v0122_live_defects_gate.mjs" --baseline-red "$TESTOZ" | tee /tmp/ozon-v0122-evidence/package-v0122-red.txt
+          node "$TESTOZ/validation/v0122-live-defects-2026-09-14/run_v0122_live_defects_gate.mjs" --candidate-green "$TESTOZ" | tee /tmp/ozon-v0122-evidence/package-v0122-green.txt
+          node "$TESTOZ/validation/v0122-live-defects-2026-09-14/run_v0122_dependency_closure_gate.mjs" "$TESTOZ" | tee /tmp/ozon-v0122-evidence/package-v0122-closure.txt
+
+          node "$TESTOZ/validation/swagger-read-surface-patch-2026-09-13/run_patch_gate.mjs" "$TESTOZ" | tee /tmp/ozon-v0122-evidence/package-swagger-green.txt
+          node "$TESTOZ/validation/swagger-read-surface-patch-2026-09-13/run_final_514_registry_gate.mjs" "$TESTROOT" /tmp/FINAL_CONTROL_SAFETY_MATRIX.jsonl | tee /tmp/ozon-v0122-evidence/package-514.txt
+          node "$TESTOZ/validation/read-effect-repair-v1/run_defect_015_date_repair_gate.mjs" "$TESTROOT" | tee /tmp/ozon-v0122-evidence/package-defect-015.txt
+          node "$TESTOZ/validation/read-effect-repair-v1/run_effect_read_repair_gate.mjs" "$TESTROOT" | tee /tmp/ozon-v0122-evidence/package-read-effect.txt
+          node "$TESTOZ/validation/swagger-read-surface-live-repair-2026-09-13/run_shared_consumer_parity_gate.mjs" "$TESTOZ" | tee /tmp/ozon-v0122-evidence/package-shared-consumer-parity.txt
+          node "$TESTOZ/validation/swagger-read-surface-live-repair-2026-09-13/run_dependency_closure_gate.mjs" "$TESTOZ" | tee /tmp/ozon-v0122-evidence/package-swagger-dependency-closure.txt
+          node "$TESTOZ/validation/swagger-read-surface-live-repair-2026-09-13/run_runtime_predispatch_gate.mjs" "$TESTOZ" | tee /tmp/ozon-v0122-evidence/package-runtime-green.txt
+          node "$TESTOZ/validation/swagger-read-surface-live-repair-2026-09-13/run_full_worker_batch_gate.mjs" "$TESTOZ" | tee /tmp/ozon-v0122-evidence/package-full-worker-green.txt
+          echo EXTRACTED_PACKAGE_ALL_MANDATORY_GATES_PASS
+
+      - name: Copy final evidence into delivery artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$PACKAGE_OUT/evidence"
+          cp /tmp/ozon-v0122-evidence/*.txt "$PACKAGE_OUT/evidence/"
+          cat > "$PACKAGE_OUT/evidence/final-summary.txt" <<EOF
+          candidate_commit=$HEAD_SHA
+          candidate_tree=$HEAD_TREE
+          version=0.1.22
+          package_sha256=$PACKAGE_SHA256
+          package_bytes=$PACKAGE_BYTES
+          package_files=$PACKAGE_FILES
+          frozen_v0.1.21_live_defects_red=PASS
+          v0.1.22_candidate_green=PASS
+          v0.1.22_dependency_lifecycle_closure=PASS
+          514_operation_registry=PASS
+          shared_consumer_parity=PASS
+          swagger_dependency_closure=PASS
+          frozen_pre_swagger_runtime_red=PASS
+          current_runtime_green=PASS
+          frozen_pre_swagger_full_worker_red=PASS
+          current_full_worker_green=PASS
+          exact_package_red_green=PASS
+          exact_package_514=PASS
+          exact_package_full_worker=PASS
+          packaged_file_inventory_match=PASS
+          packaged_bytes_match_source=PASS
+          live_provider_calls=0
+          pre_handoff_package_tests=PASS
+          live_certification=PENDING_POST_INSTALL
+          EOF
+          sed -i 's/^          //' "$PACKAGE_OUT/evidence/final-summary.txt"
+
+      - name: Upload exact installable candidate and evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PACKAGE_BASENAME }}
+          path: tooling/llm-api-bridges/ozon-seller/artifacts-v0.1.22-live-defect-repair/
+          if-no-files-found: error
+          compression-level: 0

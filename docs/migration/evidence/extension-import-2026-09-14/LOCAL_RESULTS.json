@@ -1,0 +1,1845 @@
+{
+  "status": "LOCAL_NON_BROWSER_ROUTES_PASS_REMOTE_BROWSER_PENDING",
+  "scope": "D1.E1 migration; no production runtime byte changes",
+  "runs": {
+    "ozon": {
+      "summary": {
+        "status": "PASS",
+        "suite": "ozon",
+        "python": "3.12.14",
+        "node": "v24.19.0",
+        "os": "Linux",
+        "source_runtime_changes": 0,
+        "installed_acceptance": false,
+        "identity": {
+          "status": "PASS",
+          "imported_files": 232,
+          "runtime_files": 76,
+          "support_files": 156,
+          "source_byte_changes": 0,
+          "import_manifest_sha256": "b30ace693db946b34265b60dd28af1980f0da0fb7daa1cb2de286f8eb5327b52"
+        },
+        "ozon_package": {
+          "component": "ozon",
+          "version": "0.1.22",
+          "files": 36,
+          "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+          "archive": "SELLER_AGENTS_IMPORT_ozon_0.1.22_baseline.zip",
+          "bytes": 1517679,
+          "sha256": "88c390792cfd2074d7837050c19a4a232f6a3698729530dae5ffedef978316f2",
+          "repeat_archive_match": true,
+          "source_extracted_bytes_match": true,
+          "format": "ZIP_STORED, sorted files only, UTC-independent 1980 timestamp, Unix 0644",
+          "purpose": "MIGRATION_BASELINE_NOT_COMBINED_PRODUCT",
+          "installed_acceptance": false
+        },
+        "gate_processes": 91
+      },
+      "gates": [
+        {
+          "id": "ozon-source-syntax-attachment_delivery_port_content",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/attachment_delivery_port_content.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-source-syntax-attachment_delivery_port_content.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-attachment_delivery_wake_content",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/attachment_delivery_wake_content.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-source-syntax-attachment_delivery_wake_content.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-content_script",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/content_script.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-source-syntax-content_script.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-popup",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/popup.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-source-syntax-popup.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-service_worker",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/service_worker.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-source-syntax-service_worker.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-service_worker_entry",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/service_worker_entry.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-source-syntax-service_worker_entry.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-ai_adapters",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ai_adapters.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-source-syntax-ai_adapters.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-ai_delivery_capabilities",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ai_delivery_capabilities.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-source-syntax-ai_delivery_capabilities.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-bridge_autorun_model",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/bridge_autorun_model.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-source-syntax-bridge_autorun_model.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-composer_send",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/composer_send.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-source-syntax-composer_send.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-conversation_identity",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/conversation_identity.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-source-syntax-conversation_identity.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-direct_binary_file_delivery_patch",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/direct_binary_file_delivery_patch.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-source-syntax-direct_binary_file_delivery_patch.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-file_delivery_model_policy",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_model_policy.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-source-syntax-file_delivery_model_policy.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-file_delivery_port_worker",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_port_worker.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-source-syntax-file_delivery_port_worker.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-file_delivery_wake_worker",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_wake_worker.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-source-syntax-file_delivery_wake_worker.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-live_runtime_v0122_patch",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/live_runtime_v0122_patch.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-source-syntax-live_runtime_v0122_patch.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-llm_output_report_workflow_patch",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/llm_output_report_workflow_patch.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-source-syntax-llm_output_report_workflow_patch.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-manual_controls",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/manual_controls.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-source-syntax-manual_controls.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-mixed_batch_discovery",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/mixed_batch_discovery.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.116,
+          "log": "logs/ozon-source-syntax-mixed_batch_discovery.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-ozon_contract",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_contract.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.115,
+          "log": "logs/ozon-source-syntax-ozon_contract.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-ozon_credentials",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_credentials.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.065,
+          "log": "logs/ozon-source-syntax-ozon_credentials.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-ozon_entitlements",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_entitlements.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.114,
+          "log": "logs/ozon-source-syntax-ozon_entitlements.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-ozon_guidance",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_guidance.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.065,
+          "log": "logs/ozon-source-syntax-ozon_guidance.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-ozon_operation_registry",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_operation_registry.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.115,
+          "log": "logs/ozon-source-syntax-ozon_operation_registry.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-ozon_provider",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_provider.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.065,
+          "log": "logs/ozon-source-syntax-ozon_provider.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-performance_report_continuation_patch",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/performance_report_continuation_patch.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.117,
+          "log": "logs/ozon-source-syntax-performance_report_continuation_patch.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-proven_writing_block_capture",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/proven_writing_block_capture.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.117,
+          "log": "logs/ozon-source-syntax-proven_writing_block_capture.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-provider_transport_core",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/provider_transport_core.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.065,
+          "log": "logs/ozon-source-syntax-provider_transport_core.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-runtime_names",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/runtime_names.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.115,
+          "log": "logs/ozon-source-syntax-runtime_names.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-swagger_read_surface_patch",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/swagger_read_surface_patch.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.119,
+          "log": "logs/ozon-source-syntax-swagger_read_surface_patch.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-web_file_attachment",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/web_file_attachment.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.115,
+          "log": "logs/ozon-source-syntax-web_file_attachment.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-work_session_model",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/work_session_model.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-source-syntax-work_session_model.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-syntax-xlsx_direct_binary_delivery_patch",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/xlsx_direct_binary_delivery_patch.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.115,
+          "log": "logs/ozon-source-syntax-xlsx_direct_binary_delivery_patch.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-v0122-red",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_live_defects_gate.mjs",
+            "--baseline-red",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller"
+          ],
+          "exit_code": 0,
+          "seconds": 0.115,
+          "log": "logs/ozon-source-v0122-red.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-v0122-green",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_live_defects_gate.mjs",
+            "--candidate-green",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller"
+          ],
+          "exit_code": 0,
+          "seconds": 0.165,
+          "log": "logs/ozon-source-v0122-green.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-v0122-closure",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_dependency_closure_gate.mjs",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller"
+          ],
+          "exit_code": 0,
+          "seconds": 0.169,
+          "log": "logs/ozon-source-v0122-closure.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-swagger-red",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-patch-2026-09-13/run_patch_gate.mjs",
+            "--baseline-red",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller"
+          ],
+          "exit_code": 0,
+          "seconds": 0.117,
+          "log": "logs/ozon-source-swagger-red.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-swagger-green",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-patch-2026-09-13/run_patch_gate.mjs",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller"
+          ],
+          "exit_code": 0,
+          "seconds": 0.115,
+          "log": "logs/ozon-source-swagger-green.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-514",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-patch-2026-09-13/run_final_514_registry_gate.mjs",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source",
+            "<repository>/tests/fixtures/imported/ozon-control-17aa0833/FINAL_CONTROL_SAFETY_MATRIX.jsonl"
+          ],
+          "exit_code": 0,
+          "seconds": 0.165,
+          "log": "logs/ozon-source-514.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-date",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/validation/read-effect-repair-v1/run_defect_015_date_repair_gate.mjs",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source"
+          ],
+          "exit_code": 0,
+          "seconds": 0.115,
+          "log": "logs/ozon-source-date.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-effect",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/validation/read-effect-repair-v1/run_effect_read_repair_gate.mjs",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source"
+          ],
+          "exit_code": 0,
+          "seconds": 0.62,
+          "log": "logs/ozon-source-effect.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-shared-consumers",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_shared_consumer_parity_gate.mjs",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller"
+          ],
+          "exit_code": 0,
+          "seconds": 0.116,
+          "log": "logs/ozon-source-shared-consumers.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-swagger-closure",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_dependency_closure_gate.mjs",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller"
+          ],
+          "exit_code": 0,
+          "seconds": 0.165,
+          "log": "logs/ozon-source-swagger-closure.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-predispatch-red",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_runtime_predispatch_gate.mjs",
+            "--expect-red",
+            "<repository>/build/extension-import-ozon-local/work/red-ozon"
+          ],
+          "exit_code": 0,
+          "seconds": 0.115,
+          "log": "logs/ozon-source-predispatch-red.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-predispatch-green",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_runtime_predispatch_gate.mjs",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller"
+          ],
+          "exit_code": 0,
+          "seconds": 0.115,
+          "log": "logs/ozon-source-predispatch-green.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-full-worker-red",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_full_worker_batch_gate.mjs",
+            "--expect-red",
+            "<repository>/build/extension-import-ozon-local/work/red-ozon"
+          ],
+          "exit_code": 0,
+          "seconds": 0.565,
+          "log": "logs/ozon-source-full-worker-red.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-source-full-worker-green",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_full_worker_batch_gate.mjs",
+            "<repository>/build/extension-import-ozon-local/work/ozon-source/tooling/llm-api-bridges/ozon-seller"
+          ],
+          "exit_code": 0,
+          "seconds": 0.616,
+          "log": "logs/ozon-source-full-worker-green.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-attachment_delivery_port_content",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/attachment_delivery_port_content.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.067,
+          "log": "logs/ozon-package-syntax-attachment_delivery_port_content.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-attachment_delivery_wake_content",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/attachment_delivery_wake_content.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.114,
+          "log": "logs/ozon-package-syntax-attachment_delivery_wake_content.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-content_script",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/content_script.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.117,
+          "log": "logs/ozon-package-syntax-content_script.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-popup",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/popup.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.114,
+          "log": "logs/ozon-package-syntax-popup.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-service_worker",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/service_worker.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.115,
+          "log": "logs/ozon-package-syntax-service_worker.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-service_worker_entry",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/service_worker_entry.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.065,
+          "log": "logs/ozon-package-syntax-service_worker_entry.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-ai_adapters",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ai_adapters.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.065,
+          "log": "logs/ozon-package-syntax-ai_adapters.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-ai_delivery_capabilities",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ai_delivery_capabilities.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.115,
+          "log": "logs/ozon-package-syntax-ai_delivery_capabilities.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-bridge_autorun_model",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/bridge_autorun_model.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.115,
+          "log": "logs/ozon-package-syntax-bridge_autorun_model.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-composer_send",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/composer_send.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.115,
+          "log": "logs/ozon-package-syntax-composer_send.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-conversation_identity",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/conversation_identity.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.114,
+          "log": "logs/ozon-package-syntax-conversation_identity.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-direct_binary_file_delivery_patch",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/direct_binary_file_delivery_patch.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.115,
+          "log": "logs/ozon-package-syntax-direct_binary_file_delivery_patch.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-file_delivery_model_policy",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_model_policy.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.115,
+          "log": "logs/ozon-package-syntax-file_delivery_model_policy.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-file_delivery_port_worker",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_port_worker.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.114,
+          "log": "logs/ozon-package-syntax-file_delivery_port_worker.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-file_delivery_wake_worker",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_wake_worker.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.116,
+          "log": "logs/ozon-package-syntax-file_delivery_wake_worker.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-live_runtime_v0122_patch",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/live_runtime_v0122_patch.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.116,
+          "log": "logs/ozon-package-syntax-live_runtime_v0122_patch.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-llm_output_report_workflow_patch",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/llm_output_report_workflow_patch.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.068,
+          "log": "logs/ozon-package-syntax-llm_output_report_workflow_patch.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-manual_controls",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/manual_controls.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.114,
+          "log": "logs/ozon-package-syntax-manual_controls.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-mixed_batch_discovery",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/mixed_batch_discovery.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.116,
+          "log": "logs/ozon-package-syntax-mixed_batch_discovery.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-ozon_contract",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_contract.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.117,
+          "log": "logs/ozon-package-syntax-ozon_contract.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-ozon_credentials",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_credentials.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.066,
+          "log": "logs/ozon-package-syntax-ozon_credentials.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-ozon_entitlements",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_entitlements.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.115,
+          "log": "logs/ozon-package-syntax-ozon_entitlements.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-ozon_guidance",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_guidance.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.115,
+          "log": "logs/ozon-package-syntax-ozon_guidance.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-ozon_operation_registry",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_operation_registry.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-package-syntax-ozon_operation_registry.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-ozon_provider",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_provider.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.114,
+          "log": "logs/ozon-package-syntax-ozon_provider.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-performance_report_continuation_patch",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/performance_report_continuation_patch.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.118,
+          "log": "logs/ozon-package-syntax-performance_report_continuation_patch.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-proven_writing_block_capture",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/proven_writing_block_capture.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-package-syntax-proven_writing_block_capture.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-provider_transport_core",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/provider_transport_core.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.065,
+          "log": "logs/ozon-package-syntax-provider_transport_core.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-runtime_names",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/runtime_names.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.07,
+          "log": "logs/ozon-package-syntax-runtime_names.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-swagger_read_surface_patch",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/swagger_read_surface_patch.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.114,
+          "log": "logs/ozon-package-syntax-swagger_read_surface_patch.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-web_file_attachment",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/web_file_attachment.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.065,
+          "log": "logs/ozon-package-syntax-web_file_attachment.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-work_session_model",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/work_session_model.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.064,
+          "log": "logs/ozon-package-syntax-work_session_model.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-syntax-xlsx_direct_binary_delivery_patch",
+          "command": [
+            "node",
+            "--check",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/xlsx_direct_binary_delivery_patch.js"
+          ],
+          "exit_code": 0,
+          "seconds": 0.065,
+          "log": "logs/ozon-package-syntax-xlsx_direct_binary_delivery_patch.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-v0122-red",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_live_defects_gate.mjs",
+            "--baseline-red",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller"
+          ],
+          "exit_code": 0,
+          "seconds": 0.115,
+          "log": "logs/ozon-package-v0122-red.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-v0122-green",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_live_defects_gate.mjs",
+            "--candidate-green",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller"
+          ],
+          "exit_code": 0,
+          "seconds": 0.114,
+          "log": "logs/ozon-package-v0122-green.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-v0122-closure",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_dependency_closure_gate.mjs",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller"
+          ],
+          "exit_code": 0,
+          "seconds": 0.164,
+          "log": "logs/ozon-package-v0122-closure.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-swagger-green",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-patch-2026-09-13/run_patch_gate.mjs",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller"
+          ],
+          "exit_code": 0,
+          "seconds": 0.116,
+          "log": "logs/ozon-package-swagger-green.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-514",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-patch-2026-09-13/run_final_514_registry_gate.mjs",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package",
+            "<repository>/tests/fixtures/imported/ozon-control-17aa0833/FINAL_CONTROL_SAFETY_MATRIX.jsonl"
+          ],
+          "exit_code": 0,
+          "seconds": 0.115,
+          "log": "logs/ozon-package-514.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-date",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/validation/read-effect-repair-v1/run_defect_015_date_repair_gate.mjs",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package"
+          ],
+          "exit_code": 0,
+          "seconds": 0.116,
+          "log": "logs/ozon-package-date.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-effect",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/validation/read-effect-repair-v1/run_effect_read_repair_gate.mjs",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package"
+          ],
+          "exit_code": 0,
+          "seconds": 0.565,
+          "log": "logs/ozon-package-effect.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-shared-consumers",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_shared_consumer_parity_gate.mjs",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller"
+          ],
+          "exit_code": 0,
+          "seconds": 0.115,
+          "log": "logs/ozon-package-shared-consumers.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-swagger-closure",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_dependency_closure_gate.mjs",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller"
+          ],
+          "exit_code": 0,
+          "seconds": 0.165,
+          "log": "logs/ozon-package-swagger-closure.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-predispatch-green",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_runtime_predispatch_gate.mjs",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller"
+          ],
+          "exit_code": 0,
+          "seconds": 0.114,
+          "log": "logs/ozon-package-predispatch-green.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "ozon-package-full-worker-green",
+          "command": [
+            "node",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_full_worker_batch_gate.mjs",
+            "<repository>/build/extension-import-ozon-local/work/ozon-package/tooling/llm-api-bridges/ozon-seller"
+          ],
+          "exit_code": 0,
+          "seconds": 0.569,
+          "log": "logs/ozon-package-full-worker-green.txt",
+          "status": "PASS"
+        }
+      ],
+      "runner_negative_control": {
+        "status": "PASS",
+        "observed_exit": 7,
+        "later_command_executed": false
+      },
+      "ozon-source": {
+        "version_and_permission_checks": "PASS",
+        "route_invocations": 14,
+        "source_route": true,
+        "runtime_file_count": 36
+      },
+      "ozon-package": {
+        "version_and_permission_checks": "PASS",
+        "route_invocations": 11,
+        "source_route": false,
+        "runtime_file_count": 36
+      }
+    },
+    "wb_nodes": {
+      "summary": {
+        "status": "PASS",
+        "suite": "wb-nodes",
+        "python": "3.12.14",
+        "node": "v24.19.0",
+        "os": "Linux",
+        "source_runtime_changes": 0,
+        "installed_acceptance": false,
+        "identity": {
+          "status": "PASS",
+          "imported_files": 232,
+          "runtime_files": 76,
+          "support_files": 156,
+          "source_byte_changes": 0,
+          "import_manifest_sha256": "b30ace693db946b34265b60dd28af1980f0da0fb7daa1cb2de286f8eb5327b52"
+        },
+        "wildberries_package": {
+          "component": "wildberries",
+          "version": "0.3.0",
+          "files": 40,
+          "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+          "archive": "SELLER_AGENTS_IMPORT_wildberries_0.3.0_baseline.zip",
+          "bytes": 722299,
+          "sha256": "4c69d42ad55236646093921f85e54231de7854dd2ce41ad9b7f4e59cd97adafb",
+          "repeat_archive_match": true,
+          "source_extracted_bytes_match": true,
+          "format": "ZIP_STORED, sorted files only, UTC-independent 1980 timestamp, Unix 0644",
+          "purpose": "MIGRATION_BASELINE_NOT_COMBINED_PRODUCT",
+          "installed_acceptance": false
+        },
+        "gate_processes": 2
+      },
+      "gates": [
+        {
+          "id": "wb-source-nodes",
+          "command": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+            "<repository>/tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/run_family_gate.py",
+            "<repository>/migration/reference/wildberries-v0.3.0/runtime",
+            "<repository>/build/extension-import-wb-nodes-local/wb-source-nodes",
+            "nodes",
+            "<repository>/tests/fixtures/imported/wb-donor-e01b051c/runtime"
+          ],
+          "exit_code": 0,
+          "seconds": 4.696,
+          "log": "logs/wb-source-nodes.txt",
+          "status": "PASS"
+        },
+        {
+          "id": "wb-package-nodes",
+          "command": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+            "<repository>/tests/regression/imported/wildberries-v0.3.0/progress/full_migration_2026-09-13/tests/run_family_gate.py",
+            "<repository>/build/extension-import-wb-nodes-local/packages/wildberries/extracted",
+            "<repository>/build/extension-import-wb-nodes-local/wb-package-nodes",
+            "nodes",
+            "<repository>/tests/fixtures/imported/wb-donor-e01b051c/runtime"
+          ],
+          "exit_code": 0,
+          "seconds": 4.534,
+          "log": "logs/wb-package-nodes.txt",
+          "status": "PASS"
+        }
+      ],
+      "runner_negative_control": {
+        "status": "PASS",
+        "observed_exit": 7,
+        "later_command_executed": false
+      },
+      "wb-source-nodes": {
+        "summary": {
+          "status": "PASS",
+          "suites": 35,
+          "passed": 754,
+          "failed": 0,
+          "suite_failures": 0,
+          "mode": "nodes",
+          "source_manifest": "source_manifest.json",
+          "installed_acceptance": false
+        },
+        "suites": [
+          {
+            "suite": "cache_projection",
+            "exit_code": 0,
+            "passed": 10,
+            "failed": 0,
+            "scope": "Current donor candidate ranking/projection semantics with synthetic policies only. No WB cache policy and no fetch mechanism.",
+            "status": "PASS"
+          },
+          {
+            "suite": "ai_mode_transaction",
+            "exit_code": 0,
+            "passed": 5,
+            "failed": 0,
+            "scope": "Per-tab AI apply/rollback with real worker; donor OZ_SET_TAB_AI_MODE contract plus durable pending mode; no provider traffic",
+            "status": "PASS"
+          },
+          {
+            "suite": "ai_registry_differential",
+            "exit_code": 0,
+            "passed": 9,
+            "failed": 0,
+            "scope": "Current exact donor capability/identity functions versus WB functions; no browser or provider acceptance claim",
+            "status": "PASS"
+          },
+          {
+            "suite": "calendar_policy",
+            "exit_code": 0,
+            "passed": 8,
+            "failed": 0,
+            "scope": "Generic calendar validation only; no WB date-window values activated; current donor arithmetic differential",
+            "status": "PASS"
+          },
+          {
+            "suite": "entitlement_framework",
+            "exit_code": 0,
+            "passed": 12,
+            "failed": 0,
+            "scope": "Provider-neutral endpoint/parameter/account-evidence mechanism. Only synthetic rule values; no WB entitlements activated and no network probe.",
+            "status": "PASS"
+          },
+          {
+            "suite": "file_budget_worker",
+            "exit_code": 0,
+            "passed": 14,
+            "failed": 0,
+            "scope": "Actual worker, mocked WB JSON/binary responses and local artifact backend; provider-call counter counts fixtures only",
+            "status": "PASS"
+          },
+          {
+            "suite": "delivery_worker",
+            "exit_code": 0,
+            "passed": 39,
+            "failed": 0,
+            "scope": "Real production worker/dispatcher + simulated Chrome/UI proof. No live marketplace; no native MV3 claim.",
+            "status": "PASS"
+          },
+          {
+            "suite": "manual_error_content",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "exact handleCopy control flow with injected worker result/delivery; not browser/live acceptance",
+            "real_provider_calls": 0,
+            "status": "PASS"
+          },
+          {
+            "suite": "insertion_transaction",
+            "exit_code": 0,
+            "passed": 7,
+            "failed": 0,
+            "scope": "Actual worker insertion commit/storage/restart/owner transaction; simulated UI proof; no real provider requests",
+            "status": "PASS"
+          },
+          {
+            "suite": "p5_artifact_store",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Actual artifact_store module with deterministic in-memory backend; integrity/owner/chunk/cleanup; zero provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "p6_ai_file",
+            "exit_code": 0,
+            "passed": 10,
+            "failed": 0,
+            "scope": "provider-neutral capability/artifact tests; zero marketplace calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "p7_bootstrap_worker",
+            "exit_code": 0,
+            "passed": 3,
+            "failed": 0,
+            "scope": "Actual worker bootstrap code; simulated Chrome identity/storage; zero provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "p8_policy",
+            "exit_code": 0,
+            "passed": 17,
+            "failed": 0,
+            "scope": "Actual runtime_policy plus real worker quota rejection; zero live provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "parameter_guidance",
+            "exit_code": 0,
+            "passed": 5,
+            "failed": 0,
+            "scope": "Current WB contract-derived partial schema visibility and real worker local error; no provider schema invented or request executed",
+            "status": "PASS"
+          },
+          {
+            "suite": "popup_diagnostics_durability",
+            "exit_code": 0,
+            "passed": 5,
+            "failed": 0,
+            "scope": "Actual popup and worker source; messaging/storage/clock fixtures; real provider requests=0",
+            "status": "PASS"
+          },
+          {
+            "suite": "parity_error_worker",
+            "exit_code": 0,
+            "target": "source",
+            "source_sha256": "15f6ba10f2fa61968859cde99e9c27d8b62f5ad123aba5c1cd17a7e0f18bf117",
+            "passed": 22,
+            "failed": 0,
+            "real_provider_calls": 0,
+            "scope": "synthetic-real-worker-and-extracted-Ozon-discovery; not installed chat delivery",
+            "status": "PASS"
+          },
+          {
+            "suite": "popup_work_worker",
+            "exit_code": 0,
+            "passed": 21,
+            "failed": 0,
+            "real_provider_calls": 0,
+            "scope": "exact worker functions and real dispatcher with mocked Chrome/DOM acknowledgement",
+            "worker_sha256": "15f6ba10f2fa61968859cde99e9c27d8b62f5ad123aba5c1cd17a7e0f18bf117",
+            "status": "PASS"
+          },
+          {
+            "suite": "guidance",
+            "exit_code": 0,
+            "passed": 205,
+            "failed": 0,
+            "scope": "Real worker and registry, synthetic Chrome/fetch; Ozon scanner differential. No live WB calls.",
+            "status": "PASS"
+          },
+          {
+            "suite": "production_scope",
+            "exit_code": 0,
+            "passed": 13,
+            "failed": 0,
+            "scope": "Actual production worker dispatcher and named Port. Explicit NON_PROD project authority; synthetic state transitions; no real provider traffic.",
+            "status": "PASS"
+          },
+          {
+            "suite": "provider_serialization",
+            "exit_code": 0,
+            "checks": 197,
+            "passed": 197,
+            "failed": 0,
+            "real_wb_requests": 0,
+            "scope": "contract ingress + mocked request serialization, NOT full Phase1 or live acceptance",
+            "files": {
+              "wb_contract.js": "f7bcd6b14d6313374afee77d3ae80ed2d04569996589878c802e236a34a1c60a",
+              "wb_operations.js": "08e8a2ad1f325a4bdc0a909b37220b7abaa0be1d94d6b53192666ed5f22c2c75"
+            },
+            "runner_sha256": "ea0a21e81dad5e0f350463c79c090c252b7e3e099670f361101216d4ce0384e0",
+            "status": "PASS"
+          },
+          {
+            "suite": "prompt_inheritance",
+            "exit_code": 0,
+            "passed": 9,
+            "failed": 0,
+            "scope": "Actual worker prompt/storage/Start dispatch; synthetic browser acknowledgements; provider calls=0",
+            "status": "PASS"
+          },
+          {
+            "suite": "query_planner",
+            "exit_code": 0,
+            "passed": 10,
+            "failed": 0,
+            "scope": "Generic planner with explicit synthetic policies; shipped WB policy remains absent/disabled; actual worker identity-plan persistence, fixture fetch only",
+            "status": "PASS"
+          },
+          {
+            "suite": "quota_alarm",
+            "exit_code": 0,
+            "passed": 3,
+            "failed": 0,
+            "scope": "Actual worker alarm listener with durable quota, no provider requests",
+            "status": "PASS"
+          },
+          {
+            "suite": "request_accounting",
+            "exit_code": 0,
+            "passed": 3,
+            "failed": 0,
+            "scope": "Actual worker/provider dispatch with mocked fetch and an account change during durable dispatch; fixture calls only",
+            "status": "PASS"
+          },
+          {
+            "suite": "refresh_races",
+            "exit_code": 0,
+            "passed": 18,
+            "failed": 0,
+            "scope": "Actual production dispatcher and durable storage recreation; adversarial mocks only; zero marketplace calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "response_verification",
+            "exit_code": 0,
+            "passed": 8,
+            "failed": 0,
+            "scope": "Actual worker/provider pipeline with synthetic response bodies/schema/error adapters; no real WB calls; no WB schema activated",
+            "status": "PASS"
+          },
+          {
+            "suite": "runtime_durability",
+            "exit_code": 0,
+            "passed": 6,
+            "failed": 0,
+            "scope": "Actual worker; storage, DOM proof and shortened timeout clock mocked; no provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_account_lifecycle",
+            "exit_code": 0,
+            "passed": 5,
+            "failed": 0,
+            "scope": "Actual worker, mocked storage and DOM proof; zero real provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "refresh_integration",
+            "exit_code": 0,
+            "passed": 20,
+            "failed": 0,
+            "scope": "real dispatcher, mocked Chrome transport; no live APIs; full Refresh/Finish targeted",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_ownership_fences",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Actual Work Start transaction; adversarial storage/diagnostic timing; fixture UI; real provider requests=0",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_retired_autorun",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Current NON_PROD autorun authority; explicit Work Start only; prior result retained; no provider requests",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_integration",
+            "exit_code": 0,
+            "passed": 12,
+            "failed": 0,
+            "scope": "real worker dispatcher, simulated Chrome/DOM proof; no live API",
+            "status": "PASS"
+          },
+          {
+            "suite": "transport_deadline",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Pure transport/provider fixtures; no real provider network; response headers are not complete-body success",
+            "status": "PASS"
+          },
+          {
+            "suite": "work_visibility_lifecycle",
+            "exit_code": 0,
+            "passed": 8,
+            "failed": 0,
+            "scope": "Current donor Work Resume/Show/Hide/Refresh semantics; late Start acknowledgement vs Finish; fixture browser APIs; no provider traffic",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_guards",
+            "exit_code": 0,
+            "passed": 30,
+            "failed": 0,
+            "scope": "real dispatcher, simulated Chrome storage/transport/DOM proof; no installed tests",
+            "status": "PASS"
+          }
+        ]
+      },
+      "wb-package-nodes": {
+        "summary": {
+          "status": "PASS",
+          "suites": 35,
+          "passed": 754,
+          "failed": 0,
+          "suite_failures": 0,
+          "mode": "nodes",
+          "source_manifest": "source_manifest.json",
+          "installed_acceptance": false
+        },
+        "suites": [
+          {
+            "suite": "cache_projection",
+            "exit_code": 0,
+            "passed": 10,
+            "failed": 0,
+            "scope": "Current donor candidate ranking/projection semantics with synthetic policies only. No WB cache policy and no fetch mechanism.",
+            "status": "PASS"
+          },
+          {
+            "suite": "ai_registry_differential",
+            "exit_code": 0,
+            "passed": 9,
+            "failed": 0,
+            "scope": "Current exact donor capability/identity functions versus WB functions; no browser or provider acceptance claim",
+            "status": "PASS"
+          },
+          {
+            "suite": "ai_mode_transaction",
+            "exit_code": 0,
+            "passed": 5,
+            "failed": 0,
+            "scope": "Per-tab AI apply/rollback with real worker; donor OZ_SET_TAB_AI_MODE contract plus durable pending mode; no provider traffic",
+            "status": "PASS"
+          },
+          {
+            "suite": "calendar_policy",
+            "exit_code": 0,
+            "passed": 8,
+            "failed": 0,
+            "scope": "Generic calendar validation only; no WB date-window values activated; current donor arithmetic differential",
+            "status": "PASS"
+          },
+          {
+            "suite": "entitlement_framework",
+            "exit_code": 0,
+            "passed": 12,
+            "failed": 0,
+            "scope": "Provider-neutral endpoint/parameter/account-evidence mechanism. Only synthetic rule values; no WB entitlements activated and no network probe.",
+            "status": "PASS"
+          },
+          {
+            "suite": "delivery_worker",
+            "exit_code": 0,
+            "passed": 39,
+            "failed": 0,
+            "scope": "Real production worker/dispatcher + simulated Chrome/UI proof. No live marketplace; no native MV3 claim.",
+            "status": "PASS"
+          },
+          {
+            "suite": "file_budget_worker",
+            "exit_code": 0,
+            "passed": 14,
+            "failed": 0,
+            "scope": "Actual worker, mocked WB JSON/binary responses and local artifact backend; provider-call counter counts fixtures only",
+            "status": "PASS"
+          },
+          {
+            "suite": "manual_error_content",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "exact handleCopy control flow with injected worker result/delivery; not browser/live acceptance",
+            "real_provider_calls": 0,
+            "status": "PASS"
+          },
+          {
+            "suite": "p5_artifact_store",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Actual artifact_store module with deterministic in-memory backend; integrity/owner/chunk/cleanup; zero provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "insertion_transaction",
+            "exit_code": 0,
+            "passed": 7,
+            "failed": 0,
+            "scope": "Actual worker insertion commit/storage/restart/owner transaction; simulated UI proof; no real provider requests",
+            "status": "PASS"
+          },
+          {
+            "suite": "p6_ai_file",
+            "exit_code": 0,
+            "passed": 10,
+            "failed": 0,
+            "scope": "provider-neutral capability/artifact tests; zero marketplace calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "p7_bootstrap_worker",
+            "exit_code": 0,
+            "passed": 3,
+            "failed": 0,
+            "scope": "Actual worker bootstrap code; simulated Chrome identity/storage; zero provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "p8_policy",
+            "exit_code": 0,
+            "passed": 17,
+            "failed": 0,
+            "scope": "Actual runtime_policy plus real worker quota rejection; zero live provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "parameter_guidance",
+            "exit_code": 0,
+            "passed": 5,
+            "failed": 0,
+            "scope": "Current WB contract-derived partial schema visibility and real worker local error; no provider schema invented or request executed",
+            "status": "PASS"
+          },
+          {
+            "suite": "popup_diagnostics_durability",
+            "exit_code": 0,
+            "passed": 5,
+            "failed": 0,
+            "scope": "Actual popup and worker source; messaging/storage/clock fixtures; real provider requests=0",
+            "status": "PASS"
+          },
+          {
+            "suite": "parity_error_worker",
+            "exit_code": 0,
+            "target": "source",
+            "source_sha256": "15f6ba10f2fa61968859cde99e9c27d8b62f5ad123aba5c1cd17a7e0f18bf117",
+            "passed": 22,
+            "failed": 0,
+            "real_provider_calls": 0,
+            "scope": "synthetic-real-worker-and-extracted-Ozon-discovery; not installed chat delivery",
+            "status": "PASS"
+          },
+          {
+            "suite": "guidance",
+            "exit_code": 0,
+            "passed": 205,
+            "failed": 0,
+            "scope": "Real worker and registry, synthetic Chrome/fetch; Ozon scanner differential. No live WB calls.",
+            "status": "PASS"
+          },
+          {
+            "suite": "popup_work_worker",
+            "exit_code": 0,
+            "passed": 21,
+            "failed": 0,
+            "real_provider_calls": 0,
+            "scope": "exact worker functions and real dispatcher with mocked Chrome/DOM acknowledgement",
+            "worker_sha256": "15f6ba10f2fa61968859cde99e9c27d8b62f5ad123aba5c1cd17a7e0f18bf117",
+            "status": "PASS"
+          },
+          {
+            "suite": "prompt_inheritance",
+            "exit_code": 0,
+            "passed": 9,
+            "failed": 0,
+            "scope": "Actual worker prompt/storage/Start dispatch; synthetic browser acknowledgements; provider calls=0",
+            "status": "PASS"
+          },
+          {
+            "suite": "production_scope",
+            "exit_code": 0,
+            "passed": 13,
+            "failed": 0,
+            "scope": "Actual production worker dispatcher and named Port. Explicit NON_PROD project authority; synthetic state transitions; no real provider traffic.",
+            "status": "PASS"
+          },
+          {
+            "suite": "provider_serialization",
+            "exit_code": 0,
+            "checks": 197,
+            "passed": 197,
+            "failed": 0,
+            "real_wb_requests": 0,
+            "scope": "contract ingress + mocked request serialization, NOT full Phase1 or live acceptance",
+            "files": {
+              "wb_contract.js": "f7bcd6b14d6313374afee77d3ae80ed2d04569996589878c802e236a34a1c60a",
+              "wb_operations.js": "08e8a2ad1f325a4bdc0a909b37220b7abaa0be1d94d6b53192666ed5f22c2c75"
+            },
+            "runner_sha256": "ea0a21e81dad5e0f350463c79c090c252b7e3e099670f361101216d4ce0384e0",
+            "status": "PASS"
+          },
+          {
+            "suite": "query_planner",
+            "exit_code": 0,
+            "passed": 10,
+            "failed": 0,
+            "scope": "Generic planner with explicit synthetic policies; shipped WB policy remains absent/disabled; actual worker identity-plan persistence, fixture fetch only",
+            "status": "PASS"
+          },
+          {
+            "suite": "quota_alarm",
+            "exit_code": 0,
+            "passed": 3,
+            "failed": 0,
+            "scope": "Actual worker alarm listener with durable quota, no provider requests",
+            "status": "PASS"
+          },
+          {
+            "suite": "request_accounting",
+            "exit_code": 0,
+            "passed": 3,
+            "failed": 0,
+            "scope": "Actual worker/provider dispatch with mocked fetch and an account change during durable dispatch; fixture calls only",
+            "status": "PASS"
+          },
+          {
+            "suite": "refresh_races",
+            "exit_code": 0,
+            "passed": 18,
+            "failed": 0,
+            "scope": "Actual production dispatcher and durable storage recreation; adversarial mocks only; zero marketplace calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "response_verification",
+            "exit_code": 0,
+            "passed": 8,
+            "failed": 0,
+            "scope": "Actual worker/provider pipeline with synthetic response bodies/schema/error adapters; no real WB calls; no WB schema activated",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_account_lifecycle",
+            "exit_code": 0,
+            "passed": 5,
+            "failed": 0,
+            "scope": "Actual worker, mocked storage and DOM proof; zero real provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "runtime_durability",
+            "exit_code": 0,
+            "passed": 6,
+            "failed": 0,
+            "scope": "Actual worker; storage, DOM proof and shortened timeout clock mocked; no provider calls",
+            "status": "PASS"
+          },
+          {
+            "suite": "refresh_integration",
+            "exit_code": 0,
+            "passed": 20,
+            "failed": 0,
+            "scope": "real dispatcher, mocked Chrome transport; no live APIs; full Refresh/Finish targeted",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_ownership_fences",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Actual Work Start transaction; adversarial storage/diagnostic timing; fixture UI; real provider requests=0",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_retired_autorun",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Current NON_PROD autorun authority; explicit Work Start only; prior result retained; no provider requests",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_integration",
+            "exit_code": 0,
+            "passed": 12,
+            "failed": 0,
+            "scope": "real worker dispatcher, simulated Chrome/DOM proof; no live API",
+            "status": "PASS"
+          },
+          {
+            "suite": "transport_deadline",
+            "exit_code": 0,
+            "passed": 4,
+            "failed": 0,
+            "scope": "Pure transport/provider fixtures; no real provider network; response headers are not complete-body success",
+            "status": "PASS"
+          },
+          {
+            "suite": "work_visibility_lifecycle",
+            "exit_code": 0,
+            "passed": 8,
+            "failed": 0,
+            "scope": "Current donor Work Resume/Show/Hide/Refresh semantics; late Start acknowledgement vs Finish; fixture browser APIs; no provider traffic",
+            "status": "PASS"
+          },
+          {
+            "suite": "start_guards",
+            "exit_code": 0,
+            "passed": 30,
+            "failed": 0,
+            "scope": "real dispatcher, simulated Chrome storage/transport/DOM proof; no installed tests",
+            "status": "PASS"
+          }
+        ]
+      }
+    }
+  }
+}

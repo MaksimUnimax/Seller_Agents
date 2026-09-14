@@ -1,6 +1,6 @@
 # Карта переноса расширений — D1.E0
 
-Дата: 2026-09-14. Статус: **MAP COMPLETE / CODE NOT IMPORTED**.
+Дата карты D1.E0: 2026-09-14. **MAP COMPLETE**; первоначальное состояние CODE NOT IMPORTED относится к D1.E0. Последующий [перенос D1.E1](evidence/extension-import-2026-09-14/README.md) имеет отдельную квитанцию.
 Это карта точных источников, файлов, загрузки и входов проверок. Она не закрывает поведенческую сверку WB, установленную приёмку или объединение.
 
 ## Зафиксированные источники
@@ -32,7 +32,7 @@ Ozon берётся из `tooling/llm-api-bridges/ozon-seller/dist-step7-candida
 | `migration/reference/wildberries-v0.3.0/runtime/` | 40 исходных файлов WB с явным INSTALLED FAIL; вне production-графа и workspace-пакетов |
 | `tests/regression/imported/ozon-v0.1.22/` | Исходные проверки выбранного финального package-cycle и связанные регрессии |
 | `tests/regression/imported/wildberries-v0.3.0/` | 52 исходных WB suite, их helpers, fixtures и метаданные |
-| `tests/fixtures/migration/` | Закреплённые старые donor/RED/permission/matrix входы; только для проверок |
+| `tests/fixtures/imported/` | Закреплённые старые donor/RED/permission/matrix входы; только для проверок |
 | `tooling/build/`, `tooling/checks/` | Будущая упаковка и запуск проверок в Seller_Agents; без подключения к серверной команде выполнения |
 
 Точные подпути определены в JSON-картах. Эти каталоги исходников в D1.E0 не созданы. Исходный тестовый layout будет собираться во временном каталоге из переносимых файлов, чтобы не переписывать проверки вместе с production-кодом. Состав временного каталога также проверяется по manifest; незаявленных старых файлов там быть не должно.

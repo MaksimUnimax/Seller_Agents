@@ -1,0 +1,70 @@
+{
+  "manifest_version": 3,
+  "name": "Wildberries Bridge — ChatGPT / Алиса",
+  "version": "0.3.0",
+  "description": "Read-only WB Bridge: ручные команды, рабочие сессии и доставка файлов.",
+  "permissions": [
+    "storage",
+    "tabs",
+    "unlimitedStorage",
+    "alarms"
+  ],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*",
+    "https://content-api.wildberries.ru/*",
+    "https://discounts-prices-api.wildberries.ru/*",
+    "https://marketplace-api.wildberries.ru/*",
+    "https://seller-analytics-api.wildberries.ru/*",
+    "https://statistics-api.wildberries.ru/*",
+    "https://finance-api.wildberries.ru/*",
+    "https://documents-api.wildberries.ru/*",
+    "https://common-api.wildberries.ru/*",
+    "https://supplies-api.wildberries.ru/*",
+    "https://advert-api.wildberries.ru/*",
+    "https://advert-media-api.wildberries.ru/*",
+    "https://dp-calendar-api.wildberries.ru/*",
+    "https://feedbacks-api.wildberries.ru/*",
+    "https://returns-api.wildberries.ru/*",
+    "https://alice.yandex.ru/*"
+  ],
+  "background": {
+    "service_worker": "service_worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*",
+        "https://alice.yandex.ru/*"
+      ],
+      "js": [
+        "shared/ai_delivery_capabilities.js",
+        "shared/web_file_attachment.js",
+        "shared/ai_adapters.js",
+        "shared/conversation_identity.js",
+        "shared/runtime_names.js",
+        "shared/wb_operations.js",
+        "shared/wb_contract.js",
+        "shared/parameter_guidance.js",
+        "shared/mixed_batch_discovery.js",
+        "shared/wb_guidance_registry.js",
+        "shared/wb_guidance.js",
+        "shared/delivery_policy.js",
+        "shared/wb_command_protocol.js",
+        "shared/bridge_autorun_model.js",
+        "shared/manual_controls.js",
+        "shared/composer_send.js",
+        "shared/proven_writing_block_capture.js",
+        "shared/file_delivery.js",
+        "shared/xlsx_reader.js",
+        "content_script.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_title": "Wildberries Bridge",
+    "default_popup": "popup.html"
+  }
+}

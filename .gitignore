@@ -2,6 +2,9 @@ node_modules/
 .pnpm-store/
 dist/
 build/
+!tooling/build/
+!tooling/build/**
+__pycache__/
 .next/
 coverage/
 playwright-report/

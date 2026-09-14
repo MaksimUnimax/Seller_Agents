@@ -1,0 +1,38 @@
+import path from 'node:path';import assert from 'node:assert/strict';import {boot,reporter,pendingKey,workKey,identity,key} from './worker_harness.mjs';
+const root=path.resolve(process.argv[2]),r=reporter(process.argv[3]),all=[];
+const make=()=>{const w=boot(root);all.push(w);return w};const p=w=>w.data[pendingKey];
+const msg=(w,type,e={})=>({type,intent_id:p(w)?.intent_id,revision:p(w)?.revision,identity:w.state.identity,runtime_generation:w.state.generation,actor_id:'actor-1',...e});
+const call=(w,type,e={})=>w.call(msg(w,type,e),w.content());
+const start=async w=>{assert.equal((await w.start()).ok,true);await w.settle()};
+const commit=w=>call(w,'WB_WORK_START_COMMIT_REQUEST',{baseline_user_turn_ids:['user-old'],assistant_baseline_ids:['assistant-old']});
+const ack=w=>call(w,'WB_WORK_START_SEND_OUTCOME',{click_event_observed:true,composer_empty:true,user_turn_id:'user-new'});
+const complete=w=>call(w,'WB_WORK_PENDING_IDENTITY',{first_response_complete:true,assistant_turn_id:'assistant-new'});
+const ready=async w=>{await start(w);assert.equal((await commit(w)).click_allowed,true);assert.equal((await ack(w)).send_outcome,'sent_acknowledged')};
+const reject=async(w,promise)=>{const v=await promise;assert.notEqual(v.ok,true,JSON.stringify(v));assert.notEqual(w.data[workKey]?.state,'active_visible');assert.equal(w.counts.provider,0);return v};
+for(const type of ['WB_WORK_START_COMMIT_REQUEST','WB_WORK_START_SEND_OUTCOME','WB_WORK_PENDING_IDENTITY']){
+ await r.test(type+'_STALE_REVISION',async()=>{const w=make();await start(w);await reject(w,call(w,type,{revision:999}));});
+ await r.test(type+'_STALE_GENERATION',async()=>{const w=make();await start(w);await reject(w,call(w,type,{runtime_generation:'stale'}));});
+ await r.test(type+'_FRAME_REJECTED',async()=>{const w=make();await start(w);await reject(w,w.call(msg(w,type),{...w.content(),frameId:4}));});
+}
+await r.test('PRECOMMIT_EXPIRED_NO_SEND',async()=>{const w=make();await start(w);p(w).expires_at='2000-01-01T00:00:00.000Z';await reject(w,commit(w));});
+await r.test('TIMEOUT_EVENT_TERMINALIZES_EXPIRED_INTENT',async()=>{const w=make();await ready(w);p(w).expires_at='2000-01-01T00:00:00.000Z';const v=await call(w,'WB_WORK_PENDING_TIMEOUT');assert.equal(v.ok,true);assert.ok(['cancelled','expired'].includes(p(w).phase));});
+await r.test('CORRUPT_REVISION_BLOCKS_START',async()=>{const w=make();w.data['wb_work_start_revision_v2:1']='broken';await reject(w,w.start());assert.equal(w.counts.promptDispatch,0)});
+await r.test('CORRUPT_BASELINE_BLOCKS_SEND_COMMIT',async()=>{const w=make();await start(w);const v=await call(w,'WB_WORK_START_COMMIT_REQUEST',{baseline_user_turn_ids:'not-an-array',assistant_baseline_ids:[]});assert.notEqual(v.click_allowed,true)});
+await r.test('STORAGE_READBACK_FAILURE_BLOCKS_CLICK',async()=>{const w=make();await start(w);w.state.corruptRead=true;assert.notEqual((await commit(w)).click_allowed,true);});
+await r.test('ACK_WRONG_ACTOR_BLOCKED',async()=>{const w=make();await start(w);await commit(w);await reject(w,call(w,'WB_WORK_START_SEND_OUTCOME',{actor_id:'other',click_event_observed:true,composer_empty:true}));});
+await r.test('BASELINE_USER_NOT_AN_ACK',async()=>{const w=make();await start(w);await commit(w);w.state.proof.user_turn_id='user-old';assert.equal((await ack(w)).send_outcome,'outcome_unknown_no_retry');});
+await r.test('FALSE_DOM_MATCH_NOT_AN_ACK',async()=>{const w=make();await start(w);await commit(w);w.state.proof.matched=false;assert.equal((await ack(w)).send_outcome,'outcome_unknown_no_retry');});
+await r.test('FORGED_USER_TURN_NOT_AN_ACK',async()=>{const w=make();await start(w);await commit(w);const v=await call(w,'WB_WORK_START_SEND_OUTCOME',{click_event_observed:true,composer_empty:true,user_turn_id:'forged'});assert.notEqual(v.send_outcome,'sent_acknowledged');});
+await r.test('FORGED_ASSISTANT_TURN_NOT_COMPLETED',async()=>{const w=make();await ready(w);const v=await call(w,'WB_WORK_PENDING_IDENTITY',{first_response_complete:true,assistant_turn_id:'forged'});assert.notEqual(w.data[workKey]?.state,'active_visible');});
+await r.test('VISIBILITY_FAILURE_NOT_READY',async()=>{const w=make();await ready(w);w.state.visibility=false;const v=await complete(w);assert.equal(v.ok,false);assert.equal(w.data[workKey]?.state,'error');});
+await r.test('TAB_CLOSED_CANCELS_INTENT',async()=>{const w=make();await ready(w);await w.remove();await w.settle();assert.equal(p(w).phase,'cancelled');await reject(w,complete(w));});
+await r.test('RECOVER_PROOF_ONLY_AFTER_RECREATION',async()=>{let w=make();await ready(w);const data=w.data;w.dispose();w=boot(root,data);all.push(w);w.state.generation='content-g2';const v=await call(w,'WB_WORK_START_RECOVER');assert.equal(v.ok,true);assert.equal(v.work_start_watch.runtime_generation,'content-g2');assert.equal((await complete(w)).ok,true);assert.equal(w.counts.promptDispatch,0);});
+await r.test('RECOVER_LOST_ACK_POSITIVE_DOM_ONLY',async()=>{let w=make();await start(w);await commit(w);const data=w.data;w.dispose();w=boot(root,data);all.push(w);w.state.generation='content-g2';const v=await call(w,'WB_WORK_START_RECOVER');assert.equal(v.ok,true);assert.equal(p(w).send_outcome,'sent_acknowledged');assert.equal(w.counts.promptDispatch,0);});
+await r.test('RECOVER_UNKNOWN_NO_USER_NO_RETRY',async()=>{const w=make();await start(w);await commit(w);w.state.generation='content-g2';w.state.proof.matched=false;const v=await call(w,'WB_WORK_START_RECOVER');assert.equal(v.automatic_retry,false);assert.equal(p(w).phase,'unknown_no_retry');assert.equal(w.counts.promptDispatch,1);});
+await r.test('RECOVER_OLD_SENDER_ORIGIN_BLOCKED',async()=>{const w=make();await ready(w);await reject(w,w.call(msg(w,'WB_WORK_START_RECOVER'),{...w.content(),url:'https://example.org/'}));});
+await r.test('RECOVER_FORGED_IDENTITY_BLOCKED',async()=>{const w=make();await ready(w);await reject(w,call(w,'WB_WORK_START_RECOVER',{identity:{...identity,conversation_id:'22222222-2222-2222-2222-222222222222'}}));});
+await r.test('FINISH_FRESH_START_REVISION_MONOTONIC',async()=>{const w=make();await ready(w);const before=p(w).revision;await w.call({type:'WB_WORK_ACTION',action:'finish',tab_id:1});await start(w);assert.ok(p(w).revision>before);assert.equal(w.counts.promptDispatch,2);});
+await r.test('TOGGLE_CANNOT_BYPASS_PENDING_START',async()=>{const w=make();await ready(w);await w.eval(`bindConversation({tab_id:1,origin:${JSON.stringify(identity.origin)},conversation_id:${JSON.stringify(identity.conversation_id)}})`);await reject(w,w.call({type:'WB_WORK_ACTION',action:'toggle',tab_id:1,identity:w.state.identity}));});
+await r.test('EXPIRED_COMMITTED_START_NO_AUTOMATIC_RESEND',async()=>{const w=make();await ready(w);p(w).expires_at='2000-01-01T00:00:00.000Z';await w.start();await w.settle();assert.equal(w.counts.promptDispatch,1);});
+await r.test('COMPLETED_START_REPLAY_NO_DOUBLE_BIND',async()=>{const w=make();await ready(w);await complete(w);const before=JSON.stringify(w.data[workKey]);await complete(w);assert.equal(JSON.stringify(w.data[workKey]),before);assert.equal(w.counts.promptDispatch,1);});
+for(const w of all)w.dispose();r.finish({scope:'real dispatcher, simulated Chrome storage/transport/DOM proof; no installed tests'});
