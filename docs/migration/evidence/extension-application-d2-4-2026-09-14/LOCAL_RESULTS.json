@@ -229,8 +229,8 @@
           "bytes": 4994
         },
         "apps/extension/src/application/runtime.js": {
-          "sha256": "43c506deb30293effe9b5daa5fa064a5a618eb57e063e79c031811881c76fc67",
-          "bytes": 21314
+          "sha256": "7692acb53ae4426a86c51dde35d8061467454dc41195ec6ce30050d09b375306",
+          "bytes": 21460
         },
         "apps/extension/src/application/delivery.js": {
           "sha256": "b4441d1efff36bc18b4f8023a5a7dd1c4371bfc1eba98353fffb04b2b5d923e2",
@@ -241,8 +241,8 @@
           "bytes": 3573
         },
         "apps/extension/src/application/popup.js": {
-          "sha256": "38fe0b50190464c28bde787aecbf67d2e18b936136e04e91a195508bab5adfc2",
-          "bytes": 9185
+          "sha256": "4715c0dd41b04b82ea6d8bf83ea80c966674083cf495f430e4bca8dca51f22ed",
+          "bytes": 9377
         },
         "apps/extension/src/application/popup.css": {
           "sha256": "2a8f4eba8a461dc81e3a7348babd95e71da843c35db1d60da30aae449f4fb43d",
@@ -382,8 +382,8 @@
         },
         {
           "path": "popup.js",
-          "sha256": "38fe0b50190464c28bde787aecbf67d2e18b936136e04e91a195508bab5adfc2",
-          "bytes": 9185
+          "sha256": "4715c0dd41b04b82ea6d8bf83ea80c966674083cf495f430e4bca8dca51f22ed",
+          "bytes": 9377
         },
         {
           "path": "service_worker.js",
@@ -407,8 +407,8 @@
         },
         {
           "path": "shared/application.js",
-          "sha256": "cd4c41969d761c84a7d5ac59c4b7e5921e5a1ef4c751f22262de17aafb4bb6e4",
-          "bytes": 32144
+          "sha256": "045377b935c04d623d009b0160df048497e932483729c0b5d0a0cfac1bd0fd27",
+          "bytes": 32290
         },
         {
           "path": "shared/bridge_autorun_model.js",
@@ -544,8 +544,8 @@
       "installed_acceptance": false,
       "package": {
         "name": "SELLER_AGENTS_D2_4_v0.2.3_DEVELOPMENT.zip",
-        "bytes": 1726025,
-        "sha256": "71b15363ab87f31551c9cd40642b2823db97cb07388875d167f2426eb550692a",
+        "bytes": 1726363,
+        "sha256": "baa3d726c212e96cb5757aece646496860e1550115502ca1def4e535f15e8276",
         "repeat_archive_match": true,
         "source_extracted_bytes_match": true
       }
@@ -558,10 +558,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/attachment_delivery_port_content.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/attachment_delivery_port_content.js"
       ],
       "exit_code": 0,
-      "seconds": 0.115,
+      "seconds": 0.064,
       "log": "logs/core-source-syntax-attachment_delivery_port_content.txt",
       "status": "PASS"
     },
@@ -570,10 +570,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/attachment_delivery_wake_content.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/attachment_delivery_wake_content.js"
       ],
       "exit_code": 0,
-      "seconds": 0.065,
+      "seconds": 0.064,
       "log": "logs/core-source-syntax-attachment_delivery_wake_content.txt",
       "status": "PASS"
     },
@@ -582,10 +582,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/content_script.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/content_script.js"
       ],
       "exit_code": 0,
-      "seconds": 0.115,
+      "seconds": 0.064,
       "log": "logs/core-source-syntax-content_script.txt",
       "status": "PASS"
     },
@@ -594,10 +594,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/popup.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/popup.js"
       ],
       "exit_code": 0,
-      "seconds": 0.065,
+      "seconds": 0.064,
       "log": "logs/core-source-syntax-popup.txt",
       "status": "PASS"
     },
@@ -606,10 +606,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/service_worker.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/service_worker.js"
       ],
       "exit_code": 0,
-      "seconds": 0.115,
+      "seconds": 0.064,
       "log": "logs/core-source-syntax-service_worker.txt",
       "status": "PASS"
     },
@@ -618,7 +618,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/service_worker_entry.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/service_worker_entry.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -630,7 +630,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ai_adapters.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ai_adapters.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -642,10 +642,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ai_delivery_capabilities.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ai_delivery_capabilities.js"
       ],
       "exit_code": 0,
-      "seconds": 0.065,
+      "seconds": 0.064,
       "log": "logs/core-source-syntax-ai_delivery_capabilities.txt",
       "status": "PASS"
     },
@@ -654,10 +654,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/application.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/application.js"
       ],
       "exit_code": 0,
-      "seconds": 0.114,
+      "seconds": 0.115,
       "log": "logs/core-source-syntax-application.txt",
       "status": "PASS"
     },
@@ -666,10 +666,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/bridge_autorun_model.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/bridge_autorun_model.js"
       ],
       "exit_code": 0,
-      "seconds": 0.115,
+      "seconds": 0.069,
       "log": "logs/core-source-syntax-bridge_autorun_model.txt",
       "status": "PASS"
     },
@@ -678,7 +678,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/composer_send.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/composer_send.js"
       ],
       "exit_code": 0,
       "seconds": 0.065,
@@ -690,10 +690,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/conversation_identity.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/conversation_identity.js"
       ],
       "exit_code": 0,
-      "seconds": 0.064,
+      "seconds": 0.065,
       "log": "logs/core-source-syntax-conversation_identity.txt",
       "status": "PASS"
     },
@@ -702,7 +702,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/direct_binary_file_delivery_patch.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/direct_binary_file_delivery_patch.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -714,10 +714,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_model_policy.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_model_policy.js"
       ],
       "exit_code": 0,
-      "seconds": 0.065,
+      "seconds": 0.116,
       "log": "logs/core-source-syntax-file_delivery_model_policy.txt",
       "status": "PASS"
     },
@@ -726,7 +726,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_port_worker.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_port_worker.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -738,7 +738,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_wake_worker.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_wake_worker.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -750,10 +750,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/live_runtime_v0122_patch.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/live_runtime_v0122_patch.js"
       ],
       "exit_code": 0,
-      "seconds": 0.066,
+      "seconds": 0.064,
       "log": "logs/core-source-syntax-live_runtime_v0122_patch.txt",
       "status": "PASS"
     },
@@ -762,7 +762,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/llm_output_report_workflow_patch.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/llm_output_report_workflow_patch.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -774,7 +774,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/manual_controls.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/manual_controls.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -786,10 +786,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/mixed_batch_discovery.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/mixed_batch_discovery.js"
       ],
       "exit_code": 0,
-      "seconds": 0.065,
+      "seconds": 0.064,
       "log": "logs/core-source-syntax-mixed_batch_discovery.txt",
       "status": "PASS"
     },
@@ -798,10 +798,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_contract.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_contract.js"
       ],
       "exit_code": 0,
-      "seconds": 0.114,
+      "seconds": 0.064,
       "log": "logs/core-source-syntax-ozon_contract.txt",
       "status": "PASS"
     },
@@ -810,7 +810,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_credentials.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_credentials.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -822,10 +822,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_entitlements.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_entitlements.js"
       ],
       "exit_code": 0,
-      "seconds": 0.065,
+      "seconds": 0.064,
       "log": "logs/core-source-syntax-ozon_entitlements.txt",
       "status": "PASS"
     },
@@ -834,10 +834,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_guidance.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_guidance.js"
       ],
       "exit_code": 0,
-      "seconds": 0.115,
+      "seconds": 0.064,
       "log": "logs/core-source-syntax-ozon_guidance.txt",
       "status": "PASS"
     },
@@ -846,10 +846,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_operation_registry.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_operation_registry.js"
       ],
       "exit_code": 0,
-      "seconds": 0.115,
+      "seconds": 0.064,
       "log": "logs/core-source-syntax-ozon_operation_registry.txt",
       "status": "PASS"
     },
@@ -858,7 +858,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_provider.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_provider.js"
       ],
       "exit_code": 0,
       "seconds": 0.065,
@@ -870,10 +870,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/performance_report_continuation_patch.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/performance_report_continuation_patch.js"
       ],
       "exit_code": 0,
-      "seconds": 0.115,
+      "seconds": 0.114,
       "log": "logs/core-source-syntax-performance_report_continuation_patch.txt",
       "status": "PASS"
     },
@@ -882,10 +882,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/proven_writing_block_capture.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/proven_writing_block_capture.js"
       ],
       "exit_code": 0,
-      "seconds": 0.064,
+      "seconds": 0.114,
       "log": "logs/core-source-syntax-proven_writing_block_capture.txt",
       "status": "PASS"
     },
@@ -894,10 +894,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/provider_transport_core.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/provider_transport_core.js"
       ],
       "exit_code": 0,
-      "seconds": 0.114,
+      "seconds": 0.064,
       "log": "logs/core-source-syntax-provider_transport_core.txt",
       "status": "PASS"
     },
@@ -906,7 +906,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/runtime_names.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/runtime_names.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -918,10 +918,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/swagger_read_surface_patch.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/swagger_read_surface_patch.js"
       ],
       "exit_code": 0,
-      "seconds": 0.114,
+      "seconds": 0.064,
       "log": "logs/core-source-syntax-swagger_read_surface_patch.txt",
       "status": "PASS"
     },
@@ -930,10 +930,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/wb_adapter.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/wb_adapter.js"
       ],
       "exit_code": 0,
-      "seconds": 0.115,
+      "seconds": 0.064,
       "log": "logs/core-source-syntax-wb_adapter.txt",
       "status": "PASS"
     },
@@ -942,7 +942,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/web_file_attachment.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/web_file_attachment.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -954,10 +954,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/work_session_model.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/work_session_model.js"
       ],
       "exit_code": 0,
-      "seconds": 0.114,
+      "seconds": 0.064,
       "log": "logs/core-source-syntax-work_session_model.txt",
       "status": "PASS"
     },
@@ -966,7 +966,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/xlsx_direct_binary_delivery_patch.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/xlsx_direct_binary_delivery_patch.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -977,9 +977,9 @@
       "id": "core-source-v0122-red",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_live_defects_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_live_defects_gate.mjs",
         "--baseline-red",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller"
       ],
       "exit_code": 0,
       "seconds": 0.114,
@@ -990,9 +990,9 @@
       "id": "core-source-v0122-green",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_live_defects_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_live_defects_gate.mjs",
         "--candidate-green",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller"
       ],
       "exit_code": 0,
       "seconds": 0.114,
@@ -1003,11 +1003,11 @@
       "id": "core-source-v0122-closure",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_dependency_closure_gate.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_dependency_closure_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller"
       ],
       "exit_code": 0,
-      "seconds": 0.115,
+      "seconds": 0.114,
       "log": "logs/core-source-v0122-closure.txt",
       "status": "PASS"
     },
@@ -1015,9 +1015,9 @@
       "id": "core-source-swagger-red",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-patch-2026-09-13/run_patch_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-patch-2026-09-13/run_patch_gate.mjs",
         "--baseline-red",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller"
       ],
       "exit_code": 0,
       "seconds": 0.114,
@@ -1028,8 +1028,8 @@
       "id": "core-source-swagger-green",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-patch-2026-09-13/run_patch_gate.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-patch-2026-09-13/run_patch_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller"
       ],
       "exit_code": 0,
       "seconds": 0.114,
@@ -1040,8 +1040,8 @@
       "id": "core-source-514",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-patch-2026-09-13/run_final_514_registry_gate.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-patch-2026-09-13/run_final_514_registry_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source",
         "/workspace/scratch/a73487e33082/Seller_Agents/tests/fixtures/imported/ozon-control-17aa0833/FINAL_CONTROL_SAFETY_MATRIX.jsonl"
       ],
       "exit_code": 0,
@@ -1053,8 +1053,8 @@
       "id": "core-source-date",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/read-effect-repair-v1/run_defect_015_date_repair_gate.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/read-effect-repair-v1/run_defect_015_date_repair_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source"
       ],
       "exit_code": 0,
       "seconds": 0.114,
@@ -1065,11 +1065,11 @@
       "id": "core-source-effect",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/read-effect-repair-v1/run_effect_read_repair_gate.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/read-effect-repair-v1/run_effect_read_repair_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source"
       ],
       "exit_code": 0,
-      "seconds": 0.616,
+      "seconds": 0.568,
       "log": "logs/core-source-effect.txt",
       "status": "PASS"
     },
@@ -1077,8 +1077,8 @@
       "id": "core-source-shared-consumers",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_shared_consumer_parity_gate.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_shared_consumer_parity_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller"
       ],
       "exit_code": 0,
       "seconds": 0.114,
@@ -1089,11 +1089,11 @@
       "id": "core-source-swagger-closure",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_dependency_closure_gate.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_dependency_closure_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller"
       ],
       "exit_code": 0,
-      "seconds": 0.117,
+      "seconds": 0.114,
       "log": "logs/core-source-swagger-closure.txt",
       "status": "PASS"
     },
@@ -1101,12 +1101,12 @@
       "id": "core-source-predispatch-red",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_runtime_predispatch_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_runtime_predispatch_gate.mjs",
         "--expect-red",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/red-ozon"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/red-ozon"
       ],
       "exit_code": 0,
-      "seconds": 0.115,
+      "seconds": 0.114,
       "log": "logs/core-source-predispatch-red.txt",
       "status": "PASS"
     },
@@ -1114,11 +1114,11 @@
       "id": "core-source-predispatch-green",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_composed_predispatch_gate.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_composed_predispatch_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller"
       ],
       "exit_code": 0,
-      "seconds": 0.165,
+      "seconds": 0.114,
       "log": "logs/core-source-predispatch-green.txt",
       "status": "PASS"
     },
@@ -1126,12 +1126,12 @@
       "id": "core-source-full-worker-red",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_full_worker_batch_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_full_worker_batch_gate.mjs",
         "--expect-red",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/red-ozon"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/red-ozon"
       ],
       "exit_code": 0,
-      "seconds": 0.516,
+      "seconds": 0.465,
       "log": "logs/core-source-full-worker-red.txt",
       "status": "PASS"
     },
@@ -1139,11 +1139,11 @@
       "id": "core-source-full-worker-green",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_composed_full_worker_gate.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_composed_full_worker_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller"
       ],
       "exit_code": 0,
-      "seconds": 0.716,
+      "seconds": 0.768,
       "log": "logs/core-source-full-worker-green.txt",
       "status": "PASS"
     },
@@ -1152,7 +1152,7 @@
       "command": [
         "node",
         "/workspace/scratch/a73487e33082/Seller_Agents/tests/regression/extension-core/core-contracts.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/package/runtime"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/package/runtime"
       ],
       "exit_code": 0,
       "seconds": 0.114,
@@ -1164,10 +1164,10 @@
       "command": [
         "node",
         "/workspace/scratch/a73487e33082/Seller_Agents/tests/regression/extension-core/worker-lifecycle.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/package/runtime"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/package/runtime"
       ],
       "exit_code": 0,
-      "seconds": 0.616,
+      "seconds": 0.666,
       "log": "logs/core-source-worker.txt",
       "status": "PASS"
     },
@@ -1176,7 +1176,7 @@
       "command": [
         "node",
         "/workspace/scratch/a73487e33082/Seller_Agents/tests/regression/extension-core/batch-context.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/package/runtime"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/package/runtime"
       ],
       "exit_code": 0,
       "seconds": 1.017,
@@ -1188,10 +1188,10 @@
       "command": [
         "node",
         "/workspace/scratch/a73487e33082/Seller_Agents/tests/regression/extension-core/wb-adapter.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/package/runtime"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/package/runtime"
       ],
       "exit_code": 0,
-      "seconds": 0.319,
+      "seconds": 0.365,
       "log": "logs/core-source-wb-adapter.txt",
       "status": "PASS"
     },
@@ -1200,10 +1200,10 @@
       "command": [
         "node",
         "/workspace/scratch/a73487e33082/Seller_Agents/tests/regression/extension-core/application.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/package/runtime"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/package/runtime"
       ],
       "exit_code": 0,
-      "seconds": 0.716,
+      "seconds": 0.816,
       "log": "logs/core-source-application.txt",
       "status": "PASS"
     },
@@ -1211,8 +1211,8 @@
       "id": "core-source-transaction-abort",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/indexeddb-transaction-durability-v1/run_prefix_transaction_abort_gate.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/indexeddb-transaction-durability-v1/run_prefix_transaction_abort_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source"
       ],
       "exit_code": 0,
       "seconds": 0.115,
@@ -1223,7 +1223,7 @@
       "id": "core-source-attachment",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/regression/run_direct_binary_provider_attachment_gate.mjs"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/regression/run_direct_binary_provider_attachment_gate.mjs"
       ],
       "exit_code": 0,
       "seconds": 0.115,
@@ -1235,10 +1235,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/attachment_delivery_port_content.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/attachment_delivery_port_content.js"
       ],
       "exit_code": 0,
-      "seconds": 0.064,
+      "seconds": 0.114,
       "log": "logs/core-package-syntax-attachment_delivery_port_content.txt",
       "status": "PASS"
     },
@@ -1247,10 +1247,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/attachment_delivery_wake_content.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/attachment_delivery_wake_content.js"
       ],
       "exit_code": 0,
-      "seconds": 0.114,
+      "seconds": 0.064,
       "log": "logs/core-package-syntax-attachment_delivery_wake_content.txt",
       "status": "PASS"
     },
@@ -1259,7 +1259,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/content_script.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/content_script.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -1271,10 +1271,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/popup.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/popup.js"
       ],
       "exit_code": 0,
-      "seconds": 0.065,
+      "seconds": 0.064,
       "log": "logs/core-package-syntax-popup.txt",
       "status": "PASS"
     },
@@ -1283,7 +1283,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/service_worker.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/service_worker.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -1295,7 +1295,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/service_worker_entry.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/service_worker_entry.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -1307,7 +1307,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ai_adapters.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ai_adapters.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -1319,7 +1319,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ai_delivery_capabilities.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ai_delivery_capabilities.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -1331,10 +1331,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/application.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/application.js"
       ],
       "exit_code": 0,
-      "seconds": 0.064,
+      "seconds": 0.065,
       "log": "logs/core-package-syntax-application.txt",
       "status": "PASS"
     },
@@ -1343,7 +1343,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/bridge_autorun_model.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/bridge_autorun_model.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -1355,7 +1355,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/composer_send.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/composer_send.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -1367,7 +1367,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/conversation_identity.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/conversation_identity.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -1379,7 +1379,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/direct_binary_file_delivery_patch.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/direct_binary_file_delivery_patch.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -1391,10 +1391,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_model_policy.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_model_policy.js"
       ],
       "exit_code": 0,
-      "seconds": 0.064,
+      "seconds": 0.065,
       "log": "logs/core-package-syntax-file_delivery_model_policy.txt",
       "status": "PASS"
     },
@@ -1403,10 +1403,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_port_worker.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_port_worker.js"
       ],
       "exit_code": 0,
-      "seconds": 0.064,
+      "seconds": 0.114,
       "log": "logs/core-package-syntax-file_delivery_port_worker.txt",
       "status": "PASS"
     },
@@ -1415,10 +1415,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_wake_worker.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_wake_worker.js"
       ],
       "exit_code": 0,
-      "seconds": 0.064,
+      "seconds": 0.066,
       "log": "logs/core-package-syntax-file_delivery_wake_worker.txt",
       "status": "PASS"
     },
@@ -1427,10 +1427,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/live_runtime_v0122_patch.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/live_runtime_v0122_patch.js"
       ],
       "exit_code": 0,
-      "seconds": 0.064,
+      "seconds": 0.115,
       "log": "logs/core-package-syntax-live_runtime_v0122_patch.txt",
       "status": "PASS"
     },
@@ -1439,10 +1439,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/llm_output_report_workflow_patch.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/llm_output_report_workflow_patch.js"
       ],
       "exit_code": 0,
-      "seconds": 0.064,
+      "seconds": 0.116,
       "log": "logs/core-package-syntax-llm_output_report_workflow_patch.txt",
       "status": "PASS"
     },
@@ -1451,10 +1451,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/manual_controls.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/manual_controls.js"
       ],
       "exit_code": 0,
-      "seconds": 0.065,
+      "seconds": 0.064,
       "log": "logs/core-package-syntax-manual_controls.txt",
       "status": "PASS"
     },
@@ -1463,7 +1463,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/mixed_batch_discovery.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/mixed_batch_discovery.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -1475,7 +1475,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_contract.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_contract.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -1487,7 +1487,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_credentials.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_credentials.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -1499,10 +1499,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_entitlements.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_entitlements.js"
       ],
       "exit_code": 0,
-      "seconds": 0.064,
+      "seconds": 0.065,
       "log": "logs/core-package-syntax-ozon_entitlements.txt",
       "status": "PASS"
     },
@@ -1511,7 +1511,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_guidance.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_guidance.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -1523,7 +1523,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_operation_registry.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_operation_registry.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -1535,10 +1535,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_provider.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_provider.js"
       ],
       "exit_code": 0,
-      "seconds": 0.065,
+      "seconds": 0.064,
       "log": "logs/core-package-syntax-ozon_provider.txt",
       "status": "PASS"
     },
@@ -1547,10 +1547,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/performance_report_continuation_patch.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/performance_report_continuation_patch.js"
       ],
       "exit_code": 0,
-      "seconds": 0.115,
+      "seconds": 0.064,
       "log": "logs/core-package-syntax-performance_report_continuation_patch.txt",
       "status": "PASS"
     },
@@ -1559,10 +1559,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/proven_writing_block_capture.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/proven_writing_block_capture.js"
       ],
       "exit_code": 0,
-      "seconds": 0.065,
+      "seconds": 0.064,
       "log": "logs/core-package-syntax-proven_writing_block_capture.txt",
       "status": "PASS"
     },
@@ -1571,10 +1571,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/provider_transport_core.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/provider_transport_core.js"
       ],
       "exit_code": 0,
-      "seconds": 0.064,
+      "seconds": 0.115,
       "log": "logs/core-package-syntax-provider_transport_core.txt",
       "status": "PASS"
     },
@@ -1583,7 +1583,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/runtime_names.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/runtime_names.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -1595,10 +1595,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/swagger_read_surface_patch.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/swagger_read_surface_patch.js"
       ],
       "exit_code": 0,
-      "seconds": 0.064,
+      "seconds": 0.067,
       "log": "logs/core-package-syntax-swagger_read_surface_patch.txt",
       "status": "PASS"
     },
@@ -1607,7 +1607,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/wb_adapter.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/wb_adapter.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -1619,10 +1619,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/web_file_attachment.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/web_file_attachment.js"
       ],
       "exit_code": 0,
-      "seconds": 0.064,
+      "seconds": 0.114,
       "log": "logs/core-package-syntax-web_file_attachment.txt",
       "status": "PASS"
     },
@@ -1631,10 +1631,10 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/work_session_model.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/work_session_model.js"
       ],
       "exit_code": 0,
-      "seconds": 0.064,
+      "seconds": 0.065,
       "log": "logs/core-package-syntax-work_session_model.txt",
       "status": "PASS"
     },
@@ -1643,7 +1643,7 @@
       "command": [
         "node",
         "--check",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/xlsx_direct_binary_delivery_patch.js"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/xlsx_direct_binary_delivery_patch.js"
       ],
       "exit_code": 0,
       "seconds": 0.064,
@@ -1654,9 +1654,9 @@
       "id": "core-package-v0122-red",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_live_defects_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_live_defects_gate.mjs",
         "--baseline-red",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller"
       ],
       "exit_code": 0,
       "seconds": 0.114,
@@ -1667,9 +1667,9 @@
       "id": "core-package-v0122-green",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_live_defects_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_live_defects_gate.mjs",
         "--candidate-green",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller"
       ],
       "exit_code": 0,
       "seconds": 0.114,
@@ -1680,8 +1680,8 @@
       "id": "core-package-v0122-closure",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_dependency_closure_gate.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_dependency_closure_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller"
       ],
       "exit_code": 0,
       "seconds": 0.114,
@@ -1692,11 +1692,11 @@
       "id": "core-package-swagger-green",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-patch-2026-09-13/run_patch_gate.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-patch-2026-09-13/run_patch_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller"
       ],
       "exit_code": 0,
-      "seconds": 0.165,
+      "seconds": 0.115,
       "log": "logs/core-package-swagger-green.txt",
       "status": "PASS"
     },
@@ -1704,12 +1704,12 @@
       "id": "core-package-514",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-patch-2026-09-13/run_final_514_registry_gate.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-patch-2026-09-13/run_final_514_registry_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package",
         "/workspace/scratch/a73487e33082/Seller_Agents/tests/fixtures/imported/ozon-control-17aa0833/FINAL_CONTROL_SAFETY_MATRIX.jsonl"
       ],
       "exit_code": 0,
-      "seconds": 0.115,
+      "seconds": 0.114,
       "log": "logs/core-package-514.txt",
       "status": "PASS"
     },
@@ -1717,11 +1717,11 @@
       "id": "core-package-date",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/read-effect-repair-v1/run_defect_015_date_repair_gate.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/read-effect-repair-v1/run_defect_015_date_repair_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package"
       ],
       "exit_code": 0,
-      "seconds": 0.114,
+      "seconds": 0.115,
       "log": "logs/core-package-date.txt",
       "status": "PASS"
     },
@@ -1729,11 +1729,11 @@
       "id": "core-package-effect",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/read-effect-repair-v1/run_effect_read_repair_gate.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/read-effect-repair-v1/run_effect_read_repair_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package"
       ],
       "exit_code": 0,
-      "seconds": 0.518,
+      "seconds": 0.568,
       "log": "logs/core-package-effect.txt",
       "status": "PASS"
     },
@@ -1741,8 +1741,8 @@
       "id": "core-package-shared-consumers",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_shared_consumer_parity_gate.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_shared_consumer_parity_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller"
       ],
       "exit_code": 0,
       "seconds": 0.114,
@@ -1753,11 +1753,11 @@
       "id": "core-package-swagger-closure",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_dependency_closure_gate.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_dependency_closure_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller"
       ],
       "exit_code": 0,
-      "seconds": 0.114,
+      "seconds": 0.115,
       "log": "logs/core-package-swagger-closure.txt",
       "status": "PASS"
     },
@@ -1765,11 +1765,11 @@
       "id": "core-package-predispatch-green",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_composed_predispatch_gate.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_composed_predispatch_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller"
       ],
       "exit_code": 0,
-      "seconds": 0.164,
+      "seconds": 0.114,
       "log": "logs/core-package-predispatch-green.txt",
       "status": "PASS"
     },
@@ -1777,11 +1777,11 @@
       "id": "core-package-full-worker-green",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_composed_full_worker_gate.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_composed_full_worker_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller"
       ],
       "exit_code": 0,
-      "seconds": 0.716,
+      "seconds": 0.666,
       "log": "logs/core-package-full-worker-green.txt",
       "status": "PASS"
     },
@@ -1790,10 +1790,10 @@
       "command": [
         "node",
         "/workspace/scratch/a73487e33082/Seller_Agents/tests/regression/extension-core/core-contracts.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/package/extracted"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/package/extracted"
       ],
       "exit_code": 0,
-      "seconds": 0.115,
+      "seconds": 0.114,
       "log": "logs/core-package-contracts.txt",
       "status": "PASS"
     },
@@ -1802,10 +1802,10 @@
       "command": [
         "node",
         "/workspace/scratch/a73487e33082/Seller_Agents/tests/regression/extension-core/worker-lifecycle.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/package/extracted"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/package/extracted"
       ],
       "exit_code": 0,
-      "seconds": 0.667,
+      "seconds": 0.666,
       "log": "logs/core-package-worker.txt",
       "status": "PASS"
     },
@@ -1814,10 +1814,10 @@
       "command": [
         "node",
         "/workspace/scratch/a73487e33082/Seller_Agents/tests/regression/extension-core/batch-context.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/package/extracted"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/package/extracted"
       ],
       "exit_code": 0,
-      "seconds": 0.967,
+      "seconds": 1.018,
       "log": "logs/core-package-context.txt",
       "status": "PASS"
     },
@@ -1826,7 +1826,7 @@
       "command": [
         "node",
         "/workspace/scratch/a73487e33082/Seller_Agents/tests/regression/extension-core/wb-adapter.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/package/extracted"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/package/extracted"
       ],
       "exit_code": 0,
       "seconds": 0.315,
@@ -1838,10 +1838,10 @@
       "command": [
         "node",
         "/workspace/scratch/a73487e33082/Seller_Agents/tests/regression/extension-core/application.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/package/extracted"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/package/extracted"
       ],
       "exit_code": 0,
-      "seconds": 0.816,
+      "seconds": 0.766,
       "log": "logs/core-package-application.txt",
       "status": "PASS"
     },
@@ -1849,11 +1849,11 @@
       "id": "core-package-transaction-abort",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/indexeddb-transaction-durability-v1/run_prefix_transaction_abort_gate.mjs",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/indexeddb-transaction-durability-v1/run_prefix_transaction_abort_gate.mjs",
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package"
       ],
       "exit_code": 0,
-      "seconds": 0.115,
+      "seconds": 0.117,
       "log": "logs/core-package-transaction-abort.txt",
       "status": "PASS"
     },
@@ -1861,10 +1861,10 @@
       "id": "core-package-attachment",
       "command": [
         "node",
-        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate6/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/regression/run_direct_binary_provider_attachment_gate.mjs"
+        "/workspace/scratch/a73487e33082/Seller_Agents/build/d24-gate7/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/regression/run_direct_binary_provider_attachment_gate.mjs"
       ],
       "exit_code": 0,
-      "seconds": 0.114,
+      "seconds": 0.115,
       "log": "logs/core-package-attachment.txt",
       "status": "PASS"
     }

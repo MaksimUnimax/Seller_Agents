@@ -4,7 +4,7 @@ fixture AI tab, because Playwright does not operate the browser action toolbar.
 No live AI/provider or installed target-browser certification is claimed.
 """
 from pathlib import Path
-import argparse,json,tempfile,time,os
+import argparse,json,tempfile,time,os,traceback
 from playwright.sync_api import sync_playwright
 ROOT=Path(__file__).resolve().parents[3]
 
@@ -91,7 +91,7 @@ def run(runtime,output):
             assert not errors,errors
             result.update(status='PASS',browser=context.browser.version,checks=['popup create/edit','real Work prompt','old-history baseline','WB mixed block text send','no replay','Show/Hide','native binary File/IDB/port send','Finish','320/380px and enlarged typography'])
         except Exception as error:
-            result.update(status='FAIL',error=str(error),page_errors=errors)
+            result.update(status='FAIL',error=str(error),traceback=traceback.format_exc(),page_errors=errors)
             if popup:
                 try:popup.screenshot(path=str(output/'failure-popup.png'),full_page=True)
                 except Exception:pass

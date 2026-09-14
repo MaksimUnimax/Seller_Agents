@@ -27,7 +27,9 @@ const saReady = (async () => {
 })();
 function saError(code) { return Object.assign(new Error(code), { code }); }
 function saPopupSender(sender) {
-  return !sender?.tab && sender?.url === chrome.runtime.getURL("popup.html");
+  // MessageSender.url is assigned by the browser, not supplied in the message.
+  // The same privileged page may be hosted by the browser action or its own tab.
+  return sender?.url === chrome.runtime.getURL("popup.html");
 }
 async function saEnabled() { await saReady; return saCatalogEnabled; }
 let saInitializeFlight = null;

@@ -65,6 +65,12 @@ async function setup(options = {}) {
 await test('APP-01-popup-sender-catalog-names-and-secret-isolation', async () => {
   const s = await setup(); try {
     const denied = await s.worker.request({ type: 'SA_STORE_SAVE', store: wb(fixtureToken) }); assert.equal(denied.code, 'POPUP_SENDER_REQUIRED');
+    for(const url of ['https://chatgpt.com/c/fixture','chrome-extension://other-extension/popup.html','chrome-extension://core-fixture/other.html']) {
+      const response=await s.worker.request({type:'SA_POPUP_STATE',tab_id:s.worker.tabId},{url,tab:{id:999}});
+      assert.equal(response.code,'POPUP_SENDER_REQUIRED');
+    }
+    const ownPage=await s.worker.request({type:'SA_POPUP_STATE',tab_id:s.worker.tabId},{url:'chrome-extension://core-fixture/popup.html',tab:{id:999}});
+    assert.equal(ownPage.ok,true);
     const a = await s.save(wb(fixtureToken)), b = await s.save(wb('FIXTURE_SECOND'));
     assert.equal(a.name, 'WB 1'); assert.equal(b.name, 'WB 2'); assert.notEqual(a.id, b.id);
     const renamed = await s.save({ id: a.id, marketplace: a.marketplace, name: 'Новый магазин', personalDataEnabled: true });

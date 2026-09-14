@@ -71,7 +71,7 @@ chrome.tabs.query({ active: true, currentWindow: true }).then(tabs => { tabId = 
 
 let refreshTimer;
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area !== "local") return;
+  if (area !== "local" || !Object.keys(changes).some(key => ["seller_agents_stores_v1", "ozmb_work_sessions_v1", "ozmb_pending_work_starts_v1", "ozmb_conversation_bindings", "ozmb_manual_operations"].includes(key))) return;
   clearTimeout(refreshTimer);
   refreshTimer = setTimeout(() => { if (!busy && tabId) refresh().catch(e => { $("status").textContent = e.message; }); }, 100);
 });
