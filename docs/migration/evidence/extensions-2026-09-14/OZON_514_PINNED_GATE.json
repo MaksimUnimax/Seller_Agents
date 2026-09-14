@@ -1,0 +1,37 @@
+{
+  "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+  "gate_source_path": "tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-patch-2026-09-13/run_final_514_registry_gate.mjs",
+  "matrix_source_commit": "17aa08335ee3acdc80cc7a093ddfa462198872f5",
+  "matrix_sha256": "1bc4a66bf63277558a00297b358f64f6a38cd073480ec02aa6041bcc4e0b50ce",
+  "invocation": "node <gate-source-path> <source-repository-root> <pinned-matrix-path>",
+  "exit_code": 0,
+  "stdout": "OZON_FINAL_514_PATCHED_REGISTRY_GATE_PASS\n{\n  \"verdict\": \"PASS\",\n  \"matrix_rows\": 514,\n  \"unique_swagger_operations\": 514,\n  \"final_read_capable_operations\": 299,\n  \"read_capable_operations_with_enabled_alias\": 299,\n  \"missing_read_capable_operations\": 0,\n  \"enabled_mutation_exposures\": 0,\n  \"enabled_deprecated_exposures\": 0,\n  \"enabled_aliases_without_current_swagger_target\": 0,\n  \"patched_registry_aliases_total\": 303,\n  \"enabled_current_swagger_transports\": 299,\n  \"internal_non_swagger_aliases\": [\n    \"report_file_get\"\n  ],\n  \"duplicate_read_transport_mappings\": [],\n  \"class_counts\": {\n    \"READ_SAFE_DIRECT\": 211,\n    \"MUTATION_BUSINESS_STATE\": 183,\n    \"DEPRECATED_OR_RETIRED\": 32,\n    \"READ_SAFE_REPORT_START\": 29,\n    \"READ_SAFE_REPORT_STATUS\": 15,\n    \"READ_SAFE_REPORT_DOWNLOAD\": 2,\n    \"READ_SAFE_WITH_PRIVACY_GATE\": 30,\n    \"CONDITIONAL_READ\": 12\n  }\n}\n",
+  "result": {
+    "verdict": "PASS",
+    "matrix_rows": 514,
+    "unique_swagger_operations": 514,
+    "final_read_capable_operations": 299,
+    "read_capable_operations_with_enabled_alias": 299,
+    "missing_read_capable_operations": 0,
+    "enabled_mutation_exposures": 0,
+    "enabled_deprecated_exposures": 0,
+    "enabled_aliases_without_current_swagger_target": 0,
+    "patched_registry_aliases_total": 303,
+    "enabled_current_swagger_transports": 299,
+    "internal_non_swagger_aliases": [
+      "report_file_get"
+    ],
+    "duplicate_read_transport_mappings": [],
+    "class_counts": {
+      "READ_SAFE_DIRECT": 211,
+      "MUTATION_BUSINESS_STATE": 183,
+      "DEPRECATED_OR_RETIRED": 32,
+      "READ_SAFE_REPORT_START": 29,
+      "READ_SAFE_REPORT_STATUS": 15,
+      "READ_SAFE_REPORT_DOWNLOAD": 2,
+      "READ_SAFE_WITH_PRIVACY_GATE": 30,
+      "CONDITIONAL_READ": 12
+    }
+  },
+  "provider_calls": 0
+}

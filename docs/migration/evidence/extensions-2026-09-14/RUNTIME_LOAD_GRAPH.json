@@ -1,0 +1,757 @@
+{
+  "schema_version": 1,
+  "status": "STATIC_LOAD_GRAPH_VERIFIED",
+  "components": {
+    "ozon": {
+      "manifest": {
+        "manifest_version": 3,
+        "name": "Ozon Bridge — Multi-AI ↔ Ozon Seller + Performance API",
+        "version": "0.1.22",
+        "description": "Контролируемый read-only мост ChatGPT/Alice ↔ Ozon Seller + Performance API: multi-AI adapters, batch collection, recovery и локальные credentials.",
+        "permissions": [
+          "storage",
+          "alarms",
+          "tabs",
+          "unlimitedStorage"
+        ],
+        "host_permissions": [
+          "https://chatgpt.com/*",
+          "https://chat.openai.com/*",
+          "https://alice.yandex.ru/*",
+          "https://api-seller.ozon.ru/*",
+          "https://api-performance.ozon.ru/*",
+          "https://docs.ozon.ru/*",
+          "https://ozon.ru/*",
+          "https://*.ozon.ru/*",
+          "https://ozone.ru/*",
+          "https://*.ozone.ru/*"
+        ],
+        "background": {
+          "service_worker": "service_worker_entry.js"
+        },
+        "content_scripts": [
+          {
+            "matches": [
+              "https://chatgpt.com/*",
+              "https://chat.openai.com/*",
+              "https://alice.yandex.ru/*"
+            ],
+            "js": [
+              "shared/conversation_identity.js",
+              "shared/runtime_names.js",
+              "shared/work_session_model.js",
+              "shared/ai_delivery_capabilities.js",
+              "shared/ai_adapters.js",
+              "shared/ozon_operation_registry.js",
+              "shared/ozon_entitlements.js",
+              "shared/ozon_contract.js",
+              "shared/ozon_guidance.js",
+              "shared/swagger_read_surface_patch.js",
+              "shared/bridge_autorun_model.js",
+              "shared/manual_controls.js",
+              "shared/composer_send.js",
+              "shared/proven_writing_block_capture.js",
+              "shared/web_file_attachment.js",
+              "content_script.js",
+              "attachment_delivery_port_content.js",
+              "attachment_delivery_wake_content.js"
+            ],
+            "run_at": "document_idle"
+          }
+        ],
+        "action": {
+          "default_title": "Ozon Bridge",
+          "default_popup": "popup.html"
+        }
+      },
+      "entrypoints": [
+        "manifest.json"
+      ],
+      "ordered_edges": [
+        {
+          "from": "manifest.json",
+          "to": "service_worker_entry.js",
+          "kind": "background",
+          "order": 0
+        },
+        {
+          "from": "manifest.json",
+          "to": "popup.html",
+          "kind": "popup",
+          "order": 0
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/conversation_identity.js",
+          "kind": "content_script_group_0",
+          "order": 0
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/runtime_names.js",
+          "kind": "content_script_group_0",
+          "order": 1
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/work_session_model.js",
+          "kind": "content_script_group_0",
+          "order": 2
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/ai_delivery_capabilities.js",
+          "kind": "content_script_group_0",
+          "order": 3
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/ai_adapters.js",
+          "kind": "content_script_group_0",
+          "order": 4
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/ozon_operation_registry.js",
+          "kind": "content_script_group_0",
+          "order": 5
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/ozon_entitlements.js",
+          "kind": "content_script_group_0",
+          "order": 6
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/ozon_contract.js",
+          "kind": "content_script_group_0",
+          "order": 7
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/ozon_guidance.js",
+          "kind": "content_script_group_0",
+          "order": 8
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/swagger_read_surface_patch.js",
+          "kind": "content_script_group_0",
+          "order": 9
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/bridge_autorun_model.js",
+          "kind": "content_script_group_0",
+          "order": 10
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/manual_controls.js",
+          "kind": "content_script_group_0",
+          "order": 11
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/composer_send.js",
+          "kind": "content_script_group_0",
+          "order": 12
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/proven_writing_block_capture.js",
+          "kind": "content_script_group_0",
+          "order": 13
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/web_file_attachment.js",
+          "kind": "content_script_group_0",
+          "order": 14
+        },
+        {
+          "from": "manifest.json",
+          "to": "content_script.js",
+          "kind": "content_script_group_0",
+          "order": 15
+        },
+        {
+          "from": "manifest.json",
+          "to": "attachment_delivery_port_content.js",
+          "kind": "content_script_group_0",
+          "order": 16
+        },
+        {
+          "from": "manifest.json",
+          "to": "attachment_delivery_wake_content.js",
+          "kind": "content_script_group_0",
+          "order": 17
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/conversation_identity.js",
+          "kind": "importScripts_0",
+          "order": 0
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/runtime_names.js",
+          "kind": "importScripts_0",
+          "order": 1
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/work_session_model.js",
+          "kind": "importScripts_0",
+          "order": 2
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/manual_controls.js",
+          "kind": "importScripts_0",
+          "order": 3
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/ozon_credentials.js",
+          "kind": "importScripts_0",
+          "order": 4
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/ozon_operation_registry.js",
+          "kind": "importScripts_0",
+          "order": 5
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/ozon_entitlements.js",
+          "kind": "importScripts_0",
+          "order": 6
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/ozon_contract.js",
+          "kind": "importScripts_0",
+          "order": 7
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/ozon_guidance.js",
+          "kind": "importScripts_0",
+          "order": 8
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/bridge_autorun_model.js",
+          "kind": "importScripts_0",
+          "order": 9
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/provider_transport_core.js",
+          "kind": "importScripts_0",
+          "order": 10
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/ozon_provider.js",
+          "kind": "importScripts_0",
+          "order": 11
+        },
+        {
+          "from": "service_worker_entry.js",
+          "to": "shared/ai_delivery_capabilities.js",
+          "kind": "importScripts_0",
+          "order": 0
+        },
+        {
+          "from": "service_worker_entry.js",
+          "to": "shared/mixed_batch_discovery.js",
+          "kind": "importScripts_1",
+          "order": 0
+        },
+        {
+          "from": "service_worker_entry.js",
+          "to": "service_worker.js",
+          "kind": "importScripts_2",
+          "order": 0
+        },
+        {
+          "from": "service_worker_entry.js",
+          "to": "shared/swagger_read_surface_patch.js",
+          "kind": "importScripts_3",
+          "order": 0
+        },
+        {
+          "from": "service_worker_entry.js",
+          "to": "shared/live_runtime_v0122_patch.js",
+          "kind": "importScripts_4",
+          "order": 0
+        },
+        {
+          "from": "service_worker_entry.js",
+          "to": "shared/xlsx_direct_binary_delivery_patch.js",
+          "kind": "importScripts_5",
+          "order": 0
+        },
+        {
+          "from": "service_worker_entry.js",
+          "to": "shared/llm_output_report_workflow_patch.js",
+          "kind": "importScripts_6",
+          "order": 0
+        },
+        {
+          "from": "service_worker_entry.js",
+          "to": "shared/performance_report_continuation_patch.js",
+          "kind": "importScripts_7",
+          "order": 0
+        },
+        {
+          "from": "service_worker_entry.js",
+          "to": "shared/direct_binary_file_delivery_patch.js",
+          "kind": "importScripts_8",
+          "order": 0
+        },
+        {
+          "from": "service_worker_entry.js",
+          "to": "shared/file_delivery_model_policy.js",
+          "kind": "importScripts_9",
+          "order": 0
+        },
+        {
+          "from": "service_worker_entry.js",
+          "to": "shared/file_delivery_port_worker.js",
+          "kind": "importScripts_10",
+          "order": 0
+        },
+        {
+          "from": "service_worker_entry.js",
+          "to": "shared/file_delivery_wake_worker.js",
+          "kind": "importScripts_11",
+          "order": 0
+        },
+        {
+          "from": "popup.html",
+          "to": "popup.css",
+          "kind": "html_resource",
+          "order": 0
+        },
+        {
+          "from": "popup.html",
+          "to": "popup.js",
+          "kind": "html_resource",
+          "order": 1
+        }
+      ],
+      "reachable_files": 36,
+      "unreachable_files": [],
+      "scope": "Exact literal manifest/importScripts/popup resource load graph. Not a complete semantic call graph or proof of behavioral parity."
+    },
+    "wildberries": {
+      "manifest": {
+        "manifest_version": 3,
+        "name": "Wildberries Bridge — ChatGPT / Алиса",
+        "version": "0.3.0",
+        "description": "Read-only WB Bridge: ручные команды, рабочие сессии и доставка файлов.",
+        "permissions": [
+          "storage",
+          "tabs",
+          "unlimitedStorage",
+          "alarms"
+        ],
+        "host_permissions": [
+          "https://chatgpt.com/*",
+          "https://chat.openai.com/*",
+          "https://content-api.wildberries.ru/*",
+          "https://discounts-prices-api.wildberries.ru/*",
+          "https://marketplace-api.wildberries.ru/*",
+          "https://seller-analytics-api.wildberries.ru/*",
+          "https://statistics-api.wildberries.ru/*",
+          "https://finance-api.wildberries.ru/*",
+          "https://documents-api.wildberries.ru/*",
+          "https://common-api.wildberries.ru/*",
+          "https://supplies-api.wildberries.ru/*",
+          "https://advert-api.wildberries.ru/*",
+          "https://advert-media-api.wildberries.ru/*",
+          "https://dp-calendar-api.wildberries.ru/*",
+          "https://feedbacks-api.wildberries.ru/*",
+          "https://returns-api.wildberries.ru/*",
+          "https://alice.yandex.ru/*"
+        ],
+        "background": {
+          "service_worker": "service_worker.js"
+        },
+        "content_scripts": [
+          {
+            "matches": [
+              "https://chatgpt.com/*",
+              "https://chat.openai.com/*",
+              "https://alice.yandex.ru/*"
+            ],
+            "js": [
+              "shared/ai_delivery_capabilities.js",
+              "shared/web_file_attachment.js",
+              "shared/ai_adapters.js",
+              "shared/conversation_identity.js",
+              "shared/runtime_names.js",
+              "shared/wb_operations.js",
+              "shared/wb_contract.js",
+              "shared/parameter_guidance.js",
+              "shared/mixed_batch_discovery.js",
+              "shared/wb_guidance_registry.js",
+              "shared/wb_guidance.js",
+              "shared/delivery_policy.js",
+              "shared/wb_command_protocol.js",
+              "shared/bridge_autorun_model.js",
+              "shared/manual_controls.js",
+              "shared/composer_send.js",
+              "shared/proven_writing_block_capture.js",
+              "shared/file_delivery.js",
+              "shared/xlsx_reader.js",
+              "content_script.js"
+            ],
+            "run_at": "document_idle"
+          }
+        ],
+        "action": {
+          "default_title": "Wildberries Bridge",
+          "default_popup": "popup.html"
+        }
+      },
+      "entrypoints": [
+        "manifest.json"
+      ],
+      "ordered_edges": [
+        {
+          "from": "manifest.json",
+          "to": "service_worker.js",
+          "kind": "background",
+          "order": 0
+        },
+        {
+          "from": "manifest.json",
+          "to": "popup.html",
+          "kind": "popup",
+          "order": 0
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/ai_delivery_capabilities.js",
+          "kind": "content_script_group_0",
+          "order": 0
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/web_file_attachment.js",
+          "kind": "content_script_group_0",
+          "order": 1
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/ai_adapters.js",
+          "kind": "content_script_group_0",
+          "order": 2
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/conversation_identity.js",
+          "kind": "content_script_group_0",
+          "order": 3
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/runtime_names.js",
+          "kind": "content_script_group_0",
+          "order": 4
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/wb_operations.js",
+          "kind": "content_script_group_0",
+          "order": 5
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/wb_contract.js",
+          "kind": "content_script_group_0",
+          "order": 6
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/parameter_guidance.js",
+          "kind": "content_script_group_0",
+          "order": 7
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/mixed_batch_discovery.js",
+          "kind": "content_script_group_0",
+          "order": 8
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/wb_guidance_registry.js",
+          "kind": "content_script_group_0",
+          "order": 9
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/wb_guidance.js",
+          "kind": "content_script_group_0",
+          "order": 10
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/delivery_policy.js",
+          "kind": "content_script_group_0",
+          "order": 11
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/wb_command_protocol.js",
+          "kind": "content_script_group_0",
+          "order": 12
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/bridge_autorun_model.js",
+          "kind": "content_script_group_0",
+          "order": 13
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/manual_controls.js",
+          "kind": "content_script_group_0",
+          "order": 14
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/composer_send.js",
+          "kind": "content_script_group_0",
+          "order": 15
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/proven_writing_block_capture.js",
+          "kind": "content_script_group_0",
+          "order": 16
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/file_delivery.js",
+          "kind": "content_script_group_0",
+          "order": 17
+        },
+        {
+          "from": "manifest.json",
+          "to": "shared/xlsx_reader.js",
+          "kind": "content_script_group_0",
+          "order": 18
+        },
+        {
+          "from": "manifest.json",
+          "to": "content_script.js",
+          "kind": "content_script_group_0",
+          "order": 19
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/ai_delivery_capabilities.js",
+          "kind": "importScripts_0",
+          "order": 0
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/conversation_identity.js",
+          "kind": "importScripts_0",
+          "order": 1
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/runtime_names.js",
+          "kind": "importScripts_0",
+          "order": 2
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/manual_controls.js",
+          "kind": "importScripts_0",
+          "order": 3
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/wb_credentials.js",
+          "kind": "importScripts_0",
+          "order": 4
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/wb_operations.js",
+          "kind": "importScripts_0",
+          "order": 5
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/wb_contract.js",
+          "kind": "importScripts_0",
+          "order": 6
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/parameter_guidance.js",
+          "kind": "importScripts_0",
+          "order": 7
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/mixed_batch_discovery.js",
+          "kind": "importScripts_0",
+          "order": 8
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/wb_guidance_registry.js",
+          "kind": "importScripts_0",
+          "order": 9
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/wb_guidance.js",
+          "kind": "importScripts_0",
+          "order": 10
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/delivery_policy.js",
+          "kind": "importScripts_0",
+          "order": 11
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/wb_command_protocol.js",
+          "kind": "importScripts_0",
+          "order": 12
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/wb_batch_runtime.js",
+          "kind": "importScripts_0",
+          "order": 13
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/bridge_autorun_model.js",
+          "kind": "importScripts_0",
+          "order": 14
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/provider_transport_core.js",
+          "kind": "importScripts_0",
+          "order": 15
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/response_verifier.js",
+          "kind": "importScripts_0",
+          "order": 16
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/wb_provider.js",
+          "kind": "importScripts_0",
+          "order": 17
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/work_session_model.js",
+          "kind": "importScripts_1",
+          "order": 0
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/runtime_policy.js",
+          "kind": "importScripts_1",
+          "order": 1
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/entitlement_policy.js",
+          "kind": "importScripts_1",
+          "order": 2
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/query_planner.js",
+          "kind": "importScripts_1",
+          "order": 3
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/artifact_store.js",
+          "kind": "importScripts_1",
+          "order": 4
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/runtime_worker.js",
+          "kind": "importScripts_1",
+          "order": 5
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/work_start_worker.js",
+          "kind": "importScripts_1",
+          "order": 6
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/work_recovery_worker.js",
+          "kind": "importScripts_1",
+          "order": 7
+        },
+        {
+          "from": "service_worker.js",
+          "to": "shared/delivery_transaction_worker.js",
+          "kind": "importScripts_1",
+          "order": 8
+        },
+        {
+          "from": "popup.html",
+          "to": "popup.css",
+          "kind": "html_resource",
+          "order": 0
+        },
+        {
+          "from": "popup.html",
+          "to": "shared/ai_delivery_capabilities.js",
+          "kind": "html_resource",
+          "order": 1
+        },
+        {
+          "from": "popup.html",
+          "to": "shared/xlsx_reader.js",
+          "kind": "html_resource",
+          "order": 2
+        },
+        {
+          "from": "popup.html",
+          "to": "shared/document_reader.js",
+          "kind": "html_resource",
+          "order": 3
+        },
+        {
+          "from": "popup.html",
+          "to": "popup.js",
+          "kind": "html_resource",
+          "order": 4
+        }
+      ],
+      "reachable_files": 40,
+      "unreachable_files": [],
+      "scope": "Exact literal manifest/importScripts/popup resource load graph. Not a complete semantic call graph or proof of behavioral parity."
+    }
+  }
+}

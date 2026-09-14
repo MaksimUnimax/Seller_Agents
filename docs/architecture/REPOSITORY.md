@@ -59,3 +59,9 @@ Release assets публикуются отдельно при выпуске; и
 Принятые 28 source packages разделены на 26 серверных доменов в packages/server и два общих пакета contracts/shared. Имена @product/* сохранены.
 Дополнительно материализованы docs/server, tooling/server, tests/integration/server, tests/e2e/server; OpenAPI находится в packages/contracts/openapi.
 Root lockfile перенесён из источника с адаптацией только workspace importer/link путей; frozen install проверяет согласованность. Версии внешних пакетов и их resolution/integrity не обновлялись.
+
+## Временное размещение расширений при D1.E1
+
+[Карта D1.E0](../migration/EXTENSION_IMPORT_MAP.md) уточняет первый перенос: 36 Ozon-файлов в `apps/extension/src/imported/ozon-v0.1.22/`; 40 WB-файлов в `migration/reference/wildberries-v0.3.0/runtime/` вне production/workspace graph. Каталоги пока не материализованы.
+Исходные gates размещаются в `tests/regression/imported/`, закреплённые donor/RED/matrix fixtures — в `tests/fixtures/migration/`. Проверочный runner собирает временный прежний layout из явно перечисленных входов.
+Это переходная структура для сохранения исходного поведения и проверки перемещения. D2 извлекает один runtime в целевые каталоги выше. После принятия замены старый production snapshot удаляется из рабочего дерева; test fixture сохраняется только при наличии конкретного потребителя. Постоянные две копии общего ядра не создаются.

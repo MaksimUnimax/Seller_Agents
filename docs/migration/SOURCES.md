@@ -1,5 +1,23 @@
 # Источники и наблюдённые ревизии
 
+## Активные источники D1
+
+| Часть | Выбранная ветка источника | Точный source commit | Состояние переноса |
+|---|---|---|---|
+| Ozon 0.1.22 | `repair/ozon-v0.1.22-live-defects-2026-09-14` | `3b102f68a96bee0d7d734d7e32d4fccba440e927` | Карта D1.E0 готова; код не перенесён |
+| WB 0.3.0 | `stage06-wb-terminal-2026-09-08` | `006af2724aafdf6589c16881c1ed06eb01cca281` | Карта reference готова; INSTALLED FAIL сохраняется |
+| Сервер P8.4 Foundation | `feature/product-control-plane-p8-4-h3-2026-09-14` | `3f16bbf6387cc62303e292fcfe61449c8f243b92` | D1.S1 импортирован и проверен в Seller_Agents |
+
+Ozon предоставлен владельцем как актуальный 0.1.22, PRE-HANDOFF PASS; LIVE CERTIFICATION PENDING POST INSTALL. Source branch и run сверены, устанавливаемый ZIP независимо скачан: 285804 bytes, SHA-256 `a31308169278316aefb36b18c94f6d1597060344c5227afb380aca2f5741a895`, 36 файлов. [Source runtime](https://github.com/MaksimUnimax/blood_sand/tree/3b102f68a96bee0d7d734d7e32d4fccba440e927/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate), [финальный run](https://github.com/MaksimUnimax/blood_sand/actions/runs/34817391514).
+
+WB ZIP прочитан из Git: 722299 bytes, SHA-256 `218364999bba9739052c7183baedfa917157fcddd713a07229615226fb4d0793`, 40 файлов. Для обоих пакетов все source/ZIP байты совпали. Полная [квитанция D1.E0](evidence/extensions-2026-09-14/README.md), [карта файлов и проверок](EXTENSION_IMPORT_MAP.md).
+
+Внешние проверочные inputs отдельно закреплены в [TEST_AND_AUTHORITY_INPUTS](evidence/extensions-2026-09-14/TEST_AND_AUTHORITY_INPUTS.json): старый WB donor `e01b051c…`, Ozon RED `309da471…`, permission manifest `0aa8f535…`, matrix 514 `17aa0833…`. Это test fixtures, не дополнительные runtime для production или указание объединять старые ветки.
+
+Этот pin определяет следующий D1.E1. Если владелец примет новый Ozon/WB до импорта, сравнить изменения и обновить карту; не брать иной HEAD молча. Сервер после D1.S1 развивается в Seller_Agents отдельным исполнителем, его исходная branch больше не является точкой для повторного переноса.
+
+## История D0 и замены серверного источника
+
 **Активная точка перенесённого сервера D1.S1: feature/product-control-plane-p8-4-h3-2026-09-14 @ 3f16bbf6387cc62303e292fcfe61449c8f243b92. Старые снимки D0 ниже сохранены как история.**
 
 Проверено через GitHub 2026-09-14. Репозиторий источников: MaksimUnimax/blood_sand.
@@ -15,7 +33,7 @@
 
 [Наблюдённая ревизия](https://github.com/MaksimUnimax/blood_sand/tree/35991e73fe861da5f7eb27c598d2c0397062a50b/tooling/llm-api-bridges/ozon-seller).
 Каноническую исполняемую папку/список файлов сверить по свежему release authority на D1; не выбирать donor по слову dist/latest или дате имени файла.
-[Исторический Swagger control](https://github.com/MaksimUnimax/blood_sand/blob/17aa08335ee3acdc80cc7a093ddfa462198872f5/tooling/llm-api-bridges/ozon-seller/validation/FINAL_CONTROL_AUDIT_REPORT.md) — аналитическое evidence отдельного snapshot, не установленная приёмка текущей 0.1.21.
+[Исторический Swagger control](https://github.com/MaksimUnimax/blood_sand/blob/17aa08335ee3acdc80cc7a093ddfa462198872f5/tooling/llm-api-bridges/ozon-seller/validation/FINAL_CONTROL_AUDIT_REPORT.md) — аналитическое evidence отдельного snapshot, не установленная приёмка тогдашней 0.1.21.
 
 ## WB
 

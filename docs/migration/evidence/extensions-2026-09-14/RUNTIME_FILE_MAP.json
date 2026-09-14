@@ -1,0 +1,1992 @@
+{
+  "schema_version": 1,
+  "status": "MAP_COMPLETE_NOT_IMPORTED",
+  "date": "2026-09-14",
+  "scope": "76 exact production files; destinations are a future D1/D2 plan, not existing imported code.",
+  "sources": {
+    "ozon": {
+      "commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "version": "0.1.22",
+      "branch": "repair/ozon-v0.1.22-live-defects-2026-09-14",
+      "status": "PRE_HANDOFF_PASS",
+      "live": "PENDING_POST_INSTALL"
+    },
+    "wildberries": {
+      "commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "version": "0.3.0",
+      "branch": "stage06-wb-terminal-2026-09-08",
+      "status": "INSTALLED_FAIL_OWNER_REPORTED",
+      "shared_migration": "REOPENED_COMPLETENESS_NOT_PROVEN",
+      "R1_R8": "BLOCKED"
+    }
+  },
+  "packages": {
+    "ozon": {
+      "name": "OZON_BRIDGE_v0.1.22_LIVE_DEFECT_REPAIR_3b102f68a96b.zip",
+      "bytes": 285804,
+      "sha256": "a31308169278316aefb36b18c94f6d1597060344c5227afb380aca2f5741a895",
+      "files": 36,
+      "independently_downloaded_or_git_read": true,
+      "independent_zip_source_byte_parity": "PASS",
+      "zip_entry_order": [
+        "shared/",
+        "shared/ozon_contract.js",
+        "shared/ai_adapters.js",
+        "shared/ozon_operation_registry.js",
+        "shared/file_delivery_port_worker.js",
+        "shared/ozon_credentials.js",
+        "shared/ozon_provider.js",
+        "shared/xlsx_direct_binary_delivery_patch.js",
+        "shared/provider_transport_core.js",
+        "shared/web_file_attachment.js",
+        "shared/mixed_batch_discovery.js",
+        "shared/direct_binary_file_delivery_patch.js",
+        "shared/proven_writing_block_capture.js",
+        "shared/composer_send.js",
+        "shared/file_delivery_model_policy.js",
+        "shared/conversation_identity.js",
+        "shared/ozon_entitlements.js",
+        "shared/bridge_autorun_model.js",
+        "shared/llm_output_report_workflow_patch.js",
+        "shared/ozon_guidance.js",
+        "shared/manual_controls.js",
+        "shared/ai_delivery_capabilities.js",
+        "shared/work_session_model.js",
+        "shared/performance_report_continuation_patch.js",
+        "shared/file_delivery_wake_worker.js",
+        "shared/runtime_names.js",
+        "shared/swagger_read_surface_patch.js",
+        "shared/live_runtime_v0122_patch.js",
+        "popup.css",
+        "manifest.json",
+        "service_worker_entry.js",
+        "popup.js",
+        "attachment_delivery_port_content.js",
+        "attachment_delivery_wake_content.js",
+        "popup.html",
+        "content_script.js",
+        "service_worker.js"
+      ],
+      "source_bytes": 1512883,
+      "new_product_acceptance": false
+    },
+    "wildberries": {
+      "name": "wildberries-bridge-v0.3.0-integrated-migration.zip",
+      "bytes": 722299,
+      "sha256": "218364999bba9739052c7183baedfa917157fcddd713a07229615226fb4d0793",
+      "files": 40,
+      "independently_downloaded_or_git_read": true,
+      "independent_zip_source_byte_parity": "PASS",
+      "zip_entry_order": [
+        "content_script.js",
+        "manifest.json",
+        "popup.css",
+        "popup.html",
+        "popup.js",
+        "service_worker.js",
+        "shared/ai_adapters.js",
+        "shared/ai_delivery_capabilities.js",
+        "shared/artifact_store.js",
+        "shared/bridge_autorun_model.js",
+        "shared/composer_send.js",
+        "shared/conversation_identity.js",
+        "shared/delivery_policy.js",
+        "shared/delivery_transaction_worker.js",
+        "shared/document_reader.js",
+        "shared/entitlement_policy.js",
+        "shared/file_delivery.js",
+        "shared/manual_controls.js",
+        "shared/mixed_batch_discovery.js",
+        "shared/parameter_guidance.js",
+        "shared/proven_writing_block_capture.js",
+        "shared/provider_transport_core.js",
+        "shared/query_planner.js",
+        "shared/response_verifier.js",
+        "shared/runtime_names.js",
+        "shared/runtime_policy.js",
+        "shared/runtime_worker.js",
+        "shared/wb_batch_runtime.js",
+        "shared/wb_command_protocol.js",
+        "shared/wb_contract.js",
+        "shared/wb_credentials.js",
+        "shared/wb_guidance.js",
+        "shared/wb_guidance_registry.js",
+        "shared/wb_operations.js",
+        "shared/wb_provider.js",
+        "shared/web_file_attachment.js",
+        "shared/work_recovery_worker.js",
+        "shared/work_session_model.js",
+        "shared/work_start_worker.js",
+        "shared/xlsx_reader.js"
+      ],
+      "source_bytes": 717275,
+      "new_product_acceptance": false
+    }
+  },
+  "file_count": 76,
+  "same_relative_name_count": 18,
+  "byte_identical_cross_component_files": [
+    "shared/manual_controls.js"
+  ],
+  "files": [
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/attachment_delivery_port_content.js",
+      "relative_runtime_path": "attachment_delivery_port_content.js",
+      "source_git_blob_sha": "15680a19c0fe75f709ab2c790ff250a34b7afc76",
+      "source_sha256": "f244e0bac2f9bed953a50058259beff89efbf765f5f54c664f11ffe1dbc4977a",
+      "source_bytes": 28451,
+      "source_zip_bytes_match": true,
+      "subsystem": "DELIVERY",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/attachment_delivery_port_content.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/delivery",
+        "packages/browser-platform"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/attachment_delivery_wake_content.js",
+      "relative_runtime_path": "attachment_delivery_wake_content.js",
+      "source_git_blob_sha": "bab7331c112ca960e9f7852a04873146d0a60efe",
+      "source_sha256": "6b3a7a4b25ce6a86a9e7b54c0a71a29c02aad9480cfbe7d2a0007e9ca4c9aa11",
+      "source_bytes": 759,
+      "source_zip_bytes_match": true,
+      "subsystem": "DELIVERY",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/attachment_delivery_wake_content.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/delivery",
+        "packages/browser-platform"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/content_script.js",
+      "relative_runtime_path": "content_script.js",
+      "source_git_blob_sha": "bc047968246261a078260dee469bf4f435d9b901",
+      "source_sha256": "fd86f2d04984defa8c22dcfc66c2d9f449b62b486816668f192326b1339879f2",
+      "source_bytes": 133067,
+      "source_zip_bytes_match": true,
+      "subsystem": "CONTENT",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/content_script.js",
+      "planned_d2_destinations": [
+        "apps/extension/src/content",
+        "packages/bridge-core/src/capture",
+        "packages/ai-adapters/chatgpt",
+        "packages/ai-adapters/alice"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/manifest.json",
+      "relative_runtime_path": "manifest.json",
+      "source_git_blob_sha": "e4913f8bf5c9d2426c81c6e33f928c9c91a1804a",
+      "source_sha256": "7019a672a78ac87c85617d1444721ac01158fe5a50f0329a8e7ca6758de5178c",
+      "source_bytes": 1860,
+      "source_zip_bytes_match": true,
+      "subsystem": "MANIFEST",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/manifest.json",
+      "planned_d2_destinations": [
+        "apps/extension/manifests",
+        "packages/browser-platform/chromium",
+        "packages/browser-platform/firefox",
+        "packages/browser-platform/safari"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [
+        "service_worker_entry.js",
+        "popup.html",
+        "shared/conversation_identity.js",
+        "shared/runtime_names.js",
+        "shared/work_session_model.js",
+        "shared/ai_delivery_capabilities.js",
+        "shared/ai_adapters.js",
+        "shared/ozon_operation_registry.js",
+        "shared/ozon_entitlements.js",
+        "shared/ozon_contract.js",
+        "shared/ozon_guidance.js",
+        "shared/swagger_read_surface_patch.js",
+        "shared/bridge_autorun_model.js",
+        "shared/manual_controls.js",
+        "shared/composer_send.js",
+        "shared/proven_writing_block_capture.js",
+        "shared/web_file_attachment.js",
+        "content_script.js",
+        "attachment_delivery_port_content.js",
+        "attachment_delivery_wake_content.js"
+      ],
+      "direct_load_consumers": []
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/popup.css",
+      "relative_runtime_path": "popup.css",
+      "source_git_blob_sha": "8c6e4e6b87af0644c7b41368b4f9cd53dc107185",
+      "source_sha256": "1befabf8a3650dfe01a5980b0d5ff2fcd34666d507baad8e79f3873358d7a726",
+      "source_bytes": 5195,
+      "source_zip_bytes_match": true,
+      "subsystem": "UI",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/popup.css",
+      "planned_d2_destinations": [
+        "apps/extension/src/popup"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "popup.html"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/popup.html",
+      "relative_runtime_path": "popup.html",
+      "source_git_blob_sha": "6577667fc798f48e3a0b39bd90414eea87782adf",
+      "source_sha256": "b9b1a8d5f5c5248a98f0b8c9622fde00acb241940469040718f802754d11f86c",
+      "source_bytes": 15736,
+      "source_zip_bytes_match": true,
+      "subsystem": "UI",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/popup.html",
+      "planned_d2_destinations": [
+        "apps/extension/src/popup"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [
+        "popup.css",
+        "popup.js"
+      ],
+      "direct_load_consumers": [
+        "manifest.json"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/popup.js",
+      "relative_runtime_path": "popup.js",
+      "source_git_blob_sha": "7b725605957b507abf9b99c867d28ea53b534cb2",
+      "source_sha256": "938ec8468cb17a7e5b31c08ce510ea46c2e4d9c6b7e39a7360a55bd65825dff6",
+      "source_bytes": 41087,
+      "source_zip_bytes_match": true,
+      "subsystem": "UI",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/popup.js",
+      "planned_d2_destinations": [
+        "apps/extension/src/popup"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "popup.html"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/service_worker.js",
+      "relative_runtime_path": "service_worker.js",
+      "source_git_blob_sha": "284c9ac92bb613f90ed27f6abd94e5c9935a92e3",
+      "source_sha256": "0aefd9b86a9e9adc66b9a6dfb6fa4ef41e786a9988d1a6e8c3cd19fc864b3486",
+      "source_bytes": 323015,
+      "source_zip_bytes_match": true,
+      "subsystem": "BACKGROUND",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/service_worker.js",
+      "planned_d2_destinations": [
+        "apps/extension/src/background",
+        "packages/bridge-core/src/work",
+        "packages/bridge-core/src/execution",
+        "packages/bridge-core/src/delivery"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [
+        "shared/conversation_identity.js",
+        "shared/runtime_names.js",
+        "shared/work_session_model.js",
+        "shared/manual_controls.js",
+        "shared/ozon_credentials.js",
+        "shared/ozon_operation_registry.js",
+        "shared/ozon_entitlements.js",
+        "shared/ozon_contract.js",
+        "shared/ozon_guidance.js",
+        "shared/bridge_autorun_model.js",
+        "shared/provider_transport_core.js",
+        "shared/ozon_provider.js"
+      ],
+      "direct_load_consumers": [
+        "service_worker_entry.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/service_worker_entry.js",
+      "relative_runtime_path": "service_worker_entry.js",
+      "source_git_blob_sha": "e9796eb07b85ceade5601193a1d9fcceb5a5e741",
+      "source_sha256": "3d30d776f1d8bb5db461c4551fa59e57dc6e9f74c3804cdee989798c19d4533b",
+      "source_bytes": 1729,
+      "source_zip_bytes_match": true,
+      "subsystem": "BACKGROUND",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/service_worker_entry.js",
+      "planned_d2_destinations": [
+        "apps/extension/src/background",
+        "packages/bridge-core/src/work",
+        "packages/bridge-core/src/execution",
+        "packages/bridge-core/src/delivery"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [
+        "shared/ai_delivery_capabilities.js",
+        "shared/mixed_batch_discovery.js",
+        "service_worker.js",
+        "shared/swagger_read_surface_patch.js",
+        "shared/live_runtime_v0122_patch.js",
+        "shared/xlsx_direct_binary_delivery_patch.js",
+        "shared/llm_output_report_workflow_patch.js",
+        "shared/performance_report_continuation_patch.js",
+        "shared/direct_binary_file_delivery_patch.js",
+        "shared/file_delivery_model_policy.js",
+        "shared/file_delivery_port_worker.js",
+        "shared/file_delivery_wake_worker.js"
+      ],
+      "direct_load_consumers": [
+        "manifest.json"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ai_adapters.js",
+      "relative_runtime_path": "shared/ai_adapters.js",
+      "source_git_blob_sha": "4c750308712fa630990e2cb20407240c5907d63a",
+      "source_sha256": "4b9423666cf7bed03f89edb3c23d535bd02143e85c1a1b7317d184f25cc1bb72",
+      "source_bytes": 22597,
+      "source_zip_bytes_match": true,
+      "subsystem": "AI",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/ai_adapters.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/ai",
+        "packages/ai-adapters/chatgpt",
+        "packages/ai-adapters/alice"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ai_delivery_capabilities.js",
+      "relative_runtime_path": "shared/ai_delivery_capabilities.js",
+      "source_git_blob_sha": "a0af80bc7bf7c4da73a9a37c80370462be36839c",
+      "source_sha256": "dca544904ae1aac578e52f60883c603cee4129fe56089f807ec175cef4e2e83a",
+      "source_bytes": 9753,
+      "source_zip_bytes_match": true,
+      "subsystem": "AI",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/ai_delivery_capabilities.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/ai",
+        "packages/ai-adapters/chatgpt",
+        "packages/ai-adapters/alice"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker_entry.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/bridge_autorun_model.js",
+      "relative_runtime_path": "shared/bridge_autorun_model.js",
+      "source_git_blob_sha": "658ba507f3eeabc81c8aedefee0a8ebe971c110d",
+      "source_sha256": "d321cf49a1972ffe205bd3bb14f7b160c48158be14cf29a0e9878e2c48450983",
+      "source_bytes": 15919,
+      "source_zip_bytes_match": true,
+      "subsystem": "EXECUTION",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/bridge_autorun_model.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/execution"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/composer_send.js",
+      "relative_runtime_path": "shared/composer_send.js",
+      "source_git_blob_sha": "9c1737863b10779cb825e648b95ef1648a937f5d",
+      "source_sha256": "3e9421e8e1bc209af635e2b90d957e558301763572a42875b95c8973ca75b736",
+      "source_bytes": 8267,
+      "source_zip_bytes_match": true,
+      "subsystem": "AI",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/composer_send.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/ai",
+        "packages/ai-adapters/chatgpt",
+        "packages/ai-adapters/alice"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/conversation_identity.js",
+      "relative_runtime_path": "shared/conversation_identity.js",
+      "source_git_blob_sha": "3fe3b99d42eeccc729d003733daac8b377df4066",
+      "source_sha256": "939036acd95ccb3dfe00f05b5d49568615f6d798a023a0ec995e38267fb68f57",
+      "source_bytes": 4027,
+      "source_zip_bytes_match": true,
+      "subsystem": "IDENTITY",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/conversation_identity.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/identity",
+        "packages/ai-adapters/chatgpt",
+        "packages/ai-adapters/alice"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/direct_binary_file_delivery_patch.js",
+      "relative_runtime_path": "shared/direct_binary_file_delivery_patch.js",
+      "source_git_blob_sha": "56f84677eb3137391a624e32f0136a611babc890",
+      "source_sha256": "e66dfd9bb91be078de9b08d86ac1acc124eabb3a22fb29fac77f59e7d036ab96",
+      "source_bytes": 10095,
+      "source_zip_bytes_match": true,
+      "subsystem": "DELIVERY",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/direct_binary_file_delivery_patch.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/delivery",
+        "packages/browser-platform"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker_entry.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_model_policy.js",
+      "relative_runtime_path": "shared/file_delivery_model_policy.js",
+      "source_git_blob_sha": "3af939db489fbbcfdac2013b000f2f42d928bc15",
+      "source_sha256": "caba2a05701d74879bc699316530575c63106a62f8f782eee694ef1c3b4b5aab",
+      "source_bytes": 4021,
+      "source_zip_bytes_match": true,
+      "subsystem": "DELIVERY",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/file_delivery_model_policy.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/delivery",
+        "packages/browser-platform"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker_entry.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_port_worker.js",
+      "relative_runtime_path": "shared/file_delivery_port_worker.js",
+      "source_git_blob_sha": "eb11b977ea1a8205671da654d00dc777c81691ae",
+      "source_sha256": "c9b5fdbc8661828c17145519395bde1a2eab1af9b434b99ae13c1d8ccda0c6dd",
+      "source_bytes": 39030,
+      "source_zip_bytes_match": true,
+      "subsystem": "DELIVERY",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/file_delivery_port_worker.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/delivery",
+        "packages/browser-platform"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker_entry.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_wake_worker.js",
+      "relative_runtime_path": "shared/file_delivery_wake_worker.js",
+      "source_git_blob_sha": "3025f05e6be890372e2ed8845d2f2de54c7d88f4",
+      "source_sha256": "ec1b59ba7243bf4a5591bdbe10b0b5f6e727f8769b08833da156378d202acffd",
+      "source_bytes": 1750,
+      "source_zip_bytes_match": true,
+      "subsystem": "DELIVERY",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/file_delivery_wake_worker.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/delivery",
+        "packages/browser-platform"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker_entry.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/live_runtime_v0122_patch.js",
+      "relative_runtime_path": "shared/live_runtime_v0122_patch.js",
+      "source_git_blob_sha": "bf0c331bf0827e34c56c91a1057ad68fb13c0ee2",
+      "source_sha256": "e9470607fc401dbf1e479d3a487cce4d3d6b9fa75f1b508aaa8bd8d58d4940de",
+      "source_bytes": 21046,
+      "source_zip_bytes_match": true,
+      "subsystem": "OZON",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/live_runtime_v0122_patch.js",
+      "planned_d2_destinations": [
+        "packages/marketplaces/ozon"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker_entry.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/llm_output_report_workflow_patch.js",
+      "relative_runtime_path": "shared/llm_output_report_workflow_patch.js",
+      "source_git_blob_sha": "e10b0933c74e98970d32476e0a1aec9cd543f255",
+      "source_sha256": "a564e2dbafb3980bd406e82744c177a34df2279b63c3198395c13126520dbbff",
+      "source_bytes": 15664,
+      "source_zip_bytes_match": true,
+      "subsystem": "DELIVERY",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/llm_output_report_workflow_patch.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/delivery",
+        "packages/browser-platform"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker_entry.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/manual_controls.js",
+      "relative_runtime_path": "shared/manual_controls.js",
+      "source_git_blob_sha": "116e226ad6a6b0d898a4224319a6222e6a3f64e6",
+      "source_sha256": "81f302487da7b5ff7c1b746298353438b2cfec100a5bb8f7fa2c80d1e033c81e",
+      "source_bytes": 10269,
+      "source_zip_bytes_match": true,
+      "subsystem": "CAPTURE",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/manual_controls.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/capture"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/mixed_batch_discovery.js",
+      "relative_runtime_path": "shared/mixed_batch_discovery.js",
+      "source_git_blob_sha": "f8504a5e363df78651de977aba5fbe0b3eb62767",
+      "source_sha256": "8afc5cd5399fe5734a1178d88bd18125cddb6be1593c7939f79e9bb5ec577357",
+      "source_bytes": 4772,
+      "source_zip_bytes_match": true,
+      "subsystem": "EXECUTION",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/mixed_batch_discovery.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/execution"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker_entry.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_contract.js",
+      "relative_runtime_path": "shared/ozon_contract.js",
+      "source_git_blob_sha": "25ea330ae621969efeba8cbcbae87af031438289",
+      "source_sha256": "8dfe90545f8499d1f1938dcdf932ef5e15618d4f1dd4008565f91d03679896ac",
+      "source_bytes": 321333,
+      "source_zip_bytes_match": true,
+      "subsystem": "MIXED_CONTRACT",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_contract.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/protocol",
+        "packages/marketplaces/ozon"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_credentials.js",
+      "relative_runtime_path": "shared/ozon_credentials.js",
+      "source_git_blob_sha": "e74d2a130771a2d3f769a01a4f9e892f89f81b13",
+      "source_sha256": "286c6021f958e41912842569bcfa0d0dfe920eed8ce1646014899a1de064415d",
+      "source_bytes": 4085,
+      "source_zip_bytes_match": true,
+      "subsystem": "OZON",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_credentials.js",
+      "planned_d2_destinations": [
+        "packages/marketplaces/ozon"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_entitlements.js",
+      "relative_runtime_path": "shared/ozon_entitlements.js",
+      "source_git_blob_sha": "a219577c131fa64525d685b50d7c6a03c1fc918a",
+      "source_sha256": "f8b9222368a2e3bbfb323ab5cd0fe1c3238742d5c06ef9afac752861d4c7422b",
+      "source_bytes": 58578,
+      "source_zip_bytes_match": true,
+      "subsystem": "OZON",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_entitlements.js",
+      "planned_d2_destinations": [
+        "packages/marketplaces/ozon"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_guidance.js",
+      "relative_runtime_path": "shared/ozon_guidance.js",
+      "source_git_blob_sha": "65f51531d584f9398ae0bd6db684c90f8a7df586",
+      "source_sha256": "654b330ec90069351104d1cf5add8afb979fe7daddaf3a3cbdf3fd4117bef094",
+      "source_bytes": 10927,
+      "source_zip_bytes_match": true,
+      "subsystem": "OZON",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_guidance.js",
+      "planned_d2_destinations": [
+        "packages/marketplaces/ozon"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_operation_registry.js",
+      "relative_runtime_path": "shared/ozon_operation_registry.js",
+      "source_git_blob_sha": "8e91dba347075d910621078692716494de77b9d7",
+      "source_sha256": "b42b51f815c0f88e89e1cd193d28cc4f72949d5dd1738ab35d473b226fd0a832",
+      "source_bytes": 225182,
+      "source_zip_bytes_match": true,
+      "subsystem": "OZON",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_operation_registry.js",
+      "planned_d2_destinations": [
+        "packages/marketplaces/ozon"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_provider.js",
+      "relative_runtime_path": "shared/ozon_provider.js",
+      "source_git_blob_sha": "995866e4ea69dd3a9e5d4ea60a217ad804f24f57",
+      "source_sha256": "de528808ed1d18e77ac0f9cb48ef7db8d7ff267ee299928e0207387adc7c7f7f",
+      "source_bytes": 30599,
+      "source_zip_bytes_match": true,
+      "subsystem": "OZON",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_provider.js",
+      "planned_d2_destinations": [
+        "packages/marketplaces/ozon"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/performance_report_continuation_patch.js",
+      "relative_runtime_path": "shared/performance_report_continuation_patch.js",
+      "source_git_blob_sha": "98a1c4ad9a6acaef5c8250944e00d931b7d7445b",
+      "source_sha256": "f42115e8ac4197fef8b7f5ba463bc6303e3d425a9202c95605edc3844b34a9b5",
+      "source_bytes": 5181,
+      "source_zip_bytes_match": true,
+      "subsystem": "OZON",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/performance_report_continuation_patch.js",
+      "planned_d2_destinations": [
+        "packages/marketplaces/ozon"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker_entry.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/proven_writing_block_capture.js",
+      "relative_runtime_path": "shared/proven_writing_block_capture.js",
+      "source_git_blob_sha": "067ebaf093ae4199b3c134baca0e30ac42a94d15",
+      "source_sha256": "5b0eaac9619cb827d1e74c61f53e2755c084a1d4b60c64d23f5fd4a5354c3aef",
+      "source_bytes": 14614,
+      "source_zip_bytes_match": true,
+      "subsystem": "CAPTURE",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/proven_writing_block_capture.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/capture"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/provider_transport_core.js",
+      "relative_runtime_path": "shared/provider_transport_core.js",
+      "source_git_blob_sha": "346332d6e298c461e225487ba75faf41b0d51288",
+      "source_sha256": "97f9a8bed0427753168c8ff083191338225cbe3abd026b471876daf19e04bba4",
+      "source_bytes": 37467,
+      "source_zip_bytes_match": true,
+      "subsystem": "MIXED_TRANSPORT",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/provider_transport_core.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/transport",
+        "packages/bridge-core/src/documents",
+        "packages/marketplaces/ozon"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/runtime_names.js",
+      "relative_runtime_path": "shared/runtime_names.js",
+      "source_git_blob_sha": "597fe9db3af3ef5b17b45b327b85d3ce2bd6cf87",
+      "source_sha256": "b5ca31b9e5479f2b60fff0e6d03007eb83a28e2e3bd84152c52f40b13c162b7c",
+      "source_bytes": 10642,
+      "source_zip_bytes_match": true,
+      "subsystem": "NAMESPACE",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/runtime_names.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/protocol",
+        "packages/marketplaces/ozon"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/swagger_read_surface_patch.js",
+      "relative_runtime_path": "shared/swagger_read_surface_patch.js",
+      "source_git_blob_sha": "552ccac132cedf1c47b915f2ca34a2f42eae0a0d",
+      "source_sha256": "ff87a566f28003fa41ab83c91e2ef696c259ecc81ac12975d1609a2718a5de4d",
+      "source_bytes": 57275,
+      "source_zip_bytes_match": true,
+      "subsystem": "OZON",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/swagger_read_surface_patch.js",
+      "planned_d2_destinations": [
+        "packages/marketplaces/ozon"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker_entry.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/web_file_attachment.js",
+      "relative_runtime_path": "shared/web_file_attachment.js",
+      "source_git_blob_sha": "a51663b991a6a969a0696f5d2f127378a18a00f6",
+      "source_sha256": "a1d91cb7b6aa5b1b26bf780e29f3d42895510b04d55d37569cfc3d3cf4db3010",
+      "source_bytes": 4750,
+      "source_zip_bytes_match": true,
+      "subsystem": "DELIVERY",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/web_file_attachment.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/delivery",
+        "packages/browser-platform"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/work_session_model.js",
+      "relative_runtime_path": "shared/work_session_model.js",
+      "source_git_blob_sha": "e696ae6d7ee061723c75bd02d9f994d6951861bc",
+      "source_sha256": "11e91d850a3d69711fefdaadb6617b825350d9382b9bc55cabdbbc9b255c9855",
+      "source_bytes": 1985,
+      "source_zip_bytes_match": true,
+      "subsystem": "WORK",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/work_session_model.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/work"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "ozon",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "3b102f68a96bee0d7d734d7e32d4fccba440e927",
+      "source_path": "tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/xlsx_direct_binary_delivery_patch.js",
+      "relative_runtime_path": "shared/xlsx_direct_binary_delivery_patch.js",
+      "source_git_blob_sha": "aaaf88396ad176937be179d97f65d11f86d5dbad",
+      "source_sha256": "5e61f6d749cf69d980b4d9bdae8b32bb0937e48a298abd4afd9793241252c3fa",
+      "source_bytes": 12156,
+      "source_zip_bytes_match": true,
+      "subsystem": "OZON",
+      "planned_d1_path": "apps/extension/src/imported/ozon-v0.1.22/shared/xlsx_direct_binary_delivery_patch.js",
+      "planned_d2_destinations": [
+        "packages/marketplaces/ozon"
+      ],
+      "d2_disposition": "PRESERVE_OZON_BASELINE_THEN_EXTRACT",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker_entry.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/content_script.js",
+      "relative_runtime_path": "content_script.js",
+      "source_git_blob_sha": "94f541718be48253bad5157cc4a207419f38deb6",
+      "source_sha256": "78f52c459a64866d92fd57381076438613a0e96673605e70220b1e00e99e0a54",
+      "source_bytes": 122010,
+      "source_zip_bytes_match": true,
+      "subsystem": "CONTENT",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/content_script.js",
+      "planned_d2_destinations": [
+        "apps/extension/src/content",
+        "packages/bridge-core/src/capture",
+        "packages/ai-adapters/chatgpt",
+        "packages/ai-adapters/alice"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/manifest.json",
+      "relative_runtime_path": "manifest.json",
+      "source_git_blob_sha": "290b424c8656176e74c536bf37b15de0f29392cf",
+      "source_sha256": "c8574b02c5cc4fb278c94fe7edfd735bcffd669af17cab5e06ad398d177dd23b",
+      "source_bytes": 2255,
+      "source_zip_bytes_match": true,
+      "subsystem": "MANIFEST",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/manifest.json",
+      "planned_d2_destinations": [
+        "apps/extension/manifests",
+        "packages/browser-platform/chromium",
+        "packages/browser-platform/firefox",
+        "packages/browser-platform/safari"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [
+        "service_worker.js",
+        "popup.html",
+        "shared/ai_delivery_capabilities.js",
+        "shared/web_file_attachment.js",
+        "shared/ai_adapters.js",
+        "shared/conversation_identity.js",
+        "shared/runtime_names.js",
+        "shared/wb_operations.js",
+        "shared/wb_contract.js",
+        "shared/parameter_guidance.js",
+        "shared/mixed_batch_discovery.js",
+        "shared/wb_guidance_registry.js",
+        "shared/wb_guidance.js",
+        "shared/delivery_policy.js",
+        "shared/wb_command_protocol.js",
+        "shared/bridge_autorun_model.js",
+        "shared/manual_controls.js",
+        "shared/composer_send.js",
+        "shared/proven_writing_block_capture.js",
+        "shared/file_delivery.js",
+        "shared/xlsx_reader.js",
+        "content_script.js"
+      ],
+      "direct_load_consumers": []
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/popup.css",
+      "relative_runtime_path": "popup.css",
+      "source_git_blob_sha": "559b50f2924e4dbd1455071b34f6f3eb38a01539",
+      "source_sha256": "42ba2fab872b00c7bf4010fda13ddde1474ffb39afd38f35ed1ce814724bbf74",
+      "source_bytes": 5959,
+      "source_zip_bytes_match": true,
+      "subsystem": "UI",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/popup.css",
+      "planned_d2_destinations": [
+        "apps/extension/src/popup"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "popup.html"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/popup.html",
+      "relative_runtime_path": "popup.html",
+      "source_git_blob_sha": "ebe972d6281a9b95f1162fdf23a00028c1c98e91",
+      "source_sha256": "404f7a6d6d9f4bc2c5c9b5b44c6aaf797ece18d0c466baa947c789b62880b546",
+      "source_bytes": 10182,
+      "source_zip_bytes_match": true,
+      "subsystem": "UI",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/popup.html",
+      "planned_d2_destinations": [
+        "apps/extension/src/popup"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [
+        "popup.css",
+        "shared/ai_delivery_capabilities.js",
+        "shared/xlsx_reader.js",
+        "shared/document_reader.js",
+        "popup.js"
+      ],
+      "direct_load_consumers": [
+        "manifest.json"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/popup.js",
+      "relative_runtime_path": "popup.js",
+      "source_git_blob_sha": "c1da480158e8ccbc651258a1e568c6c47546d2f2",
+      "source_sha256": "c5f97098d31dad2b8049002eb8a1edd78ff11b32667c59bad62fffb706b6a1f7",
+      "source_bytes": 22725,
+      "source_zip_bytes_match": true,
+      "subsystem": "UI",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/popup.js",
+      "planned_d2_destinations": [
+        "apps/extension/src/popup"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "popup.html"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/service_worker.js",
+      "relative_runtime_path": "service_worker.js",
+      "source_git_blob_sha": "853f5c64a5a56772399f27da4450c4ee2d18aa34",
+      "source_sha256": "15f6ba10f2fa61968859cde99e9c27d8b62f5ad123aba5c1cd17a7e0f18bf117",
+      "source_bytes": 121713,
+      "source_zip_bytes_match": true,
+      "subsystem": "BACKGROUND",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/service_worker.js",
+      "planned_d2_destinations": [
+        "apps/extension/src/background",
+        "packages/bridge-core/src/work",
+        "packages/bridge-core/src/execution",
+        "packages/bridge-core/src/delivery"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [
+        "shared/ai_delivery_capabilities.js",
+        "shared/conversation_identity.js",
+        "shared/runtime_names.js",
+        "shared/manual_controls.js",
+        "shared/wb_credentials.js",
+        "shared/wb_operations.js",
+        "shared/wb_contract.js",
+        "shared/parameter_guidance.js",
+        "shared/mixed_batch_discovery.js",
+        "shared/wb_guidance_registry.js",
+        "shared/wb_guidance.js",
+        "shared/delivery_policy.js",
+        "shared/wb_command_protocol.js",
+        "shared/wb_batch_runtime.js",
+        "shared/bridge_autorun_model.js",
+        "shared/provider_transport_core.js",
+        "shared/response_verifier.js",
+        "shared/wb_provider.js",
+        "shared/work_session_model.js",
+        "shared/runtime_policy.js",
+        "shared/entitlement_policy.js",
+        "shared/query_planner.js",
+        "shared/artifact_store.js",
+        "shared/runtime_worker.js",
+        "shared/work_start_worker.js",
+        "shared/work_recovery_worker.js",
+        "shared/delivery_transaction_worker.js"
+      ],
+      "direct_load_consumers": [
+        "manifest.json"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/ai_adapters.js",
+      "relative_runtime_path": "shared/ai_adapters.js",
+      "source_git_blob_sha": "a2fbf5a0ab913bb8fa05e84fd471d8cb6d7a4251",
+      "source_sha256": "9d7374f07566990369a6464b605176bc4e9f1d5a4f1e89acefedac762ca6a301",
+      "source_bytes": 20558,
+      "source_zip_bytes_match": true,
+      "subsystem": "AI",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/ai_adapters.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/ai",
+        "packages/ai-adapters/chatgpt",
+        "packages/ai-adapters/alice"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/ai_delivery_capabilities.js",
+      "relative_runtime_path": "shared/ai_delivery_capabilities.js",
+      "source_git_blob_sha": "b12a0580734e35d89c8eca06b4ba7e7a58a195e1",
+      "source_sha256": "4d75b7ccd2a54574ee1a95c42704fe3cd88507e288bdca3540e24cd32ecd356c",
+      "source_bytes": 12518,
+      "source_zip_bytes_match": true,
+      "subsystem": "AI",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/ai_delivery_capabilities.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/ai",
+        "packages/ai-adapters/chatgpt",
+        "packages/ai-adapters/alice"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js",
+        "popup.html"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/artifact_store.js",
+      "relative_runtime_path": "shared/artifact_store.js",
+      "source_git_blob_sha": "517fde121f79678778ee61ae78ee039a75f55c80",
+      "source_sha256": "3a0ca403e4a77f3ec179a9c1bb5160a2d41348d16bd28ec710418bfd549c42f0",
+      "source_bytes": 6314,
+      "source_zip_bytes_match": true,
+      "subsystem": "STORAGE",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/artifact_store.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/storage",
+        "packages/browser-platform"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/bridge_autorun_model.js",
+      "relative_runtime_path": "shared/bridge_autorun_model.js",
+      "source_git_blob_sha": "6e1854fe7a39aa5de666ca555914385650c64241",
+      "source_sha256": "dff5265640ec4b848b4dee6019261c7b230d015eeac6f12fd85b9b7c2e93c22c",
+      "source_bytes": 9369,
+      "source_zip_bytes_match": true,
+      "subsystem": "EXECUTION",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/bridge_autorun_model.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/execution"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/composer_send.js",
+      "relative_runtime_path": "shared/composer_send.js",
+      "source_git_blob_sha": "98a021693866d9e45f68dd96d0a41a8d63e454d6",
+      "source_sha256": "6647f23296e8d1fcf22f8704cc4b91c733a1a17238ac985b511573a0edd5f116",
+      "source_bytes": 8539,
+      "source_zip_bytes_match": true,
+      "subsystem": "AI",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/composer_send.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/ai",
+        "packages/ai-adapters/chatgpt",
+        "packages/ai-adapters/alice"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/conversation_identity.js",
+      "relative_runtime_path": "shared/conversation_identity.js",
+      "source_git_blob_sha": "ff205f996b6740584f3d5204a540e3a0481210e4",
+      "source_sha256": "1a053e73236a4b712fbe8c99e1bc556bf5c7d2f879b3074c260873a37fc7dff5",
+      "source_bytes": 4107,
+      "source_zip_bytes_match": true,
+      "subsystem": "IDENTITY",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/conversation_identity.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/identity",
+        "packages/ai-adapters/chatgpt",
+        "packages/ai-adapters/alice"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/delivery_policy.js",
+      "relative_runtime_path": "shared/delivery_policy.js",
+      "source_git_blob_sha": "4f1a292ccd6cf4be72d47e17ec559523b6b8d33e",
+      "source_sha256": "7e96a552eca2bbdc78d83f50d116edcd76f4303194f8ad62bd2723b77fff9924",
+      "source_bytes": 3294,
+      "source_zip_bytes_match": true,
+      "subsystem": "DELIVERY",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/delivery_policy.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/delivery",
+        "packages/browser-platform"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/delivery_transaction_worker.js",
+      "relative_runtime_path": "shared/delivery_transaction_worker.js",
+      "source_git_blob_sha": "69c2619f7ba961aff7b07d0a7792e328b96c6f47",
+      "source_sha256": "3e3e86a7040f6a004c33bc803dec51ced3e786f01574c888711a7af9b6be8584",
+      "source_bytes": 23134,
+      "source_zip_bytes_match": true,
+      "subsystem": "DELIVERY",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/delivery_transaction_worker.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/delivery",
+        "packages/browser-platform"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/document_reader.js",
+      "relative_runtime_path": "shared/document_reader.js",
+      "source_git_blob_sha": "92b338c814852da12eb60c1a0fb8fbeac22aeda6",
+      "source_sha256": "b8043b8dca60b2e56e3a97ad1649f8a42d83f4cfb9723a94fc58cdefa35efeda",
+      "source_bytes": 9788,
+      "source_zip_bytes_match": true,
+      "subsystem": "DOCUMENT",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/document_reader.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/documents"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "popup.html"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/entitlement_policy.js",
+      "relative_runtime_path": "shared/entitlement_policy.js",
+      "source_git_blob_sha": "a4ae62a3883c0a4f06b17a4906f050b1fd62334a",
+      "source_sha256": "b045c865e523f149b0e0cd78824bb053038855e1513163583ae59dfe5b9b729f",
+      "source_bytes": 6510,
+      "source_zip_bytes_match": true,
+      "subsystem": "POLICY",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/entitlement_policy.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/policy"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/file_delivery.js",
+      "relative_runtime_path": "shared/file_delivery.js",
+      "source_git_blob_sha": "8d7108bfd700f3c0d23a79ed15b25438c6dec441",
+      "source_sha256": "0c360ff5275230711b0666d22a4bff35149d1c75b0988f97eb19fbf3e388bc96",
+      "source_bytes": 5873,
+      "source_zip_bytes_match": true,
+      "subsystem": "DELIVERY",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/file_delivery.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/delivery",
+        "packages/browser-platform"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/manual_controls.js",
+      "relative_runtime_path": "shared/manual_controls.js",
+      "source_git_blob_sha": "116e226ad6a6b0d898a4224319a6222e6a3f64e6",
+      "source_sha256": "81f302487da7b5ff7c1b746298353438b2cfec100a5bb8f7fa2c80d1e033c81e",
+      "source_bytes": 10269,
+      "source_zip_bytes_match": true,
+      "subsystem": "CAPTURE",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/manual_controls.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/capture"
+      ],
+      "d2_disposition": "BYTE_IDENTICAL_TO_OZON_DEPENDENCY_REVIEW_STILL_REQUIRED",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/mixed_batch_discovery.js",
+      "relative_runtime_path": "shared/mixed_batch_discovery.js",
+      "source_git_blob_sha": "a9ffee8820124838b9d75cf9f0c9d9048eda324f",
+      "source_sha256": "42583e4231a1061d5f18e1832be02e9901629deb101e507553849be71c12756d",
+      "source_bytes": 4936,
+      "source_zip_bytes_match": true,
+      "subsystem": "EXECUTION",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/mixed_batch_discovery.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/execution"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/parameter_guidance.js",
+      "relative_runtime_path": "shared/parameter_guidance.js",
+      "source_git_blob_sha": "10a00900064521d9c743ed30fe1788188fdd1c27",
+      "source_sha256": "fb22a4bcae6a73fb0a738ab84e9f354d38e3ef1f1518672ccf23434a986a038e",
+      "source_bytes": 2500,
+      "source_zip_bytes_match": true,
+      "subsystem": "WB",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/parameter_guidance.js",
+      "planned_d2_destinations": [
+        "packages/marketplaces/wildberries"
+      ],
+      "d2_disposition": "PRESERVE_WB_PROVIDER_BASELINE_LIVE_UNVERIFIED",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/proven_writing_block_capture.js",
+      "relative_runtime_path": "shared/proven_writing_block_capture.js",
+      "source_git_blob_sha": "83214079e605b91fd11494ff57eccd4cff386913",
+      "source_sha256": "d0f8e413ad6081890c0b93c5c5f33e53d209b4ffec217a6761f32745653ff8a1",
+      "source_bytes": 14505,
+      "source_zip_bytes_match": true,
+      "subsystem": "CAPTURE",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/proven_writing_block_capture.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/capture"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/provider_transport_core.js",
+      "relative_runtime_path": "shared/provider_transport_core.js",
+      "source_git_blob_sha": "fab68b61667e888183b277eafbb17e2dda669c08",
+      "source_sha256": "b1e5c7ac666dbf0e4ebf26f6fd67d327aa38a244364a8e50e00ae1d5828cb890",
+      "source_bytes": 10128,
+      "source_zip_bytes_match": true,
+      "subsystem": "POLICY",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/provider_transport_core.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/policy"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/query_planner.js",
+      "relative_runtime_path": "shared/query_planner.js",
+      "source_git_blob_sha": "2c0ffac082ba8227464c6e6fd0ab0ef62f3c1770",
+      "source_sha256": "524953b42984e08254d1513f8ee6e18c2772603711152ee8c1e065a72324b480",
+      "source_bytes": 5986,
+      "source_zip_bytes_match": true,
+      "subsystem": "EXECUTION",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/query_planner.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/execution"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/response_verifier.js",
+      "relative_runtime_path": "shared/response_verifier.js",
+      "source_git_blob_sha": "a5cf72fd0eed9a451abe7bd1650633c4c7204ca4",
+      "source_sha256": "738e21b1f3d14d42d11a9f13f2d3d7b5972d1fcedeb03fb2482e22e93ff2ac45",
+      "source_bytes": 2671,
+      "source_zip_bytes_match": true,
+      "subsystem": "POLICY",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/response_verifier.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/policy"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/runtime_names.js",
+      "relative_runtime_path": "shared/runtime_names.js",
+      "source_git_blob_sha": "6b7da8e0bf80b9fe170a30025a82e24792d61d05",
+      "source_sha256": "0ebaa0192096f04f0acb26c64b7cbcc2dd4dd52440f5d8523156ccc0d9b34158",
+      "source_bytes": 5460,
+      "source_zip_bytes_match": true,
+      "subsystem": "NAMESPACE",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/runtime_names.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/protocol",
+        "packages/marketplaces/wildberries"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/runtime_policy.js",
+      "relative_runtime_path": "shared/runtime_policy.js",
+      "source_git_blob_sha": "0ea58e174ba4a2c78288f3bd41ca8b0e5bb31e02",
+      "source_sha256": "83d4718621ec1c6a6b36e7f72aea64cf42772b3927725d37dbdd842c6777b242",
+      "source_bytes": 21054,
+      "source_zip_bytes_match": true,
+      "subsystem": "POLICY",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/runtime_policy.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/policy"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/runtime_worker.js",
+      "relative_runtime_path": "shared/runtime_worker.js",
+      "source_git_blob_sha": "d68b6cebed66c1db6c8f8bbadae2eaf01f686e7f",
+      "source_sha256": "e568a9a52c2a10f7db7f63e52a205138d2ab1c91ae7d08eefecfd9c8fbdee586",
+      "source_bytes": 28853,
+      "source_zip_bytes_match": true,
+      "subsystem": "BACKGROUND",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/runtime_worker.js",
+      "planned_d2_destinations": [
+        "apps/extension/src/background",
+        "packages/bridge-core/src/work",
+        "packages/bridge-core/src/execution",
+        "packages/bridge-core/src/delivery"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/wb_batch_runtime.js",
+      "relative_runtime_path": "shared/wb_batch_runtime.js",
+      "source_git_blob_sha": "b830f587cb668828850369d78ac2a1816bb052c9",
+      "source_sha256": "674bf0f7a2111bacbd96baa7bdcb108107f06c96d50440d9cd0cf8118f9fc2db",
+      "source_bytes": 9003,
+      "source_zip_bytes_match": true,
+      "subsystem": "EXECUTION",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/wb_batch_runtime.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/execution"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/wb_command_protocol.js",
+      "relative_runtime_path": "shared/wb_command_protocol.js",
+      "source_git_blob_sha": "fb496f5e55144fc50c8ad6f00e004ff6327f58a1",
+      "source_sha256": "b9ac3d7043d58fd2639c84da81fb836f9b1d616850ad358b4bbf0cbaad17e258",
+      "source_bytes": 11793,
+      "source_zip_bytes_match": true,
+      "subsystem": "WB",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/wb_command_protocol.js",
+      "planned_d2_destinations": [
+        "packages/marketplaces/wildberries"
+      ],
+      "d2_disposition": "PRESERVE_WB_PROVIDER_BASELINE_LIVE_UNVERIFIED",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/wb_contract.js",
+      "relative_runtime_path": "shared/wb_contract.js",
+      "source_git_blob_sha": "51137d0a0517c7412ebfec005bb03e19b2fe644a",
+      "source_sha256": "f7bcd6b14d6313374afee77d3ae80ed2d04569996589878c802e236a34a1c60a",
+      "source_bytes": 15487,
+      "source_zip_bytes_match": true,
+      "subsystem": "WB",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/wb_contract.js",
+      "planned_d2_destinations": [
+        "packages/marketplaces/wildberries"
+      ],
+      "d2_disposition": "PRESERVE_WB_PROVIDER_BASELINE_LIVE_UNVERIFIED",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/wb_credentials.js",
+      "relative_runtime_path": "shared/wb_credentials.js",
+      "source_git_blob_sha": "0525a3a01c9f94b2b07495bf534d94a6e43f1f93",
+      "source_sha256": "c731be6b35914ba6b1f0dc5a156dbfd8eb24709f52456c3f6623c83d3d5584a4",
+      "source_bytes": 2313,
+      "source_zip_bytes_match": true,
+      "subsystem": "WB",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/wb_credentials.js",
+      "planned_d2_destinations": [
+        "packages/marketplaces/wildberries"
+      ],
+      "d2_disposition": "PRESERVE_WB_PROVIDER_BASELINE_LIVE_UNVERIFIED",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/wb_guidance.js",
+      "relative_runtime_path": "shared/wb_guidance.js",
+      "source_git_blob_sha": "92a8b36fdc48c720f55b664698ddd9bcf4670214",
+      "source_sha256": "3d23d074bdb3b8cce87dbc393f27a64e448ae3bce824302879bee469cb3494d3",
+      "source_bytes": 10217,
+      "source_zip_bytes_match": true,
+      "subsystem": "WB",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/wb_guidance.js",
+      "planned_d2_destinations": [
+        "packages/marketplaces/wildberries"
+      ],
+      "d2_disposition": "PRESERVE_WB_PROVIDER_BASELINE_LIVE_UNVERIFIED",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/wb_guidance_registry.js",
+      "relative_runtime_path": "shared/wb_guidance_registry.js",
+      "source_git_blob_sha": "737f37a4a8ef6e3cc6794c7920a211572a4007a7",
+      "source_sha256": "44d1bfa4c0cc659fe795678632e89c4e88a71712fe31799422fa608ed750b5f9",
+      "source_bytes": 1780,
+      "source_zip_bytes_match": true,
+      "subsystem": "WB",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/wb_guidance_registry.js",
+      "planned_d2_destinations": [
+        "packages/marketplaces/wildberries"
+      ],
+      "d2_disposition": "PRESERVE_WB_PROVIDER_BASELINE_LIVE_UNVERIFIED",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/wb_operations.js",
+      "relative_runtime_path": "shared/wb_operations.js",
+      "source_git_blob_sha": "ea052bf9f231b52fe871d2b41901e7b555ba2ea9",
+      "source_sha256": "08e8a2ad1f325a4bdc0a909b37220b7abaa0be1d94d6b53192666ed5f22c2c75",
+      "source_bytes": 107901,
+      "source_zip_bytes_match": true,
+      "subsystem": "WB",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/wb_operations.js",
+      "planned_d2_destinations": [
+        "packages/marketplaces/wildberries"
+      ],
+      "d2_disposition": "PRESERVE_WB_PROVIDER_BASELINE_LIVE_UNVERIFIED",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/wb_provider.js",
+      "relative_runtime_path": "shared/wb_provider.js",
+      "source_git_blob_sha": "9243554b1b95bba85485f39301017fdd2312e6c9",
+      "source_sha256": "ef2c1522cd7b29e88b8e739a6db1c1c7340dbeed8d1cb38c9f567587e6ef2f39",
+      "source_bytes": 7093,
+      "source_zip_bytes_match": true,
+      "subsystem": "WB",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/wb_provider.js",
+      "planned_d2_destinations": [
+        "packages/marketplaces/wildberries"
+      ],
+      "d2_disposition": "PRESERVE_WB_PROVIDER_BASELINE_LIVE_UNVERIFIED",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/web_file_attachment.js",
+      "relative_runtime_path": "shared/web_file_attachment.js",
+      "source_git_blob_sha": "d112f7b4b83f31dbd285b8b1a16a926442ebeb25",
+      "source_sha256": "627b327ee6bf462f84d21f60c18bbebfe0ab0e7f8c0d551e45f6ec454e958d18",
+      "source_bytes": 4723,
+      "source_zip_bytes_match": true,
+      "subsystem": "DELIVERY",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/web_file_attachment.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/delivery",
+        "packages/browser-platform"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/work_recovery_worker.js",
+      "relative_runtime_path": "shared/work_recovery_worker.js",
+      "source_git_blob_sha": "b623fba2ec5a6da07e620b1dbe7f259fb017b2c0",
+      "source_sha256": "ef9a3d3183cca713ac8f8932754f6683bec9571a7a2bc92161a1b15a196a73c6",
+      "source_bytes": 13777,
+      "source_zip_bytes_match": true,
+      "subsystem": "WORK",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/work_recovery_worker.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/work"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/work_session_model.js",
+      "relative_runtime_path": "shared/work_session_model.js",
+      "source_git_blob_sha": "75b0cad5419fa3e61861893d2cc79dffadc0c283",
+      "source_sha256": "42a93c9e61bbf5d4fe38e7ab91115bb67519abfc9018aa3038b639f16f5c1657",
+      "source_bytes": 1983,
+      "source_zip_bytes_match": true,
+      "subsystem": "WORK",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/work_session_model.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/work"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/work_start_worker.js",
+      "relative_runtime_path": "shared/work_start_worker.js",
+      "source_git_blob_sha": "c6ea15de8f874e557b60c2c691338bc6bc9860bf",
+      "source_sha256": "3fa8bbba107739d1450c4e613eb47a9b9fa26cefd0926fdaf2c5e132b6d9d36d",
+      "source_bytes": 22947,
+      "source_zip_bytes_match": true,
+      "subsystem": "WORK",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/work_start_worker.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/work"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "service_worker.js"
+      ]
+    },
+    {
+      "component": "wildberries",
+      "source_repository": "MaksimUnimax/blood_sand",
+      "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+      "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/xlsx_reader.js",
+      "relative_runtime_path": "shared/xlsx_reader.js",
+      "source_git_blob_sha": "610df7c78a940eb26cf6182fae93110b484093b1",
+      "source_sha256": "0ffa5c70e9c74b415e6ffe368c7bf1e607793bee2fccdafc86fa2eb8f33b49ca",
+      "source_bytes": 7048,
+      "source_zip_bytes_match": true,
+      "subsystem": "DOCUMENT",
+      "planned_d1_path": "migration/reference/wildberries-v0.3.0/runtime/shared/xlsx_reader.js",
+      "planned_d2_destinations": [
+        "packages/bridge-core/src/documents"
+      ],
+      "d2_disposition": "HOLD_SHARED_BEHAVIOR_DIFFERENTIAL",
+      "d2_status": "NOT_IMPLEMENTED",
+      "direct_load_dependencies": [],
+      "direct_load_consumers": [
+        "manifest.json",
+        "popup.html"
+      ]
+    }
+  ]
+}

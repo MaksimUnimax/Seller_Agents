@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-14",
+  "verdict": "SOURCE_MAP_CHECKS_PASS",
+  "scope": "Documentation, source/ZIP identity, literal resource load graph and pinned test input map; not semantic equivalence or installed acceptance",
+  "environment": {
+    "os": "Linux",
+    "architecture": "x86_64",
+    "python": "3.12.14",
+    "node": "v24.19.0",
+    "git": "git version 2.51.1"
+  },
+  "runtime_source_hash_matches": 76,
+  "runtime_source_zip_matches": 76,
+  "runtime_planned_target_collisions": 0,
+  "static_edges": {
+    "ozon": 46,
+    "wildberries": 54
+  },
+  "test_and_authority_records": 176,
+  "test_input_unique_source_blobs": 176,
+  "test_input_planned_target_collisions": 0,
+  "historical_reference_only_records": 20,
+  "ozon_pinned_514_gate": "PASS",
+  "wb_retention_probe": "REPRODUCED_TARGET_REQUIREMENT_GAP",
+  "modified_production_files": 0,
+  "provider_calls": 0,
+  "remote_ci": "See GitHub Documentation CI for the published commit",
+  "files": {
+    "RUNTIME_FILE_MAP.json": "ff006f02f77991e21359ed40837a654aed7487bb7eb30ae8713912498d058d39",
+    "RUNTIME_LOAD_GRAPH.json": "312adb900272b402429d1bbf289cfb2836a242033f0d2b411bbeb80aa3c4a15e",
+    "TEST_AND_AUTHORITY_INPUTS.json": "c077d7bda006f0f40d5731fc99130f272ec18d4e52bf9d872e5ce0b8d5d9192e",
+    "WB_RETENTION_PROBE.json": "52db27196df01e36628ac3b23f5738ffe75234a0d59068eed48fa0d5fa1cf3f1",
+    "probe-wb-retention.mjs": "fe16fb82a56be39b715e8574319f9ac1f9a02052a995d901f16bd4d4880daa1e",
+    "OZON_514_PINNED_GATE.json": "64acdd544c271d99fd9525395fcad7815b801c59cdc38bef2c4a9b938b59d3b8"
+  },
+  "documentation_check": {
+    "command": "node tooling/checks/docs-check.mjs",
+    "exit_code": 0,
+    "files": 298,
+    "markdown_files": 207,
+    "relative_links": 246,
+    "requirements": 26,
+    "acceptance_scenarios": 32,
+    "scope": "structure, relative file links and requirement coverage; no product tests"
+  }
+}

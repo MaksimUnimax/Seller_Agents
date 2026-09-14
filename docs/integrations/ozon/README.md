@@ -1,6 +1,6 @@
 # Ozon adapter
 
-Текущий наблюдённый source snapshot: [SOURCES](../../migration/SOURCES.md). Владелец продолжает линию 0.1.21; snapshot не замораживает будущий donor.
+Активный источник для переноса: Ozon 0.1.22, `3b102f68a96bee0d7d734d7e32d4fccba440e927`. PRE-HANDOFF PASS, LIVE CERTIFICATION PENDING POST INSTALL. [SOURCES](../../migration/SOURCES.md), [карта D1.E0](../../migration/EXTENSION_IMPORT_MAP.md). Новый source не выбирается по движущемуся branch HEAD без сверки и обновления карты.
 
 ## Собственная ответственность
 

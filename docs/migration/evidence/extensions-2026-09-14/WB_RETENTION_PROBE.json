@@ -1,0 +1,13 @@
+{
+  "source_commit": "006af2724aafdf6589c16881c1ed06eb01cca281",
+  "source_path": "tooling/llm-api-bridges/wildberries/extension/shared/artifact_store.js",
+  "source_sha256": "3a0ca403e4a77f3ec179a9c1bb5160a2d41348d16bd28ec710418bfd549c42f0",
+  "probe": "unchanged WBArtifactStore.create default; in-memory storage backend, synthetic clock and payload",
+  "observed_default_ttl_ms": 86400000,
+  "read_after_3600001_ms": "SUCCEEDED",
+  "required_target_max_ttl_ms": 3600000,
+  "verdict": "CONFIRMED_TARGET_REQUIREMENT_GAP",
+  "runtime_modifications": 0,
+  "provider_calls": 0,
+  "scope": "Proves default module lifetime; production caller review separately confirms original-file, quarantine and generated-text callers omit expiresAt. Not installed UI acceptance."
+}
