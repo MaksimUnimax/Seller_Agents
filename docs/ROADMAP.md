@@ -1,7 +1,7 @@
 # Общий roadmap
 
 Статусы относятся к Seller_Agents, а не автоматически к исходным проектам.
-D0 и D1 COMPLETED. D1.S1 (сервер), D1.E0 (карта расширений), D1.E1 (исходники/тесты/пакеты) приняты. D2 IN_PROGRESS, D2.1 ACCEPTED, D2.2 ACCEPTED; D2.3 internal adapter LOCAL PASS / REMOTE PENDING; перенос не означает готовность единого продукта.
+D0 и D1 COMPLETED. D1.S1 (сервер), D1.E0 (карта расширений), D1.E1 (исходники/тесты/пакеты) приняты. D2 IN_PROGRESS, D2.1 ACCEPTED, D2.2 ACCEPTED; D2.3 internal adapter ACCEPTED / SOURCE-PACKAGE-REMOTE PASS; перенос не означает готовность единого продукта.
 
 | Этап | Работа | Критерий завершения |
 |---|---|---|
@@ -27,7 +27,7 @@ D0 и D1 COMPLETED. D1.S1 (сервер), D1.E0 (карта расширений
 
 ## D2 — внутренняя последовательность
 
-D2.3: [адаптер WB/shared queue](development/EXTENSION_WB_ADAPTER.md), [квитанция](migration/evidence/extension-wb-adapter-d2-3-2026-09-14/README.md). Внутренний API в actual worker/package прошёл локальные проверки; remote CI/readback ожидаются. Пользовательские WB popup/Start/delivery ещё не подключены. Этап 3 ниже реализован на уровне адаптерных портов, его прикладное соединение завершается вместе с этапом 4.
+D2.3: [адаптер WB/shared queue](development/EXTENSION_WB_ADAPTER.md), [квитанция](migration/evidence/extension-wb-adapter-d2-3-2026-09-14/README.md). Внутренний API в actual worker/package принят по source/ZIP/remote CI/readback. Пользовательские WB popup/Start/delivery ещё не подключены. Этап 3 ниже реализован на уровне адаптерных портов, его прикладное соединение завершается вместе с этапом 4.
 
 D2.2: очередь вынесена в bridge-core, контекст пакета защищает dispatch и delivery. [Приёмка](migration/evidence/extension-context-d2-2-2026-09-14/README.md) завершена: source/package/remote CI/readback PASS. Настоящий каталог и WB adapter впереди.
 

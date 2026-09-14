@@ -77,3 +77,8 @@
 - Await guards выделены из Ozon в один общий модуль; сохранены его regressions. Добавлены WB контекст, локальная HELP/ошибки, shared observed Retry-After и сохранение результата перед остановкой из-за ошибки квоты.
 - 17 новых групп WB, 105 source/ZIP процессов PASS; version 0.2.2, 37 файлов. Remote приёмка ожидается.
 - Это внутренний API: реальный WB popup/content/Start/delivery ещё не соединён. Catalog/часовой TTL/I1/installed acceptance остаются открыты, R1–R8 закрыты.
+
+## 2026-09-14 — D2.3 internal WB adapter accepted
+
+- Extension CI 34839904748 на be8f949: core и три baseline jobs SUCCESS. Скачанный development ZIP совпал побайтово; 37 runtime files / 77 inputs / 97-file Git readback MATCH.
+- Внутренний adapter API принят. Прикладная WB интеграция, магазины, общий popup, TTL и установленная приёмка остаются открыты. Новых provider calls и изменений сервера нет.

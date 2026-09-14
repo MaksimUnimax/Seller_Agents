@@ -1,6 +1,6 @@
 # D2.3 — WB adapter / common queue
 
-Дата: 2026-09-14. Статус: **LOCAL SOURCE/PACKAGE PASS; REMOTE CI/READBACK PENDING**.
+Дата: 2026-09-14. Статус: **ACCEPTED — INTERNAL ADAPTER SOURCE/PACKAGE/REMOTE CI/READBACK PASS**.
 Base remote main: `f73d2b448e5189476b06bf1a2a25e528241e750d`; tree `e88a92686cf3b2754e17e9591c8c558f89555d32`.
 Поручение владельца: восстановить и продолжить существующее объединение; Ozon — основной эталон общей механики.
 
@@ -29,3 +29,7 @@ Development-пакет 0.2.2 имеет 37 файлов; два ZIP совпад
 **WB application route не подключён:** popup/content handlers ещё используют Ozon. Новые WB tests исполняют реальный generated worker и реальные core/adapter modules, но подставляют локальные application/storage/context/finalization ports. Это internal adapter acceptance, а не установленный полный сценарий. Настоящие магазины, WB Start, file/DOM/send и часовой TTL всех копий — следующий участок D2.
 
 Imported baselines и tests неизменны. Сервер, wire contracts, lockfile, исходные ветки, live marketplace calls и production не менялись. WB INSTALLED FAIL / R1–R8 BLOCKED, Ozon live pending сохранены. Общий D2 остаётся IN_PROGRESS.
+
+## Удалённая приёмка
+
+[Extension CI 34839904748](https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34839904748) завершён SUCCESS на `be8f949f03240a02060abb3d896d62737afd3710`, tree `6796b402c47668d659f172064658bb42337e4bd5`. Прошли общий core и все три baseline jobs. [REMOTE_RESULTS](REMOTE_RESULTS.json) содержит jobs и независимую сверку скачанного artifact: внутренний ZIP и 37 файлов MATCH; состав 77 production inputs совпал с локальным. [REMOTE_READBACK](REMOTE_READBACK.json): 97 уникальных изменённых/production файлов сверены по remote Git blob SHA и локальному SHA-256. Завершающая запись меняет только документацию/evidence. Это приёмка внутреннего адаптера; WB popup/content/installed route остаётся открытым.
