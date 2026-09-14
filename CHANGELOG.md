@@ -15,3 +15,9 @@
 - Импорт замороженного server P8.4 Foundation, 3f16bbf.
 - Новая структура, workspace paths и Server CI; без продолжения H3/P8.5/P8.6.
 - Source mapping, проверка Git blob SHA и поручение серверному Codex.
+
+## 2026-09-14 — D1.S1 server import accepted
+
+- Новый Server CI PASS: 1272 unit, 1507 PostgreSQL integration, 85 browser E2E и отдельный regression пути Playwright.
+- Подтверждено совпадение 594 файлов candidate с подготовленным деревом.
+- Подготовлен handoff серверному Codex; расширения и дальнейшие H3/P8.5/P8.6 не начаты.

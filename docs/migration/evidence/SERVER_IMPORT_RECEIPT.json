@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "status": "SERVER_IMPORT_ACCEPTED",
+  "scope": "D1.S1 server import only",
+  "source": {
+    "repository": "MaksimUnimax/blood_sand",
+    "branch": "feature/product-control-plane-p8-4-h3-2026-09-14",
+    "commit": "3f16bbf6387cc62303e292fcfe61449c8f243b92",
+    "server_tree": "3b2443b827fdd993fc242c830422806fdbabde1d",
+    "ci_run": 34817887681
+  },
+  "accepted_candidate": {
+    "repository": "MaksimUnimax/Seller_Agents",
+    "branch": "migration/server-p8-4-foundation-2026-09-14",
+    "commit": "511ccff1a694e9caaa4d81a29346f30f876dab26",
+    "tree": "82b6a2af7c4594ecac9e744bde552f148210c20e",
+    "server_ci_run": 34819854406,
+    "server_ci_url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34819854406",
+    "conclusion": "success"
+  },
+  "inventory": {
+    "source_entries": 512,
+    "source_blob_hashes_verified": 512,
+    "imported_entries": 511,
+    "excluded_empty_placeholder": 1,
+    "verified_target_files": 594,
+    "target_hash_mismatches": 0,
+    "dispositions": {
+      "PATH_ADAPTED": 69,
+      "WORKSPACE_CONFIGURATION": 4,
+      "EXCLUDED_EMPTY_PLACEHOLDER": 1,
+      "BYTE_IDENTICAL": 428,
+      "DOCUMENTATION_ADAPTED": 9,
+      "WORKSPACE_PATHS_ONLY": 1
+    }
+  },
+  "validation": {
+    "frozen_install": "PASS",
+    "lint": "PASS",
+    "format": "PASS",
+    "typecheck": "PASS",
+    "workspace_path_regression": 1,
+    "unit_tests": 1272,
+    "integration_test_files": 38,
+    "integration_tests": 1507,
+    "migration": "PASS",
+    "openapi": "PASS",
+    "boundary_guard": "PASS",
+    "build_apps": 5,
+    "browser_e2e_tests": 85,
+    "live_ai_calls": "NOT_RUN",
+    "marketplace_calls": "NOT_RUN",
+    "production_deployment": "NOT_RUN"
+  },
+  "frozen_scope": {
+    "p8_4_foundation": "PRESERVED",
+    "h3_browser_actions": "NOT_STARTED",
+    "p8_5": "NOT_STARTED",
+    "p8_6": "NOT_STARTED",
+    "extensions_import": "NOT_STARTED",
+    "beta_features": "NOT_IMPLEMENTED"
+  },
+  "unpublished_local_materials": {
+    "paths": [
+      "owner_refs/",
+      "recommendations/"
+    ],
+    "status": "NOT_IN_REMOTE_SOURCE_NOT_IMPORTED"
+  },
+  "publication_note": "Subsequent completion commit changes documentation/receipt only; its SHA is supplied by Git history and final remote readback."
+}
