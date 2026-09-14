@@ -1,7 +1,7 @@
 # Общий roadmap
 
 Статусы относятся к Seller_Agents, а не автоматически к исходным проектам.
-D0 и D1 COMPLETED. D1.S1 (сервер), D1.E0 (карта расширений), D1.E1 (исходники/тесты/пакеты) приняты. D2 NOT_STARTED; перенос не означает готовность единого продукта.
+D0 и D1 COMPLETED. D1.S1 (сервер), D1.E0 (карта расширений), D1.E1 (исходники/тесты/пакеты) приняты. D2 IN_PROGRESS, D2.1 CANDIDATE; перенос не означает готовность единого продукта.
 
 | Этап | Работа | Критерий завершения |
 |---|---|---|
@@ -26,6 +26,8 @@ D0 и D1 COMPLETED. D1.S1 (сервер), D1.E0 (карта расширений
 Старые Ozon design forks не объединять без semantic differential и доказанной необходимости.
 
 ## D2 — внутренняя последовательность
+
+Первый шаг D2.1: общие Work/discovery/execution/delivery-модули подключены в development-сборку Ozon 0.2.0. [Описание](development/EXTENSION_CORE.md), [приёмка](migration/evidence/extension-core-d2-1-2026-09-14/README.md): local PASS, remote pending. Это начало последовательности ниже, а не готовое единое расширение.
 
 1. Сопоставить subsystem authority и зависимые файлы.
 2. Проверить общий Work Start/Finish, capture, очередь и доставку.

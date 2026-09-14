@@ -42,3 +42,10 @@
 - Добавлены REMOTE_RESULTS и REMOTE_READBACK; D1 завершён, D2 ещё не начат.
 - Зафиксированы неудачная первая конфигурация CI и диагностические сообщения Playwright teardown; исходный runtime и assertions не изменены.
 - Ozon LIVE CERTIFICATION PENDING, WB INSTALLED FAIL и R1–R8 BLOCKED сохраняются. Сервер не менялся.
+
+## 2026-09-14 — D2.1 common-core candidate
+
+- Выделены Work/discovery/local execution/delivery-модули и Ozon protocol/file policy adapters.
+- Общие алгоритмы подключены в реальную development-сборку 0.2.0; импортированные baseline-файлы не изменены.
+- Добавлены 15 групп contract/worker сценариев, source/extracted-package маршруты и отдельный job существующего Extension CI.
+- Локально 99 процессов PASS; remote приёмка ожидается. Общий D2, установленная приёмка и WB adapter остаются открыты.

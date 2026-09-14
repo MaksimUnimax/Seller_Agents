@@ -1,6 +1,7 @@
-# apps/extension
+# Расширение Seller Agents
 
-Composition root единого браузерного расширения. Подключает bridge-core, marketplace/AI/browser adapters и control-client. Содержит UI/entrypoints/packaging, не дублирует provider business policy.
+`src/imported/ozon-v0.1.22/` — неизменённый источник и regression baseline. `composition.json` и `src/background/compat/` подключают выделенные общие модули к development-сборке 0.2.0. Generated runtime создаётся сборщиком в build и не редактируется вручную.
 
-D1.E1: `src/imported/ozon-v0.1.22/` содержит 36 точных исходных production-файлов Ozon. Общий runtime ещё не реализован. [Сборка/проверки](../../docs/development/EXTENSION_BASELINE.md), [приёмка](../../docs/migration/evidence/extension-import-2026-09-14/README.md).
-Границы: [архитектура](../../docs/architecture/OVERVIEW.md), [размещение](../../docs/architecture/REPOSITORY.md), [текущий статус](../../docs/STATUS.md).
+WB пока остаётся reference. Единый marketplace switch, несколько магазинов, серверная авторизация нового расширения и браузерный выпуск ещё не реализованы этим шагом.
+
+[Общее ядро и сборка](../../docs/development/EXTENSION_CORE.md), [исходные проверки](../../docs/development/EXTENSION_BASELINE.md), [текущее состояние](../../docs/STATUS.md).

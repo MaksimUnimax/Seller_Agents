@@ -71,13 +71,14 @@ def negative_control(output):
                         {"status": "PASS", "observed_exit": 7, "later_command_executed": False})
 
 
-def ozon_route(runner, work, runtime, label, source_route):
+def ozon_route(runner, work, runtime, label, source_route, expected_version="0.1.22"):
     repo = work / label
     ozon = baseline.prepare_ozon_layout(repo, runtime)
     prod = ozon / "dist-step7-candidate"
     manifest = baseline.read_json(prod / "manifest.json")
     permission = baseline.read_json(ROOT / "tests/fixtures/imported/ozon-permissions-0aa8f535/manifest.json")
-    assert manifest["manifest_version"] == 3 and manifest["version"] == "0.1.22"
+    assert expected_version in ("0.1.22", "0.2.0")
+    assert manifest["manifest_version"] == 3 and manifest["version"] == expected_version
     for key in ("permissions", "host_permissions"):
         assert manifest[key] == permission[key], key
     texts = {p.relative_to(prod).as_posix(): p.read_text(encoding="utf-8")
@@ -85,7 +86,9 @@ def ozon_route(runner, work, runtime, label, source_route):
     old_lines = [(p, line) for p, text in texts.items() for line in text.splitlines() if "0.1.21" in line]
     assert len(old_lines) == 1 and old_lines[0][0] == "service_worker_entry.js"
     assert "Repair live v0.1.21 defects before downstream output/delivery wrappers capture contract/provider globals." in old_lines[0][1]
-    assert sum("0.1.22" in text for text in texts.values()) == 10
+    assert sum(expected_version in text for text in texts.values()) == 10
+    if expected_version != "0.1.22":
+        assert not any("0.1.22" in text for text in texts.values())
     assert not any(re.search(r"0\.1\.(19|20)", text) for text in texts.values())
     for p in sorted(prod.rglob("*.js")):
         runner.run(label + "-syntax-" + p.stem, ["node", "--check", p])

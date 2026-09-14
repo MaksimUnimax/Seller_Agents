@@ -1,6 +1,7 @@
-# packages/bridge-core
+# Общее ядро расширения
 
-Общий provider-neutral Work/runtime: parser, очередь, локальное исполнение через порты, доставка, recovery, инварианты. Без импорта конкретной площадки/DOM/серверной БД.
+В D2.1 выделены Work state/revision, mixed-envelope discovery, локальные single-flight/record writes и модель доставки/recovery. Эти модули уже входят в development-сборку; остальная оркестрация ещё переносится.
 
-Состояние D0: назначение каталога зафиксировано; production-реализация не перенесена.
-Границы: [архитектура](../../docs/architecture/OVERVIEW.md), [размещение](../../docs/architecture/REPOSITORY.md), [текущий статус](../../docs/STATUS.md).
+Без конкретной площадки, DOM, browser storage API или сервера. Ozon file policy и protocol defaults находятся в marketplace adapter. Временные legacy compatibility exports создаёт приложение.
+
+[Архитектура и команды](../../docs/development/EXTENSION_CORE.md), [фактический статус](../../docs/STATUS.md).

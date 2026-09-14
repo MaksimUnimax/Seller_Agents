@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "stage": "D2.1",
+  "version": "0.2.0",
+  "purpose": "DEVELOPMENT_OZON_CARRIER_NOT_COMBINED_BETA",
+  "baseline": "apps/extension/src/imported/ozon-v0.1.22",
+  "bundles": {
+    "shared/work_session_model.js": [
+      "packages/bridge-core/src/work/session-model.js",
+      "apps/extension/src/background/compat/work-model.js"
+    ],
+    "shared/mixed_batch_discovery.js": [
+      "packages/bridge-core/src/protocol/mixed-discovery.js",
+      "packages/marketplaces/ozon/src/mixed-discovery.js"
+    ],
+    "shared/bridge_autorun_model.js": [
+      "packages/bridge-core/src/delivery/model.js",
+      "packages/marketplaces/ozon/src/delivery-plan.js",
+      "apps/extension/src/background/compat/delivery-model.js"
+    ]
+  },
+  "worker_prelude": "packages/bridge-core/src/execution/local-operations.js",
+  "worker_initializer": {
+    "old": "let manualOperationsWriteLock = Promise.resolve();",
+    "replacement": "apps/extension/src/background/compat/manual-record-initializer.js"
+  },
+  "worker_function_replacements": [
+    {
+      "function": "singleFlight",
+      "source_sha256": "5a91e574768e0fd8dc77bb107026d01e10446a75677f14e84651383e28d7e034",
+      "replacement": "apps/extension/src/background/compat/singleFlight.js"
+    },
+    {
+      "function": "getManualOperation",
+      "source_sha256": "9be6c7fe8905fa6f49174ed20622609633cf149dbbe3cc3e570617a4069fa455",
+      "replacement": "apps/extension/src/background/compat/getManualOperation.js"
+    },
+    {
+      "function": "withManualOperationsWrite",
+      "source_sha256": "59d253a28916e1fe57f6ca9a267f676393df9000c3d82e0d571daf396b5a38f1",
+      "replacement": "apps/extension/src/background/compat/withManualOperationsWrite.js"
+    },
+    {
+      "function": "mutateManualOperation",
+      "source_sha256": "81c86a36e0a9b61b5f5bad5b63bbc9efe9fc99f40d9214a28acbb8ab47a6af19",
+      "replacement": "apps/extension/src/background/compat/mutateManualOperation.js"
+    }
+  ],
+  "preserved_boundaries": [
+    "provider registry/transport",
+    "patch load order",
+    "storage namespaces",
+    "content/message protocol",
+    "Ozon prompts and UI except package version",
+    "WB reference immutable",
+    "server untouched"
+  ]
+}

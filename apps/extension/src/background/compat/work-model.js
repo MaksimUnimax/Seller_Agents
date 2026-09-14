@@ -1,0 +1,1 @@
+globalThis.OzonWorkSessionModel = globalThis.SellerAgentsWorkSessionModel;
