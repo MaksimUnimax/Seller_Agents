@@ -28,7 +28,7 @@ describe("runMigrations", () => {
 
     expect(migrator).toHaveBeenCalledWith(runtime.db, { migrationsFolder });
     expect(close).toHaveBeenCalledOnce();
-    expect(migrationsFolder).toMatch(/packages\/db\/drizzle$/);
+    expect(migrationsFolder).toMatch(/packages\/server\/db\/drizzle$/);
   });
 
   it("closes resources and propagates migration failures", async () => {

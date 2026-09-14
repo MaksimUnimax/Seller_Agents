@@ -13,10 +13,10 @@
   ],
   "dependency_registry_unchanged": true,
   "counts": {
-    "PATH_ADAPTED": 68,
+    "PATH_ADAPTED": 69,
     "WORKSPACE_CONFIGURATION": 4,
     "EXCLUDED_EMPTY_PLACEHOLDER": 1,
-    "BYTE_IDENTICAL": 429,
+    "BYTE_IDENTICAL": 428,
     "DOCUMENTATION_ADAPTED": 9,
     "WORKSPACE_PATHS_ONLY": 1
   },
@@ -3536,9 +3536,9 @@
       "source_blob_sha": "1dab8029fc6f0121d7e4a027af76b13bbf3edc5e",
       "source_bytes": 2122,
       "target_path": "packages/server/db/src/migrations.test.ts",
-      "target_blob_sha": "1dab8029fc6f0121d7e4a027af76b13bbf3edc5e",
-      "disposition": "BYTE_IDENTICAL",
-      "reason": "Only repository placement changed."
+      "target_blob_sha": "4ba0701a6c1c8451c120f36d48585bba8b0c525e",
+      "disposition": "PATH_ADAPTED",
+      "reason": "Preserve exact migration-directory assertion at relocated packages/server/db/drizzle path."
     },
     {
       "source_path": "server/packages/db/src/migrations.ts",

@@ -32,3 +32,7 @@ Ozon/WB остаются отдельными последующими этап�
 ## Первый CI candidate
 
 [f1daff90](https://github.com/MaksimUnimax/Seller_Agents/commit/f1daff90ab7694b18b84c08a778034d11b1f7dfe): import inventory/frozen boundaries, frozen install и lint PASS; format check FAIL для четырёх перемещённых файлов. Следующие stages не запускались. Documentation CI PASS. Исправляется только формат длинных новых путей и workspace YAML; этот неуспешный прогон не выдан за product PASS.
+
+## Второй CI candidate
+
+[afed7c04](https://github.com/MaksimUnimax/Seller_Agents/commit/afed7c047c35710415a4a14b623d9d65593c435a): formatting, typecheck и сохранённый Playwright workspace-path regression PASS. Unit stage обнаружил старое ожидание packages/db/drizzle в migrations.test.ts. Путь реальной миграции уже правильный packages/server/db/drizzle; обновлено только точное ожидаемое расположение в тесте, без изменения SQL или runtime мигратора. Остальные stages этого запуска не объявлены пройденными.
