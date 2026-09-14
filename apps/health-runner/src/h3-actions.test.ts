@@ -129,8 +129,8 @@ describe("B1 safe packaged H3 action vocabulary", () => {
 
     expect(standard).toEqual({
       surface: "CHATGPT_STANDARD",
-      profileId: "CHATGPT_STANDARD_H3_V1",
-      profileRevision: 1,
+      profileId: "CHATGPT_STANDARD_H3_V2",
+      profileRevision: 2,
     });
     expect(work).toEqual({
       surface: "CHATGPT_WORK",
@@ -143,8 +143,8 @@ describe("B1 safe packaged H3 action vocabulary", () => {
         kind: "IDENTIFY_SURFACE",
         surfaceProfile: {
           surface: "CHATGPT_WORK",
-          profileId: "CHATGPT_STANDARD_H3_V1",
-          profileRevision: 1,
+          profileId: "CHATGPT_STANDARD_H3_V2",
+          profileRevision: 2,
         },
       }),
     ).toThrow();

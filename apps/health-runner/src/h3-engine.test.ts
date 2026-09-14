@@ -391,7 +391,7 @@ describe("B2 common H3 execution engine", () => {
       plan("CHATGPT_WORK"),
     );
     expect(standardResult.surfaceProfile.profileId).toBe(
-      "CHATGPT_STANDARD_H3_V1",
+      "CHATGPT_STANDARD_H3_V2",
     );
     expect(workResult.surfaceProfile.profileId).toBe("CHATGPT_WORK_H3_V1");
     expect(standard.calls).toContain("sendOnce");

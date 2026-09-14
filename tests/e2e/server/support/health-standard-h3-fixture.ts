@@ -1,5 +1,6 @@
 import { createServer, type IncomingMessage, type Server } from "node:http";
 import { getPackagedH3Prompt } from "@product/health-runner";
+import { CHATGPT_STANDARD_H3_PROFILE } from "../../../../apps/health-runner/src/standard-h3-profile.js";
 
 export type HealthStandardH3FixtureVariant =
   | "VALID"
@@ -27,7 +28,10 @@ export type HealthStandardH3FixtureVariant =
 
 export type HealthStandardH3Fixture = Readonly<{
   origin: string;
-  startUrl: (variant: HealthStandardH3FixtureVariant) => string;
+  startUrl: (
+    variant: HealthStandardH3FixtureVariant,
+    bookkeeping?: boolean,
+  ) => string;
   promptMatches: number;
   sendActivations: number;
   requestMethods: readonly string[];
@@ -35,160 +39,129 @@ export type HealthStandardH3Fixture = Readonly<{
 }>;
 
 const HEALTH_PROMPT = getPackagedH3Prompt("BRIDGE_COMMAND_SMOKE_V1");
+const STANDARD_SELECTORS = CHATGPT_STANDARD_H3_PROFILE.selectors;
+const CONVERSATION_ID = "00000000-0000-4000-8000-000000000001";
+const CHANGED_CONVERSATION_ID = "00000000-0000-4000-8000-000000000003";
 const BLOCKERS: Readonly<
   Partial<Record<HealthStandardH3FixtureVariant, string>>
 > = {
-  LOGIN_EXPIRED: "LOGIN_EXPIRED",
-  CAPTCHA_CHECKPOINT: "CAPTCHA_SECURITY_CHECKPOINT",
-  VERIFICATION_CHECKPOINT: "VERIFICATION_CHECKPOINT",
-  ACCOUNT_BLOCKED: "ACCOUNT_BLOCKED",
+  LOGIN_EXPIRED: "login",
+  CAPTCHA_CHECKPOINT: "captcha",
+  VERIFICATION_CHECKPOINT: "verification",
+  ACCOUNT_BLOCKED: "blocked",
 };
 
 function requestPath(request: IncomingMessage): string {
   return new URL(request.url ?? "/", "http://127.0.0.1").pathname;
 }
 
-function testId(id: string): string {
-  return `data-testid="hf-${id}"`;
-}
-
 function composerMarkup(
   variant: HealthStandardH3FixtureVariant,
-  conversationId: string,
+  bookkeeping: boolean,
   suffix = "",
 ): string {
   if (variant === "MISSING_COMPOSER") return "";
   const disabled = variant === "DISABLED_INPUT" ? " disabled" : "";
+  const promptId =
+    variant === "WORK_SURFACE"
+      ? "workspace-input"
+      : STANDARD_SELECTORS.promptInput.id;
+  const promptTestId =
+    variant === "WORK_SURFACE"
+      ? "workspace-input"
+      : STANDARD_SELECTORS.promptInput.testId;
   const send =
     variant === "MISSING_SEND"
       ? ""
-      : `<button ${testId("send-control")} data-hf-state="send" data-hf-actionable="true" aria-label="Send message" type="button">Send</button>`;
+      : `<button id="composer-submit-button" data-testid="${STANDARD_SELECTORS.sendControl.testId}" aria-label="Send message" type="button"${bookkeeping ? ' data-fixture-control="send"' : ""}>Send</button>`;
   const extraSend =
     variant === "SEND_AMBIGUOUS"
-      ? `<button ${testId("send-control")} data-hf-state="send" data-hf-actionable="true" aria-label="Send message" type="button">Send duplicate</button>`
+      ? `<button data-testid="${STANDARD_SELECTORS.sendControl.testId}" aria-label="Send message" type="button">Send duplicate</button>`
       : "";
   const stop =
     variant === "SEND_STOP_CONFUSION"
-      ? `<button ${testId("stop-control")} data-hf-state="busy" aria-label="Stop generating" type="button">Stop</button>`
-      : `<button ${testId("stop-control")} data-hf-state="busy" aria-label="Stop generating" type="button" hidden>Stop</button>`;
-  const delivery =
-    variant === "DELIVERY_MISSING"
-      ? ""
-      : `<div ${testId("delivery-target")} data-hf-owner-conversation-id="${conversationId}" data-hf-mode="health-safe">delivery contour</div>`;
-  return `<form ${testId("composer-root")} data-hf-active="true" data-hf-variant="standard_composer_v1" data-hf-conversation-id="${conversationId}" data-hf-instance="${suffix}">
-    <textarea ${testId("editable-input")} aria-label="ChatGPT prompt" data-hf-editable="true" data-hf-actionable="true"${disabled}></textarea>
-    ${send}${extraSend}${stop}${delivery}
+      ? `<button data-testid="${STANDARD_SELECTORS.stopControl.testId}" aria-label="Stop generating" type="button">Stop</button>`
+      : `<button data-testid="${STANDARD_SELECTORS.stopControl.testId}" aria-label="Stop generating" type="button" hidden>Stop</button>`;
+  return `<form data-fixture-composer="${suffix}"${bookkeeping ? ' data-fixture-bookkeeping="composer"' : ""}>
+    <textarea id="${promptId}" data-testid="${promptTestId}" aria-label="ChatGPT prompt"${disabled}></textarea>
+    ${send}${extraSend}${stop}
   </form>`;
 }
 
-function historicalResponse(conversationId: string): string {
-  return `<article ${testId("assistant-message")} data-hf-message-id="history-1" data-hf-conversation-id="${conversationId}">
-    <div ${testId("command-surface")} data-hf-shape="fenced-code-block"><pre ${testId("code-block")} data-hf-fence="true" data-hf-code-id="history-code"><code>${"BRIDGE_HEALTHCHECK_V1"}</code></pre></div>
-    <button ${testId("native-copy")} data-hf-copy-for="history-code" data-hf-actionable="true" aria-label="Copy">Copy</button>
-  </article>`;
+function historicalResponse(): string {
+  return `<section data-turn="assistant" data-turn-id="turn-history">
+    <div data-writing-block-fullscreen-editor-region><button aria-label="Copy" type="button">Copy</button><pre><code>BRIDGE_HEALTHCHECK_V1</code></pre></div>
+  </section>`;
 }
 
-function newResponseMarkup(
-  variant: HealthStandardH3FixtureVariant,
-  conversationId: string,
-): string {
-  const completed = variant !== "COMPLETION_MISSING";
-  const responseConversationId =
-    variant === "CONVERSATION_CHANGED"
-      ? "changed-conversation"
-      : conversationId;
+function newResponseMarkup(variant: HealthStandardH3FixtureVariant): string {
+  const incomplete = variant === "COMPLETION_MISSING";
   const code =
     variant === "CODE_BLOCK_MISSING"
       ? ""
-      : `<div ${testId("command-surface")} data-hf-shape="fenced-code-block"><pre ${testId("code-block")} data-hf-fence="true" data-hf-code-id="response-code"><code>${HEALTH_PROMPT.includes("BRIDGE_HEALTHCHECK_V1") ? "BRIDGE_HEALTHCHECK_V1" : "unexpected"}</code></pre></div>`;
-  const copy =
-    variant === "COPY_MISSING"
-      ? ""
-      : `<button ${testId("native-copy")} data-hf-copy-for="${variant === "COPY_MISMATCHED" ? "wrong-code" : "response-code"}" data-hf-actionable="true" aria-label="Copy">Copy</button>`;
-  return `<article ${testId("assistant-message")} data-hf-message-id="response-1" data-hf-conversation-id="${responseConversationId}">
-    <div ${testId("message-association")} data-hf-conversation-id="${responseConversationId}"></div>
-    <div ${testId("response-state")} data-hf-state="${completed ? "idle" : "busy"}" data-hf-generation-seen="true"></div>
-    <div ${testId("completion")} ${completed ? "" : "hidden"}>complete</div><div ${testId("response-idle")} ${completed ? "" : "hidden"}>idle</div>
-    ${code}${copy}
-  </article>`;
+      : `<div data-writing-block-fullscreen-editor-region><button aria-label="${variant === "COPY_MISSING" ? "Copy unavailable" : "Copy"}" type="button">Copy</button><pre><code>${variant === "COPY_MISMATCHED" ? "UNEXPECTED_HEALTH_TOKEN" : "BRIDGE_HEALTHCHECK_V1"}</code></pre></div>`;
+  return `<section data-turn="assistant" data-turn-id="turn-response"${incomplete ? ' aria-busy="true"' : ""}><p>Completed response</p>${code}</section>`;
 }
 
-function fixtureHtml(variant: HealthStandardH3FixtureVariant): string {
-  const conversationId = "fixture-conversation-v1";
+function checkpointMarkup(kind: string): string {
+  if (!kind || kind === "login") return "";
+  const label =
+    kind === "captcha"
+      ? "CAPTCHA security checkpoint"
+      : kind === "blocked"
+        ? "Account blocked"
+        : "Verification checkpoint";
+  return `<div role="dialog" aria-label="${label}">${label}</div>`;
+}
+
+function fixtureHtml(
+  variant: HealthStandardH3FixtureVariant,
+  bookkeeping: boolean,
+  origin: string,
+): string {
   const blocker = BLOCKERS[variant];
-  const surface =
-    variant === "MISSING_SURFACE"
-      ? ""
-      : `<section ${testId("surface")} data-hf-kind="${variant === "WORK_SURFACE" ? "chatgpt-work" : "chatgpt-standard"}">surface</section>`;
-  const composerCount = variant === "AMBIGUOUS_COMPOSER" ? 2 : 1;
-  const composers = Array.from({ length: composerCount }, (_unused, index) =>
-    composerMarkup(variant, conversationId, String(index)),
-  ).join("");
-  const history =
-    variant === "OLD_RESPONSE_ONLY" ? historicalResponse(conversationId) : "";
+  const surface = ["MISSING_SURFACE", "WORK_SURFACE"].includes(variant)
+    ? ""
+    : `<main${bookkeeping ? ' data-fixture-page="standard"' : ""}>ChatGPT
+      <section data-fixture-conversation="active">
+        ${variant === "OLD_RESPONSE_ONLY" ? historicalResponse() : ""}
+        ${Array.from({ length: variant === "AMBIGUOUS_COMPOSER" ? 2 : 1 }, (_unused, index) => composerMarkup(variant, bookkeeping, String(index))).join("")}
+      </section>
+    </main>`;
   const responseEnabled = ![
     "OLD_RESPONSE_ONLY",
     "BUSY_TIMEOUT",
     "RESPONSE_MISSING",
   ].includes(variant);
-  const completionEnabled = variant !== "COMPLETION_MISSING";
-  const promptExpectation = JSON.stringify(HEALTH_PROMPT);
-  return `<!doctype html>
-<html><head><title>Controlled ChatGPT Standard H3 fixture</title></head>
-<body>
-  <main ${testId("page-host")} data-hf-kind="chatgpt">host</main>
-  ${surface}
-  <section ${testId("conversation-root")} data-hf-conversation-id="${conversationId}">
-    <section ${testId("active-conversation")} data-hf-conversation-id="${conversationId}">
-      <div ${testId("conversation-url-id")} data-hf-conversation-id="${conversationId}"></div>
-      <div ${testId("response-state")} data-hf-state="idle" data-hf-generation-seen="false"></div>
-      ${history}
-      ${composers}
-    </section>
-  </section>
-  ${blocker ? `<div ${testId("blocking")} data-hf-state="${blocker}">blocked</div>` : ""}
-  <script>
-    const conversation = document.querySelector('[data-testid="hf-conversation-root"]');
-    const initialState = conversation.querySelector('[data-testid="hf-response-state"]');
-    let sendCount = 0;
-    const expectedPrompt = ${promptExpectation};
-    document.querySelectorAll('[data-testid="hf-editable-input"]').forEach((input) => {
-      input.addEventListener('input', () => {
-        if (input.value === expectedPrompt) {
-          input.setAttribute('data-hf-prompt-match', 'true');
-          fetch('/fixture-action?kind=prompt-match');
-        }
-      });
+  const canonicalHref = `${origin}/c/${CONVERSATION_ID}`;
+  return `<!doctype html><html><head><title>ChatGPT</title><link rel="canonical" href="${canonicalHref}"></head>
+<body>${surface}${checkpointMarkup(blocker ?? "")}
+<script>
+  const prompt = document.querySelector('#prompt-textarea');
+  const main = document.querySelector('main');
+  const expectedPrompt = ${JSON.stringify(HEALTH_PROMPT)};
+  let sendCount = 0;
+  prompt?.addEventListener('input', () => { if (prompt.value === expectedPrompt) fetch('/fixture-action?kind=prompt-match'); });
+  document.querySelectorAll('button[data-testid="send-button"]').forEach((send) => {
+    send.addEventListener('click', () => {
+      sendCount += 1;
+      fetch('/fixture-action?kind=send-click&count=' + sendCount);
+      if (sendCount !== 1) return;
+      const stop = document.querySelector('button[data-testid="stop-button"]');
+      if (stop && ${JSON.stringify(variant !== "BUSY_TIMEOUT")}) stop.hidden = false;
+      if (${JSON.stringify(variant === "DELIVERY_MISSING")}) document.querySelector('#composer-submit-button')?.remove();
+      if (!${JSON.stringify(responseEnabled)}) return;
+      setTimeout(() => {
+        if (${JSON.stringify(variant === "CONVERSATION_CHANGED")}) history.replaceState({}, '', '/c/${CHANGED_CONVERSATION_ID}');
+        main?.querySelector('section[data-fixture-conversation="active"]')?.insertAdjacentHTML('beforeend', ${JSON.stringify(newResponseMarkup(variant))});
+        const response = document.querySelector('section[data-turn="assistant"][data-turn-id="turn-response"]');
+        if (!response) return;
+        if (${JSON.stringify(variant !== "COMPLETION_MISSING")}) { response.removeAttribute('aria-busy'); if (stop) stop.hidden = true; }
+      }, 40);
     });
-    document.querySelectorAll('[data-testid="hf-send-control"]').forEach((send) => {
-      send.addEventListener('click', () => {
-        sendCount += 1;
-        fetch('/fixture-action?kind=send-click&count=' + sendCount);
-        if (sendCount !== 1) return;
-        initialState.setAttribute('data-hf-state', 'busy');
-        initialState.setAttribute('data-hf-generation-seen', '${variant !== "BUSY_TIMEOUT" ? "true" : "false"}');
-        document.querySelectorAll('[data-testid="hf-stop-control"]').forEach((stop) => stop.hidden = false);
-        ${
-          responseEnabled
-            ? `setTimeout(() => {
-          conversation.querySelector('[data-testid="hf-active-conversation"]').insertAdjacentHTML('beforeend', ${JSON.stringify(newResponseMarkup(variant, conversationId))});
-          const response = conversation.querySelector('[data-testid="hf-assistant-message"][data-hf-message-id="response-1"]');
-          ${
-            completionEnabled
-              ? `document.querySelector('[data-testid="hf-assistant-message"][data-hf-message-id="response-1"] [data-testid="hf-response-state"]').setAttribute('data-hf-state', 'idle');
-          document.querySelector('[data-testid="hf-assistant-message"][data-hf-message-id="response-1"] [data-testid="hf-completion"]').hidden = false;
-          document.querySelector('[data-testid="hf-assistant-message"][data-hf-message-id="response-1"] [data-testid="hf-response-idle"]').hidden = false;
-          document.querySelectorAll('[data-testid="hf-stop-control"]').forEach((stop) => stop.hidden = true);`
-              : ""
-          }
-        }, 40);`
-            : ""
-        }
-      });
-    });
-    window.addEventListener('beforeunload', () => fetch('/fixture-action?kind=cleanup'));
-  </script>
-</body></html>`;
+  });
+  window.addEventListener('beforeunload', () => fetch('/fixture-action?kind=cleanup'));
+</script></body></html>`;
 }
 
 export async function startHealthStandardH3Fixture(): Promise<HealthStandardH3Fixture> {
@@ -213,9 +186,9 @@ export async function startHealthStandardH3Fixture(): Promise<HealthStandardH3Fi
       response.end(JSON.stringify({ promptMatches, sendActivations }));
       return;
     }
-    const variant = path
-      .slice(1)
-      .toUpperCase() as HealthStandardH3FixtureVariant;
+    const variant = (
+      path === "/auth/login" ? "LOGIN_EXPIRED" : path.slice(1).toUpperCase()
+    ) as HealthStandardH3FixtureVariant;
     const variants: readonly HealthStandardH3FixtureVariant[] = [
       "VALID",
       "WORK_SURFACE",
@@ -244,8 +217,18 @@ export async function startHealthStandardH3Fixture(): Promise<HealthStandardH3Fi
       response.writeHead(404).end();
       return;
     }
+    const bookkeeping = !new URL(
+      request.url ?? "/",
+      "http://127.0.0.1",
+    ).searchParams.has("bookkeeping-off");
     response.writeHead(200, { "content-type": "text/html; charset=utf-8" });
-    response.end(fixtureHtml(variant));
+    response.end(
+      fixtureHtml(
+        variant,
+        bookkeeping,
+        `http://127.0.0.1:${(server.address() as { port: number }).port}`,
+      ),
+    );
   });
   await new Promise<void>((resolve, reject) => {
     server.once("error", reject);
@@ -259,7 +242,8 @@ export async function startHealthStandardH3Fixture(): Promise<HealthStandardH3Fi
   const origin = `http://127.0.0.1:${address.port}`;
   return {
     origin,
-    startUrl: (variant) => `${origin}/${variant.toLowerCase()}`,
+    startUrl: (variant, bookkeeping = true) =>
+      `${origin}${variant === "LOGIN_EXPIRED" ? "/auth/login" : `/${variant.toLowerCase()}`}${bookkeeping ? "" : "?bookkeeping-off"}`,
     get promptMatches() {
       return promptMatches;
     },
@@ -268,9 +252,9 @@ export async function startHealthStandardH3Fixture(): Promise<HealthStandardH3Fi
     },
     requestMethods,
     close: async () => {
-      await new Promise<void>((resolve, reject) => {
-        server.close((error) => (error ? reject(error) : resolve()));
-      });
+      await new Promise<void>((resolve, reject) =>
+        server.close((error) => (error ? reject(error) : resolve())),
+      );
     },
   };
 }

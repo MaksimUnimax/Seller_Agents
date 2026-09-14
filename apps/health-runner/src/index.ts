@@ -116,7 +116,6 @@ export type {
   SafeStructuralMetadata,
   SafeStructuralObservation,
 } from "./strategies.js";
-
 export class NoopBrowserDriver implements BrowserDriver {
   public readonly sessionKind = "EPHEMERAL_CONTROLLED" as const;
   public constructor(public readonly family: BrowserFamily) {}

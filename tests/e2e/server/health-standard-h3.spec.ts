@@ -17,12 +17,13 @@ const TARGET_KEY = "chatgpt_standard_health";
 async function runVariant(
   fixture: HealthStandardH3Fixture,
   variant: HealthStandardH3FixtureVariant,
+  bookkeeping = true,
 ) {
   const driver = new ChromeBrowserDriver(
     createControlledTargetRegistry([
       {
         key: TARGET_KEY,
-        startUrl: fixture.startUrl(variant),
+        startUrl: fixture.startUrl(variant, bookkeeping),
         allowedTopLevelOrigins: [fixture.origin],
         browserFamily: "chrome",
         navigationTimeoutMs: 5_000,
@@ -105,8 +106,8 @@ test.describe("B3 packaged ChatGPT Standard H3", () => {
       expect(result.completedSteps).toHaveLength(9);
       expect(result.surfaceProfile).toEqual({
         surface: "CHATGPT_STANDARD",
-        profileId: "CHATGPT_STANDARD_H3_V1",
-        profileRevision: 1,
+        profileId: "CHATGPT_STANDARD_H3_V2",
+        profileRevision: 2,
       });
       await waitForFixtureState(fixture, {
         promptMatches: 1,
@@ -115,6 +116,35 @@ test.describe("B3 packaged ChatGPT Standard H3", () => {
       expect(JSON.stringify(result)).not.toContain("Health check");
       expect(JSON.stringify(result)).not.toContain("BRIDGE_HEALTHCHECK_V1");
       expect(JSON.stringify(result)).not.toMatch(/selector|html|cookie|token/i);
+    } finally {
+      await fixture.close();
+    }
+  });
+
+  test("fixture bookkeeping is irrelevant to production contour discovery", async () => {
+    const fixture = await startHealthStandardH3Fixture();
+    try {
+      const result = await runVariant(fixture, "VALID", false);
+      expect(result.outcome).toBe("PASS");
+      await waitForFixtureState(fixture, {
+        promptMatches: 1,
+        sendActivations: 1,
+      });
+    } finally {
+      await fixture.close();
+    }
+  });
+
+  test("fixture is built from the shipped Standard profile authority", async () => {
+    const fixture = await startHealthStandardH3Fixture();
+    try {
+      const result = await runVariant(fixture, "VALID");
+      expect(result.surfaceProfile).toEqual({
+        surface: "CHATGPT_STANDARD",
+        profileId: "CHATGPT_STANDARD_H3_V2",
+        profileRevision: 2,
+      });
+      expect(result.outcome).toBe("PASS");
     } finally {
       await fixture.close();
     }
@@ -221,7 +251,7 @@ test.describe("B3 packaged ChatGPT Standard H3", () => {
 
   test.describe("post-send failures never retry", () => {
     for (const [variant, failureCode] of [
-      ["BUSY_TIMEOUT", "BUSY_OBSERVATION_FAILED"],
+      ["BUSY_TIMEOUT", "BUSY_TIMEOUT"],
       ["RESPONSE_MISSING", "RESPONSE_TIMEOUT"],
       ["COMPLETION_MISSING", "COMPLETION_TIMEOUT"],
       ["CODE_BLOCK_MISSING", "BRIDGE_SURFACE_VALIDATION_FAILED"],
