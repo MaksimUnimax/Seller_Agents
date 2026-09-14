@@ -105,3 +105,16 @@ export function createControlledTargetRegistry(
 ): ControlledTargetRegistry {
   return new ControlledTargetRegistry(definitions);
 }
+
+/** The only production ChatGPT target currently packaged for H3. */
+export function createPackagedStandardH3TargetRegistry(): ControlledTargetRegistry {
+  return new ControlledTargetRegistry([
+    {
+      key: "chatgpt_standard_health",
+      startUrl: "https://chatgpt.com/",
+      allowedTopLevelOrigins: ["https://chatgpt.com"],
+      browserFamily: "chrome",
+      navigationTimeoutMs: 15_000,
+    },
+  ]);
+}

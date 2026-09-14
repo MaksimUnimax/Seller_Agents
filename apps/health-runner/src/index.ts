@@ -13,6 +13,7 @@ export {
   ControlledTargetRegistry,
   ControlledTargetKeySchema,
   createControlledTargetRegistry,
+  createPackagedStandardH3TargetRegistry,
 } from "./target-registry.js";
 export type { ControlledTarget } from "./target-registry.js";
 export type { ControlledTargetKey } from "./target-registry.js";
