@@ -31,7 +31,7 @@
 
 ## Текущий этап
 
-D0 и D1 завершены, включая D1.S1, D1.E0 и D1.E1. В D1.E1: 232 файла исходников и проверок перенесены по [карте](docs/migration/EXTENSION_IMPORT_MAP.md); [приёмка переноса](docs/migration/evidence/extension-import-2026-09-14/README.md) завершена: remote CI и readback PASS. [Команды расширений](docs/development/EXTENSION_BASELINE.md). D2.1: общие модули включены в development-сборку; [проверка](docs/migration/evidence/extension-core-d2-1-2026-09-14/README.md) и [команды](docs/development/EXTENSION_CORE.md). Сервер развивается параллельно отдельным Codex.
+D0 и D1 завершены, включая D1.S1, D1.E0 и D1.E1. В D1.E1: 232 файла исходников и проверок перенесены по [карте](docs/migration/EXTENSION_IMPORT_MAP.md); [приёмка переноса](docs/migration/evidence/extension-import-2026-09-14/README.md) завершена: remote CI и readback PASS. [Команды расширений](docs/development/EXTENSION_BASELINE.md). D2.1 принят: общие модули включены в проверенную development-сборку; [проверка](docs/migration/evidence/extension-core-d2-1-2026-09-14/README.md) и [команды](docs/development/EXTENSION_CORE.md). Сервер развивается параллельно отдельным Codex.
 
 **WB 0.3.0: INSTALLED FAIL по последней проверке владельца. Полнота Ozon → WB переноса не доказана; R1–R8 закрыты до установленной приёмки исправленного общего механизма.** Исторический 1075/0 не отменяет этот результат.
 

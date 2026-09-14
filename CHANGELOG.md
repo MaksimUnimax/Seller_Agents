@@ -49,3 +49,10 @@
 - Общие алгоритмы подключены в реальную development-сборку 0.2.0; импортированные baseline-файлы не изменены.
 - Добавлены 15 групп contract/worker сценариев, source/extracted-package маршруты и отдельный job существующего Extension CI.
 - Локально 99 процессов PASS; remote приёмка ожидается. Общий D2, установленная приёмка и WB adapter остаются открыты.
+
+## 2026-09-14 — D2.1 common-core accepted
+
+- Полный Extension CI на 45f7d4e завершён SUCCESS: новый core job и три сохранённых baseline jobs.
+- 99 процессов composed source/ZIP проверки PASS; 15 новых групп module/worker сценариев, прежние Ozon gates, transaction-abort и direct-binary attachment.
+- CI artifact независимо скачан; 36 файлов пакета и 50 production inputs сверены с локальной сборкой и Git.
+- D2.1 принят; общий D2, WB adapter, многомагазинность, общий popup и installed acceptance остаются открытыми.

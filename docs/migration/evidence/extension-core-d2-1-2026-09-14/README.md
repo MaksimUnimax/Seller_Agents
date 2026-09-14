@@ -1,6 +1,6 @@
 # D2.1 — выделение первых общих модулей
 
-Дата: 2026-09-14. Статус: **CANDIDATE / REMOTE ACCEPTANCE PENDING**.
+Дата: 2026-09-14. Статус: **ACCEPTED — SOURCE / PACKAGE / REMOTE READBACK PASS**.
 Основание: поручение владельца «Делай» после D1.E1. Base Seller_Agents: `f2a093231bde076c5ee9cd59047b31396b314ba1`. Donor Ozon 0.1.22: `3b102f68a96bee0d7d734d7e32d4fccba440e927`. WB reference: `006af2724aafdf6589c16881c1ed06eb01cca281`, INSTALLED FAIL.
 
 ## Изменение
@@ -31,6 +31,17 @@ Linux, Node 24.19.0, Python 3.12.14. Команда: `python tooling/checks/exte
 
 В исходном worker принятая команда после Finish может оформиться как локальный error-item `WORK_SESSION_NOT_VISIBLE` с нулём API-команд. Поэтому проверяется отказ в бизнес-исполнении и отсутствие запросов, а не предположение, что любой ответ служебного handler обязан иметь `ok=false`. Механика не объявляется новой функциональностью.
 
+## Remote core и точный пакет
+
+[Common core CI](https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34832750570/job/103939635078) завершён SUCCESS на `45f7d4efe46be3a4a903ea3c5c17d1aa88d3a3f5`, tree `06709890d75177e04ac056d43c308382204c7c4b`. На GitHub повторены все 99 процессов; итоговые inputs/files/package receipt совпали с локальными.
+
+Пакет: `SELLER_AGENTS_D2_1_v0.2.0_DEVELOPMENT.zip`, **1526076 bytes**, SHA-256 `877b965c5daeda22aab03ede1c5253c3d9399239aeee54475804c90dbf190983`.
+Artifact ID: `10342980900`; внешняя оболочка Actions имеет отдельный SHA-256 `6c35dd0108afff89fcfa5fb7c1d8f5d7f9a191e33927f22b0012dd41927b2880`.
+
+[REMOTE_RESULTS](REMOTE_RESULTS.json) содержит результаты job, команды, negative control, состав и hashes. Artifact скачан независимо, его внешний hash и внутренний пакет пересчитаны; все 36 runtime entries совпали с receipt. [REMOTE_READBACK](REMOTE_READBACK.json) связывает 35 изменённых Git-файлов и 50 production inputs с проверенным commit; core-модули входят в пакет, а не остаются неиспользованными файлами. Все четыре common-core source перечислены среди реальных inputs.
+
+[Полный Extension CI](https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34832750570) завершён SUCCESS: Common core и все три Ozon/WB baseline jobs. Полный D2 и installed acceptance остаются открытыми даже после их PASS. CI artifacts сохраняются 14 дней; исходники, команды, hashes и результаты остаются в Git.
+
 ## Границы
 
 - Новые common modules не делают сетевых запросов и не вводят обязательных обращений к серверу.
@@ -40,4 +51,4 @@ Linux, Node 24.19.0, Python 3.12.14. Команда: `python tooling/checks/exte
 - Browser messaging/storage/network в новых worker tests имитируются. Native worker suspension, живые ChatGPT/Alice/Ozon, Firefox, Opera, Yandex и Safari/macOS этим прогоном не сертифицированы.
 - Ozon live pending и WB installed FAIL сохраняются. R1–R8 не открыты. Server/runtime contracts, lockfile, исходные branches и production не менялись.
 
-Remote CI/readback и независимое скачивание CI artifact должны быть завершены до перевода D2.1 в ACCEPTED. Общий D2 остаётся IN_PROGRESS после принятия этого шага.
+D2.1 принят после remote CI, readback и независимой проверки скачанного artifact. Завершающая фиксация добавляет только документацию/evidence к проверенному commit; 50 production inputs и исполняемые проверки не меняются. Общий D2 остаётся IN_PROGRESS. Следующая работа — оркестрация с неизменяемым контекстом магазина/аккаунта и подключение WB adapter к тому же ядру.

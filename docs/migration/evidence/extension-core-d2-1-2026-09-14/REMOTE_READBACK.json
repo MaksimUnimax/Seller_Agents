@@ -1,0 +1,487 @@
+{
+  "commit": "45f7d4efe46be3a4a903ea3c5c17d1aa88d3a3f5",
+  "tree": "06709890d75177e04ac056d43c308382204c7c4b",
+  "changed_files": [
+    {
+      "path": ".github/workflows/extension-ci.yml",
+      "bytes": 5376,
+      "sha256": "a8ad42daa20bae03b85c16fb0e53224079afa1b6ca5411b9f29be20002c922cd"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 9315,
+      "sha256": "72bf06820ca640272327885288c8dfe0b85e31d2c181afb0bc50dd249804ee1d"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 4815,
+      "sha256": "8a5cffa3b32a5e5068b0075532a082e6fd9674609df593aae9a6189180782972"
+    },
+    {
+      "path": "README.md",
+      "bytes": 3903,
+      "sha256": "76a29ec2a2d906c3fa71160cc56bcb87cc0084a2c39c2afadaaf95d8139058b0"
+    },
+    {
+      "path": "apps/extension/README.md",
+      "bytes": 907,
+      "sha256": "1564c79e8c46c07db09c513c699ebc03c662f72c3cca1d8bb1fd959fe5168d38"
+    },
+    {
+      "path": "apps/extension/composition.json",
+      "bytes": 2216,
+      "sha256": "bc273cab1474ebf9beb241f92a84f8ce533d14cd1ae4210259e121bef3dcf780"
+    },
+    {
+      "path": "apps/extension/src/background/compat/delivery-model.js",
+      "bytes": 184,
+      "sha256": "9f2394dab7cadadea5d562e0cf95ced708f4d4fe3c6330597736548ee2165730"
+    },
+    {
+      "path": "apps/extension/src/background/compat/getManualOperation.js",
+      "bytes": 135,
+      "sha256": "363b1400f8d1a8e267cd6f2e31fb066098a82196ff96fa5164c5ca8fe4a38568"
+    },
+    {
+      "path": "apps/extension/src/background/compat/manual-record-initializer.js",
+      "bytes": 218,
+      "sha256": "5d09c1c16bb2bc816b0ae19f4875acb37f1e03a6ff600777f5135c2d6b50b6b8"
+    },
+    {
+      "path": "apps/extension/src/background/compat/mutateManualOperation.js",
+      "bytes": 172,
+      "sha256": "b305da21353283bff835b3bcaff4dbd15eb14a5b67a92b2f963f4ee88ab05bbb"
+    },
+    {
+      "path": "apps/extension/src/background/compat/singleFlight.js",
+      "bytes": 116,
+      "sha256": "e4a6f585248bcf7a69706b5f85273ba50f53e129b92e5a03192b81fae05f0109"
+    },
+    {
+      "path": "apps/extension/src/background/compat/withManualOperationsWrite.js",
+      "bytes": 90,
+      "sha256": "ca8382013e3f94e5c5e2d4675978d1b3513a7d02d5c0ed18a4e6e77a5f4b58b1"
+    },
+    {
+      "path": "apps/extension/src/background/compat/work-model.js",
+      "bytes": 75,
+      "sha256": "5516279ce15488f2016e71c71ad49e19831c4f642f7699310cf155fe283cd369"
+    },
+    {
+      "path": "docs/README.md",
+      "bytes": 4511,
+      "sha256": "1894c011bf08c2edb5081ef91c244c1540e62b6acf4b5c0a3593332a4f44b11b"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "bytes": 7251,
+      "sha256": "7634f18aa0428154b585df3b4aab9278e250e3454c94ddbbdfa2b39528b68ecd"
+    },
+    {
+      "path": "docs/STATUS.md",
+      "bytes": 6933,
+      "sha256": "587556ba3c88039c8f32d5a2ea508757edfc94e76c99b5c36cce53ae83c3629c"
+    },
+    {
+      "path": "docs/architecture/OVERVIEW.md",
+      "bytes": 6420,
+      "sha256": "bdc2d7eed3ba33c73d9b486fee4f19d9701f3a26acdaa0c7c5d25c79ab16625c"
+    },
+    {
+      "path": "docs/development/EXTENSION_BASELINE.md",
+      "bytes": 9278,
+      "sha256": "b0597fe67fa90f97b0206c9373048a11ef617ff954a8c9f9040d6e10de1b88dc"
+    },
+    {
+      "path": "docs/development/EXTENSION_CORE.md",
+      "bytes": 9849,
+      "sha256": "bce5c0224515bb373722361f56f7f3cca68b39b74f82f7b964e5f6cb4a48dc1f"
+    },
+    {
+      "path": "docs/migration/evidence/extension-core-d2-1-2026-09-14/LOCAL_RESULTS.json",
+      "bytes": 61343,
+      "sha256": "498c732d75ac21cb1b1e3cbe28a4d072e2ea51fd4ab15296cbed566aa9bea1aa"
+    },
+    {
+      "path": "docs/migration/evidence/extension-core-d2-1-2026-09-14/README.md",
+      "bytes": 6020,
+      "sha256": "43c420b80808b7d5936517c56af8105381925dabe3fd3b5809360627aa7eb2e4"
+    },
+    {
+      "path": "packages/bridge-core/README.md",
+      "bytes": 757,
+      "sha256": "20731a756cdf2c7c02b2bdd7c374ab474641f77917a9fc9d7c09f06c306bc2ec"
+    },
+    {
+      "path": "packages/bridge-core/src/delivery/model.js",
+      "bytes": 15972,
+      "sha256": "2f716233d0262419e15005f6f3c86b508079207bc1a91951e7b7dbd109aed8d6"
+    },
+    {
+      "path": "packages/bridge-core/src/execution/local-operations.js",
+      "bytes": 1966,
+      "sha256": "9287c3e99f97e8af7dcc0c22352027a7d51ad558f2465f24103abd2093b1d46c"
+    },
+    {
+      "path": "packages/bridge-core/src/protocol/mixed-discovery.js",
+      "bytes": 5487,
+      "sha256": "0a4968c56d391b5b5d38c044628a7662b20a8b47ef088e2d9e687007be830b96"
+    },
+    {
+      "path": "packages/bridge-core/src/work/session-model.js",
+      "bytes": 2353,
+      "sha256": "bca0b640b3f630e75d2e46bb9f582cca6992a6bb99d049119926232770b64a1c"
+    },
+    {
+      "path": "packages/marketplaces/ozon/README.md",
+      "bytes": 637,
+      "sha256": "52fc88b2f0101a906b72f5b5f1b4a1c8128a4cdeb216bb95874c90539b6622e4"
+    },
+    {
+      "path": "packages/marketplaces/ozon/src/delivery-plan.js",
+      "bytes": 5064,
+      "sha256": "cd1a2194101df3d7fabb34282ecfd8df01a72a269dc0fb45b8b17fb3f05d31f0"
+    },
+    {
+      "path": "packages/marketplaces/ozon/src/mixed-discovery.js",
+      "bytes": 564,
+      "sha256": "007a2da658231d63995e6cdf1c6f1958d7397adf86e795e942bc100155a4a7ce"
+    },
+    {
+      "path": "tests/regression/extension-core/core-contracts.mjs",
+      "bytes": 11851,
+      "sha256": "c9b508cfad206cefee8e19cb78c74e53ac0201927bb6e9d96a0325eed473adea"
+    },
+    {
+      "path": "tests/regression/extension-core/worker-harness.mjs",
+      "bytes": 7979,
+      "sha256": "56176490d15525c0ae1d610c038e5c8631e4ffccd58f6659812a312e5928c37b"
+    },
+    {
+      "path": "tests/regression/extension-core/worker-lifecycle.mjs",
+      "bytes": 9513,
+      "sha256": "ff9a6dfb6958115fa08ad3adb7f83404bce461bd30e8626355ea091438781bc3"
+    },
+    {
+      "path": "tooling/build/extension_composed.py",
+      "bytes": 5101,
+      "sha256": "87e09356e16675672da98abd705e8066c9207f032981205c8bac732d56f56942"
+    },
+    {
+      "path": "tooling/checks/extension_core.py",
+      "bytes": 2778,
+      "sha256": "4738c935a2faa48131305c854e889f45d0a804c57b91ba44aeafd19e7d33cae3"
+    },
+    {
+      "path": "tooling/checks/extension_import.py",
+      "bytes": 10749,
+      "sha256": "1143059da2039d8a2797372cd8fba8fce4574e87cc238c5b7b5c933c44ed37ad"
+    }
+  ],
+  "status": "MATCH",
+  "production_inputs": [
+    {
+      "path": "apps/extension/composition.json",
+      "sha256": "bc273cab1474ebf9beb241f92a84f8ce533d14cd1ae4210259e121bef3dcf780",
+      "bytes": 2216,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/attachment_delivery_port_content.js",
+      "sha256": "f244e0bac2f9bed953a50058259beff89efbf765f5f54c664f11ffe1dbc4977a",
+      "bytes": 28451,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/attachment_delivery_wake_content.js",
+      "sha256": "6b3a7a4b25ce6a86a9e7b54c0a71a29c02aad9480cfbe7d2a0007e9ca4c9aa11",
+      "bytes": 759,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/content_script.js",
+      "sha256": "fd86f2d04984defa8c22dcfc66c2d9f449b62b486816668f192326b1339879f2",
+      "bytes": 133067,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/manifest.json",
+      "sha256": "7019a672a78ac87c85617d1444721ac01158fe5a50f0329a8e7ca6758de5178c",
+      "bytes": 1860,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/popup.css",
+      "sha256": "1befabf8a3650dfe01a5980b0d5ff2fcd34666d507baad8e79f3873358d7a726",
+      "bytes": 5195,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/popup.html",
+      "sha256": "b9b1a8d5f5c5248a98f0b8c9622fde00acb241940469040718f802754d11f86c",
+      "bytes": 15736,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/popup.js",
+      "sha256": "938ec8468cb17a7e5b31c08ce510ea46c2e4d9c6b7e39a7360a55bd65825dff6",
+      "bytes": 41087,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/service_worker.js",
+      "sha256": "0aefd9b86a9e9adc66b9a6dfb6fa4ef41e786a9988d1a6e8c3cd19fc864b3486",
+      "bytes": 323015,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/service_worker_entry.js",
+      "sha256": "3d30d776f1d8bb5db461c4551fa59e57dc6e9f74c3804cdee989798c19d4533b",
+      "bytes": 1729,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ai_adapters.js",
+      "sha256": "4b9423666cf7bed03f89edb3c23d535bd02143e85c1a1b7317d184f25cc1bb72",
+      "bytes": 22597,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ai_delivery_capabilities.js",
+      "sha256": "dca544904ae1aac578e52f60883c603cee4129fe56089f807ec175cef4e2e83a",
+      "bytes": 9753,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/bridge_autorun_model.js",
+      "sha256": "d321cf49a1972ffe205bd3bb14f7b160c48158be14cf29a0e9878e2c48450983",
+      "bytes": 15919,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/composer_send.js",
+      "sha256": "3e9421e8e1bc209af635e2b90d957e558301763572a42875b95c8973ca75b736",
+      "bytes": 8267,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/conversation_identity.js",
+      "sha256": "939036acd95ccb3dfe00f05b5d49568615f6d798a023a0ec995e38267fb68f57",
+      "bytes": 4027,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/direct_binary_file_delivery_patch.js",
+      "sha256": "e66dfd9bb91be078de9b08d86ac1acc124eabb3a22fb29fac77f59e7d036ab96",
+      "bytes": 10095,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/file_delivery_model_policy.js",
+      "sha256": "caba2a05701d74879bc699316530575c63106a62f8f782eee694ef1c3b4b5aab",
+      "bytes": 4021,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/file_delivery_port_worker.js",
+      "sha256": "c9b5fdbc8661828c17145519395bde1a2eab1af9b434b99ae13c1d8ccda0c6dd",
+      "bytes": 39030,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/file_delivery_wake_worker.js",
+      "sha256": "ec1b59ba7243bf4a5591bdbe10b0b5f6e727f8769b08833da156378d202acffd",
+      "bytes": 1750,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/live_runtime_v0122_patch.js",
+      "sha256": "e9470607fc401dbf1e479d3a487cce4d3d6b9fa75f1b508aaa8bd8d58d4940de",
+      "bytes": 21046,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/llm_output_report_workflow_patch.js",
+      "sha256": "a564e2dbafb3980bd406e82744c177a34df2279b63c3198395c13126520dbbff",
+      "bytes": 15664,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/manual_controls.js",
+      "sha256": "81f302487da7b5ff7c1b746298353438b2cfec100a5bb8f7fa2c80d1e033c81e",
+      "bytes": 10269,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/mixed_batch_discovery.js",
+      "sha256": "8afc5cd5399fe5734a1178d88bd18125cddb6be1593c7939f79e9bb5ec577357",
+      "bytes": 4772,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_contract.js",
+      "sha256": "8dfe90545f8499d1f1938dcdf932ef5e15618d4f1dd4008565f91d03679896ac",
+      "bytes": 321333,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_credentials.js",
+      "sha256": "286c6021f958e41912842569bcfa0d0dfe920eed8ce1646014899a1de064415d",
+      "bytes": 4085,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_entitlements.js",
+      "sha256": "f8b9222368a2e3bbfb323ab5cd0fe1c3238742d5c06ef9afac752861d4c7422b",
+      "bytes": 58578,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_guidance.js",
+      "sha256": "654b330ec90069351104d1cf5add8afb979fe7daddaf3a3cbdf3fd4117bef094",
+      "bytes": 10927,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_operation_registry.js",
+      "sha256": "b42b51f815c0f88e89e1cd193d28cc4f72949d5dd1738ab35d473b226fd0a832",
+      "bytes": 225182,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_provider.js",
+      "sha256": "de528808ed1d18e77ac0f9cb48ef7db8d7ff267ee299928e0207387adc7c7f7f",
+      "bytes": 30599,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/performance_report_continuation_patch.js",
+      "sha256": "f42115e8ac4197fef8b7f5ba463bc6303e3d425a9202c95605edc3844b34a9b5",
+      "bytes": 5181,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/proven_writing_block_capture.js",
+      "sha256": "5b0eaac9619cb827d1e74c61f53e2755c084a1d4b60c64d23f5fd4a5354c3aef",
+      "bytes": 14614,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/provider_transport_core.js",
+      "sha256": "97f9a8bed0427753168c8ff083191338225cbe3abd026b471876daf19e04bba4",
+      "bytes": 37467,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/runtime_names.js",
+      "sha256": "b5ca31b9e5479f2b60fff0e6d03007eb83a28e2e3bd84152c52f40b13c162b7c",
+      "bytes": 10642,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/swagger_read_surface_patch.js",
+      "sha256": "ff87a566f28003fa41ab83c91e2ef696c259ecc81ac12975d1609a2718a5de4d",
+      "bytes": 57275,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/web_file_attachment.js",
+      "sha256": "a1d91cb7b6aa5b1b26bf780e29f3d42895510b04d55d37569cfc3d3cf4db3010",
+      "bytes": 4750,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/work_session_model.js",
+      "sha256": "11e91d850a3d69711fefdaadb6617b825350d9382b9bc55cabdbbc9b255c9855",
+      "bytes": 1985,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/imported/ozon-v0.1.22/shared/xlsx_direct_binary_delivery_patch.js",
+      "sha256": "5e61f6d749cf69d980b4d9bdae8b32bb0937e48a298abd4afd9793241252c3fa",
+      "bytes": 12156,
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/bridge-core/src/work/session-model.js",
+      "sha256": "bca0b640b3f630e75d2e46bb9f582cca6992a6bb99d049119926232770b64a1c",
+      "bytes": 2353,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/compat/work-model.js",
+      "sha256": "5516279ce15488f2016e71c71ad49e19831c4f642f7699310cf155fe283cd369",
+      "bytes": 75,
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/bridge-core/src/protocol/mixed-discovery.js",
+      "sha256": "0a4968c56d391b5b5d38c044628a7662b20a8b47ef088e2d9e687007be830b96",
+      "bytes": 5487,
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/marketplaces/ozon/src/mixed-discovery.js",
+      "sha256": "007a2da658231d63995e6cdf1c6f1958d7397adf86e795e942bc100155a4a7ce",
+      "bytes": 564,
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/bridge-core/src/delivery/model.js",
+      "sha256": "2f716233d0262419e15005f6f3c86b508079207bc1a91951e7b7dbd109aed8d6",
+      "bytes": 15972,
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/marketplaces/ozon/src/delivery-plan.js",
+      "sha256": "cd1a2194101df3d7fabb34282ecfd8df01a72a269dc0fb45b8b17fb3f05d31f0",
+      "bytes": 5064,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/compat/delivery-model.js",
+      "sha256": "9f2394dab7cadadea5d562e0cf95ced708f4d4fe3c6330597736548ee2165730",
+      "bytes": 184,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/compat/singleFlight.js",
+      "sha256": "e4a6f585248bcf7a69706b5f85273ba50f53e129b92e5a03192b81fae05f0109",
+      "bytes": 116,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/compat/getManualOperation.js",
+      "sha256": "363b1400f8d1a8e267cd6f2e31fb066098a82196ff96fa5164c5ca8fe4a38568",
+      "bytes": 135,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/compat/withManualOperationsWrite.js",
+      "sha256": "ca8382013e3f94e5c5e2d4675978d1b3513a7d02d5c0ed18a4e6e77a5f4b58b1",
+      "bytes": 90,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/compat/mutateManualOperation.js",
+      "sha256": "b305da21353283bff835b3bcaff4dbd15eb14a5b67a92b2f963f4ee88ab05bbb",
+      "bytes": 172,
+      "status": "MATCH"
+    },
+    {
+      "path": "apps/extension/src/background/compat/manual-record-initializer.js",
+      "sha256": "5d09c1c16bb2bc816b0ae19f4875acb37f1e03a6ff600777f5135c2d6b50b6b8",
+      "bytes": 218,
+      "status": "MATCH"
+    },
+    {
+      "path": "packages/bridge-core/src/execution/local-operations.js",
+      "sha256": "9287c3e99f97e8af7dcc0c22352027a7d51ad558f2465f24103abd2093b1d46c",
+      "bytes": 1966,
+      "status": "MATCH"
+    }
+  ],
+  "all_50_input_hashes_match_downloaded_ci_package_receipt": true,
+  "server_diff": "EMPTY",
+  "baseline_diff": "EMPTY"
+}
