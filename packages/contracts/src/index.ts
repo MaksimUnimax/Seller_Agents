@@ -535,38 +535,66 @@ export const PaymentHistoryResponseV1Schema = z
 /** Frozen P3.1 control-plane bootstrap wire-contract identifiers. */
 export const ControlPlaneContractVersionV1Schema =
   z.literal("control_plane_v1");
+/** I1-SRV.1 is a breaking signed-payload change and uses an explicit v2. */
+export const ControlPlaneContractVersionV2Schema =
+  z.literal("control_plane_v2");
+export const ControlPlaneContractVersionSchema = z.union([
+  ControlPlaneContractVersionV1Schema,
+  ControlPlaneContractVersionV2Schema,
+]);
 export const BootstrapSnapshotVersionV1Schema = z.literal(
   "bootstrap_snapshot_v1",
+);
+export const BootstrapSnapshotVersionV2Schema = z.literal(
+  "bootstrap_snapshot_v2",
 );
 export const BootstrapEnvelopeVersionV1Schema = z.literal(
   "bootstrap_envelope_v1",
 );
+export const BootstrapEnvelopeVersionV2Schema = z.literal(
+  "bootstrap_envelope_v2",
+);
 
 const IsoTimestampV1Schema = z.string().datetime({ offset: true });
 
+const BootstrapRequestShape = {
+  extensionVersion: SemVerV1Schema,
+  browser: z
+    .object({
+      family: z.enum(["chrome", "yandex_chromium"]),
+      version: z.string().min(1).max(64),
+    })
+    .strict(),
+  deviceId: z.uuid(),
+  lastConfigVersion: z.number().int().min(0).nullable(),
+  detectedAi: z
+    .object({
+      family: StableMachineIdentifierV1Schema,
+      surface: StableMachineIdentifierV1Schema,
+      variant: StableMachineIdentifierV1Schema.nullable().optional(),
+    })
+    .strict()
+    .optional(),
+};
 export const BootstrapRequestV1Schema = z
   .object({
     contractVersion: ControlPlaneContractVersionV1Schema,
-    extensionVersion: SemVerV1Schema,
-    browser: z
-      .object({
-        family: z.enum(["chrome", "yandex_chromium"]),
-        version: z.string().min(1).max(64),
-      })
-      .strict(),
-    deviceId: z.uuid(),
-    lastConfigVersion: z.number().int().min(0).nullable(),
-    detectedAi: z
-      .object({
-        family: StableMachineIdentifierV1Schema,
-        surface: StableMachineIdentifierV1Schema,
-        variant: StableMachineIdentifierV1Schema.nullable().optional(),
-      })
-      .strict()
-      .optional(),
+    ...BootstrapRequestShape,
   })
   .strict();
 export type BootstrapRequestV1 = z.infer<typeof BootstrapRequestV1Schema>;
+export const BootstrapRequestV2Schema = z
+  .object({
+    contractVersion: ControlPlaneContractVersionV2Schema,
+    ...BootstrapRequestShape,
+  })
+  .strict();
+export type BootstrapRequestV2 = z.infer<typeof BootstrapRequestV2Schema>;
+export const BootstrapRequestSchema = z.discriminatedUnion("contractVersion", [
+  BootstrapRequestV1Schema,
+  BootstrapRequestV2Schema,
+]);
+export type BootstrapRequest = z.infer<typeof BootstrapRequestSchema>;
 
 const EntitlementValueV1Schema = z.union([
   z.boolean(),
@@ -657,77 +685,102 @@ const SubscriptionV1Schema = z.discriminatedUnion("state", [
     .strict(),
 ]);
 
+const BootstrapSnapshotPayloadShape = {
+  configVersion: z.number().int().positive(),
+  issuedAt: IsoTimestampV1Schema,
+  expiresAt: IsoTimestampV1Schema,
+  offlineGraceUntil: IsoTimestampV1Schema,
+  serverTime: IsoTimestampV1Schema,
+  accessBasis: AccessBasisV1Schema.optional(),
+  subscription: SubscriptionV1Schema,
+  // The pre-P4 device limit is an internal device-management rule.  It is
+  // deliberately not part of the frozen bootstrap snapshot wire format.
+  devicePolicy: z.object({ status: z.literal("ACTIVE") }).strict(),
+  compatibility: z
+    .object({
+      extension: z
+        .object({
+          status: z.enum([
+            "SUPPORTED",
+            "UPDATE_RECOMMENDED",
+            "UPDATE_REQUIRED",
+          ]),
+          minimumVersion: SemVerV1Schema.nullable(),
+        })
+        .strict(),
+      browser: z
+        .object({
+          status: z.enum(["SUPPORTED", "UNSUPPORTED_BROWSER", "MAINTENANCE"]),
+        })
+        .strict(),
+    })
+    .strict(),
+  entitlements: BoundedEntitlementMapV1Schema,
+  features: BoundedFeatureMapV1Schema,
+  ai: BootstrapAiResolutionV1Schema,
+};
+const validateBootstrapSnapshotTimes = (
+  value: {
+    issuedAt: string;
+    expiresAt: string;
+    offlineGraceUntil: string;
+    serverTime: string;
+  },
+  context: z.RefinementCtx,
+) => {
+  const issuedAt = Date.parse(value.issuedAt);
+  const expiresAt = Date.parse(value.expiresAt);
+  const offlineGraceUntil = Date.parse(value.offlineGraceUntil);
+  const serverTime = Date.parse(value.serverTime);
+  if (issuedAt > serverTime)
+    context.addIssue({
+      code: "custom",
+      path: ["serverTime"],
+      message: "issuedAt must be at or before serverTime",
+    });
+  if (issuedAt >= expiresAt)
+    context.addIssue({
+      code: "custom",
+      path: ["expiresAt"],
+      message: "expiresAt must be after issuedAt",
+    });
+  if (expiresAt >= offlineGraceUntil)
+    context.addIssue({
+      code: "custom",
+      path: ["offlineGraceUntil"],
+      message: "offlineGraceUntil must be after expiresAt",
+    });
+};
 export const BootstrapSnapshotPayloadV1Schema = z
   .object({
     snapshotVersion: BootstrapSnapshotVersionV1Schema,
     contractVersion: ControlPlaneContractVersionV1Schema,
-    configVersion: z.number().int().positive(),
-    issuedAt: IsoTimestampV1Schema,
-    expiresAt: IsoTimestampV1Schema,
-    offlineGraceUntil: IsoTimestampV1Schema,
-    serverTime: IsoTimestampV1Schema,
-    account: z
-      .object({
-        /** Stable canonical Seller Agents account identity (never a store ID). */
-        id: z.uuid(),
-        status: z.literal("ACTIVE"),
-      })
-      .strict(),
-    accessBasis: AccessBasisV1Schema.optional(),
-    subscription: SubscriptionV1Schema,
-    // The pre-P4 device limit is an internal device-management rule.  It is
-    // deliberately not part of the frozen bootstrap snapshot wire format.
-    devicePolicy: z.object({ status: z.literal("ACTIVE") }).strict(),
-    compatibility: z
-      .object({
-        extension: z
-          .object({
-            status: z.enum([
-              "SUPPORTED",
-              "UPDATE_RECOMMENDED",
-              "UPDATE_REQUIRED",
-            ]),
-            minimumVersion: SemVerV1Schema.nullable(),
-          })
-          .strict(),
-        browser: z
-          .object({
-            status: z.enum(["SUPPORTED", "UNSUPPORTED_BROWSER", "MAINTENANCE"]),
-          })
-          .strict(),
-      })
-      .strict(),
-    entitlements: BoundedEntitlementMapV1Schema,
-    features: BoundedFeatureMapV1Schema,
-    ai: BootstrapAiResolutionV1Schema,
+    account: z.object({ status: z.literal("ACTIVE") }).strict(),
+    ...BootstrapSnapshotPayloadShape,
   })
   .strict()
-  .superRefine((value, context) => {
-    const issuedAt = Date.parse(value.issuedAt);
-    const expiresAt = Date.parse(value.expiresAt);
-    const offlineGraceUntil = Date.parse(value.offlineGraceUntil);
-    const serverTime = Date.parse(value.serverTime);
-    if (issuedAt > serverTime)
-      context.addIssue({
-        code: "custom",
-        path: ["serverTime"],
-        message: "issuedAt must be at or before serverTime",
-      });
-    if (issuedAt >= expiresAt)
-      context.addIssue({
-        code: "custom",
-        path: ["expiresAt"],
-        message: "expiresAt must be after issuedAt",
-      });
-    if (expiresAt >= offlineGraceUntil)
-      context.addIssue({
-        code: "custom",
-        path: ["offlineGraceUntil"],
-        message: "offlineGraceUntil must be after expiresAt",
-      });
-  });
+  .superRefine(validateBootstrapSnapshotTimes);
 export type BootstrapSnapshotPayloadV1 = z.infer<
   typeof BootstrapSnapshotPayloadV1Schema
+>;
+export const BootstrapSnapshotPayloadV2Schema = z
+  .object({
+    snapshotVersion: BootstrapSnapshotVersionV2Schema,
+    contractVersion: ControlPlaneContractVersionV2Schema,
+    account: z.object({ id: z.uuid(), status: z.literal("ACTIVE") }).strict(),
+    ...BootstrapSnapshotPayloadShape,
+  })
+  .strict()
+  .superRefine(validateBootstrapSnapshotTimes);
+export type BootstrapSnapshotPayloadV2 = z.infer<
+  typeof BootstrapSnapshotPayloadV2Schema
+>;
+export const BootstrapSnapshotPayloadSchema = z.union([
+  BootstrapSnapshotPayloadV1Schema,
+  BootstrapSnapshotPayloadV2Schema,
+]);
+export type BootstrapSnapshotPayload = z.infer<
+  typeof BootstrapSnapshotPayloadSchema
 >;
 
 export const SignedBootstrapEnvelopeV1Schema = z
@@ -752,6 +805,33 @@ export const SignedBootstrapEnvelopeV1Schema = z
   );
 export type SignedBootstrapEnvelopeV1 = z.infer<
   typeof SignedBootstrapEnvelopeV1Schema
+>;
+export const SignedBootstrapEnvelopeV2Schema = z
+  .object({
+    envelopeVersion: BootstrapEnvelopeVersionV2Schema,
+    algorithm: z.literal("Ed25519"),
+    keyId: StableMachineIdentifierV1Schema,
+    payload: z
+      .string()
+      .min(1)
+      .max(32_768)
+      .regex(/^[A-Za-z0-9_-]+$/),
+    signature: z
+      .string()
+      .min(1)
+      .max(256)
+      .regex(/^[A-Za-z0-9_-]+$/),
+  })
+  .strict();
+export type SignedBootstrapEnvelopeV2 = z.infer<
+  typeof SignedBootstrapEnvelopeV2Schema
+>;
+export const SignedBootstrapEnvelopeSchema = z.union([
+  SignedBootstrapEnvelopeV1Schema,
+  SignedBootstrapEnvelopeV2Schema,
+]);
+export type SignedBootstrapEnvelope = z.infer<
+  typeof SignedBootstrapEnvelopeSchema
 >;
 
 /** P6.2 admin read/support/principal-management contracts. */

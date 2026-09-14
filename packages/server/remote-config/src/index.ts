@@ -15,13 +15,19 @@ import {
   type CompatibilityPolicyRevision,
   type CompatibilityResolution,
   type P3MutationContext,
+  ContractVersionSchema,
+  type ContractVersion,
 } from "@product/compatibility";
 import { z } from "zod";
 import {
   BootstrapSnapshotPayloadV1Schema,
+  BootstrapSnapshotPayloadV2Schema,
   SignedBootstrapEnvelopeV1Schema,
+  SignedBootstrapEnvelopeV2Schema,
   type BootstrapSnapshotPayloadV1,
+  type BootstrapSnapshotPayloadV2,
   type SignedBootstrapEnvelopeV1,
+  type SignedBootstrapEnvelopeV2,
 } from "@product/contracts";
 
 const HashSchema = z.string().regex(/^[0-9a-f]{64}$/);
@@ -48,16 +54,34 @@ export const SigningKeyEventSchema = z
 export const ConfigReleaseSchema = z
   .object({
     configVersion: z.number().int().positive(),
-    contractVersion: z.literal("control_plane_v1"),
-    snapshotVersion: z.literal("bootstrap_snapshot_v1"),
-    envelopeVersion: z.literal("bootstrap_envelope_v1"),
+    contractVersion: ContractVersionSchema,
+    snapshotVersion: z.enum(["bootstrap_snapshot_v1", "bootstrap_snapshot_v2"]),
+    envelopeVersion: z.enum(["bootstrap_envelope_v1", "bootstrap_envelope_v2"]),
     contentHashSha256: HashSchema,
     sourceFingerprintSha256: HashSchema,
     signingKeyId: StableMachineIdentifierV1Schema,
     publishedAt: TimestampSchema,
     createdAt: TimestampSchema,
   })
-  .strict();
+  .strict()
+  .superRefine((value, context) => {
+    const expected =
+      value.contractVersion === "control_plane_v1"
+        ? ["bootstrap_snapshot_v1", "bootstrap_envelope_v1"]
+        : ["bootstrap_snapshot_v2", "bootstrap_envelope_v2"];
+    if (value.snapshotVersion !== expected[0])
+      context.addIssue({
+        code: "custom",
+        path: ["snapshotVersion"],
+        message: "snapshot version does not match contract",
+      });
+    if (value.envelopeVersion !== expected[1])
+      context.addIssue({
+        code: "custom",
+        path: ["envelopeVersion"],
+        message: "envelope version does not match contract",
+      });
+  });
 export const ConfigReleaseCompatibilityPolicySchema = z
   .object({
     configVersion: z.number().int().positive(),
@@ -177,11 +201,30 @@ export const ConfigReleaseManifestV1Schema = z
 export type ConfigReleaseManifestV1 = z.infer<
   typeof ConfigReleaseManifestV1Schema
 >;
-export function configReleaseHashes(manifest: ConfigReleaseManifestV1): {
+export const ConfigReleaseManifestV2Schema = z
+  .object({
+    contractVersion: z.literal("control_plane_v2"),
+    snapshotVersion: z.literal("bootstrap_snapshot_v2"),
+    envelopeVersion: z.literal("bootstrap_envelope_v2"),
+    signingKeyId: StableMachineIdentifierV1Schema,
+    compatibilityPolicyRevisionIds: z.array(z.uuid()),
+    featureRuleRevisionIds: z.array(z.uuid()),
+    featureRolloutRevisionIds: z.array(z.uuid()),
+  })
+  .strict();
+export type ConfigReleaseManifestV2 = z.infer<
+  typeof ConfigReleaseManifestV2Schema
+>;
+export const ConfigReleaseManifestSchema = z.union([
+  ConfigReleaseManifestV1Schema,
+  ConfigReleaseManifestV2Schema,
+]);
+export type ConfigReleaseManifest = z.infer<typeof ConfigReleaseManifestSchema>;
+export function configReleaseHashes(manifest: ConfigReleaseManifest): {
   sourceFingerprintSha256: string;
   contentHashSha256: string;
 } {
-  const normalized = ConfigReleaseManifestV1Schema.parse({
+  const normalized = ConfigReleaseManifestSchema.parse({
     contractVersion: manifest.contractVersion,
     snapshotVersion: manifest.snapshotVersion,
     envelopeVersion: manifest.envelopeVersion,
@@ -236,7 +279,7 @@ export const CreateFeatureDefinitionCommandSchema = z
 export const PublishFeatureRuleRevisionCommandSchema = z
   .object({
     featureKey: FeatureKeySchema,
-    contractVersion: z.literal("control_plane_v1"),
+    contractVersion: ContractVersionSchema,
     enabled: z.boolean(),
     browserFamily: z.enum(["chrome", "yandex_chromium"]).nullable(),
     minimumExtensionVersion: z.string().nullable(),
@@ -278,18 +321,20 @@ export const PublishRolloutRevisionCommandSchema = z
     publishedAt: z.date(),
   })
   .strict();
-export const PublishConfigReleaseCommandSchema =
-  ConfigReleaseManifestV1Schema.extend({ publishedAt: z.date() })
-    .strict()
-    .superRefine((v, c) => {
-      for (const [name, ids] of [
-        ["compatibility", v.compatibilityPolicyRevisionIds],
-        ["feature rule", v.featureRuleRevisionIds],
-        ["feature rollout", v.featureRolloutRevisionIds],
-      ] as const)
-        if (new Set(ids).size !== ids.length)
-          c.addIssue({ code: "custom", message: `duplicate ${name} source` });
-    });
+export const PublishConfigReleaseCommandSchema = z
+  .union([
+    ConfigReleaseManifestV1Schema.extend({ publishedAt: z.date() }),
+    ConfigReleaseManifestV2Schema.extend({ publishedAt: z.date() }),
+  ])
+  .superRefine((v, c) => {
+    for (const [name, ids] of [
+      ["compatibility", v.compatibilityPolicyRevisionIds],
+      ["feature rule", v.featureRuleRevisionIds],
+      ["feature rollout", v.featureRolloutRevisionIds],
+    ] as const)
+      if (new Set(ids).size !== ids.length)
+        c.addIssue({ code: "custom", message: `duplicate ${name} source` });
+  });
 export type CreateFeatureDefinitionCommand = z.infer<
   typeof CreateFeatureDefinitionCommandSchema
 >;
@@ -389,7 +434,7 @@ export interface RemoteConfigCatalogRepository {
   listSigningKeyEvents(keyId: string): Promise<SigningKeyEvent[]>;
   findConfigRelease(configVersion: number): Promise<ConfigRelease | undefined>;
   findLatestConfigRelease(
-    contractVersion: "control_plane_v1",
+    contractVersion: ContractVersion,
   ): Promise<ConfigRelease | undefined>;
   listConfigReleaseCompatibilityPolicies(
     configVersion: number,
@@ -400,7 +445,7 @@ export type P3FeatureRule = {
   id: string;
   featureKey: string;
   revision: number;
-  contractVersion: "control_plane_v1";
+  contractVersion: ContractVersion;
   enabled: boolean;
   browserFamily: "chrome" | "yandex_chromium" | null;
   minimumExtensionVersion: string | null;
@@ -429,7 +474,7 @@ export const P3FeatureRuleSchema = z
     id: z.uuid(),
     featureKey: FeatureKeySchema,
     revision: z.number().int().positive(),
-    contractVersion: z.literal("control_plane_v1"),
+    contractVersion: ContractVersionSchema,
     enabled: z.boolean(),
     browserFamily: z.enum(["chrome", "yandex_chromium"]).nullable(),
     minimumExtensionVersion: z.string().nullable(),
@@ -549,7 +594,7 @@ export async function listP3SelectableConfigReleases(
   return selectionMode === "BASELINE_ONLY" ? [baseline] : [baseline, candidate];
 }
 export type ResolveP3BootstrapPolicyInput = {
-  contractVersion: "control_plane_v1";
+  contractVersion: ContractVersion;
   extensionVersion: string;
   browser: { family: "chrome" | "yandex_chromium"; version: string };
   accountId: string;
@@ -584,7 +629,7 @@ export async function resolveP3BootstrapPolicy(
   try {
     const configRollout = await catalog.findRolloutByKey("bootstrap.config");
     if (!configRollout)
-      selected = await catalog.findLatestConfigRelease("control_plane_v1");
+      selected = await catalog.findLatestConfigRelease(input.contractVersion);
     else {
       if (
         configRollout.targetKind !== "CONFIG_RELEASE" ||
@@ -603,7 +648,7 @@ export async function resolveP3BootstrapPolicy(
         return { failure: "ROLLOUT_SOURCE_INVALID" };
       const selectionMode = configRolloutSelectionModeV1(revision.state);
       if (selectionMode === "ORDINARY_LATEST")
-        selected = await catalog.findLatestConfigRelease("control_plane_v1");
+        selected = await catalog.findLatestConfigRelease(input.contractVersion);
       else {
         const subjectId =
           configRollout.subjectKind === "ACCOUNT"
@@ -626,9 +671,15 @@ export async function resolveP3BootstrapPolicy(
     }
     if (!selected) return { failure: "NO_CONFIG_RELEASE" };
     if (
-      selected.contractVersion !== "control_plane_v1" ||
-      selected.snapshotVersion !== "bootstrap_snapshot_v1" ||
-      selected.envelopeVersion !== "bootstrap_envelope_v1"
+      selected.contractVersion !== input.contractVersion ||
+      selected.snapshotVersion !==
+        (input.contractVersion === "control_plane_v1"
+          ? "bootstrap_snapshot_v1"
+          : "bootstrap_snapshot_v2") ||
+      selected.envelopeVersion !==
+        (input.contractVersion === "control_plane_v1"
+          ? "bootstrap_envelope_v1"
+          : "bootstrap_envelope_v2")
     )
       return { failure: "CONFIG_SOURCE_INVALID" };
     const [policies, rules, linkedRollouts] = await Promise.all([
@@ -666,7 +717,7 @@ export async function resolveP3BootstrapPolicy(
     for (const rule of rules) {
       if (
         featureIds.has(rule.featureKey) ||
-        rule.contractVersion !== "control_plane_v1"
+        rule.contractVersion !== input.contractVersion
       )
         return { failure: "FEATURE_SOURCE_INVALID" };
       featureIds.add(rule.featureKey);
@@ -824,6 +875,27 @@ export function signBootstrapSnapshot(
   });
 }
 
+/** Signs the I1-SRV.1 account-identity payload under its explicit v2 wire tag. */
+export function signBootstrapSnapshotV2(
+  payload: BootstrapSnapshotPayloadV2,
+  keyId: string,
+  privateKey: KeyObject,
+): SignedBootstrapEnvelopeV2 {
+  const parsed = BootstrapSnapshotPayloadV2Schema.parse(payload);
+  const payloadBytes = canonicalizeJson(parsed);
+  return SignedBootstrapEnvelopeV2Schema.parse({
+    envelopeVersion: "bootstrap_envelope_v2",
+    algorithm: "Ed25519",
+    keyId,
+    payload: payloadBytes.toString("base64url"),
+    signature: sign(
+      null,
+      bootstrapSigningBytes(keyId, payloadBytes),
+      privateKey,
+    ).toString("base64url"),
+  });
+}
+
 export function verifyBootstrapEnvelope(
   input: unknown,
   ring: TrustedConfigSigningKeyRing,
@@ -871,6 +943,52 @@ export function verifyBootstrapEnvelope(
     return { ok: false, error: "INVALID_PAYLOAD_JSON" };
   }
   const payload = BootstrapSnapshotPayloadV1Schema.safeParse(json);
+  if (!payload.success) return { ok: false, error: "INVALID_PAYLOAD_SCHEMA" };
+  try {
+    if (!canonicalizeJson(payload.data).equals(payloadBytes))
+      return { ok: false, error: "NON_CANONICAL_PAYLOAD" };
+  } catch {
+    return { ok: false, error: "INVALID_PAYLOAD_SCHEMA" };
+  }
+  return { ok: true, payload: payload.data };
+}
+
+export type VerifyBootstrapEnvelopeV2Result =
+  | { ok: true; payload: BootstrapSnapshotPayloadV2 }
+  | { ok: false; error: BootstrapVerificationFailure };
+
+export function verifyBootstrapEnvelopeV2(
+  input: unknown,
+  ring: TrustedConfigSigningKeyRing,
+): VerifyBootstrapEnvelopeV2Result {
+  const envelope = SignedBootstrapEnvelopeV2Schema.safeParse(input);
+  if (!envelope.success) return { ok: false, error: "INVALID_ENVELOPE" };
+  const publicKey = ring.get(envelope.data.keyId);
+  if (!publicKey) return { ok: false, error: "UNKNOWN_SIGNING_KEY" };
+  const payloadBytes = decodeBase64Url(envelope.data.payload);
+  const signature = decodeBase64Url(envelope.data.signature);
+  if (!payloadBytes || !signature)
+    return { ok: false, error: "INVALID_PAYLOAD_ENCODING" };
+  try {
+    if (
+      !verify(
+        null,
+        bootstrapSigningBytes(envelope.data.keyId, payloadBytes),
+        publicKey,
+        signature,
+      )
+    )
+      return { ok: false, error: "INVALID_SIGNATURE" };
+  } catch {
+    return { ok: false, error: "INVALID_SIGNATURE" };
+  }
+  let json: unknown;
+  try {
+    json = JSON.parse(payloadBytes.toString("utf8"));
+  } catch {
+    return { ok: false, error: "INVALID_PAYLOAD_JSON" };
+  }
+  const payload = BootstrapSnapshotPayloadV2Schema.safeParse(json);
   if (!payload.success) return { ok: false, error: "INVALID_PAYLOAD_SCHEMA" };
   try {
     if (!canonicalizeJson(payload.data).equals(payloadBytes))

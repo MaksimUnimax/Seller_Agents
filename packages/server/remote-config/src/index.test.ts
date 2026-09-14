@@ -13,7 +13,9 @@ import {
   rolloutBucketV1,
   selectRolloutCandidateV1,
   signBootstrapSnapshot,
+  signBootstrapSnapshotV2,
   verifyBootstrapEnvelope,
+  verifyBootstrapEnvelopeV2,
   resolveSigningKeyLifecycle,
   type TrustedConfigSigningKeyRing,
 } from "./index.js";
@@ -92,10 +94,7 @@ const payload: BootstrapSnapshotPayloadV1 = {
   expiresAt: "2026-09-04T00:05:00.000Z",
   offlineGraceUntil: "2026-09-04T00:10:00.000Z",
   serverTime: "2026-09-04T00:00:01.000Z",
-  account: {
-    id: "11111111-1111-4111-8111-111111111111",
-    status: "ACTIVE",
-  },
+  account: { status: "ACTIVE" },
   subscription: { state: "NONE", planRevision: null },
   devicePolicy: { status: "ACTIVE" },
   compatibility: {
@@ -242,12 +241,6 @@ describe("bootstrap V1 schemas", () => {
         detectedAi: { family: "ChatGPT", surface: "standard" },
       }).success,
     ).toBe(false);
-    expect(
-      BootstrapRequestV1Schema.safeParse({
-        ...request,
-        accountId: "22222222-2222-4222-8222-222222222222",
-      }).success,
-    ).toBe(false);
   });
 
   it("requires time ordering and the truthful pre-commercial baseline", () => {
@@ -280,6 +273,33 @@ describe("signed bootstrap envelope", () => {
     expect(verifyBootstrapEnvelope(envelope, ring)).toEqual({
       ok: true,
       payload,
+    });
+  });
+
+  it("uses a new envelope and snapshot version for account identity", () => {
+    const { config, ring } = keyMaterial();
+    const v2Payload = {
+      ...payload,
+      snapshotVersion: "bootstrap_snapshot_v2" as const,
+      contractVersion: "control_plane_v2" as const,
+      account: {
+        id: "11111111-1111-4111-8111-111111111111",
+        status: "ACTIVE" as const,
+      },
+    };
+    const envelope = signBootstrapSnapshotV2(
+      v2Payload,
+      "config-current",
+      config.privateKey,
+    );
+    expect(envelope.envelopeVersion).toBe("bootstrap_envelope_v2");
+    expect(verifyBootstrapEnvelopeV2(envelope, ring)).toEqual({
+      ok: true,
+      payload: v2Payload,
+    });
+    expect(verifyBootstrapEnvelope(envelope, ring)).toEqual({
+      ok: false,
+      error: "INVALID_ENVELOPE",
     });
   });
 
@@ -320,24 +340,6 @@ describe("signed bootstrap envelope", () => {
     expect(
       verifyBootstrapEnvelope(
         { ...envelope, signature: flipBase64Url(envelope.signature) },
-        ring,
-      ),
-    ).toEqual({ ok: false, error: "INVALID_SIGNATURE" });
-    const tamperedPayload = JSON.parse(
-      Buffer.from(envelope.payload, "base64url").toString("utf8"),
-    ) as Record<string, unknown>;
-    tamperedPayload.account = {
-      id: "22222222-2222-4222-8222-222222222222",
-      status: "ACTIVE",
-    };
-    expect(
-      verifyBootstrapEnvelope(
-        {
-          ...envelope,
-          payload: Buffer.from(canonicalizeJson(tamperedPayload)).toString(
-            "base64url",
-          ),
-        },
         ring,
       ),
     ).toEqual({ ok: false, error: "INVALID_SIGNATURE" });

@@ -205,7 +205,7 @@ async function validateConfigSources(
     const p = rowPolicy(raw);
     const scope = p.browserFamily ?? "global";
     if (
-      p.contractVersion !== "control_plane_v1" ||
+      p.contractVersion !== value.contractVersion ||
       scopes.has(scope) ||
       (p.browserFamily === null && p.minimumBrowserVersion !== null) ||
       p.maintenanceMode !== (p.maintenanceCode !== null) ||
@@ -233,7 +233,7 @@ async function validateConfigSources(
   for (const raw of rules.rows) {
     const rule = P3FeatureRuleSchema.parse(raw);
     if (
-      rule.contractVersion !== "control_plane_v1" ||
+      rule.contractVersion !== value.contractVersion ||
       features.has(rule.featureKey)
     )
       throw new Error("P3_FEATURE_RULE_SOURCE_INVALID");
@@ -269,7 +269,7 @@ async function validateConfigSources(
     const pair = baseline.rows.map((r) => P3FeatureRuleSchema.parse(r));
     if (
       pair[0]!.featureKey !== pair[1]!.featureKey ||
-      pair.some((r) => r.contractVersion !== "control_plane_v1") ||
+      pair.some((r) => r.contractVersion !== value.contractVersion) ||
       !ruleById.has(revision.baselineFeatureRuleRevisionId!) ||
       rolloutFeatures.has(pair[0]!.featureKey)
     )
@@ -282,7 +282,7 @@ function rowPolicy(row: Record<string, unknown>): CompatibilityPolicyRevision {
     id: String(row.id),
     policyKey: String(row.policyKey),
     revision: Number(row.revision),
-    contractVersion: "control_plane_v1",
+    contractVersion: String(row.contractVersion),
     browserFamily: row.browserFamily as "chrome" | "yandex_chromium" | null,
     minimumExtensionVersion: row.minimumExtensionVersion as string | null,
     recommendedExtensionVersion: row.recommendedExtensionVersion as
@@ -488,7 +488,7 @@ export function createP3PolicyPublicationRepository(
           [value.policyKey],
         );
         const r = await q.query<Record<string, unknown>>(
-          'INSERT INTO compatibility_policy_revisions(policy_key,revision,contract_version,browser_family,minimum_extension_version,recommended_extension_version,minimum_browser_version,maintenance_mode,maintenance_code,published_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id,policy_key AS "policyKey",revision,contract_version, browser_family AS "browserFamily",minimum_extension_version AS "minimumExtensionVersion",recommended_extension_version AS "recommendedExtensionVersion",minimum_browser_version AS "minimumBrowserVersion",maintenance_mode AS "maintenanceMode",maintenance_code AS "maintenanceCode",published_at AS "publishedAt",created_at AS "createdAt"',
+          'INSERT INTO compatibility_policy_revisions(policy_key,revision,contract_version,browser_family,minimum_extension_version,recommended_extension_version,minimum_browser_version,maintenance_mode,maintenance_code,published_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id,policy_key AS "policyKey",revision,contract_version AS "contractVersion",browser_family AS "browserFamily",minimum_extension_version AS "minimumExtensionVersion",recommended_extension_version AS "recommendedExtensionVersion",minimum_browser_version AS "minimumBrowserVersion",maintenance_mode AS "maintenanceMode",maintenance_code AS "maintenanceCode",published_at AS "publishedAt",created_at AS "createdAt"',
           [
             value.policyKey,
             next.rows[0]!.revision,

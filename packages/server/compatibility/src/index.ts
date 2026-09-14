@@ -9,7 +9,11 @@ const HashSchema = z.string().regex(/^[0-9a-f]{64}$/);
 const BrowserFamilySchema = z.enum(["chrome", "yandex_chromium"]);
 const TimestampSchema = z.date();
 export const ReleaseChannelSchema = StableMachineIdentifierV1Schema;
-export const ContractVersionSchema = z.literal("control_plane_v1");
+export const ContractVersionSchema = z.enum([
+  "control_plane_v1",
+  "control_plane_v2",
+]);
+export type ContractVersion = z.infer<typeof ContractVersionSchema>;
 export const ExtensionReleaseSchema = z
   .object({
     id: z.uuid(),
@@ -61,7 +65,7 @@ export interface CompatibilityCatalogRepository {
   listReleaseContracts(releaseId: string): Promise<ReleaseContractSupport[]>;
   listReleaseBrowsers(releaseId: string): Promise<ReleaseBrowserSupport[]>;
   listCompatibilityPolicyRevisions(
-    contractVersion: "control_plane_v1",
+    contractVersion: ContractVersion,
   ): Promise<CompatibilityPolicyRevision[]>;
   listBlockedVersions(
     policyRevisionId: string,
@@ -201,7 +205,7 @@ export type CompatibilityResolution = {
   minimumVersion: string | null;
 };
 export type CompatibilityResolverInput = {
-  contractVersion: "control_plane_v1";
+  contractVersion: ContractVersion;
   extensionVersion: string;
   browserFamily: "chrome" | "yandex_chromium";
   browserVersion: string;

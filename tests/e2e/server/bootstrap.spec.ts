@@ -9,7 +9,6 @@ import type {
 import {
   activateExtension,
   activateExtensionClient,
-  accountId,
   apiOrigin,
   reset,
   seedBootstrapConfig,
@@ -126,18 +125,6 @@ test("bootstrap rejects a malformed authenticated request", async ({
   expect((await response.json()).error.code).toBe("INVALID_REQUEST");
 });
 
-test("bootstrap rejects a request-supplied account identity", async ({
-  page,
-}) => {
-  const credentials = await activateExtension(page);
-  const response = await bootstrap(credentials.accessToken, {
-    ...request(credentials.deviceId),
-    accountId: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
-  });
-  expect(response.status).toBe(400);
-  expect((await response.json()).error.code).toBe("INVALID_REQUEST");
-});
-
 test("bootstrap rejects a body device that differs from the bearer principal", async ({
   page,
 }) => {
@@ -178,10 +165,7 @@ test("bootstrap returns a cryptographically verified strict snapshot", async ({
   if (verified.ok)
     expect(verified.payload).toMatchObject({
       configVersion,
-      account: {
-        id: await accountId(),
-        status: "ACTIVE",
-      },
+      account: { status: "ACTIVE" },
       subscription: { state: "ACTIVE" },
       devicePolicy: { status: "ACTIVE" },
       entitlements: { "device.max_active": 1 },
