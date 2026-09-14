@@ -56,3 +56,10 @@
 - 99 процессов composed source/ZIP проверки PASS; 15 новых групп module/worker сценариев, прежние Ozon gates, transaction-abort и direct-binary attachment.
 - CI artifact независимо скачан; 36 файлов пакета и 50 production inputs сверены с локальной сборкой и Git.
 - D2.1 принят; общий D2, WB adapter, многомагазинность, общий popup и installed acceptance остаются открытыми.
+
+## 2026-09-14 — D2.2 batch context candidate
+
+- Воспроизведена отправка хвоста пакета под новыми ключами на D2.1.
+- Общая очередь, безопасный snapshot и guard на асинхронных границах, до fetch и delivery; блокировка legacy pending API без context.
+- Сохранены Ozon policy/cache/quota/delivery wrappers; Performance bearer ограничен теми же credentials.
+- Добавлены 12 behavioral context-сценариев; пакет development 0.2.1. Remote acceptance pending.

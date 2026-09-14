@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "stage": "D2.1",
-  "version": "0.2.0",
+  "stage": "D2.2",
+  "version": "0.2.1",
   "purpose": "DEVELOPMENT_OZON_CARRIER_NOT_COMBINED_BETA",
   "baseline": "apps/extension/src/imported/ozon-v0.1.22",
   "bundles": {
@@ -17,9 +17,17 @@
       "packages/bridge-core/src/delivery/model.js",
       "packages/marketplaces/ozon/src/delivery-plan.js",
       "apps/extension/src/background/compat/delivery-model.js"
+    ],
+    "shared/ozon_provider.js": [
+      "packages/marketplaces/ozon/src/provider-runtime.js"
     ]
   },
-  "worker_prelude": "packages/bridge-core/src/execution/local-operations.js",
+  "worker_prelude": [
+    "packages/bridge-core/src/execution/local-operations.js",
+    "packages/bridge-core/src/execution/context.js",
+    "packages/bridge-core/src/execution/batch-queue.js",
+    "apps/extension/src/background/context/runtime-context.js"
+  ],
   "worker_initializer": {
     "old": "let manualOperationsWriteLock = Promise.resolve();",
     "replacement": "apps/extension/src/background/compat/manual-record-initializer.js"
@@ -44,6 +52,71 @@
       "function": "mutateManualOperation",
       "source_sha256": "81c86a36e0a9b61b5f5bad5b63bbc9efe9fc99f40d9214a28acbb8ab47a6af19",
       "replacement": "apps/extension/src/background/compat/mutateManualOperation.js"
+    },
+    {
+      "function": "readAnalyticsResultCacheForCurrentSettings",
+      "source_sha256": "2f2f10261f46e163396c12425e3baabf92134f29f0fccef025fb22b50c829107",
+      "replacement": "apps/extension/src/background/context/readAnalyticsResultCacheForCurrentSettings.js"
+    },
+    {
+      "function": "storeAnalyticsResultCacheForCurrentSettings",
+      "source_sha256": "190cbf5978c4e8f4ab4f043e5864c6da3133e3c7813a46cdea1c421dd91a7063",
+      "replacement": "apps/extension/src/background/context/storeAnalyticsResultCacheForCurrentSettings.js"
+    },
+    {
+      "function": "prepareProviderQuotaForCommand",
+      "source_sha256": "e3f9d8901566c9036945b7da5b1b8d690b944b39112fedb83222eb47af66cbd8",
+      "replacement": "apps/extension/src/background/context/prepareProviderQuotaForCommand.js"
+    },
+    {
+      "function": "ensureBatchLocalPolicy",
+      "source_sha256": "7a2c211821db10000d359098e3957f1e96300e62ce16fd93932659a88c5d1d17",
+      "replacement": "apps/extension/src/background/context/ensureBatchLocalPolicy.js"
+    },
+    {
+      "function": "ensureBatchCapabilityAndPlanning",
+      "source_sha256": "4331316b3af89451a68f354eb7265642590ac557c70170b1b91bfc57b5452d6a",
+      "replacement": "apps/extension/src/background/context/ensureBatchCapabilityAndPlanning.js"
+    },
+    {
+      "function": "executeOzonCore",
+      "source_sha256": "151b4e169893df278ec2cd1db9e55b1805fd53c2d9fd16c2057c108cc6000c2b",
+      "replacement": "apps/extension/src/background/context/executeOzonCore.js"
+    },
+    {
+      "function": "executeManualCommand",
+      "source_sha256": "8fbf446527b92a3fb18c4473377e1edea490e1de8080a8fda321125f3fa62286",
+      "replacement": "apps/extension/src/background/context/executeManualCommand.js"
+    },
+    {
+      "function": "finalizeManualBatch",
+      "source_sha256": "a6239cc489225d127256a6dfec6ae32d4f843648837f77f9907f15a0b8928bea",
+      "replacement": "apps/extension/src/background/context/finalizeManualBatch.js"
+    },
+    {
+      "function": "attemptManualBatchDelivery",
+      "source_sha256": "7f58bff2da59306bd636a165968e9d2327f0b9b65fc7c4b86a459c3e1b30711d",
+      "replacement": "apps/extension/src/background/context/attemptManualBatchDelivery.js"
+    },
+    {
+      "function": "commitManualBatchDeliveryInsert",
+      "source_sha256": "473969fefc6f649fa1a795028885cb9db76aa3227fd7656f4a407db5d6205812",
+      "replacement": "apps/extension/src/background/context/commitManualBatchDeliveryInsert.js"
+    },
+    {
+      "function": "processBatchQueue",
+      "source_sha256": "48f017cd03c5a1e0260d0780bc5ca2ea18dd79dccbd9289aded67d5846bbba00",
+      "replacement": "apps/extension/src/background/context/processBatchQueue.js"
+    },
+    {
+      "function": "manualRecoveryForContent",
+      "source_sha256": "0ca0373944971368665568f88555c5e72d9634a5014df264640ca4e09d7f9381",
+      "replacement": "apps/extension/src/background/context/manualRecoveryForContent.js"
+    },
+    {
+      "function": "storeAnalyticsResultCache",
+      "source_sha256": "e8f8a899fc34eaf055a55a58b2ae8e3600b17b7d477797091e51c59c1487599f",
+      "replacement": "apps/extension/src/background/context/storeAnalyticsResultCache.js"
     }
   ],
   "preserved_boundaries": [

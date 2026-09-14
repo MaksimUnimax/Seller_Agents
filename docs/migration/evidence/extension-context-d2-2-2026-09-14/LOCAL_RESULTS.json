@@ -1,0 +1,1746 @@
+{
+  "base_commit": "56812e282dfb7ee48a6682277c68fd74ca716a60",
+  "command": "python tooling/checks/extension_core.py --output build/d2-2-final",
+  "summary": {
+    "stage": "D2.2",
+    "status": "PASS",
+    "os": "Linux",
+    "python": "3.12.14",
+    "node": "v24.19.0",
+    "live_provider_calls": 0,
+    "installed_acceptance": false,
+    "composition": {
+      "stage": "D2.2",
+      "version": "0.2.1",
+      "purpose": "DEVELOPMENT_OZON_CARRIER_NOT_COMBINED_BETA",
+      "inputs": {
+        "apps/extension/composition.json": {
+          "sha256": "54ffb9f7778d62d5ee3d4ec01ca62ff1913ddb53f0d0a1d00579eda342a810e9",
+          "bytes": 5674
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/attachment_delivery_port_content.js": {
+          "sha256": "f244e0bac2f9bed953a50058259beff89efbf765f5f54c664f11ffe1dbc4977a",
+          "bytes": 28451
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/attachment_delivery_wake_content.js": {
+          "sha256": "6b3a7a4b25ce6a86a9e7b54c0a71a29c02aad9480cfbe7d2a0007e9ca4c9aa11",
+          "bytes": 759
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/content_script.js": {
+          "sha256": "fd86f2d04984defa8c22dcfc66c2d9f449b62b486816668f192326b1339879f2",
+          "bytes": 133067
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/manifest.json": {
+          "sha256": "7019a672a78ac87c85617d1444721ac01158fe5a50f0329a8e7ca6758de5178c",
+          "bytes": 1860
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/popup.css": {
+          "sha256": "1befabf8a3650dfe01a5980b0d5ff2fcd34666d507baad8e79f3873358d7a726",
+          "bytes": 5195
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/popup.html": {
+          "sha256": "b9b1a8d5f5c5248a98f0b8c9622fde00acb241940469040718f802754d11f86c",
+          "bytes": 15736
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/popup.js": {
+          "sha256": "938ec8468cb17a7e5b31c08ce510ea46c2e4d9c6b7e39a7360a55bd65825dff6",
+          "bytes": 41087
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/service_worker.js": {
+          "sha256": "0aefd9b86a9e9adc66b9a6dfb6fa4ef41e786a9988d1a6e8c3cd19fc864b3486",
+          "bytes": 323015
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/service_worker_entry.js": {
+          "sha256": "3d30d776f1d8bb5db461c4551fa59e57dc6e9f74c3804cdee989798c19d4533b",
+          "bytes": 1729
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/ai_adapters.js": {
+          "sha256": "4b9423666cf7bed03f89edb3c23d535bd02143e85c1a1b7317d184f25cc1bb72",
+          "bytes": 22597
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/ai_delivery_capabilities.js": {
+          "sha256": "dca544904ae1aac578e52f60883c603cee4129fe56089f807ec175cef4e2e83a",
+          "bytes": 9753
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/bridge_autorun_model.js": {
+          "sha256": "d321cf49a1972ffe205bd3bb14f7b160c48158be14cf29a0e9878e2c48450983",
+          "bytes": 15919
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/composer_send.js": {
+          "sha256": "3e9421e8e1bc209af635e2b90d957e558301763572a42875b95c8973ca75b736",
+          "bytes": 8267
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/conversation_identity.js": {
+          "sha256": "939036acd95ccb3dfe00f05b5d49568615f6d798a023a0ec995e38267fb68f57",
+          "bytes": 4027
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/direct_binary_file_delivery_patch.js": {
+          "sha256": "e66dfd9bb91be078de9b08d86ac1acc124eabb3a22fb29fac77f59e7d036ab96",
+          "bytes": 10095
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/file_delivery_model_policy.js": {
+          "sha256": "caba2a05701d74879bc699316530575c63106a62f8f782eee694ef1c3b4b5aab",
+          "bytes": 4021
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/file_delivery_port_worker.js": {
+          "sha256": "c9b5fdbc8661828c17145519395bde1a2eab1af9b434b99ae13c1d8ccda0c6dd",
+          "bytes": 39030
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/file_delivery_wake_worker.js": {
+          "sha256": "ec1b59ba7243bf4a5591bdbe10b0b5f6e727f8769b08833da156378d202acffd",
+          "bytes": 1750
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/live_runtime_v0122_patch.js": {
+          "sha256": "e9470607fc401dbf1e479d3a487cce4d3d6b9fa75f1b508aaa8bd8d58d4940de",
+          "bytes": 21046
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/llm_output_report_workflow_patch.js": {
+          "sha256": "a564e2dbafb3980bd406e82744c177a34df2279b63c3198395c13126520dbbff",
+          "bytes": 15664
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/manual_controls.js": {
+          "sha256": "81f302487da7b5ff7c1b746298353438b2cfec100a5bb8f7fa2c80d1e033c81e",
+          "bytes": 10269
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/mixed_batch_discovery.js": {
+          "sha256": "8afc5cd5399fe5734a1178d88bd18125cddb6be1593c7939f79e9bb5ec577357",
+          "bytes": 4772
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_contract.js": {
+          "sha256": "8dfe90545f8499d1f1938dcdf932ef5e15618d4f1dd4008565f91d03679896ac",
+          "bytes": 321333
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_credentials.js": {
+          "sha256": "286c6021f958e41912842569bcfa0d0dfe920eed8ce1646014899a1de064415d",
+          "bytes": 4085
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_entitlements.js": {
+          "sha256": "f8b9222368a2e3bbfb323ab5cd0fe1c3238742d5c06ef9afac752861d4c7422b",
+          "bytes": 58578
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_guidance.js": {
+          "sha256": "654b330ec90069351104d1cf5add8afb979fe7daddaf3a3cbdf3fd4117bef094",
+          "bytes": 10927
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_operation_registry.js": {
+          "sha256": "b42b51f815c0f88e89e1cd193d28cc4f72949d5dd1738ab35d473b226fd0a832",
+          "bytes": 225182
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/ozon_provider.js": {
+          "sha256": "de528808ed1d18e77ac0f9cb48ef7db8d7ff267ee299928e0207387adc7c7f7f",
+          "bytes": 30599
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/performance_report_continuation_patch.js": {
+          "sha256": "f42115e8ac4197fef8b7f5ba463bc6303e3d425a9202c95605edc3844b34a9b5",
+          "bytes": 5181
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/proven_writing_block_capture.js": {
+          "sha256": "5b0eaac9619cb827d1e74c61f53e2755c084a1d4b60c64d23f5fd4a5354c3aef",
+          "bytes": 14614
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/provider_transport_core.js": {
+          "sha256": "97f9a8bed0427753168c8ff083191338225cbe3abd026b471876daf19e04bba4",
+          "bytes": 37467
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/runtime_names.js": {
+          "sha256": "b5ca31b9e5479f2b60fff0e6d03007eb83a28e2e3bd84152c52f40b13c162b7c",
+          "bytes": 10642
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/swagger_read_surface_patch.js": {
+          "sha256": "ff87a566f28003fa41ab83c91e2ef696c259ecc81ac12975d1609a2718a5de4d",
+          "bytes": 57275
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/web_file_attachment.js": {
+          "sha256": "a1d91cb7b6aa5b1b26bf780e29f3d42895510b04d55d37569cfc3d3cf4db3010",
+          "bytes": 4750
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/work_session_model.js": {
+          "sha256": "11e91d850a3d69711fefdaadb6617b825350d9382b9bc55cabdbbc9b255c9855",
+          "bytes": 1985
+        },
+        "apps/extension/src/imported/ozon-v0.1.22/shared/xlsx_direct_binary_delivery_patch.js": {
+          "sha256": "5e61f6d749cf69d980b4d9bdae8b32bb0937e48a298abd4afd9793241252c3fa",
+          "bytes": 12156
+        },
+        "packages/bridge-core/src/work/session-model.js": {
+          "sha256": "bca0b640b3f630e75d2e46bb9f582cca6992a6bb99d049119926232770b64a1c",
+          "bytes": 2353
+        },
+        "apps/extension/src/background/compat/work-model.js": {
+          "sha256": "5516279ce15488f2016e71c71ad49e19831c4f642f7699310cf155fe283cd369",
+          "bytes": 75
+        },
+        "packages/bridge-core/src/protocol/mixed-discovery.js": {
+          "sha256": "0a4968c56d391b5b5d38c044628a7662b20a8b47ef088e2d9e687007be830b96",
+          "bytes": 5487
+        },
+        "packages/marketplaces/ozon/src/mixed-discovery.js": {
+          "sha256": "007a2da658231d63995e6cdf1c6f1958d7397adf86e795e942bc100155a4a7ce",
+          "bytes": 564
+        },
+        "packages/bridge-core/src/delivery/model.js": {
+          "sha256": "2f716233d0262419e15005f6f3c86b508079207bc1a91951e7b7dbd109aed8d6",
+          "bytes": 15972
+        },
+        "packages/marketplaces/ozon/src/delivery-plan.js": {
+          "sha256": "cd1a2194101df3d7fabb34282ecfd8df01a72a269dc0fb45b8b17fb3f05d31f0",
+          "bytes": 5064
+        },
+        "apps/extension/src/background/compat/delivery-model.js": {
+          "sha256": "9f2394dab7cadadea5d562e0cf95ced708f4d4fe3c6330597736548ee2165730",
+          "bytes": 184
+        },
+        "packages/marketplaces/ozon/src/provider-runtime.js": {
+          "sha256": "7afcd03731950cde9e5374eb0e85663cfee81713e98efbec28867ce3153373b0",
+          "bytes": 35796
+        },
+        "apps/extension/src/background/compat/singleFlight.js": {
+          "sha256": "e4a6f585248bcf7a69706b5f85273ba50f53e129b92e5a03192b81fae05f0109",
+          "bytes": 116
+        },
+        "apps/extension/src/background/compat/getManualOperation.js": {
+          "sha256": "363b1400f8d1a8e267cd6f2e31fb066098a82196ff96fa5164c5ca8fe4a38568",
+          "bytes": 135
+        },
+        "apps/extension/src/background/compat/withManualOperationsWrite.js": {
+          "sha256": "ca8382013e3f94e5c5e2d4675978d1b3513a7d02d5c0ed18a4e6e77a5f4b58b1",
+          "bytes": 90
+        },
+        "apps/extension/src/background/compat/mutateManualOperation.js": {
+          "sha256": "b305da21353283bff835b3bcaff4dbd15eb14a5b67a92b2f963f4ee88ab05bbb",
+          "bytes": 172
+        },
+        "apps/extension/src/background/context/readAnalyticsResultCacheForCurrentSettings.js": {
+          "sha256": "d9a5bc04b48da0402053c7ebbea14ee658783586f7465ba06d793b770ac46c85",
+          "bytes": 688
+        },
+        "apps/extension/src/background/context/storeAnalyticsResultCacheForCurrentSettings.js": {
+          "sha256": "a9043428911b669ae6d317f3a677ec2d673d662d33f380aff0339f2a79d3a646",
+          "bytes": 701
+        },
+        "apps/extension/src/background/context/prepareProviderQuotaForCommand.js": {
+          "sha256": "7e4e878a645cc1ac0bc80f5f2dfa4314f3f0bad411dcc6ba3913573c97bb3bfb",
+          "bytes": 2325
+        },
+        "apps/extension/src/background/context/ensureBatchLocalPolicy.js": {
+          "sha256": "b8fcd5f2aaaefd92119867e3645c2d7ade9b0cf0117c3cbba5df21a71e605120",
+          "bytes": 3422
+        },
+        "apps/extension/src/background/context/ensureBatchCapabilityAndPlanning.js": {
+          "sha256": "9d181959ab7a22c7c6bc25cc4060a4a0bb88e9b468cb0ef5a459fd66ebaa6bb5",
+          "bytes": 11433
+        },
+        "apps/extension/src/background/context/executeOzonCore.js": {
+          "sha256": "0b3286a85901939537276b86eda03fa2a8930b2f582d8dae1e1ad7957cc90909",
+          "bytes": 3976
+        },
+        "apps/extension/src/background/context/executeManualCommand.js": {
+          "sha256": "02ee400ffec5c5832bb6cd0328ae6009c7b724f660bc39bcb49fc68a668f7b1d",
+          "bytes": 6303
+        },
+        "apps/extension/src/background/context/finalizeManualBatch.js": {
+          "sha256": "b96aaa69f449e4a78ab1594fd2333d18eb2d07989193828dea94a8ad9c99372d",
+          "bytes": 2305
+        },
+        "apps/extension/src/background/context/attemptManualBatchDelivery.js": {
+          "sha256": "0ff45b9666874e6775e23d0e36b1d31357957d1a917db9f397563f41d23f420e",
+          "bytes": 2301
+        },
+        "apps/extension/src/background/context/commitManualBatchDeliveryInsert.js": {
+          "sha256": "e8743f2576b898431c2d16233944ef35f6114d41d33d13ed4c4414b5ab317073",
+          "bytes": 4203
+        },
+        "apps/extension/src/background/context/processBatchQueue.js": {
+          "sha256": "fc0df5d7dfd8924b309b4694dbc12bb8b4aa50011a4bc70aa1f2939d9954e152",
+          "bytes": 81
+        },
+        "apps/extension/src/background/context/manualRecoveryForContent.js": {
+          "sha256": "c2754a99741b4373a072568cf4ec59320ca92846f13837520c6cc9f95a47ceaf",
+          "bytes": 3554
+        },
+        "apps/extension/src/background/context/storeAnalyticsResultCache.js": {
+          "sha256": "544c910ac4f612f2410f6c4910a45b046d3f21c5793fa22b418fe0bcb508b987",
+          "bytes": 3180
+        },
+        "apps/extension/src/background/compat/manual-record-initializer.js": {
+          "sha256": "cb334a2df861052fea81e06d908bc31f6ca688f96d309063317ca7d772252a6f",
+          "bytes": 312
+        },
+        "packages/bridge-core/src/execution/local-operations.js": {
+          "sha256": "9287c3e99f97e8af7dcc0c22352027a7d51ad558f2465f24103abd2093b1d46c",
+          "bytes": 1966
+        },
+        "packages/bridge-core/src/execution/context.js": {
+          "sha256": "4208b48cd88a0b751272d3078f341e52da6e67ae6d5ac9a75eae4d55f90e590b",
+          "bytes": 1819
+        },
+        "packages/bridge-core/src/execution/batch-queue.js": {
+          "sha256": "3f7d3284c08947a17e60d43f761ab931757fa5660cc41cd662bbef38a8ee6a24",
+          "bytes": 45104
+        },
+        "apps/extension/src/background/context/runtime-context.js": {
+          "sha256": "b9dfea00e3ce4255175c26b462b2aaa390c713a1284e937fdfe2e003b3c62a70",
+          "bytes": 8263
+        }
+      },
+      "files": [
+        {
+          "path": "attachment_delivery_port_content.js",
+          "sha256": "f244e0bac2f9bed953a50058259beff89efbf765f5f54c664f11ffe1dbc4977a",
+          "bytes": 28451
+        },
+        {
+          "path": "attachment_delivery_wake_content.js",
+          "sha256": "6b3a7a4b25ce6a86a9e7b54c0a71a29c02aad9480cfbe7d2a0007e9ca4c9aa11",
+          "bytes": 759
+        },
+        {
+          "path": "content_script.js",
+          "sha256": "2a9c380b1442719bb9c85f2c9d84f19c7d3ee6d37ab8b7ca636de5c2e6c73845",
+          "bytes": 133066
+        },
+        {
+          "path": "manifest.json",
+          "sha256": "d4510225fb9d1a7c37343e9c4e9672344f843cc60d3bf34780d8ad20b8650a51",
+          "bytes": 1833
+        },
+        {
+          "path": "popup.css",
+          "sha256": "1befabf8a3650dfe01a5980b0d5ff2fcd34666d507baad8e79f3873358d7a726",
+          "bytes": 5195
+        },
+        {
+          "path": "popup.html",
+          "sha256": "0bfbebf8a55e3009a4764057d21618b012a5b382f1e3b65bcd9dc2fa2e25eff0",
+          "bytes": 15735
+        },
+        {
+          "path": "popup.js",
+          "sha256": "dbe22b7a392ebf020a0e49fa1a00a10e005805d27ff4aa5869d7df3d518b9f57",
+          "bytes": 41085
+        },
+        {
+          "path": "service_worker.js",
+          "sha256": "c538f1ed57b0b3327f99160053893e40319b31ad43ba738854a9af233749ce5b",
+          "bytes": 354460
+        },
+        {
+          "path": "service_worker_entry.js",
+          "sha256": "3d30d776f1d8bb5db461c4551fa59e57dc6e9f74c3804cdee989798c19d4533b",
+          "bytes": 1729
+        },
+        {
+          "path": "shared/ai_adapters.js",
+          "sha256": "4b9423666cf7bed03f89edb3c23d535bd02143e85c1a1b7317d184f25cc1bb72",
+          "bytes": 22597
+        },
+        {
+          "path": "shared/ai_delivery_capabilities.js",
+          "sha256": "dca544904ae1aac578e52f60883c603cee4129fe56089f807ec175cef4e2e83a",
+          "bytes": 9753
+        },
+        {
+          "path": "shared/bridge_autorun_model.js",
+          "sha256": "75d3e2752f447ce273e0b4d46ebddce77839b54db21a8f76a640e48fb75d3050",
+          "bytes": 21226
+        },
+        {
+          "path": "shared/composer_send.js",
+          "sha256": "3e9421e8e1bc209af635e2b90d957e558301763572a42875b95c8973ca75b736",
+          "bytes": 8267
+        },
+        {
+          "path": "shared/conversation_identity.js",
+          "sha256": "939036acd95ccb3dfe00f05b5d49568615f6d798a023a0ec995e38267fb68f57",
+          "bytes": 4027
+        },
+        {
+          "path": "shared/direct_binary_file_delivery_patch.js",
+          "sha256": "e66dfd9bb91be078de9b08d86ac1acc124eabb3a22fb29fac77f59e7d036ab96",
+          "bytes": 10095
+        },
+        {
+          "path": "shared/file_delivery_model_policy.js",
+          "sha256": "caba2a05701d74879bc699316530575c63106a62f8f782eee694ef1c3b4b5aab",
+          "bytes": 4021
+        },
+        {
+          "path": "shared/file_delivery_port_worker.js",
+          "sha256": "c9b5fdbc8661828c17145519395bde1a2eab1af9b434b99ae13c1d8ccda0c6dd",
+          "bytes": 39030
+        },
+        {
+          "path": "shared/file_delivery_wake_worker.js",
+          "sha256": "ec1b59ba7243bf4a5591bdbe10b0b5f6e727f8769b08833da156378d202acffd",
+          "bytes": 1750
+        },
+        {
+          "path": "shared/live_runtime_v0122_patch.js",
+          "sha256": "02c56426005758036ea012df7b06f093fdaf0dee0319c2c14c5215ed0e21b957",
+          "bytes": 21042
+        },
+        {
+          "path": "shared/llm_output_report_workflow_patch.js",
+          "sha256": "a564e2dbafb3980bd406e82744c177a34df2279b63c3198395c13126520dbbff",
+          "bytes": 15664
+        },
+        {
+          "path": "shared/manual_controls.js",
+          "sha256": "81f302487da7b5ff7c1b746298353438b2cfec100a5bb8f7fa2c80d1e033c81e",
+          "bytes": 10269
+        },
+        {
+          "path": "shared/mixed_batch_discovery.js",
+          "sha256": "5daff1af1af6244068258e27cf77e4a814192c1019b3bf3e73dcb9c63a0619ad",
+          "bytes": 6054
+        },
+        {
+          "path": "shared/ozon_contract.js",
+          "sha256": "9dc4c3d71fce12ae9b6d2fd1d98629a6132868236bca764cce0f015e4eec9066",
+          "bytes": 321332
+        },
+        {
+          "path": "shared/ozon_credentials.js",
+          "sha256": "286c6021f958e41912842569bcfa0d0dfe920eed8ce1646014899a1de064415d",
+          "bytes": 4085
+        },
+        {
+          "path": "shared/ozon_entitlements.js",
+          "sha256": "f8b9222368a2e3bbfb323ab5cd0fe1c3238742d5c06ef9afac752861d4c7422b",
+          "bytes": 58578
+        },
+        {
+          "path": "shared/ozon_guidance.js",
+          "sha256": "b5aeb3a29f72ad01870c3e00a6b476ca25f3df5baa7df4d78e4453cbd067eae0",
+          "bytes": 10926
+        },
+        {
+          "path": "shared/ozon_operation_registry.js",
+          "sha256": "b42b51f815c0f88e89e1cd193d28cc4f72949d5dd1738ab35d473b226fd0a832",
+          "bytes": 225182
+        },
+        {
+          "path": "shared/ozon_provider.js",
+          "sha256": "7afcd03731950cde9e5374eb0e85663cfee81713e98efbec28867ce3153373b0",
+          "bytes": 35796
+        },
+        {
+          "path": "shared/performance_report_continuation_patch.js",
+          "sha256": "f42115e8ac4197fef8b7f5ba463bc6303e3d425a9202c95605edc3844b34a9b5",
+          "bytes": 5181
+        },
+        {
+          "path": "shared/proven_writing_block_capture.js",
+          "sha256": "5b0eaac9619cb827d1e74c61f53e2755c084a1d4b60c64d23f5fd4a5354c3aef",
+          "bytes": 14614
+        },
+        {
+          "path": "shared/provider_transport_core.js",
+          "sha256": "97f9a8bed0427753168c8ff083191338225cbe3abd026b471876daf19e04bba4",
+          "bytes": 37467
+        },
+        {
+          "path": "shared/runtime_names.js",
+          "sha256": "2b3d309e0c9d9a776e1fbc454e9b965e367a301902a1219b89788aab37df5ce4",
+          "bytes": 10640
+        },
+        {
+          "path": "shared/swagger_read_surface_patch.js",
+          "sha256": "6c5f968d6fa67d677ffb37f057fb577c28e6fad2470ed28aab06e517f6358509",
+          "bytes": 57274
+        },
+        {
+          "path": "shared/web_file_attachment.js",
+          "sha256": "a1d91cb7b6aa5b1b26bf780e29f3d42895510b04d55d37569cfc3d3cf4db3010",
+          "bytes": 4750
+        },
+        {
+          "path": "shared/work_session_model.js",
+          "sha256": "28d82f48ceb4926eb3af7db9dde9fb1f17eadfdc58e8a257065ef5971aa345ff",
+          "bytes": 2431
+        },
+        {
+          "path": "shared/xlsx_direct_binary_delivery_patch.js",
+          "sha256": "5e61f6d749cf69d980b4d9bdae8b32bb0937e48a298abd4afd9793241252c3fa",
+          "bytes": 12156
+        }
+      ],
+      "installed_acceptance": false,
+      "package": {
+        "name": "SELLER_AGENTS_D2_2_v0.2.1_DEVELOPMENT.zip",
+        "bytes": 1561316,
+        "sha256": "2edb38989ced75ff028df0d17ae69ffc5d345490868276370490062bb4e8d26d",
+        "repeat_archive_match": true,
+        "source_extracted_bytes_match": true
+      }
+    },
+    "gate_processes": 101
+  },
+  "gates": [
+    {
+      "id": "core-source-syntax-attachment_delivery_port_content",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/attachment_delivery_port_content.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-attachment_delivery_port_content.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-attachment_delivery_wake_content",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/attachment_delivery_wake_content.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-attachment_delivery_wake_content.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-content_script",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/content_script.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "logs/core-source-syntax-content_script.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-popup",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/popup.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-popup.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-service_worker",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/service_worker.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-service_worker.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-service_worker_entry",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/service_worker_entry.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-service_worker_entry.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-ai_adapters",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ai_adapters.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-ai_adapters.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-ai_delivery_capabilities",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ai_delivery_capabilities.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-ai_delivery_capabilities.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-bridge_autorun_model",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/bridge_autorun_model.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log": "logs/core-source-syntax-bridge_autorun_model.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-composer_send",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/composer_send.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-composer_send.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-conversation_identity",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/conversation_identity.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log": "logs/core-source-syntax-conversation_identity.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-direct_binary_file_delivery_patch",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/direct_binary_file_delivery_patch.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-direct_binary_file_delivery_patch.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-file_delivery_model_policy",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_model_policy.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-file_delivery_model_policy.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-file_delivery_port_worker",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_port_worker.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-file_delivery_port_worker.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-file_delivery_wake_worker",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_wake_worker.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-file_delivery_wake_worker.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-live_runtime_v0122_patch",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/live_runtime_v0122_patch.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-live_runtime_v0122_patch.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-llm_output_report_workflow_patch",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/llm_output_report_workflow_patch.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-llm_output_report_workflow_patch.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-manual_controls",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/manual_controls.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-manual_controls.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-mixed_batch_discovery",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/mixed_batch_discovery.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-mixed_batch_discovery.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-ozon_contract",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_contract.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-ozon_contract.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-ozon_credentials",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_credentials.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-ozon_credentials.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-ozon_entitlements",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_entitlements.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-ozon_entitlements.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-ozon_guidance",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_guidance.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-ozon_guidance.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-ozon_operation_registry",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_operation_registry.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-ozon_operation_registry.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-ozon_provider",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_provider.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-ozon_provider.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-performance_report_continuation_patch",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/performance_report_continuation_patch.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.067,
+      "log": "logs/core-source-syntax-performance_report_continuation_patch.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-proven_writing_block_capture",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/proven_writing_block_capture.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-source-syntax-proven_writing_block_capture.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-provider_transport_core",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/provider_transport_core.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-provider_transport_core.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-runtime_names",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/runtime_names.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log": "logs/core-source-syntax-runtime_names.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-swagger_read_surface_patch",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/swagger_read_surface_patch.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.118,
+      "log": "logs/core-source-syntax-swagger_read_surface_patch.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-web_file_attachment",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/web_file_attachment.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-web_file_attachment.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-work_session_model",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/work_session_model.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-work_session_model.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-syntax-xlsx_direct_binary_delivery_patch",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/xlsx_direct_binary_delivery_patch.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-syntax-xlsx_direct_binary_delivery_patch.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-v0122-red",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_live_defects_gate.mjs",
+        "--baseline-red",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-source-v0122-red.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-v0122-green",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_live_defects_gate.mjs",
+        "--candidate-green",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-source-v0122-green.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-v0122-closure",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_dependency_closure_gate.mjs",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-source-v0122-closure.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-swagger-red",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-patch-2026-09-13/run_patch_gate.mjs",
+        "--baseline-red",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-source-swagger-red.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-swagger-green",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-patch-2026-09-13/run_patch_gate.mjs",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-source-swagger-green.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-514",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-patch-2026-09-13/run_final_514_registry_gate.mjs",
+        "$REPO/build/d2-2-final/work/core-source",
+        "$REPO/tests/fixtures/imported/ozon-control-17aa0833/FINAL_CONTROL_SAFETY_MATRIX.jsonl"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-source-514.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-date",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/read-effect-repair-v1/run_defect_015_date_repair_gate.mjs",
+        "$REPO/build/d2-2-final/work/core-source"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-source-date.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-effect",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/read-effect-repair-v1/run_effect_read_repair_gate.mjs",
+        "$REPO/build/d2-2-final/work/core-source"
+      ],
+      "exit_code": 0,
+      "seconds": 0.518,
+      "log": "logs/core-source-effect.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-shared-consumers",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_shared_consumer_parity_gate.mjs",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-source-shared-consumers.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-swagger-closure",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_dependency_closure_gate.mjs",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-source-swagger-closure.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-predispatch-red",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_runtime_predispatch_gate.mjs",
+        "--expect-red",
+        "$REPO/build/d2-2-final/work/red-ozon"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-source-predispatch-red.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-predispatch-green",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_composed_predispatch_gate.mjs",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller"
+      ],
+      "exit_code": 0,
+      "seconds": 0.118,
+      "log": "logs/core-source-predispatch-green.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-full-worker-red",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_full_worker_batch_gate.mjs",
+        "--expect-red",
+        "$REPO/build/d2-2-final/work/red-ozon"
+      ],
+      "exit_code": 0,
+      "seconds": 0.516,
+      "log": "logs/core-source-full-worker-red.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-full-worker-green",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_full_worker_batch_gate.mjs",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller"
+      ],
+      "exit_code": 0,
+      "seconds": 0.716,
+      "log": "logs/core-source-full-worker-green.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-contracts",
+      "command": [
+        "node",
+        "$REPO/tests/regression/extension-core/core-contracts.mjs",
+        "$REPO/build/d2-2-final/package/runtime"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-source-contracts.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-worker",
+      "command": [
+        "node",
+        "$REPO/tests/regression/extension-core/worker-lifecycle.mjs",
+        "$REPO/build/d2-2-final/package/runtime"
+      ],
+      "exit_code": 0,
+      "seconds": 0.566,
+      "log": "logs/core-source-worker.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-context",
+      "command": [
+        "node",
+        "$REPO/tests/regression/extension-core/batch-context.mjs",
+        "$REPO/build/d2-2-final/package/runtime"
+      ],
+      "exit_code": 0,
+      "seconds": 0.867,
+      "log": "logs/core-source-context.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-transaction-abort",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/indexeddb-transaction-durability-v1/run_prefix_transaction_abort_gate.mjs",
+        "$REPO/build/d2-2-final/work/core-source"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-source-transaction-abort.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-source-attachment",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-source/tooling/llm-api-bridges/ozon-seller/validation/regression/run_direct_binary_provider_attachment_gate.mjs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-source-attachment.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-attachment_delivery_port_content",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/attachment_delivery_port_content.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-package-syntax-attachment_delivery_port_content.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-attachment_delivery_wake_content",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/attachment_delivery_wake_content.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-package-syntax-attachment_delivery_wake_content.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-content_script",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/content_script.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-package-syntax-content_script.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-popup",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/popup.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-package-syntax-popup.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-service_worker",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/service_worker.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log": "logs/core-package-syntax-service_worker.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-service_worker_entry",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/service_worker_entry.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log": "logs/core-package-syntax-service_worker_entry.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-ai_adapters",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ai_adapters.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.066,
+      "log": "logs/core-package-syntax-ai_adapters.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-ai_delivery_capabilities",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ai_delivery_capabilities.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-package-syntax-ai_delivery_capabilities.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-bridge_autorun_model",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/bridge_autorun_model.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-package-syntax-bridge_autorun_model.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-composer_send",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/composer_send.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-package-syntax-composer_send.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-conversation_identity",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/conversation_identity.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-package-syntax-conversation_identity.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-direct_binary_file_delivery_patch",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/direct_binary_file_delivery_patch.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-package-syntax-direct_binary_file_delivery_patch.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-file_delivery_model_policy",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_model_policy.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log": "logs/core-package-syntax-file_delivery_model_policy.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-file_delivery_port_worker",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_port_worker.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log": "logs/core-package-syntax-file_delivery_port_worker.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-file_delivery_wake_worker",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/file_delivery_wake_worker.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log": "logs/core-package-syntax-file_delivery_wake_worker.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-live_runtime_v0122_patch",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/live_runtime_v0122_patch.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-package-syntax-live_runtime_v0122_patch.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-llm_output_report_workflow_patch",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/llm_output_report_workflow_patch.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "logs/core-package-syntax-llm_output_report_workflow_patch.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-manual_controls",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/manual_controls.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log": "logs/core-package-syntax-manual_controls.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-mixed_batch_discovery",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/mixed_batch_discovery.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.165,
+      "log": "logs/core-package-syntax-mixed_batch_discovery.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-ozon_contract",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_contract.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-package-syntax-ozon_contract.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-ozon_credentials",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_credentials.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-package-syntax-ozon_credentials.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-ozon_entitlements",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_entitlements.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-package-syntax-ozon_entitlements.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-ozon_guidance",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_guidance.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-package-syntax-ozon_guidance.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-ozon_operation_registry",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_operation_registry.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-package-syntax-ozon_operation_registry.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-ozon_provider",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/ozon_provider.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log": "logs/core-package-syntax-ozon_provider.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-performance_report_continuation_patch",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/performance_report_continuation_patch.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-package-syntax-performance_report_continuation_patch.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-proven_writing_block_capture",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/proven_writing_block_capture.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-package-syntax-proven_writing_block_capture.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-provider_transport_core",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/provider_transport_core.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-package-syntax-provider_transport_core.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-runtime_names",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/runtime_names.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-package-syntax-runtime_names.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-swagger_read_surface_patch",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/swagger_read_surface_patch.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-package-syntax-swagger_read_surface_patch.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-web_file_attachment",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/web_file_attachment.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log": "logs/core-package-syntax-web_file_attachment.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-work_session_model",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/work_session_model.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-package-syntax-work_session_model.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-syntax-xlsx_direct_binary_delivery_patch",
+      "command": [
+        "node",
+        "--check",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/dist-step7-candidate/shared/xlsx_direct_binary_delivery_patch.js"
+      ],
+      "exit_code": 0,
+      "seconds": 0.064,
+      "log": "logs/core-package-syntax-xlsx_direct_binary_delivery_patch.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-v0122-red",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_live_defects_gate.mjs",
+        "--baseline-red",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-package-v0122-red.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-v0122-green",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_live_defects_gate.mjs",
+        "--candidate-green",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller"
+      ],
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "logs/core-package-v0122-green.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-v0122-closure",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/v0122-live-defects-2026-09-14/run_v0122_dependency_closure_gate.mjs",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-package-v0122-closure.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-swagger-green",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-patch-2026-09-13/run_patch_gate.mjs",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-package-swagger-green.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-514",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-patch-2026-09-13/run_final_514_registry_gate.mjs",
+        "$REPO/build/d2-2-final/work/core-package",
+        "$REPO/tests/fixtures/imported/ozon-control-17aa0833/FINAL_CONTROL_SAFETY_MATRIX.jsonl"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-package-514.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-date",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/read-effect-repair-v1/run_defect_015_date_repair_gate.mjs",
+        "$REPO/build/d2-2-final/work/core-package"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-package-date.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-effect",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/read-effect-repair-v1/run_effect_read_repair_gate.mjs",
+        "$REPO/build/d2-2-final/work/core-package"
+      ],
+      "exit_code": 0,
+      "seconds": 0.566,
+      "log": "logs/core-package-effect.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-shared-consumers",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_shared_consumer_parity_gate.mjs",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-package-shared-consumers.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-swagger-closure",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_dependency_closure_gate.mjs",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-package-swagger-closure.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-predispatch-green",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_composed_predispatch_gate.mjs",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller"
+      ],
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "logs/core-package-predispatch-green.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-full-worker-green",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/swagger-read-surface-live-repair-2026-09-13/run_full_worker_batch_gate.mjs",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller"
+      ],
+      "exit_code": 0,
+      "seconds": 0.666,
+      "log": "logs/core-package-full-worker-green.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-contracts",
+      "command": [
+        "node",
+        "$REPO/tests/regression/extension-core/core-contracts.mjs",
+        "$REPO/build/d2-2-final/package/extracted"
+      ],
+      "exit_code": 0,
+      "seconds": 0.116,
+      "log": "logs/core-package-contracts.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-worker",
+      "command": [
+        "node",
+        "$REPO/tests/regression/extension-core/worker-lifecycle.mjs",
+        "$REPO/build/d2-2-final/package/extracted"
+      ],
+      "exit_code": 0,
+      "seconds": 0.566,
+      "log": "logs/core-package-worker.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-context",
+      "command": [
+        "node",
+        "$REPO/tests/regression/extension-core/batch-context.mjs",
+        "$REPO/build/d2-2-final/package/extracted"
+      ],
+      "exit_code": 0,
+      "seconds": 0.866,
+      "log": "logs/core-package-context.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-transaction-abort",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/indexeddb-transaction-durability-v1/run_prefix_transaction_abort_gate.mjs",
+        "$REPO/build/d2-2-final/work/core-package"
+      ],
+      "exit_code": 0,
+      "seconds": 0.115,
+      "log": "logs/core-package-transaction-abort.txt",
+      "status": "PASS"
+    },
+    {
+      "id": "core-package-attachment",
+      "command": [
+        "node",
+        "$REPO/build/d2-2-final/work/core-package/tooling/llm-api-bridges/ozon-seller/validation/regression/run_direct_binary_provider_attachment_gate.mjs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log": "logs/core-package-attachment.txt",
+      "status": "PASS"
+    }
+  ],
+  "negative_control": {
+    "status": "PASS",
+    "observed_exit": 7,
+    "later_command_executed": false
+  },
+  "core_context_scenarios": 12,
+  "prior_module_groups": 9,
+  "prior_worker_scenarios": 6,
+  "test_adaptations": {
+    "core-package-policy-whitespace-adaptation.json": {
+      "source_sha256": "1f90e48d0e8231e825274236e3d69b2f0ad83483c8790224df8fc0529cb9a9dd",
+      "adapted_sha256": "7f8562bfdb2f5702d0188a64d1fd079e70020efa64d94946c0661706c16f514f",
+      "change": "one structural policy assertion accepts formatter whitespace",
+      "behavior_assertions_changed": false
+    },
+    "core-source-policy-whitespace-adaptation.json": {
+      "source_sha256": "1f90e48d0e8231e825274236e3d69b2f0ad83483c8790224df8fc0529cb9a9dd",
+      "adapted_sha256": "7f8562bfdb2f5702d0188a64d1fd079e70020efa64d94946c0661706c16f514f",
+      "change": "one structural policy assertion accepts formatter whitespace",
+      "behavior_assertions_changed": false
+    }
+  },
+  "predispatch_port_maps": {
+    "core-package-predispatch-port-map.json": {
+      "source_sha256": "25cf8f0b100d41d5d47bd8712c7d4c42d41bb13f08166565fa035637f25e3781",
+      "adapted_sha256": "b15e1e249cdff39756e7226a70b7d8f2bdf972fff0d54a15400689bd3e041c48",
+      "marker_mapping": {
+        "readAnalyticsResultCacheForCurrentSettings(requestedPhysicalCommand)": "readCache(requestedPhysicalCommand)",
+        "OzonContract.reviewedAnalyticsAcquisitionProfile(requestedPhysicalCommand)": "reviewedAcquisitionProfile(requestedPhysicalCommand,)",
+        "prepareProviderQuotaForCommand(physicalCommandForQuota)": "prepareQuota(physicalCommandForQuota)",
+        "executeOzonCore(liveEntry.command_text": "execute(liveEntry.command_text"
+      },
+      "behavior_assertions_changed": false
+    },
+    "core-source-predispatch-port-map.json": {
+      "source_sha256": "25cf8f0b100d41d5d47bd8712c7d4c42d41bb13f08166565fa035637f25e3781",
+      "adapted_sha256": "b15e1e249cdff39756e7226a70b7d8f2bdf972fff0d54a15400689bd3e041c48",
+      "marker_mapping": {
+        "readAnalyticsResultCacheForCurrentSettings(requestedPhysicalCommand)": "readCache(requestedPhysicalCommand)",
+        "OzonContract.reviewedAnalyticsAcquisitionProfile(requestedPhysicalCommand)": "reviewedAcquisitionProfile(requestedPhysicalCommand,)",
+        "prepareProviderQuotaForCommand(physicalCommandForQuota)": "prepareQuota(physicalCommandForQuota)",
+        "executeOzonCore(liveEntry.command_text": "execute(liveEntry.command_text"
+      },
+      "behavior_assertions_changed": false
+    }
+  }
+}

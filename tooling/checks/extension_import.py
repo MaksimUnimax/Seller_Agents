@@ -77,7 +77,7 @@ def ozon_route(runner, work, runtime, label, source_route, expected_version="0.1
     prod = ozon / "dist-step7-candidate"
     manifest = baseline.read_json(prod / "manifest.json")
     permission = baseline.read_json(ROOT / "tests/fixtures/imported/ozon-permissions-0aa8f535/manifest.json")
-    assert expected_version in ("0.1.22", "0.2.0")
+    assert expected_version in ("0.1.22", "0.2.0", "0.2.1")
     assert manifest["manifest_version"] == 3 and manifest["version"] == expected_version
     for key in ("permissions", "host_permissions"):
         assert manifest[key] == permission[key], key
@@ -97,6 +97,20 @@ def ozon_route(runner, work, runtime, label, source_route, expected_version="0.1
     swagger = v / "swagger-read-surface-patch-2026-09-13"
     repaired = v / "swagger-read-surface-live-repair-2026-09-13"
     effect = v / "read-effect-repair-v1"
+    if expected_version == "0.2.1":
+        corrective = effect / "run_live_gate_corrective_regression.mjs"
+        original_corrective = corrective.read_text()
+        old_guard = r"if \(!commandRequiresPersonalDataPolicy\(entry\.command\) \|\| personalDataEnabled\) return entry;"
+        formatted_guard = r"if\s*\(\s*!commandRequiresPersonalDataPolicy\(entry\.command\)\s*\|\|\s*personalDataEnabled\s*\)\s*return\s+entry;"
+        assert original_corrective.count(old_guard) == 1
+        adapted_corrective = original_corrective.replace(old_guard, formatted_guard)
+        corrective.write_text(adapted_corrective)
+        baseline.write_json(runner.output / (label + "-policy-whitespace-adaptation.json"), {
+            "source_sha256": baseline.sha256(original_corrective.encode()),
+            "adapted_sha256": baseline.sha256(adapted_corrective.encode()),
+            "change": "one structural policy assertion accepts formatter whitespace",
+            "behavior_assertions_changed": False,
+        })
     matrix = ROOT / "tests/fixtures/imported/ozon-control-17aa0833/FINAL_CONTROL_SAFETY_MATRIX.jsonl"
     steps = [
         ("v0122-red", [live / "run_v0122_live_defects_gate.mjs", "--baseline-red", ozon]),
@@ -120,7 +134,33 @@ def ozon_route(runner, work, runtime, label, source_route, expected_version="0.1
     for kind, filename in [("predispatch", "run_runtime_predispatch_gate.mjs"), ("full-worker", "run_full_worker_batch_gate.mjs")]:
         if source_route:
             steps.append((kind + "-red", [repaired / filename, "--expect-red", red_root]))
-        steps.append((kind + "-green", [repaired / filename, ozon]))
+        green_script = repaired / filename
+        marker_mapping = {
+            "readAnalyticsResultCacheForCurrentSettings(requestedPhysicalCommand)": "readCache(requestedPhysicalCommand)",
+            "OzonContract.reviewedAnalyticsAcquisitionProfile(requestedPhysicalCommand)": "reviewedAcquisitionProfile(requestedPhysicalCommand,)",
+            "prepareProviderQuotaForCommand(physicalCommandForQuota)": "prepareQuota(physicalCommandForQuota)",
+            "executeOzonCore(liveEntry.command_text": "execute(liveEntry.command_text",
+        }
+        if expected_version == "0.2.1" and kind == "predispatch":
+            # Only the four renamed ports in the structural order assertion change.
+            # The original test and RED route remain untouched; all behavior assertions stay intact.
+            original_source = green_script.read_text()
+            adapted_source = original_source
+            for old, new in marker_mapping.items():
+                old_literal, new_literal = json.dumps(old), json.dumps(new)
+                assert adapted_source.count(old_literal) == 1, old
+                adapted_source = adapted_source.replace(old_literal, new_literal)
+            position_probe = "workerSource.indexOf(marker)"
+            assert adapted_source.count(position_probe) == 1
+            adapted_source = adapted_source.replace(position_probe, r"workerSource.replace(/\s+/g, '').indexOf(marker.replace(/\s+/g, ''))")
+            green_script = repaired / "run_composed_predispatch_gate.mjs"
+            green_script.write_text(adapted_source)
+            baseline.write_json(runner.output / (label + "-predispatch-port-map.json"), {
+                "source_sha256": baseline.sha256(original_source.encode()),
+                "adapted_sha256": baseline.sha256(adapted_source.encode()),
+                "marker_mapping": marker_mapping, "behavior_assertions_changed": False,
+            })
+        steps.append((kind + "-green", [green_script, ozon]))
     for name, args in steps:
         runner.run(label + "-" + name, ["node", *args], cwd=repo)
     baseline.write_json(runner.output / (label + "-authority.json"),

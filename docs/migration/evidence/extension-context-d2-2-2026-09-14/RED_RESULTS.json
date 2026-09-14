@@ -1,0 +1,13 @@
+{
+  "source_commit": "56812e282dfb7ee48a6682277c68fd74ca716a60",
+  "tested_package": "SELLER_AGENTS_D2_1_v0.2.0_DEVELOPMENT.zip",
+  "tested_package_sha256": "877b965c5daeda22aab03ede1c5253c3d9399239aeee54475804c90dbf190983",
+  "test": "tests/regression/extension-core/batch-context.mjs",
+  "test_sha256": "5d62f08c457e91321f4bda169086e24105e4b0ac8d3fdd3b4ada38d281c0c363",
+  "exit_code": 1,
+  "expected_requests": 1,
+  "observed_requests": 2,
+  "stderr": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: Credential change must stop the remaining block, never send it to the new cabinet\n\n2 !== 1\n\n    at file://$REPO/tests/regression/extension-core/batch-context.mjs:52:10 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: 2,\n  expected: 1,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n",
+  "live_provider_calls": 0,
+  "classification": "CONFIRMED_RUNTIME_DEFECT_WITH_CONTROLLED_NETWORK"
+}

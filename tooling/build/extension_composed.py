@@ -28,7 +28,7 @@ def compose(directory):
     directory.mkdir(parents=True, exist_ok=False)
     baseline.verify_import()
     recipe = baseline.read_json(RECIPE)
-    assert recipe["version"] == "0.2.0" and recipe["stage"] == "D2.1"
+    assert recipe["version"] == "0.2.1" and recipe["stage"] == "D2.2"
     inputs = {}
     read_input("apps/extension/composition.json", inputs)
     output = {}
@@ -40,7 +40,7 @@ def compose(directory):
         output[target] = b"\n;\n".join(read_input(source, inputs) for source in sources)
     worker = output["service_worker.js"].decode("utf-8")
     for row in recipe["worker_function_replacements"]:
-        pattern = r"(?ms)^(?:async )?function " + re.escape(row["function"]) + r"\(.*?^}"
+        pattern = r"(?ms)^(?:async )?function " + re.escape(row["function"]) + r"\(.*?^}$"
         matches = list(re.finditer(pattern, worker))
         assert len(matches) == 1, row["function"]
         match = matches[0]
@@ -50,7 +50,7 @@ def compose(directory):
     init = recipe["worker_initializer"]
     assert worker.count(init["old"]) == 1
     worker = worker.replace(init["old"], read_input(init["replacement"], inputs).decode().rstrip())
-    output["service_worker.js"] = read_input(recipe["worker_prelude"], inputs) + b"\n;\n" + worker.encode()
+    output["service_worker.js"] = b"\n;\n".join(read_input(path, inputs) for path in recipe["worker_prelude"]) + b"\n;\n" + worker.encode()
     # This is a distinct development package. The frozen donor stays untouched.
     for relative, data in output.items():
         data = data.replace(b"0.1.22", recipe["version"].encode())
@@ -75,7 +75,7 @@ def build(output):
     receipt = compose(runtime)
     second = output / "repeat-runtime"
     assert compose(second) == receipt
-    name = "SELLER_AGENTS_D2_1_v0.2.0_DEVELOPMENT.zip"
+    name = "SELLER_AGENTS_D2_2_v0.2.1_DEVELOPMENT.zip"
     archive = output / name
     repeat = output / "repeat.zip"
     for source, target in [(runtime, archive), (second, repeat)]:

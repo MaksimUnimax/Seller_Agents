@@ -1,22 +1,38 @@
-# Общие модули расширения: D2.1
+# Общее ядро расширения
 
-D2 открыт поручением владельца после принятого переноса D1. Первый законченный шаг — извлечение проверенных общих алгоритмов и подключение их в собираемый Ozon-контур. Это development-сборка 0.2.0, не готовая общая бета Ozon/WB. Результаты: [квитанция](../migration/evidence/extension-core-d2-1-2026-09-14/README.md).
+Текущий шаг D2.2: общая очередь и закреплённый контекст пакета в development-сборке 0.2.1. Это Ozon carrier, не общая бета Ozon/WB. [Приёмка D2.2](../migration/evidence/extension-context-d2-2-2026-09-14/README.md); [принятый предыдущий шаг D2.1](../migration/evidence/extension-core-d2-1-2026-09-14/README.md).
 
-## Зачем выделяем по частям
+## Реальная граница модулей
 
-В исходном Ozon worker функции исполняются вместе с поздними Swagger, XLSX и delivery wrappers. Их порядок и динамическое чтение зависимостей должны сохраниться. Поэтому первый шаг переносит законченные алгоритмы за узкие интерфейсы; остальная оркестрация временно остаётся в проверенном worker. Это не переписывание Ozon или восстановление старой WB реализации с нуля.
-
-| Модуль | Источник и текущая ответственность | Что остаётся снаружи |
+| Код | Ответственность | Внешние зависимости |
 |---|---|---|
-| `bridge-core/src/work/session-model.js` | Work state/revision, допустимые переходы из Ozon work_session_model | Стартовый промпт, binding/storage/messages и generation-проверки worker |
-| `bridge-core/src/protocol/mixed-discovery.js` | Порядок HELP/API envelopes, строки/вложенный JSON, локальные ошибки | Маркеры, валидатор команд и HELP конкретной площадки |
-| `bridge-core/src/execution/local-operations.js` | Single-flight и последовательная запись общей карты manual operations | Browser storage, namespace, разрешения и сам provider request |
-| `bridge-core/src/delivery/model.js` | Claim/commit/insert/unknown/recovery из зрелой модели | Выбор файлов и представления через три provider ports |
-| `marketplaces/ozon/src/delivery-plan.js` | Ozon result marker, допустимый file ref, оригинальные файлы и текстовый attachment | Хранилище и фактическая загрузка/Send в ИИ |
-| `marketplaces/ozon/src/mixed-discovery.js` | Совместимые Ozon prefixes/defaults и parser injection | Общий алгоритм обхода envelopes |
-| `apps/extension/src/background/compat` | Старые имена и worker function adapters | Самостоятельная вторая реализация алгоритмов |
+| bridge-core/work/session-model | Состояния Work и переходы | Browser storage и Start orchestration остаются в приложении |
+| bridge-core/protocol/mixed-discovery | Порядок HELP/API и вложенные envelopes | Маркеры и валидаторы площадки через порты |
+| bridge-core/execution/local-operations | Single flight и последовательная запись всей карты операций | Storage ports |
+| bridge-core/execution/batch-queue | Полный зрелый processBatchQueue: подготовка, очередь, local results, quota wait, atomic group projection, finalize | Политика, transport, cache, quota, форматы ошибок и проекции передаются через порты |
+| bridge-core/execution/context | Неизменяемый allowlisted snapshot и сравнение identity/revisions | Чтение текущего состояния через port |
+| bridge-core/delivery/model | Claim/commit/unknown/recovery | План файлов площадки и реальные DOM/file ports |
+| marketplaces/ozon | Ozon registry/transport semantics, file plan, protocol defaults; provider-runtime с guard перед fetch | ProviderTransportCore и поздние принятые wrappers |
+| apps/extension/src/background/context | Захват локального контекста, прикладные ports, admission, guarded policy/cache/execution/delivery | Существующие storage namespaces и message protocol |
+| apps/extension/src/background/compat | Совместимость имён D2.1 | Самостоятельных копий общего алгоритма нет |
 
-Общее ядро не импортирует Ozon/WB, browser API, DOM или сервер. Ключи и ответы не появляются в новых межкомпонентных сообщениях. Ports принимаются при создании модели; отсутствующий обязательный port означает отказ при создании, а не выбор Ozon по умолчанию. Getter capability сохраняет видимость исправлений, загруженных после базовой модели.
+Общее ядро не обращается к DOM, хранилищу браузера или серверу. processBatchQueue больше не содержит второй копии алгоритма в worker: он делегирует SellerAgentsBatchQueue. Сохраняются порядок загрузки поздних Swagger/privacy/XLSX/file wrappers и динамическое обращение к текущему OzonProvider.
+
+## Контекст D2.2 и граница будущей авторизации
+
+При принятии ручного блока сохраняются accountId, storeId, marketplace, credentialRevision, conversationKey, bindingId/revision, workSessionId, policyRevision, commandHash и requestId. В durable record нет raw credentials. Замена реквизитов, binding revision, новой Work-сессии, отключение персональных данных или завершение текущей операции блокируют продолжение. Изменение auto-send после клика не меняет уже разрешённую доставку.
+
+В этой промежуточной сборке **ещё нет аккаунта Seller Agents и каталога нескольких магазинов**. Поэтому accountId явно равен `standalone-local-development`; storeId — локальный digest пары Client ID, credentialRevision — digest точного набора Seller/Performance credentials. Это compatibility scope прежнего одного слота Ozon, не подтверждение providerAccountId и не реализация SA-AUTH-01/SA-SHOP-01. При подключении каталога заменить reader настоящими стабильными account/store IDs; не переносить этот локальный digest как серверный storeId.
+
+Work generation в текущем carrier определяется start_intent_id. Обычное изменение revision из-за видимости не объявляется новым магазином. Контекст сверяется при входе в queue, на асинхронных портах, перед storage mutation, перед provider fetch (в том числе после Performance auth), после response и перед claim/insert/recovery доставки. Получение служебного токена может завершиться после Finish; запрос бизнес-данных после этого не разрешается. Уже принятый площадкой запрос не отменяется задним числом.
+
+Settings и секреты читаются в отдельный snapshot для исполнения, затем его credential digest сверяется с закреплённым. Cache и quota получают реквизиты этого snapshot; их namespace не переключается на новый кабинет. Служебный Performance token переиспользуется только для того же набора реквизитов.
+
+Старый pending API-пакет без execution_context не получает контекст текущих настроек задним числом: EXECUTION_CONTEXT_MISSING, требуется новый явный запуск. In-flight/insert-unknown сохраняют запрет повторов. Отвергнутый локальный error-item без API не становится разрешением сети. Legacy autorun пока сохраняется как временный путь разработки; целевой клиентский autorun по-прежнему подлежит удалению.
+
+Проверка контекста читает только небольшие settings/binding/Work записи. Статус операции хранится в worker как payload-free mirror; он обновляется после успешной записи через единственный manual record store. Отчётный буфер не перечитывается при каждом guard. На перезапуске mirror заполняется из текущей операции без автоматического исполнения. Отдельный runtime-тест проверяет отсутствие чтений payload при guard.
+
+Новых обращений к серверу нет: сравнение локальное. Между браузерами команды, реквизиты и буфер этим кодом не синхронизируются.
 
 ## Сборка
 
@@ -25,37 +41,24 @@ python3 tooling/build/extension_composed.py --output build/core-development
 python3 tooling/checks/extension_core.py --output build/core-verification
 ```
 
-Нужны те же Node 24 и Python 3.12, что при переносе. Сборка не устанавливает серверные зависимости. Каждый каталог результата новый.
+Node 24.19.0, Python 3.12.14. [composition.json](../../apps/extension/composition.json) перечисляет inputs/bundles и заменяемые функции. Проверяется полный SHA-256 каждого исходного фрагмента. Multi-line function signature извлекается до отдельной закрывающей строки функции; раньше совпадение на `}) {` могло захватить только заголовок — это исправлено до публикации и проверяется исполнением всего generated worker.
 
-[composition.json](../../apps/extension/composition.json) определяет исходный baseline, состав generated bundles и четыре заменяемые функции worker. Перед заменой каждого фрагмента проверяется SHA-256 исходной функции. Manifest D1 по-прежнему проверяет все 232 неизменённых imported файла; он не пересчитывается под новый код.
+Все 232 imported файла остаются неизменными. Generated runtime не коммитится. Две независимые сборки ZIP обязаны совпасть; затем проверяются распакованные 36 файлов. Версия 0.2.1 принадлежит development-пакету, исходный Ozon 0.1.22 не переименовывается.
 
-Сборщик создаёт 36 production-файлов, соединяя core, Ozon adapter и compatibility entry в прежних точках загрузки. Остальные entrypoints берутся из закреплённого источника. В generated worker четыре функции делегируют ядру; новая очередь manual records занимает прежнюю область сериализации всей карты. Отдельная очередь на каждый диалог была бы ошибкой: два read/modify/write могли бы стереть изменения друг друга.
+## Постоянная проверка
 
-Это временная сборочная граница D2.1. Generated файлы не редактируются и не коммитятся. В `composition-receipt.json` перечислены hashes всех inputs и конечных файлов. Две независимые сборки совпадают, распакованные bytes повторно проверяются. Пакет имеет отдельные имя и версию 0.2.0; исходный Ozon 0.1.22 не переименовывается задним числом.
+Существующий Extension CI исполняет прежние Ozon/WB baseline jobs и Common core / source and package. Composed route: прежние Ozon gates, 9 групп module/donor contracts, 6 полных worker-сценариев, 12 новых context-сценариев, transaction-abort и direct-binary attachment. Одинаковая проверка исходников и ZIP не считается удвоением покрытия.
 
-Legacy global names в скомпонованных файлах сохраняют текущих consumers. В новых исходниках есть один алгоритм; compatibility entries только связывают его с текущим приложением. Когда соответствующая область worker будет полностью перенесена, временная замена фрагментов удаляется вместе с adapter-функциями этой области.
+Архивные тесты не редактируются. В временной копии проверки новой композиции адаптируются четыре имени портов и нечувствительность structural order assertion к пробелам; одна structural privacy-regex допускает форматирование. RED использует исходную проверку порядка. Все behavioral assertions сохранены, hashes и карта адаптации записываются runner-ом. Это не подмена исполнения поиском строк: также запускаются полный worker, provider predispatch и новые гонки.
 
-## Постоянные проверки
+Область требований: SA-SHOP-04, SA-WORK-01/03, SA-CMD-01/02/03 и применимая часть SA-QUOTA-01. Серверная авторизация, каталог, установленная приёмка и полная браузерная матрица этими тестами не закрываются.
 
-В существующий Extension CI добавлен job Common core / source and package. Он исполняет:
+## Оставшийся D2
 
-1. D1 source identity и отрицательный контроль runner.
-2. Детерминированную сборку и независимую распаковку.
-3. Прежние Ozon source/package routes на новой реальной сборке; baseline-default runner остаётся 0.1.22, composed route явно требует 0.2.0. Assertions исходных тестов не изменены.
-4. Девять групп проверок общих модулей, donor differential и отсутствия неявной площадки.
-5. Шесть сценариев полного worker: Start → смешанный ручной пакет → доставка → Finish; двойной клик/отмена хвоста; restart во время запроса; insertion UNKNOWN; 429 без retry; неизвестный Start без второго Send.
-6. Сохранённые regression транзакционного abort и direct binary attachment на source и ZIP.
+1. Подключить WB adapter к общей очереди, с WB host/schema/read policy и полной сверкой общих зависимостей; без второй копии worker.
+2. Перевести прикладную Work/Start и delivery orchestration на общую модель магазина, заменить временный local scope; единая карточка магазинов и popup Ozon/WB.
+3. Удалить клиентский autorun и согласовать Show/Hide отдельно от отмены по целевому UX. Текущее legacy поведение не объявляется уже исправленным.
+4. Унифицировать техническое хранилище и часовой TTL всех payload-копий.
+5. Подключить настоящий auth/bootstrap в раннем I1 по совместному контракту с серверным исполнителем.
 
-Новые сценарии относятся к SA-WORK-01/03, SA-CMD-01/02/03 и части SA-DATA-01/02; проверяют применимую часть A04/A06–A12. Глобальные сценарии матрицы не получают installed PASS. Полный worker здесь работает с контролируемыми browser messages/storage/network. DOM, настоящая установка и живые ChatGPT/Alice не проверены этим job.
-
-Старый WB route остаётся отдельной проверкой неизменённого reference. Совместимость чистого ядра с явно переданными WB prefixes/ports проверяется синтетическим контрактом; это не подключённый WB adapter и не разрешение R1–R8.
-
-## Следующие части D2
-
-1. Выделить оркестрацию Work/ручного пакета из оставшегося worker, вводя неизменяемый account/store/binding/credential context и проверку после await. Не начинать с копирования всего worker для WB.
-2. Подключить WB marketplace adapter к тому же ядру, сохранив его host/schema/read-only policy. Сравнить применимое поведение с mature Ozon, восстановить неполные подсистемы.
-3. Реализовать единую карточку магазина, два Ozon API, переключатель и новый Start при смене. Удалить пользовательскую автоработу; общие delivery primitives при этом сохраняются.
-4. Объединить техническое хранилище с единым часовым TTL и сценариями ошибок/пробуждения. Legacy TTL не объявляется уже исправленным.
-5. Ранний I1 с настоящим серверным auth/bootstrap по согласованной wire-схеме. Серверные пакеты не меняются этим шагом.
-
-Исходные снимки удаляются только после принятой замены их consumers и переносимых проверок. Installed WB FAIL, Ozon live pending, браузерная матрица и общий D2 остаются открытыми.
+WB INSTALLED FAIL / R1–R8 BLOCKED и Ozon live pending остаются действующими. Сервер, wire contracts и browser-store releases не входят в D2.2.

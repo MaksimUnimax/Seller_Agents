@@ -36,6 +36,7 @@ export async function makeWorker(directory, options = {}) {
   function area(kind) {
     return {
       async get(keys) {
+        options.onStorageRead?.(kind, keys);
         const data = backing[kind];
         if (keys == null) return clone(data);
         if (typeof keys === "string") return clone({ [keys]: data[keys] });

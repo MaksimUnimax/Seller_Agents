@@ -1,0 +1,1180 @@
+(() => {
+  "use strict";
+  function create(ports) {
+    const {
+      normalizeKey,
+      singleFlight,
+      flights,
+      preparePolicy,
+      prepareCapability,
+      prepareQueries,
+      workerId,
+      diagnostic,
+      guidanceResult,
+      policyErrorResult,
+      planningErrorResult,
+      findGroup,
+      readCache,
+      projectGroup,
+      prepareQuota,
+      groupError,
+      persistQuotaWait,
+      quotaMetadata,
+      execute,
+      groupPlanning,
+      storeCache,
+      cachedResult,
+      acquisitionPlanning,
+      executionError,
+      projectSingle,
+      reviewedAcquisitionProfile,
+      providerId,
+      coalescedOperation,
+      bridgeErrorCode,
+    } = ports;
+    function process({
+      conversationKey,
+      ownerKind,
+      ownerId,
+      getOwner,
+      mutateOwner,
+      ownerMatches,
+      isCollecting,
+      failOwner,
+      finalizeOwner,
+    }) {
+      const key = normalizeKey(conversationKey);
+      const flightKey = `${String(ownerKind || "batch")}:${String(ownerId || "")}`;
+      return singleFlight(flights, flightKey, async () => {
+        const initialOwner = await getOwner();
+        const initialEntries = Array.isArray(initialOwner?.batch?.entries)
+          ? initialOwner.batch.entries
+          : [];
+        // Guidance and policy blocks are local results. Personal-data policy is
+        // applied before any subscription probe, quota/cache scheduling or provider call.
+        if (initialEntries.some((entry) => entry?.kind === "command")) {
+          const policyPrepared = await preparePolicy({
+            ownerKind,
+            ownerId,
+            getOwner,
+            mutateOwner,
+            ownerMatches,
+            isCollecting,
+            failOwner,
+          });
+          if (!policyPrepared?.ok)
+            return policyPrepared || { ok: false, code: "BATCH_POLICY_FAILED" };
+          const afterPolicy = await getOwner();
+          const remainingCommands = Array.isArray(afterPolicy?.batch?.entries)
+            ? afterPolicy.batch.entries.some(
+                (entry) => entry?.kind === "command",
+              )
+            : false;
+          if (remainingCommands) {
+            const prepared = await prepareCapability({
+              ownerKind,
+              ownerId,
+              getOwner,
+              mutateOwner,
+              ownerMatches,
+              isCollecting,
+              failOwner,
+            });
+            if (!prepared?.ok)
+              return prepared || { ok: false, code: "BATCH_PLANNING_FAILED" };
+            if (prepared.code === "CAPABILITY_PROBE_IN_PROGRESS")
+              return { ok: true, code: "CAPABILITY_PROBE_IN_PROGRESS" };
+            const queryPrepared = await prepareQueries({
+              ownerKind,
+              ownerId,
+              getOwner,
+              mutateOwner,
+              ownerMatches,
+              isCollecting,
+              failOwner,
+            });
+            if (!queryPrepared?.ok)
+              return (
+                queryPrepared || {
+                  ok: false,
+                  code: "BATCH_QUERY_PLANNING_FAILED",
+                }
+              );
+          }
+        }
+        while (true) {
+          let owner = await getOwner();
+          if (!owner || !ownerMatches(owner))
+            return { ok: false, code: "BATCH_OWNER_NOT_ACTIVE" };
+          if (!isCollecting(owner) || !owner.batch)
+            return {
+              ok: true,
+              code: "BATCH_NOT_COLLECTING",
+              status: owner.status || null,
+            };
+
+          const entries = Array.isArray(owner.batch.entries)
+            ? owner.batch.entries
+            : [];
+          const nextIndex = Math.max(0, Number(owner.batch.next_index || 0));
+          if (nextIndex >= entries.length)
+            return await finalizeOwner(owner, entries);
+
+          const entry = entries[nextIndex];
+          if (!entry) {
+            await failOwner(
+              "BATCH_ENTRY_MISSING",
+              `Batch entry ${nextIndex} отсутствует.`,
+            );
+            return { ok: false, code: "BATCH_ENTRY_MISSING" };
+          }
+          if (entry.status === "complete") {
+            await mutateOwner((current) => {
+              if (
+                !current ||
+                !ownerMatches(current) ||
+                !isCollecting(current) ||
+                !current.batch
+              )
+                return current;
+              if (Number(current.batch.next_index || 0) !== nextIndex)
+                return current;
+              return {
+                ...current,
+                batch: { ...current.batch, next_index: nextIndex + 1 },
+              };
+            });
+            continue;
+          }
+          if (entry.status === "requesting") {
+            const worker = String(owner.batch.request_worker_session_id || "");
+            if (worker && worker !== workerId) {
+              await failOwner(
+                "REQUEST_OUTCOME_UNKNOWN_NO_RETRY",
+                "Service worker перезапустился во время provider request. Исход запроса неизвестен; автоматический повтор запрещён.",
+              );
+              await diagnostic(
+                "REQUEST_RECOVERY_BLOCKED_NO_RETRY",
+                {
+                  owner_kind: ownerKind,
+                  owner_id: ownerId,
+                  queue_index: nextIndex,
+                  previous_worker_session_id: worker,
+                  worker_session_id: workerId,
+                },
+                { level: "error" },
+              );
+              return { ok: false, code: "REQUEST_OUTCOME_UNKNOWN_NO_RETRY" };
+            }
+            return { ok: true, code: "REQUEST_IN_PROGRESS" };
+          }
+
+          if (
+            entry.kind === "pre_execution_error" ||
+            entry.kind === "guidance"
+          ) {
+            const guidance = guidanceResult(entry);
+            if (entry.kind === "pre_execution_error")
+              await diagnostic("GUIDANCE_ATTEMPT_CLASSIFIED", {
+                owner_kind: ownerKind,
+                owner_id: ownerId,
+                code: entry.error?.code || "INVALID_COMMAND",
+                status: guidance.status,
+                cluster: guidance.cluster,
+                external_request_executed: false,
+              });
+            else
+              await diagnostic("GUIDANCE_CLUSTER_SELECTED", {
+                owner_kind: ownerKind,
+                owner_id: ownerId,
+                status: guidance.status,
+                cluster: guidance.cluster,
+                external_request_executed: false,
+              });
+            const result = guidance;
+            let stored = false;
+            await mutateOwner((current) => {
+              if (
+                !current ||
+                !ownerMatches(current) ||
+                !isCollecting(current) ||
+                !current.batch
+              )
+                return current;
+              if (Number(current.batch.next_index || 0) !== nextIndex)
+                return current;
+              const currentEntries = [...(current.batch.entries || [])];
+              const currentEntry = currentEntries[nextIndex];
+              if (!currentEntry || currentEntry.status !== "pending")
+                return current;
+              currentEntries[nextIndex] = {
+                ...currentEntry,
+                status: "complete",
+                request_id: result.request_id,
+                http_status: 0,
+                external_request_executed: false,
+                report_text: result.report_text,
+                request_completed_at: new Date().toISOString(),
+              };
+              stored = true;
+              return {
+                ...current,
+                batch: {
+                  ...current.batch,
+                  entries: currentEntries,
+                  next_index: nextIndex + 1,
+                  request_state: "idle",
+                  request_worker_session_id: null,
+                },
+              };
+            });
+            if (!stored) return { ok: false, code: "BATCH_ENTRY_STORE_RACE" };
+            await diagnostic(
+              "BATCH_PREEXEC_RESULT_STORED",
+              {
+                owner_kind: ownerKind,
+                owner_id: ownerId,
+                queue_index: nextIndex,
+                code: entry.error?.code || entry.guidance?.status || "GUIDANCE",
+                external_request_executed: false,
+              },
+              { level: "warning" },
+            );
+            continue;
+          }
+
+          if (entry.kind === "policy_error") {
+            const result = policyErrorResult(
+              entry.command,
+              entry.command_fingerprint,
+            );
+            let stored = false;
+            await mutateOwner((current) => {
+              if (
+                !current ||
+                !ownerMatches(current) ||
+                !isCollecting(current) ||
+                !current.batch
+              )
+                return current;
+              if (Number(current.batch.next_index || 0) !== nextIndex)
+                return current;
+              const currentEntries = [...(current.batch.entries || [])];
+              const currentEntry = currentEntries[nextIndex];
+              if (
+                !currentEntry ||
+                currentEntry.status !== "pending" ||
+                currentEntry.kind !== "policy_error"
+              )
+                return current;
+              currentEntries[nextIndex] = {
+                ...currentEntry,
+                status: "complete",
+                request_id: result.request_id,
+                http_status: 0,
+                external_request_executed: false,
+                report_text: result.report_text,
+                request_completed_at: new Date().toISOString(),
+              };
+              stored = true;
+              return {
+                ...current,
+                batch: {
+                  ...current.batch,
+                  entries: currentEntries,
+                  next_index: nextIndex + 1,
+                  request_state: "idle",
+                  request_worker_session_id: null,
+                },
+              };
+            });
+            if (!stored)
+              return { ok: false, code: "BATCH_POLICY_RESULT_STORE_RACE" };
+            await diagnostic(
+              "BATCH_PERSONAL_DATA_POLICY_RESULT_STORED",
+              {
+                owner_kind: ownerKind,
+                owner_id: ownerId,
+                queue_index: nextIndex,
+                operation: entry.operation,
+                code: "OPERATION_DISABLED_BY_USER",
+                external_request_executed: false,
+              },
+              { level: "warning" },
+            );
+            continue;
+          }
+
+          if (entry.kind === "planning_error") {
+            const plan = {
+              error: entry.error || {},
+              planning: entry.planning || null,
+            };
+            const result = planningErrorResult(
+              entry.command,
+              entry.command_fingerprint,
+              plan,
+            );
+            let stored = false;
+            await mutateOwner((current) => {
+              if (
+                !current ||
+                !ownerMatches(current) ||
+                !isCollecting(current) ||
+                !current.batch
+              )
+                return current;
+              if (Number(current.batch.next_index || 0) !== nextIndex)
+                return current;
+              const currentEntries = [...(current.batch.entries || [])];
+              const currentEntry = currentEntries[nextIndex];
+              if (
+                !currentEntry ||
+                currentEntry.status !== "pending" ||
+                currentEntry.kind !== "planning_error"
+              )
+                return current;
+              currentEntries[nextIndex] = {
+                ...currentEntry,
+                status: "complete",
+                request_id: result.request_id,
+                http_status: 0,
+                external_request_executed: false,
+                report_text: result.report_text,
+                request_completed_at: new Date().toISOString(),
+              };
+              stored = true;
+              return {
+                ...current,
+                batch: {
+                  ...current.batch,
+                  entries: currentEntries,
+                  next_index: nextIndex + 1,
+                  request_state: "idle",
+                  request_worker_session_id: null,
+                },
+              };
+            });
+            if (!stored)
+              return { ok: false, code: "BATCH_PLANNING_RESULT_STORE_RACE" };
+            await diagnostic(
+              "BATCH_CAPABILITY_RESULT_STORED",
+              {
+                owner_kind: ownerKind,
+                owner_id: ownerId,
+                queue_index: nextIndex,
+                operation: entry.operation,
+                code: entry.error?.code || "CAPABILITY_PLANNING_REJECTED",
+                external_request_executed: false,
+              },
+              { level: "warning" },
+            );
+            continue;
+          }
+
+          if (entry.kind === "command" && entry.query_group_id) {
+            const group = findGroup(owner.batch, entry.query_group_id);
+            if (
+              !group ||
+              Number(group.leader_index) !== nextIndex ||
+              !Array.isArray(group.member_indexes) ||
+              group.member_indexes.length < 2
+            ) {
+              await failOwner(
+                "BATCH_QUERY_PLAN_CORRUPT",
+                "Durable query plan не совпадает с текущим queue index; provider request запрещён.",
+              );
+              return { ok: false, code: "BATCH_QUERY_PLAN_CORRUPT" };
+            }
+            const expectedIndexes = group.member_indexes.map((value) =>
+              Number(value),
+            );
+            if (
+              expectedIndexes.some(
+                (value, offset) => value !== nextIndex + offset,
+              )
+            ) {
+              await failOwner(
+                "BATCH_QUERY_PLAN_NONCONTIGUOUS",
+                "Step 2 coalescing допускает только contiguous logical commands; provider request запрещён.",
+              );
+              return { ok: false, code: "BATCH_QUERY_PLAN_NONCONTIGUOUS" };
+            }
+
+            const groupCacheHit = await readCache(group.physical_command);
+            if (groupCacheHit.hit === true) {
+              const members = expectedIndexes.map(
+                (memberIndex) => owner.batch.entries[memberIndex],
+              );
+              const virtualPhysicalResult = {
+                ok: true,
+                request_id: null,
+                physical_attempt_id: null,
+                provider: providerId,
+                executed_command_fingerprint:
+                  group.physical_command_fingerprint,
+                http_status: Number(groupCacheHit.http_status || 200),
+                result: groupCacheHit.result,
+                elapsed_ms: 0,
+                rate_limit: null,
+                external_request_executed: false,
+                cache: groupCacheHit.cache,
+              };
+              const logicalResults = members.map((member) =>
+                projectGroup(member, group, virtualPhysicalResult),
+              );
+              let cacheStored = false;
+              owner = await mutateOwner((current) => {
+                if (
+                  !current ||
+                  !ownerMatches(current) ||
+                  !isCollecting(current) ||
+                  !current.batch
+                )
+                  return current;
+                if (Number(current.batch.next_index || 0) !== nextIndex)
+                  return current;
+                if (current.batch.request_state === "requesting")
+                  return current;
+                const currentEntries = [...(current.batch.entries || [])];
+                for (
+                  let offset = 0;
+                  offset < expectedIndexes.length;
+                  offset += 1
+                ) {
+                  const memberIndex = expectedIndexes[offset];
+                  const currentEntry = currentEntries[memberIndex];
+                  const logicalResult = logicalResults[offset];
+                  if (
+                    !currentEntry ||
+                    currentEntry.status !== "pending" ||
+                    !logicalResult
+                  )
+                    return current;
+                  currentEntries[memberIndex] = {
+                    ...currentEntry,
+                    status: "complete",
+                    request_id: logicalResult.request_id || null,
+                    physical_request_id: null,
+                    http_status: Number(logicalResult.http_status || 0),
+                    external_request_executed: false,
+                    executed_command_fingerprint:
+                      group.physical_command_fingerprint || null,
+                    cache_hit: true,
+                    report_text: String(logicalResult.report_text || ""),
+                    request_completed_at: new Date().toISOString(),
+                  };
+                }
+                cacheStored = true;
+                return {
+                  ...current,
+                  batch: {
+                    ...current.batch,
+                    entries: currentEntries,
+                    next_index: expectedIndexes[expectedIndexes.length - 1] + 1,
+                    request_state: "idle",
+                    request_worker_session_id: null,
+                    quota_wait: null,
+                    request_quota: null,
+                  },
+                };
+              });
+              if (!cacheStored)
+                return { ok: false, code: "PROVIDER_CACHE_RESULT_STORE_RACE" };
+              await diagnostic("PROVIDER_CACHE_HIT", {
+                owner_kind: ownerKind,
+                owner_id: ownerId,
+                queue_index: nextIndex,
+                logical_count: logicalResults.length,
+                coalescing_group_id: group.group_id,
+                external_request_executed: false,
+              });
+              continue;
+            }
+
+            const quotaDecision = await prepareQuota(group.physical_command);
+            if (quotaDecision.error) {
+              const members = expectedIndexes.map(
+                (memberIndex) => owner.batch.entries[memberIndex],
+              );
+              const logicalResults = members.map((member) =>
+                groupError(member, group, quotaDecision.error, 0, null),
+              );
+              let stored = false;
+              owner = await mutateOwner((current) => {
+                if (
+                  !current ||
+                  !ownerMatches(current) ||
+                  !isCollecting(current) ||
+                  !current.batch
+                )
+                  return current;
+                if (Number(current.batch.next_index || 0) !== nextIndex)
+                  return current;
+                const currentEntries = [...(current.batch.entries || [])];
+                for (
+                  let offset = 0;
+                  offset < expectedIndexes.length;
+                  offset += 1
+                ) {
+                  const memberIndex = expectedIndexes[offset];
+                  const currentEntry = currentEntries[memberIndex];
+                  const logicalResult = logicalResults[offset];
+                  if (
+                    !currentEntry ||
+                    currentEntry.status !== "pending" ||
+                    !logicalResult
+                  )
+                    return current;
+                  currentEntries[memberIndex] = {
+                    ...currentEntry,
+                    status: "complete",
+                    request_id: logicalResult.request_id || null,
+                    physical_request_id: null,
+                    http_status: 0,
+                    external_request_executed: false,
+                    executed_command_fingerprint:
+                      group.physical_command_fingerprint || null,
+                    report_text: String(logicalResult.report_text || ""),
+                    request_completed_at: new Date().toISOString(),
+                  };
+                }
+                stored = true;
+                return {
+                  ...current,
+                  batch: {
+                    ...current.batch,
+                    entries: currentEntries,
+                    next_index: expectedIndexes[expectedIndexes.length - 1] + 1,
+                    request_state: "idle",
+                    request_worker_session_id: null,
+                    quota_wait: null,
+                    request_quota: null,
+                  },
+                };
+              });
+              if (!stored)
+                return { ok: false, code: "PROVIDER_QUOTA_ERROR_STORE_RACE" };
+              await diagnostic(
+                "PROVIDER_QUOTA_STATE_UNAVAILABLE",
+                {
+                  owner_kind: ownerKind,
+                  owner_id: ownerId,
+                  queue_index: nextIndex,
+                  logical_count: logicalResults.length,
+                  external_request_executed: false,
+                },
+                { level: "error" },
+              );
+              continue;
+            }
+            if (quotaDecision.required && !quotaDecision.allowed) {
+              await persistQuotaWait({
+                ownerKind,
+                ownerId,
+                nextIndex,
+                quota: quotaDecision.quota,
+                mutateOwner,
+                ownerMatches,
+                isCollecting,
+                groupId: group.group_id,
+              });
+              return {
+                ok: true,
+                code: "PROVIDER_QUOTA_WAITING",
+                next_allowed_at: Number(
+                  quotaDecision.quota?.next_allowed_at || 0,
+                ),
+              };
+            }
+
+            let groupGranted = false;
+            owner = await mutateOwner((current) => {
+              if (
+                !current ||
+                !ownerMatches(current) ||
+                !isCollecting(current) ||
+                !current.batch
+              )
+                return current;
+              if (Number(current.batch.next_index || 0) !== nextIndex)
+                return current;
+              if (
+                current.batch.query_planning_state !== "complete" ||
+                !["idle", "quota_waiting"].includes(
+                  String(current.batch.request_state || "idle"),
+                )
+              )
+                return current;
+              const liveGroup = findGroup(current.batch, entry.query_group_id);
+              if (!liveGroup || Number(liveGroup.leader_index) !== nextIndex)
+                return current;
+              const currentEntries = [...(current.batch.entries || [])];
+              for (const memberIndex of expectedIndexes) {
+                const member = currentEntries[memberIndex];
+                if (
+                  !member ||
+                  member.kind !== "command" ||
+                  member.status !== "pending" ||
+                  String(member.query_group_id || "") !== String(group.group_id)
+                )
+                  return current;
+              }
+              const startedAt = new Date().toISOString();
+              for (const memberIndex of expectedIndexes)
+                currentEntries[memberIndex] = {
+                  ...currentEntries[memberIndex],
+                  status: "requesting",
+                  request_started_at: startedAt,
+                };
+              groupGranted = true;
+              return {
+                ...current,
+                last_operation: coalescedOperation,
+                batch: {
+                  ...current.batch,
+                  entries: currentEntries,
+                  request_state: "requesting",
+                  request_worker_session_id: workerId,
+                  quota_wait: null,
+                  request_quota: quotaMetadata(quotaDecision.quota),
+                },
+              };
+            });
+            if (!groupGranted) continue;
+
+            const liveEntries = owner.batch.entries;
+            const liveMembers = expectedIndexes.map(
+              (memberIndex) => liveEntries[memberIndex],
+            );
+            const liveLeader = liveMembers[0];
+            await diagnostic("BATCH_COALESCED_REQUEST_STARTED", {
+              owner_kind: ownerKind,
+              owner_id: ownerId,
+              queue_index: nextIndex,
+              queue_total: liveEntries.length,
+              coalescing_group_id: group.group_id,
+              logical_count: liveMembers.length,
+              physical_command_fingerprint: group.physical_command_fingerprint,
+              physical_metrics: group.physical_metrics,
+            });
+
+            const requestStartedAt = Date.now();
+            const physicalAttemptId = `physical-attempt-${crypto.randomUUID()}`;
+            let physicalResult = null;
+            let logicalResults;
+            try {
+              physicalResult = {
+                ...(await execute(liveLeader.command_text, {
+                  executionCommand: group.physical_command,
+                  planning: groupPlanning(
+                    liveLeader,
+                    group,
+                    physicalAttemptId,
+                    group.physical_command_fingerprint,
+                  ),
+                  quotaPermit: quotaDecision.quota,
+                })),
+                physical_attempt_id: physicalAttemptId,
+              };
+              if (physicalResult.ok === true) {
+                await storeCache(group.physical_command, physicalResult, null);
+                try {
+                  logicalResults = liveMembers.map((member) =>
+                    projectGroup(member, group, physicalResult),
+                  );
+                } catch (projectionError) {
+                  logicalResults = liveMembers.map((member) =>
+                    projectGroup(
+                      member,
+                      group,
+                      physicalResult,
+                      projectionError,
+                    ),
+                  );
+                  await diagnostic(
+                    "BATCH_COALESCED_PROJECTION_FAILED",
+                    {
+                      owner_kind: ownerKind,
+                      owner_id: ownerId,
+                      coalescing_group_id: group.group_id,
+                      physical_request_id: physicalResult.request_id || null,
+                      code: String(
+                        projectionError?.code ||
+                          "ANALYTICS_COALESCED_RESPONSE_UNPROJECTABLE",
+                      ),
+                    },
+                    { level: "error" },
+                  );
+                }
+              } else {
+                logicalResults = liveMembers.map((member) =>
+                  projectGroup(member, group, physicalResult),
+                );
+              }
+            } catch (error) {
+              logicalResults = liveMembers.map((member) =>
+                groupError(
+                  member,
+                  group,
+                  error,
+                  Date.now() - requestStartedAt,
+                  physicalAttemptId,
+                ),
+              );
+            }
+
+            let stored = false;
+            owner = await mutateOwner((current) => {
+              if (
+                !current ||
+                !ownerMatches(current) ||
+                !isCollecting(current) ||
+                !current.batch
+              )
+                return current;
+              if (Number(current.batch.next_index || 0) !== nextIndex)
+                return current;
+              if (
+                current.batch.request_state !== "requesting" ||
+                current.batch.request_worker_session_id !== workerId
+              )
+                return current;
+              const currentEntries = [...(current.batch.entries || [])];
+              for (
+                let offset = 0;
+                offset < expectedIndexes.length;
+                offset += 1
+              ) {
+                const memberIndex = expectedIndexes[offset];
+                const currentEntry = currentEntries[memberIndex];
+                const logicalResult = logicalResults[offset];
+                if (
+                  !currentEntry ||
+                  currentEntry.status !== "requesting" ||
+                  String(currentEntry.query_group_id || "") !==
+                    String(group.group_id) ||
+                  !logicalResult
+                )
+                  return current;
+              }
+              const completedAt = new Date().toISOString();
+              for (
+                let offset = 0;
+                offset < expectedIndexes.length;
+                offset += 1
+              ) {
+                const memberIndex = expectedIndexes[offset];
+                const currentEntry = currentEntries[memberIndex];
+                const logicalResult = logicalResults[offset];
+                currentEntries[memberIndex] = {
+                  ...currentEntry,
+                  status: "complete",
+                  request_id: logicalResult.request_id || null,
+                  physical_request_id:
+                    logicalResult.physical_request_id ||
+                    physicalResult?.request_id ||
+                    null,
+                  http_status: Number(logicalResult.http_status || 0),
+                  external_request_executed:
+                    logicalResult.external_request_executed === true,
+                  executed_command_fingerprint:
+                    logicalResult.executed_command_fingerprint ||
+                    group.physical_command_fingerprint ||
+                    null,
+                  report_text: String(logicalResult.report_text || ""),
+                  request_completed_at: completedAt,
+                };
+              }
+              const firstBridgeError = logicalResults.find(
+                (result) => result?.bridge_error === true,
+              );
+              stored = true;
+              return {
+                ...current,
+                batch: {
+                  ...current.batch,
+                  entries: currentEntries,
+                  next_index: expectedIndexes[expectedIndexes.length - 1] + 1,
+                  request_state: "idle",
+                  request_worker_session_id: null,
+                  quota_wait: null,
+                  request_quota: null,
+                },
+                last_error: firstBridgeError
+                  ? {
+                      code: firstBridgeError.error?.code || bridgeErrorCode,
+                      message:
+                        firstBridgeError.error?.message ||
+                        "Coalesced bridge execution error converted to logical results.",
+                      at: new Date().toISOString(),
+                      recoverable: true,
+                    }
+                  : null,
+              };
+            });
+            if (!stored) {
+              await failOwner(
+                "BATCH_COALESCED_RESULT_STORE_RACE",
+                "Coalesced provider result получен, но durable batch state изменился до atomic logical projection store. Автоматический повтор запрещён.",
+              );
+              return { ok: false, code: "BATCH_COALESCED_RESULT_STORE_RACE" };
+            }
+            await diagnostic(
+              "BATCH_COALESCED_RESULTS_STORED",
+              {
+                owner_kind: ownerKind,
+                owner_id: ownerId,
+                queue_index: nextIndex,
+                logical_count: logicalResults.length,
+                physical_request_id: physicalResult?.request_id || null,
+                physical_command_fingerprint:
+                  physicalResult?.executed_command_fingerprint ||
+                  group.physical_command_fingerprint ||
+                  null,
+                http_status: Number(
+                  physicalResult?.http_status ||
+                    logicalResults[0]?.http_status ||
+                    0,
+                ),
+                external_request_executed: logicalResults.some(
+                  (result) => result?.external_request_executed === true,
+                ),
+              },
+              {
+                level: logicalResults.some((result) => result?.ok === false)
+                  ? "warning"
+                  : "info",
+              },
+            );
+            continue;
+          }
+
+          const requestedPhysicalCommand =
+            entry.execution_command || entry.command;
+          const singleCacheHit = await readCache(requestedPhysicalCommand);
+          if (singleCacheHit.hit === true) {
+            const result = cachedResult(entry, singleCacheHit);
+            let cacheStored = false;
+            owner = await mutateOwner((current) => {
+              if (
+                !current ||
+                !ownerMatches(current) ||
+                !isCollecting(current) ||
+                !current.batch
+              )
+                return current;
+              if (Number(current.batch.next_index || 0) !== nextIndex)
+                return current;
+              if (current.batch.request_state === "requesting") return current;
+              const currentEntries = [...(current.batch.entries || [])];
+              const currentEntry = currentEntries[nextIndex];
+              if (
+                !currentEntry ||
+                currentEntry.status !== "pending" ||
+                currentEntry.kind !== "command"
+              )
+                return current;
+              currentEntries[nextIndex] = {
+                ...currentEntry,
+                status: "complete",
+                request_id: result.request_id || null,
+                http_status: Number(result.http_status || 0),
+                external_request_executed: false,
+                executed_command_fingerprint:
+                  result.executed_command_fingerprint || null,
+                cache_hit: true,
+                report_text: String(result.report_text || ""),
+                request_completed_at: new Date().toISOString(),
+              };
+              cacheStored = true;
+              return {
+                ...current,
+                batch: {
+                  ...current.batch,
+                  entries: currentEntries,
+                  next_index: nextIndex + 1,
+                  request_state: "idle",
+                  request_worker_session_id: null,
+                  quota_wait: null,
+                  request_quota: null,
+                },
+              };
+            });
+            if (!cacheStored)
+              return { ok: false, code: "PROVIDER_CACHE_RESULT_STORE_RACE" };
+            await diagnostic("PROVIDER_CACHE_HIT", {
+              owner_kind: ownerKind,
+              owner_id: ownerId,
+              queue_index: nextIndex,
+              logical_count: 1,
+              operation: entry.operation,
+              external_request_executed: false,
+            });
+            continue;
+          }
+          const acquisitionProfile = reviewedAcquisitionProfile(
+            requestedPhysicalCommand,
+          );
+          const physicalCommandForQuota = acquisitionProfile?.applicable
+            ? acquisitionProfile.command
+            : requestedPhysicalCommand;
+          const executionPlanning = acquisitionPlanning(
+            entry.planning || null,
+            acquisitionProfile,
+          );
+          const quotaDecision = await prepareQuota(physicalCommandForQuota);
+          if (quotaDecision.error) {
+            const result = executionError(
+              entry.command,
+              entry.command_fingerprint,
+              quotaDecision.error,
+              0,
+              executionPlanning,
+            );
+            let stored = false;
+            owner = await mutateOwner((current) => {
+              if (
+                !current ||
+                !ownerMatches(current) ||
+                !isCollecting(current) ||
+                !current.batch
+              )
+                return current;
+              if (Number(current.batch.next_index || 0) !== nextIndex)
+                return current;
+              const currentEntries = [...(current.batch.entries || [])];
+              const currentEntry = currentEntries[nextIndex];
+              if (!currentEntry || currentEntry.status !== "pending")
+                return current;
+              currentEntries[nextIndex] = {
+                ...currentEntry,
+                status: "complete",
+                request_id: result.request_id || null,
+                http_status: 0,
+                external_request_executed: false,
+                executed_command_fingerprint: null,
+                report_text: String(result.report_text || ""),
+                request_completed_at: new Date().toISOString(),
+              };
+              stored = true;
+              return {
+                ...current,
+                batch: {
+                  ...current.batch,
+                  entries: currentEntries,
+                  next_index: nextIndex + 1,
+                  request_state: "idle",
+                  request_worker_session_id: null,
+                  quota_wait: null,
+                  request_quota: null,
+                },
+              };
+            });
+            if (!stored)
+              return { ok: false, code: "PROVIDER_QUOTA_ERROR_STORE_RACE" };
+            await diagnostic(
+              "PROVIDER_QUOTA_STATE_UNAVAILABLE",
+              {
+                owner_kind: ownerKind,
+                owner_id: ownerId,
+                queue_index: nextIndex,
+                logical_count: 1,
+                external_request_executed: false,
+              },
+              { level: "error" },
+            );
+            continue;
+          }
+          if (quotaDecision.required && !quotaDecision.allowed) {
+            await persistQuotaWait({
+              ownerKind,
+              ownerId,
+              nextIndex,
+              quota: quotaDecision.quota,
+              mutateOwner,
+              ownerMatches,
+              isCollecting,
+            });
+            return {
+              ok: true,
+              code: "PROVIDER_QUOTA_WAITING",
+              next_allowed_at: Number(
+                quotaDecision.quota?.next_allowed_at || 0,
+              ),
+            };
+          }
+
+          let requestGranted = false;
+          owner = await mutateOwner((current) => {
+            if (
+              !current ||
+              !ownerMatches(current) ||
+              !isCollecting(current) ||
+              !current.batch
+            )
+              return current;
+            if (Number(current.batch.next_index || 0) !== nextIndex)
+              return current;
+            const currentEntries = [...(current.batch.entries || [])];
+            const currentEntry = currentEntries[nextIndex];
+            if (
+              !currentEntry ||
+              currentEntry.status !== "pending" ||
+              currentEntry.kind !== "command"
+            )
+              return current;
+            requestGranted = true;
+            currentEntries[nextIndex] = {
+              ...currentEntry,
+              status: "requesting",
+              request_started_at: new Date().toISOString(),
+            };
+            return {
+              ...current,
+              last_operation: currentEntry.operation || null,
+              batch: {
+                ...current.batch,
+                entries: currentEntries,
+                request_state: "requesting",
+                request_worker_session_id: workerId,
+                quota_wait: null,
+                request_quota: quotaMetadata(quotaDecision.quota),
+              },
+            };
+          });
+          if (!requestGranted) continue;
+
+          const liveEntry = owner.batch.entries[nextIndex];
+          await diagnostic("BATCH_REQUEST_STARTED", {
+            owner_kind: ownerKind,
+            owner_id: ownerId,
+            queue_index: nextIndex,
+            queue_total: owner.batch.entries.length,
+            operation: liveEntry.operation,
+            command_fingerprint: liveEntry.command_fingerprint,
+          });
+          let result;
+          const requestStartedAt = Date.now();
+          try {
+            result = await execute(liveEntry.command_text, {
+              executionCommand: physicalCommandForQuota,
+              planning: executionPlanning,
+              quotaPermit: quotaDecision.quota,
+            });
+            if (
+              result?.ok === true &&
+              physicalCommandForQuota.operation === coalescedOperation
+            ) {
+              await storeCache(
+                physicalCommandForQuota,
+                result,
+                acquisitionProfile,
+              );
+              result = projectSingle(liveEntry, result, acquisitionProfile);
+            }
+          } catch (error) {
+            try {
+              result = executionError(
+                liveEntry.command,
+                liveEntry.command_fingerprint,
+                error,
+                Date.now() - requestStartedAt,
+                executionPlanning,
+              );
+            } catch (reportError) {
+              await failOwner(
+                reportError.code || "BATCH_ERROR_REPORT_FAILED",
+                reportError.message || String(reportError),
+              );
+              throw reportError;
+            }
+          }
+
+          let stored = false;
+          owner = await mutateOwner((current) => {
+            if (
+              !current ||
+              !ownerMatches(current) ||
+              !isCollecting(current) ||
+              !current.batch
+            )
+              return current;
+            if (Number(current.batch.next_index || 0) !== nextIndex)
+              return current;
+            if (
+              current.batch.request_state !== "requesting" ||
+              current.batch.request_worker_session_id !== workerId
+            )
+              return current;
+            const currentEntries = [...(current.batch.entries || [])];
+            const currentEntry = currentEntries[nextIndex];
+            if (!currentEntry || currentEntry.status !== "requesting")
+              return current;
+            currentEntries[nextIndex] = {
+              ...currentEntry,
+              status: "complete",
+              request_id: result.request_id || null,
+              http_status: Number(result.http_status || 0),
+              external_request_executed:
+                result.external_request_executed !== false &&
+                (result.external_request_executed === true ||
+                  result.bridge_error !== true),
+              executed_command_fingerprint:
+                result.executed_command_fingerprint || null,
+              report_text: String(result.report_text || ""),
+              request_completed_at: new Date().toISOString(),
+            };
+            stored = true;
+            return {
+              ...current,
+              batch: {
+                ...current.batch,
+                entries: currentEntries,
+                next_index: nextIndex + 1,
+                request_state: "idle",
+                request_worker_session_id: null,
+                quota_wait: null,
+                request_quota: null,
+              },
+              last_error: result.bridge_error
+                ? {
+                    code: result.error?.code || bridgeErrorCode,
+                    message:
+                      result.error?.message ||
+                      "Bridge execution error converted to batch result.",
+                    at: new Date().toISOString(),
+                    recoverable: true,
+                  }
+                : null,
+            };
+          });
+          if (!stored) {
+            await failOwner(
+              "BATCH_RESULT_STORE_RACE",
+              "provider result получен, но durable batch state изменился до сохранения. Автоматический повтор запрещён.",
+            );
+            return { ok: false, code: "BATCH_RESULT_STORE_RACE" };
+          }
+          await diagnostic("BATCH_RESULT_STORED", {
+            owner_kind: ownerKind,
+            owner_id: ownerId,
+            queue_index: nextIndex,
+            queue_total: owner.batch.entries.length,
+            operation: liveEntry.operation,
+            request_id: result.request_id || null,
+            executed_command_fingerprint:
+              result.executed_command_fingerprint || null,
+            http_status: Number(result.http_status || 0),
+            external_request_executed:
+              result.external_request_executed !== false &&
+              (result.external_request_executed === true ||
+                result.bridge_error !== true),
+          });
+        }
+      });
+    }
+    return Object.freeze({ process });
+  }
+  globalThis.SellerAgentsBatchQueue = Object.freeze({ create });
+})();
