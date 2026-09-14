@@ -140,21 +140,38 @@ regression is 13/13 green.
 
 No Work strategy, B5 persistence, live H3 acceptance, P8.5 scheduling,
 database migration, contract change, Stream A edit, extension edit, provider
-call, customer session, or security bypass was introduced. The old candidate
-run `34875403817` for `cd4f12db167311e82ab35fd2687167bd5aa5684c` was queried
-directly through both the workflow-run and workflow-jobs endpoints; GitHub
-returned 404 for both, so its terminal conclusion is not readable in this
-execution environment. It remains architecturally rejected regardless of
-that readback because its deterministic completion matrix did not prove the
-fail-closed invariant. Final correction-head CI is recorded below after the
-exact new candidate run completes.
+call, customer session, or security bypass was introduced. The architect
+established the following authoritative Actions record for prior candidates:
+run `34875403817` for `cd4f12db167311e82ab35fd2687167bd5aa5684c` concluded
+`FAILURE`; run `34879207686` for
+`aa5ea7d2b1d3b8a78338928f566c9ed9b36e3698` was `CANCELLED` when superseded;
+and run `34879404332` for
+`bb6b2cc13e484381df5c987020de156789592e2a` concluded `FAILURE` in job
+`104094860512`. The latter passed every earlier Server CI gate and failed only
+at `pnpm test:e2e`.
 
-### Final exact candidate CI readback
+Local CI-equivalent reproduction recovered the B3-specific timing defect that
+was not visible in the unavailable remote log: under H2-to-B3 suite load,
+`FRESH_BOUND_IDENTITY_CHANGES` can observe its intentionally asynchronous
+second identity transition during `OBSERVE_COMPLETION`, while the test had
+required the later `BRIDGE_SURFACE_VALIDATION_FAILED` boundary. The strategy
+correctly fails closed in either boundary and sends exactly once. The coherent
+test correction is
+`1e480743b625d4edefbe9209172aac3c6cfbfa20`; the corrected Standard suite is
+36/36, the H2 regression is 13/13, and clean migrated full E2E is 121/121.
 
-- Code correction candidate SHA: `aa5ea7d2b1d3b8a78338928f566c9ed9b36e3698`
+The same full E2E run against the database populated by the repository's
+integration suite also reproduced a separate pre-B3 failure in
+`admin-ai.spec.ts` caused by its existing unscoped `getByText(/CANDIDATE/)`
+locator resolving four elements. That file is unchanged by B3 and is outside
+the allowed correction paths; the fresh-database control passes it.
+
+### Current exact candidate CI readback
+
+- Implementation candidate SHA: `1e480743b625d4edefbe9209172aac3c6cfbfa20`
 - Remote feature ref: confirmed at that exact SHA before this evidence
-  readback commit.
-- Server CI run/job: not readable from the connected GitHub Actions account;
-  direct run-list, exact-commit workflow-runs, workflow-run, workflow-jobs,
-  combined-status, and repository metadata endpoints all returned GitHub 404.
-- Terminal result: `EXTERNAL_BLOCKER` (no CI success is claimed).
+  correction.
+- Server CI run/job: pending exact authenticated readback in the architect's
+  Actions context; this execution context cannot read the private Actions
+  endpoints.
+- Terminal result: not claimed. No CI success is recorded here.
