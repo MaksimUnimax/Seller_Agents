@@ -27,7 +27,7 @@ def run(runtime,output):
         page=popup=worker=None
         errors=[]
         try:
-            context.route('**/*',lambda route:route.fulfill(body=fixture,content_type='text/html') if route.request.url.startswith('https://chatgpt.com/c/') else route.abort())
+            context.route('https://**/*',lambda route:route.fulfill(body=fixture,content_type='text/html') if route.request.url.startswith('https://chatgpt.com/c/') else route.abort())
             worker=context.service_workers[0] if context.service_workers else context.wait_for_event('serviceworker')
             page=context.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
             page.goto('https://chatgpt.com/c/11111111-1111-4111-8111-111111111111')
@@ -40,9 +40,9 @@ def run(runtime,output):
             popup=context.new_page();popup.on('pageerror',lambda e:errors.append(str(e)))
             popup.add_init_script(f"const originalQuery=chrome.tabs.query.bind(chrome.tabs);chrome.tabs.query=(query)=>query.active?Promise.resolve([{{id:{tab_id}}}]):originalQuery(query);")
             popup.goto(worker.url.rsplit('/',1)[0]+'/popup.html')
-            popup.wait_for_function("document.querySelector('#account').textContent.includes('I1')")
+            until(lambda: 'I1' in popup.locator('#account').inner_text())
             popup.click('#wildberries');popup.click('#add');popup.fill('#token','FIXTURE_BROWSER_PERSONAL_TOKEN');popup.fill('#name','Тестовый WB');popup.click('#save')
-            popup.wait_for_function("document.querySelector('#stores').textContent.includes('Тестовый WB')")
+            until(lambda: 'Тестовый WB' in popup.locator('#stores').inner_text())
             assert page.evaluate('sent.length')==0
             popup.click('#start')
             until(lambda:'Работаем' in popup.locator('#connection').inner_text())

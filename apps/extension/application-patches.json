@@ -173,5 +173,15 @@
     "target": "attachment_delivery_port_content.js",
     "old": "    root.textContent = String(message || \"\");",
     "new": "    root.textContent = String(message || \"\").replace(/Ozon/g, \"Seller Agents\");"
+  },
+  {
+    "target": "service_worker.js",
+    "old": "  if (!wait || nextAllowedAt <= 0) return null;\n  return Object.freeze({",
+    "new": "  if (!wait || nextAllowedAt <= 0) return null;\n  if (owner?.execution_context?.marketplace === \"wildberries\") return Object.freeze({\n    marketplace: \"wildberries\", source: \"provider_retry_after\", next_allowed_at: nextAllowedAt,\n    automatic_retry: false, explicit_resume_required: true\n  });\n  return Object.freeze({"
+  },
+  {
+    "target": "content_script.js",
+    "old": "    if (!due) return \"\";\n    const remainingMs = Math.max(0, due - Number(now));",
+    "new": "    if (!due) return \"\";\n    if (saContentContext) {\n      const provider = saContentContext.marketplace === \"wildberries\" ? \"WB\" : \"Ozon\";\n      return Number(now) >= due\n        ? `Ожидание ${provider} завершено. Продолжите пакет в расширении.`\n        : `Ожидание ${provider} до ${formatLocalClock(due)}. Пакет сохранён. Затем продолжите его в расширении.`;\n    }\n    const remainingMs = Math.max(0, due - Number(now));"
   }
 ]

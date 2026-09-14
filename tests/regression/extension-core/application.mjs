@@ -206,4 +206,22 @@ await test('APP-09-Ozon-local-file-reference-is-owned-by-store-not-name-or-dialo
     assert.equal(s.worker.network.length,0);
   } finally { s.worker.close(); }
 });
+await test('APP-10-WB-observed-quota-holds-tail-without-Ozon-intervals-or-auto-retry', async () => {
+  const s = await setup({ fetch: async () => new Response('{"error":"fixture quota"}', { status:429, headers:{'content-type':'application/json','retry-after':'120'} }) }); try {
+    const started = await s.start(await s.save(wb(fixtureToken)));
+    await s.execute(started, api+'\n'+api);
+    const owner = await until(async()=>{const o=await s.worker.call('getManualOperation',started.key);return o?.batch?.request_state==='quota_waiting'&&o;},'WB tail waits for observed Retry-After');
+    const state = plain(await s.worker.call('publicManualOperation', owner));
+    assert.equal(state.quota_wait.source,'provider_retry_after');
+    assert.equal(state.quota_wait.marketplace,'wildberries');
+    assert.equal(state.quota_wait.automatic_retry,false);
+    assert.equal(state.quota_wait.explicit_resume_required,true);
+    assert.ok(state.quota_wait.next_allowed_at>Date.now());
+    for(const key of ['family','min_interval_ms','bridge_launch_safety_ms','effective_interval_ms','scope']) assert.ok(!(key in state.quota_wait));
+    assert.equal(s.worker.network.length,1);
+    await s.popup('SA_RESUME_QUOTA',{conversation_key:started.key});
+    await new Promise(r=>setTimeout(r,30));
+    assert.equal(s.worker.network.length,1,'early explicit resume cannot skip provider deadline');
+  } finally { s.worker.close(); }
+});
 console.log(JSON.stringify({ status:'PASS', results, live_provider_calls:0, scope:'actual generated worker/popup messages and attachment port; simulated browser and provider; not installed live acceptance' },null,2));
