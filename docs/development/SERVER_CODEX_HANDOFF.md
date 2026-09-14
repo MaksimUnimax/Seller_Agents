@@ -1,8 +1,23 @@
 # Поручение серверному Codex после переноса
 
 Этот файл — подготовленное поручение, не запуск нового агента и не разрешение продолжить P8.4 в старом репозитории.
-Начать реализацию после завершённого SERVER_IMPORT_ACCEPTANCE и поручения владельца.
-Repository: MaksimUnimax/Seller_Agents. Base: актуальный main после принятого переноса. Создать короткую feature/server-beta-access ветку от него.
+S1.1 уже принят; этот файл сохраняет его исходную область как историческую запись и не выдаёт новое разрешение на серверную реализацию.
+Repository: MaksimUnimax/Seller_Agents. Историческая база S1.1 — актуальный
+`main` после принятого переноса; использованная для него ветка
+`feature/server-beta-access` уже закрыта.
+
+## Текущая authority handoff
+
+Текущим источником истины является canonical `main` на merge-коммите
+`d0b54aa5e659932d3fa2d996b572e06aadfffe62`. Post-merge authority, source
+lineage и exact-head CI S1.1 записаны в [S1.1 remote acceptance](../server/S1_1_REMOTE_ACCEPTANCE_2026-09-14.md).
+
+Ниже сохранена область уже завершённого S1.1 для трассировки требований. Она
+не является текущим поручением и не должна повторно реализовываться. Для нового
+серверного изменения требуется отдельное поручение владельца с указанным
+scope и базовым commit. Этот A8A closeout остаётся документационным и не
+открывает I1, S1.2, H3/P8.4/P8.5/P8.6, extension work, database changes или
+contract changes.
 
 ## Точка остановки источника
 
@@ -18,12 +33,12 @@ docs/architecture/CONTRACTS, DATA_AND_SECURITY и SYNC;
 docs/server/README, DEVELOPMENT_RULES, SECURITY, INTEGRATION_CONTRACT;
 docs/migration/evidence/SERVER_IMPORT_ACCEPTANCE.
 
-## Следующая ограниченная задача
+## Завершённое поручение S1.1 (историческая область)
 
 Level 1: S1 — сервер бесплатной беты.
 Level 2: S1.1 — явный бесплатный доступ BETA и атомарный набор регистраций.
 S1.1 принят в canonical `main` как `DONE / REMOTE ACCEPTED`; post-merge authority и exact-head CI записаны в [S1.1 remote acceptance](../server/S1_1_REMOTE_ACCEPTANCE_2026-09-14.md). Следующий будущий серверный участок — ранний I1 (реальная авторизация расширения); S1.2 (реальная email-доставка/preprod) этим состоянием не начинается.
-До кода составить план затронутых существующих auth/access/admin модулей и согласованных контрактов по уже принятому ТЗ; не менять продуктовую механику.
+План затронутых модулей и согласованных контрактов был частью завершённого поручения; его нельзя трактовать как новое задание.
 
 Требуемый результат:
 - accessBasis BETA без fake checkout и платного trial timer;
