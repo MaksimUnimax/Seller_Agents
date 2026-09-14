@@ -17,6 +17,7 @@ export async function makeWorker(directory, options = {}) {
   const network = [],
     messages = [],
     listeners = [],
+    connectListeners = [],
     timers = new Set();
   const backing = options.backing || { local: {}, session: {} };
   let context,
@@ -52,6 +53,7 @@ export async function makeWorker(directory, options = {}) {
         );
       },
       async set(values) {
+        await options.onStorageWrite?.(kind, values);
         Object.assign(backing[kind], structuredClone(values));
       },
       async remove(keys) {
@@ -64,6 +66,8 @@ export async function makeWorker(directory, options = {}) {
     id: tabId,
     url: identity.origin + "/c/" + identity.conversation_id,
   };
+  const tabs = new Map([[tabId, tab]]);
+  const identities = new Map([[tabId, identity]]);
   const chrome = {
     storage: {
       local: area("local"),
@@ -78,11 +82,11 @@ export async function makeWorker(directory, options = {}) {
           listeners.push(fn);
         },
       },
-      onConnect: { addListener() {} },
+      onConnect: { addListener(fn) { connectListeners.push(fn); } },
     },
     tabs: {
       async get(id) {
-        return id === tabId ? tab : null;
+        return tabs.get(id) || null;
       },
       async query() {
         return [];
@@ -96,14 +100,14 @@ export async function makeWorker(directory, options = {}) {
             const fields = {
               intent_id: message.intent_id,
               revision: message.revision,
-              identity,
+              identity: identities.get(id),
               actor_id: "fixture-actor",
               runtime_generation: "fixture-content",
             };
             const committed = await request({
               type: "OZ_WORK_START_COMMIT_REQUEST",
               ...fields,
-            });
+            }, { tab: tabs.get(id) });
             assert.equal(committed.click_allowed, true);
             const ack = await request({
               type: "OZ_WORK_START_SEND_OUTCOME",
@@ -111,7 +115,7 @@ export async function makeWorker(directory, options = {}) {
               click_event_observed: true,
               composer_empty: promptOutcome === "sent",
               assistant_baseline_ids: ["existing-assistant-turn"],
-            });
+            }, { tab: tabs.get(id) });
             assert.equal(ack.ok, true);
             callback({
               ok: true,
@@ -126,7 +130,7 @@ export async function makeWorker(directory, options = {}) {
         }
         const response =
           message.type === "OZ_GET_IDENTITY"
-            ? { ok: true, identity }
+            ? { ok: true, identity: identities.get(id) }
             : {
                 ok: true,
                 applied: true,
@@ -162,6 +166,7 @@ export async function makeWorker(directory, options = {}) {
     Headers,
     AbortController,
     Blob,
+    indexedDB: options.indexedDB,
     structuredClone,
     queueMicrotask,
     atob,
@@ -219,14 +224,15 @@ export async function makeWorker(directory, options = {}) {
     context,
     { filename: "service_worker_entry.js" },
   );
-  request = (message) =>
+  // Default sender reflects the mature popup/content ownership of each message.
+  request = (message, sender = /^OZ_(?:SAVE_|RESET_|CLEAR_|SET_|GET_SETTINGS_STATE|GET_GLOBAL_SETTINGS_STATE|GET_DIAGNOSTICS|BIND_CONVERSATION|TEST_CONNECTION|REFRESH_SELLER_API_METADATA|WORK_START$|WORK_SHOW$|WORK_HIDE$|WORK_FINISH$|WORK_REFRESH$|WORK_RESUME$)/.test(message.type) ? { url: chrome.runtime.getURL("popup.html") } : { tab }) =>
     new Promise((resolve, reject) => {
       const timeout = setTimeout(
         () => reject(new Error("Message timed out: " + message.type)),
         4000,
       );
       try {
-        listeners.at(-1)(clone(message), clone({ tab }), (response) => {
+        listeners.at(-1)(clone(message), clone(sender), (response) => {
           clearTimeout(timeout);
           resolve(response);
         });
@@ -245,6 +251,17 @@ export async function makeWorker(directory, options = {}) {
     identity,
     tabId,
     request,
+    popup: (message) => request(message, { url: chrome.runtime.getURL("popup.html") }),
+    addTab(id, conversationId) { const value = { ...identity, conversation_id: conversationId }; identities.set(id, value); tabs.set(id, { id, url: value.origin + "/c/" + conversationId }); return { identity: value, sender: { tab: tabs.get(id) } }; },
+    setDialogue(id) { identity.conversation_id = id; tab.url = identity.origin + "/c/" + id; },
+    portRequest(message) {
+      return new Promise(resolve => {
+        const handlers = [];
+        const port = { name: "ozon-attachment-delivery-v1", sender: { tab, url: tab.url }, onMessage: { addListener(fn) { handlers.push(fn); } }, postMessage: response => resolve(response.response) };
+        for (const fn of connectListeners) fn(port);
+        for (const fn of handlers) fn(clone({ ...message, request_id: "fixture-port", live_owner: identity }));
+      });
+    },
     call,
     async settings() {
       const response = await request({

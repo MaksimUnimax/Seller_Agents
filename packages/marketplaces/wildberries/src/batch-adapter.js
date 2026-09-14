@@ -52,7 +52,14 @@
           return finalize(saved, entries, context);
         },
       };
-      const scope = async (command) => A.hash(JSON.stringify(["wildberries", snapshot.accountId,
+      const ports = createPorts(context, { quota, diagnostic, workerId, provider, flights });
+      return globalThis.SellerAgentsGuardedBatchQueue.run(options, { context, ports });
+    }
+    return Object.freeze({ admit, process });
+  }
+  function createPorts(context, { quota, diagnostic, workerId, provider = A.createProvider(), flights = new Map() }) {
+    const { snapshot } = context;
+  const scope = async (command) => A.hash(JSON.stringify(["wildberries", snapshot.accountId,
         snapshot.credentialRevision, A.operation(command).host]));
       const ports = {
         normalizeKey: (key) => key, workerId, flights,
@@ -102,9 +109,7 @@
           return result;
         },
       };
-      return globalThis.SellerAgentsGuardedBatchQueue.run(options, { context, ports });
-    }
-    return Object.freeze({ admit, process });
+    return ports;
   }
-  globalThis.SellerAgentsWBBatch = Object.freeze({ create });
+  globalThis.SellerAgentsWBBatch = Object.freeze({ create, createPorts });
 })();

@@ -1,0 +1,187 @@
+[
+  {
+    "target": "service_worker.js",
+    "old": "chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {\n  (async () => {\n    switch (message?.type) {",
+    "new": "async function saLegacyMessage(message, sender) {\n    switch (message?.type) {"
+  },
+  {
+    "target": "service_worker.js",
+    "old": "  })().then(sendResponse).catch(async (error) => {",
+    "new": "}\nchrome.runtime.onMessage.addListener((message, sender, sendResponse) => {\n  saHandleMessage(message, sender).then(sendResponse).catch(async (error) => {"
+  },
+  {
+    "target": "service_worker.js",
+    "old": "    updated_at: record.updated_at || record.bound_at || null",
+    "new": "    updated_at: record.updated_at || record.bound_at || null,\n    store_context: record.store_context || null,\n    assistant_baseline_ids: record.assistant_baseline_ids || []"
+  },
+  {
+    "target": "service_worker.js",
+    "old": "    bindings[key] = record;",
+    "new": "    if (await saEnabled()) {\n      record.store_context = await saStoreForPending(tab, workStartIntentId);\n      record.assistant_baseline_ids = (await getPendingWorkStarts())[String(tab)]?.assistant_baseline_ids || [];\n    }\n    bindings[key] = record;"
+  },
+  {
+    "target": "service_worker.js",
+    "old": "    version: 2,\n    state: OzonWorkSessionModel.STATES.PENDING_IDENTITY,",
+    "new": "    version: 2,\n    store_context: saStarts.get(Number(tab)) || null,\n    state: OzonWorkSessionModel.STATES.PENDING_IDENTITY,"
+  },
+  {
+    "target": "service_worker.js",
+    "old": "async function dispatchPendingWorkStartPrompt(tab, pending, promptText) {",
+    "new": "async function dispatchPendingWorkStartPrompt(tab, pending, promptText) {\n  await saPendingGuard(pending);\n  if (pending.store_context) promptText = await saPrompt(pending.store_context);"
+  },
+  {
+    "target": "service_worker.js",
+    "old": "  const identity = normalizeIdentity(message.identity || {});\n  if (!identity.origin",
+    "new": "  await saPendingGuard(pending);\n  const identity = normalizeIdentity(message.identity || {});\n  if (!identity.origin"
+  },
+  {
+    "target": "service_worker.js",
+    "old": "async function resumeProviderQuotaWaits() {",
+    "new": "async function resumeProviderQuotaWaits() {\n  if (await saEnabled()) return;"
+  },
+  {
+    "target": "content_script.js",
+    "old": "  let manualEnabled = false;",
+    "new": "  let manualEnabled = false;\n  let saContentContext = null;\n  function saApplyContext(value) { if (value) { const changed = saContentContext?.work_session_id !== value.work_session_id; saContentContext = value; if (changed) { clearOwnButtons(); manualKnownBlocks.clear(); } } }\n  async function saCheckDelivery(recovery) {\n    if (!saContentContext) return;\n    const response = await sendRuntime(\"OZ_WORK_DELIVERY_ASSERT\", { conversation_key: recovery.conversation_key, owner_id: recovery.owner_id || recovery.operation_id, delivery_id: recovery.delivery_id });\n    if (!response?.ok || !current() || !sameConversation(recovery.origin, recovery.conversation_id)) throw Object.assign(new Error(\"Рабочая сессия или результат изменились\"), { code: response?.code || \"EXECUTION_CONTEXT_CHANGED\" });\n  }"
+  },
+  {
+    "target": "content_script.js",
+    "old": "    record.button.textContent = record.in_flight ? \"Ozon…\" : \"Ozon\";",
+    "new": "    const label = saContentContext?.marketplace === \"wildberries\" ? \"WB\" : \"Ozon\";\n    record.button.textContent = record.in_flight ? `${label}…` : label;"
+  },
+  {
+    "target": "content_script.js",
+    "old": "    const manualRequestId = crypto.randomUUID();",
+    "new": "    const manualRequestId = saContentContext ? await sha256Hex(JSON.stringify([saContentContext.work_session_id, adapter.messageId(binding.section), text])) : crypto.randomUUID();"
+  },
+  {
+    "target": "content_script.js",
+    "old": "manual_request_id: manualRequestId });",
+    "new": "manual_request_id: manualRequestId, work_session_id: saContentContext?.work_session_id });"
+  },
+  {
+    "target": "content_script.js",
+    "old": "    for (const message of adapter.assistantMessages()) {\n      for (const root",
+    "new": "    for (const message of adapter.assistantMessages()) {\n      if (saContentContext?.assistant_baseline_ids?.includes(adapter.messageId(message))) continue;\n      for (const root"
+  },
+  {
+    "target": "content_script.js",
+    "old": "      stopManualComposerWait(\"manual_mode_disabled\");\n      if (!manualEnabled",
+    "new": "      if (!saContentContext?.work_active) stopManualComposerWait(\"manual_mode_disabled\");\n      if (!manualEnabled"
+  },
+  {
+    "target": "content_script.js",
+    "old": "      if (!manualEnabled || manualConversationKey !== state.conversation_key) {",
+    "new": "      if ((!manualEnabled && !saContentContext?.work_active) || manualConversationKey !== state.conversation_key) {"
+  },
+  {
+    "target": "content_script.js",
+    "old": "    const enabled = response?.ok && response.enabled === true;",
+    "new": "    saApplyContext(response?.store_context);\n    const enabled = response?.ok && response.enabled === true && (!saContentContext || saContentContext.button_visible);"
+  },
+  {
+    "target": "content_script.js",
+    "old": "    const manualModeEnabled = response?.ok && response.manual_mode === true;",
+    "new": "    saApplyContext(response?.store_context);\n    const manualModeEnabled = response?.ok && response.manual_mode === true && (!saContentContext || saContentContext.button_visible);"
+  },
+  {
+    "target": "content_script.js",
+    "old": "    if (message?.type === \"OZ_WORK_APPLY_VISIBILITY\") {",
+    "new": "    if (message?.type === \"OZ_WORK_APPLY_VISIBILITY\") {\n      if (saContentContext) {\n        saContentContext = { ...saContentContext, button_visible: message.visible === true, work_active: message.visible === true || message.work_active === true };\n        if (!saContentContext.work_active) { stopDeliveryWatch(\"work_finished\"); stopManualComposerWait(\"work_finished\"); }\n      }"
+  },
+  {
+    "target": "content_script.js",
+    "old": "    const insertContext = primaryComposerContext();\n    if (!insertContext)",
+    "new": "    await saCheckDelivery(recovery);\n    const insertContext = primaryComposerContext();\n    if (!insertContext)"
+  },
+  {
+    "target": "content_script.js",
+    "old": "              button.click();",
+    "new": "              await saCheckDelivery(state);\n              if (state.cancelled || activeDeliveryWatch !== state) throw Object.assign(new Error(\"Delivery stopped\"), { code: \"EXECUTION_CONTEXT_CHANGED\" });\n              button.click();"
+  },
+  {
+    "target": "shared/file_delivery_port_worker.js",
+    "old": "  function getArtifact(key) { return idbRequest(\"readonly\", (store) => store.get(String(key))); }",
+    "new": "  function getArtifact(key) { return (async () => {\n    const record = await idbRequest(\"readonly\", (store) => store.get(String(key)));\n    if (record && Number(record.expires_at_ms || 0) <= nowMs()) { await deleteArtifact(key); return null; }\n    return record;\n  })(); }"
+  },
+  {
+    "target": "shared/file_delivery_port_worker.js",
+    "old": "    const storageKey = ownerMapKey(kind);\n    const data = await chrome.storage.local.get(storageKey);",
+    "new": "    if (kind === \"manual\" && typeof saEnabled === \"function\" && await saEnabled()) {\n      const owner = await getManualOperation(key);\n      if (!owner || expectedId && ownerId(owner, kind) !== expectedId) return null;\n      await saAssertDeliveryOwner(owner);\n      return owner;\n    }\n    const storageKey = ownerMapKey(kind);\n    const data = await chrome.storage.local.get(storageKey);"
+  },
+  {
+    "target": "shared/file_delivery_port_worker.js",
+    "old": "    const storageKey = ownerMapKey(kind);\n    return withStateWrite(async () => {",
+    "new": "    if (kind === \"manual\" && typeof saEnabled === \"function\" && await saEnabled()) return mutateManualOperation(key, async current => {\n      if (!current || ownerId(current, kind) !== expectedId) return current;\n      await saAssertDeliveryOwner(current);\n      const next = await mutator(current);\n      await saAssertDeliveryOwner(current);\n      return next;\n    });\n    const storageKey = ownerMapKey(kind);\n    return withStateWrite(async () => {"
+  },
+  {
+    "target": "shared/file_delivery_port_worker.js",
+    "old": "    return { key, ...found };",
+    "new": "    if (typeof saAssertDeliveryOwner === \"function\") await saAssertDeliveryOwner(found.owner);\n    return { key, ...found };"
+  },
+  {
+    "target": "shared/file_delivery_port_worker.js",
+    "old": "    const chunk = bytes.slice(offset, Math.min(bytes.byteLength, offset + requested));",
+    "new": "    if (typeof saAssertDeliveryOwner === \"function\") await saAssertDeliveryOwner(found.owner);\n    const chunk = bytes.slice(offset, Math.min(bytes.byteLength, offset + requested));"
+  },
+  {
+    "target": "shared/file_delivery_port_worker.js",
+    "old": "    const meta = delivery?.generated_text_document;",
+    "new": "    if (delivery.payload_expires_at_ms && delivery.payload_expires_at_ms <= nowMs()) throw Object.assign(new Error(\"Result expired\"), { code: \"RESULT_EXPIRED\" });\n    const meta = delivery?.generated_text_document;"
+  },
+  {
+    "target": "shared/file_delivery_port_worker.js",
+    "old": "      unicode_char_length: Number(meta.unicode_char_length || 0),\n      sha256: await sha256Hex(bytes),\n      bytes: bufferCopy(bytes),\n      created_at_ms: created,\n      expires_at_ms: created + ARTIFACT_TTL_MS",
+    "new": "      unicode_char_length: Number(meta.unicode_char_length || 0),\n      sha256: await sha256Hex(bytes),\n      bytes: bufferCopy(bytes),\n      created_at_ms: created,\n      expires_at_ms: Math.min(created + ARTIFACT_TTL_MS, delivery.payload_expires_at_ms || Infinity)"
+  },
+  {
+    "target": "shared/file_delivery_port_worker.js",
+    "old": "    cleanupExpiredArtifacts\n  });",
+    "new": "    cleanupExpiredArtifacts,\n    async storeApplicationArtifact(record) {\n      if (!/^provider:sa_file_[A-Za-z0-9-]+$/.test(record.artifact_key) || !record.bytes || record.expires_at_ms <= nowMs()) throw new Error(\"Invalid application artifact\");\n      const bytes = asBytes(record.bytes);\n      const next = { ...record, bytes: bufferCopy(bytes), filename: sanitizeFilename(record.filename, \"wb-report.bin\"), sha256: await sha256Hex(bytes), byte_length: bytes.byteLength };\n      await putArtifact(next);\n      return descriptorFromRecord(next);\n    }\n  });"
+  },
+  {
+    "target": "shared/file_delivery_port_worker.js",
+    "old": "    return `OZON_BATCH_RESULT_V1\\n${JSON.stringify({",
+    "new": "    return `${delivery.marketplace === \"wildberries\" ? \"WB_BATCH_RESULT_V1\" : \"OZON_BATCH_RESULT_V1\"}\\n${JSON.stringify({"
+  },
+  {
+    "target": "attachment_delivery_port_content.js",
+    "old": "    const { descriptors, files } = await buildFiles(committed);",
+    "new": "    const { descriptors, files } = await buildFiles(committed);\n    const stillCurrent = await request(\"OZ_ATTACHMENT_RECOVERY_GET\", { ...ownerPayload(committed) });\n    if (!stillCurrent?.ok || !stillCurrent.recovery || stillCurrent.recovery.delivery_id !== committed.delivery_id) throw Object.assign(new Error(\"Delivery context changed\"), { code: \"EXECUTION_CONTEXT_CHANGED\" });"
+  },
+  {
+    "target": "content_script.js",
+    "old": "              await saCheckDelivery(state);\n              if (state.cancelled",
+    "new": "              await saCheckDelivery(state);\n              if (saContentContext) {\n                const commit = await sendRuntime(\"OZ_WORK_SEND_COMMIT\", { conversation_key: state.conversation_key, owner_id: state.owner_id, delivery_id: state.delivery_id, actor_id: runtimeId });\n                if (!commit?.ok || commit.click_allowed !== true) { state.send_click_committed = true; throw Object.assign(new Error(\"Send already committed or stopped\"), { code: commit?.code || \"SEND_NOT_ALLOWED\" }); }\n                state.send_click_committed = true;\n              }\n              if (state.cancelled"
+  },
+  {
+    "target": "content_script.js",
+    "old": "        applyManualMode(message.enabled === true, currentKey);",
+    "new": "        applyManualMode(message.enabled === true && (!saContentContext || saContentContext.button_visible), currentKey);"
+  },
+  {
+    "target": "service_worker.js",
+    "old": "function launchBatchProcessor(ownerKind, conversationKey, ownerId, source = \"batch_launch\") {",
+    "new": "function launchBatchProcessor(ownerKind, conversationKey, ownerId, source = \"batch_launch\") {\n  if (ownerKind === \"autorun\") return { ok: false, code: \"CLIENT_AUTORUN_REMOVED\" };"
+  },
+  {
+    "target": "content_script.js",
+    "old": "  function toast(text, tone = \"info\", timeout = 5000, key = \"\") {",
+    "new": "  function toast(text, tone = \"info\", timeout = 5000, key = \"\") {\n    if (saContentContext?.marketplace === \"wildberries\") text = String(text).replace(/Ozon/g, \"WB\");"
+  },
+  {
+    "target": "attachment_delivery_port_content.js",
+    "old": "    root.textContent = String(message || \"\");",
+    "new": "    root.textContent = String(message || \"\").replace(/Ozon/g, \"Seller Agents\");"
+  },
+  {
+    "target": "service_worker.js",
+    "old": "  if (!wait || nextAllowedAt <= 0) return null;\n  return Object.freeze({",
+    "new": "  if (!wait || nextAllowedAt <= 0) return null;\n  if (owner?.execution_context?.marketplace === \"wildberries\") return Object.freeze({\n    marketplace: \"wildberries\", source: \"provider_retry_after\", next_allowed_at: nextAllowedAt,\n    automatic_retry: false, explicit_resume_required: true\n  });\n  return Object.freeze({"
+  },
+  {
+    "target": "content_script.js",
+    "old": "    if (!due) return \"\";\n    const remainingMs = Math.max(0, due - Number(now));",
+    "new": "    if (!due) return \"\";\n    if (saContentContext) {\n      const provider = saContentContext.marketplace === \"wildberries\" ? \"WB\" : \"Ozon\";\n      return Number(now) >= due\n        ? `Ожидание ${provider} завершено. Продолжите пакет в расширении.`\n        : `Ожидание ${provider} до ${formatLocalClock(due)}. Пакет сохранён. Затем продолжите его в расширении.`;\n    }\n    const remainingMs = Math.max(0, due - Number(now));"
+  }
+]

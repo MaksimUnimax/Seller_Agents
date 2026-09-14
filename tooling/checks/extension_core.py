@@ -29,7 +29,7 @@ def main():
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
     runner = original.Runner(output)
-    result = {"stage": "D2.3", "status": "RUNNING", "os": platform.system(),
+    result = {"stage": "D2.4", "status": "RUNNING", "os": platform.system(),
               "python": platform.python_version(), "node": subprocess.check_output(["node", "--version"], text=True).strip(),
               "live_provider_calls": 0, "installed_acceptance": False}
     try:
@@ -39,11 +39,12 @@ def main():
         work = output / "work"
         work.mkdir()
         for runtime, label, source_route in [(source, "core-source", True), (extracted, "core-package", False)]:
-            original.ozon_route(runner, work, runtime, label, source_route, expected_version="0.2.2")
+            original.ozon_route(runner, work, runtime, label, source_route, expected_version="0.2.3")
             runner.run(label + "-contracts", ["node", ROOT / "tests/regression/extension-core/core-contracts.mjs", runtime])
             runner.run(label + "-worker", ["node", ROOT / "tests/regression/extension-core/worker-lifecycle.mjs", runtime])
             runner.run(label + "-context", ["node", ROOT / "tests/regression/extension-core/batch-context.mjs", runtime])
             runner.run(label + "-wb-adapter", ["node", ROOT / "tests/regression/extension-core/wb-adapter.mjs", runtime])
+            runner.run(label + "-application", ["node", ROOT / "tests/regression/extension-core/application.mjs", runtime])
             repo = work / label
             validation = repo / composed.baseline.OZON_REL / "validation"
             runner.run(label + "-transaction-abort", ["node", validation / "indexeddb-transaction-durability-v1/run_prefix_transaction_abort_gate.mjs", repo])

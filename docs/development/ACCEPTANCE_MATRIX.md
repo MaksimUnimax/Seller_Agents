@@ -40,3 +40,19 @@ Requirement IDs соответствуют [SPEC](../product/SPEC.md). При р
 
 Матрица не является исполняемым тестом. Нельзя выдавать наличие строк A01–A32 за 32 пройденных сценария.
 Installed acceptance записывается отдельно по браузерам/ИИ и по точному пакету. R1–R8 WB открываются отдельным решением после положенного gate.
+
+
+## D2.4 — ограниченные доказательства implementation
+
+Development 0.2.3, code candidate `96af54f1d67c20f6eca2ade552fde20948f1e66d`; [квитанция](../migration/evidence/extension-application-d2-4-2026-09-14/README.md). Это сопоставление фактически проверенных частей требованиям, а не перевод целых A01–A32 в installed PASS. Итог remote CI указан в квитанции; source/ZIP/native результаты не заменяют I1/Q1.
+
+| Целевые сценарии | Проверенная часть D2.4 | Оставшаяся граница |
+|---|---|---|
+| A01, A03, A05, A32 | APP-01/03/05: постоянные IDs, переименование, два WB магазина/две вкладки и Ozon, pinned credentials, подтверждение смены, поздний ответ после замены/удаления | Настоящий аккаунт Seller Agents, полный cross-provider installed сценарий |
+| A02 | Seller-only Ozon в APP-03; отдельные поля/проверки Seller и Performance, безопасные коды проверки | Live права/expiry/provider account identity не подтверждались |
+| A04, A07, A08 | APP-02 и native fixture: настоящий Start/prompt, baseline старой истории, один WB HELP/API блок, полная текстовая доставка; D2.3 adapter policy gates сохранены | Новый/fork/account/surface каждого реального ИИ, live API |
+| A06 | APP-04/05 и прежние context gates: Hide сохраняет хвост, Finish/смена закрывают контекст и позднюю доставку | Полная установленная временная матрица Finish |
+| A10, A11 | APP-06/07/09: expiry/readback/local-ref scope; исходный IDB abort gate; native PDF через IDB/chunks/File/attachment/Send с точными байтами | Все форматы/размеры на реальном ИИ, длительный sleep/restart и очистка после wake |
+| A12, A25 | Durable text Send commit/no retry и no replay по Work/message/block; native повтор кнопки не делает второй запрос; зрелые Ozon recovery gates сохранены | Полная установленная recovery/UNKNOWN матрица и разные composer/upload UI |
+| A17, A21, A31 | Shared queue/context/observed quota: APP-10 доказывает 429 → удержание хвоста и невозможность раннего resume; обычные application тесты не делают control API calls | Межбраузерное согласование/наблюдение и реальная работа signed offline access |
+| A13–A16, A18–A20, A22–A24, A26–A30 | Не принимаются D2.4; account port из APP-08 не является авторизацией | I1, D3/S2, Q1 и серверная параллель |

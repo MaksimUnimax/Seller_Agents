@@ -1,3 +1,3 @@
 async function getManualOperation(conversationKey) {
-  return manualOperationRecords.get(normalizeConversationKey(conversationKey));
+  return saPrunePayload(await manualOperationRecords.get(normalizeConversationKey(conversationKey)));
 }

@@ -19,6 +19,7 @@ function rememberManualContextOwners(records) {
 }
 /* D2.2 standalone Ozon carrier. Service account/store catalog is connected in later D2/I1 steps. */
 async function readBatchContextState(key, immutable, ownerIdentity = null) {
+  if (await saEnabled()) return saReadContext(key, immutable, ownerIdentity);
   const data = await storageGet([
     KEYS.SELLER_CLIENT_ID,
     KEYS.SELLER_API_KEY,
@@ -98,6 +99,7 @@ async function captureBatchContext(key, text, requestId) {
   return SellerAgentsExecutionContext.snapshot(state);
 }
 async function createBatchExecutionGuard(owner) {
+  if (await saEnabled()) return saGuard(owner);
   if (owner && !manualContextOwners.has(owner.conversation_key))
     manualContextOwners.set(
       owner.conversation_key,
@@ -156,6 +158,7 @@ async function runComposedBatchQueue(options) {
   try {
     if (options.ownerKind === "manual")
       context = await createBatchExecutionGuard(await options.getOwner());
+    if (context?.snapshot.marketplace === "wildberries") return SellerAgentsGuardedBatchQueue.run(options, { context, ports: SellerAgentsWBBatch.createPorts(context, { quota: saQuota, diagnostic, workerId: WORKER_SESSION_ID, flights: batchCollectionRequests }) });
     const ports = {
       normalizeKey: normalizeConversationKey,
       singleFlight,

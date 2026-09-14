@@ -1,0 +1,83 @@
+{
+  "candidate": "96af54f1d67c20f6eca2ade552fde20948f1e66d",
+  "run_id": 34846554237,
+  "job_id": 103983896491,
+  "artifact_id": 10348194008,
+  "routes": {
+    "source": {
+      "status": "PASS",
+      "live_provider_calls": 0,
+      "installed_acceptance": false,
+      "scope": "native Chromium fixture; popup active-tab port controlled; synthetic AI/fetch",
+      "browser": "151.0.7922.34",
+      "checks": [
+        "popup create/edit",
+        "real Work prompt",
+        "old-history baseline",
+        "WB mixed block text send",
+        "no replay",
+        "Show/Hide",
+        "native binary File/IDB/port send",
+        "Finish",
+        "320/380px and enlarged typography"
+      ]
+    },
+    "extracted": {
+      "status": "PASS",
+      "live_provider_calls": 0,
+      "installed_acceptance": false,
+      "scope": "native Chromium fixture; popup active-tab port controlled; synthetic AI/fetch",
+      "browser": "151.0.7922.34",
+      "checks": [
+        "popup create/edit",
+        "real Work prompt",
+        "old-history baseline",
+        "WB mixed block text send",
+        "no replay",
+        "Show/Hide",
+        "native binary File/IDB/port send",
+        "Finish",
+        "320/380px and enlarged typography"
+      ]
+    }
+  },
+  "screenshots": [
+    {
+      "path": "extracted/popup-320-1.png",
+      "bytes": 61494,
+      "sha256": "c45c40b89a1486e2283b984e36506cf41732ff48ccc5ef222199fb0135e26442",
+      "visual_review": "PASS: readable, no overlap or horizontal clipping; WB edit card, finished session, blank secret field"
+    },
+    {
+      "path": "extracted/popup-380-1.25.png",
+      "bytes": 66952,
+      "sha256": "a79eafa7e7d7737812419fc7cfef22faa6d452d8a85a5420f8a5d9d113c55956",
+      "visual_review": "PASS: readable, no overlap or horizontal clipping; WB edit card, finished session, blank secret field"
+    },
+    {
+      "path": "extracted/popup-380-1.png",
+      "bytes": 61576,
+      "sha256": "255b753a11bcabe8b678725e8f29b416da449062bfcd2f3a6df3568e056897d7",
+      "visual_review": "PASS: readable, no overlap or horizontal clipping; WB edit card, finished session, blank secret field"
+    },
+    {
+      "path": "source/popup-320-1.png",
+      "bytes": 61494,
+      "sha256": "c45c40b89a1486e2283b984e36506cf41732ff48ccc5ef222199fb0135e26442",
+      "visual_review": "PASS: readable, no overlap or horizontal clipping; WB edit card, finished session, blank secret field"
+    },
+    {
+      "path": "source/popup-380-1.25.png",
+      "bytes": 66952,
+      "sha256": "a79eafa7e7d7737812419fc7cfef22faa6d452d8a85a5420f8a5d9d113c55956",
+      "visual_review": "PASS: readable, no overlap or horizontal clipping; WB edit card, finished session, blank secret field"
+    },
+    {
+      "path": "source/popup-380-1.png",
+      "bytes": 61576,
+      "sha256": "255b753a11bcabe8b678725e8f29b416da449062bfcd2f3a6df3568e056897d7",
+      "visual_review": "PASS: readable, no overlap or horizontal clipping; WB edit card, finished session, blank secret field"
+    }
+  ],
+  "limits": "Synthetic chat/provider; popup opened as extension tab with controlled active-tab query. Actual worker/content/IDB/chunk/File and browser MessageSender. Not live AI, toolbar-popup or target-browser certification."
+}
