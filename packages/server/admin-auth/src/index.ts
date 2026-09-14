@@ -85,6 +85,7 @@ const rolePermissions: Record<AdminRole, readonly AdminPermission[]> = {
     "ai.registry.read",
     "ai.profile.read",
     "ai.assignment.read",
+    "beta.admission.read",
   ],
   ADMIN_BILLING_READONLY: [
     "account.read",

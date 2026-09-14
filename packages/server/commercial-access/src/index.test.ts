@@ -440,6 +440,32 @@ describe("P5.6 portal-safe service", () => {
       true,
     );
   });
+  it("keeps commercial subscription data but applies BETA unlimited device policy", async () => {
+    const result = await new CommercialPortalService(
+      {
+        isOwner: async () => true,
+        readSubscription: async () => portalSubscription,
+        countActiveDevices: async () => 100,
+        listPayments: async () => ({ kind: "OK", payments: [] }),
+      },
+      serviceFor(eligible(), [
+        resolution("device.max_active", { kind: "INTEGER", value: 3 }),
+      ]),
+      () => at,
+      { resolve: async () => ({ kind: "BETA" as const }) },
+    ).readSubscription("user", accountId);
+    expect(result.kind).toBe("OK");
+    if (result.kind === "OK") {
+      expect(result.value.accessBasis).toBe("BETA");
+      expect(result.value.subscription).toBe(portalSubscription);
+      expect(result.value.deviceAllowance).toEqual({
+        maxActive: null,
+        activeCount: 100,
+        remaining: null,
+        overLimit: false,
+      });
+    }
+  });
 });
 
 describe("P5.6 boundary matrix", () => {

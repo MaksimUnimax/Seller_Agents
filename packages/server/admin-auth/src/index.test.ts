@@ -136,6 +136,11 @@ describe("P6.1 admin crypto and RBAC foundation", () => {
   it("maps owner to every current P6 permission", () => {
     expect(permissionsForRole("ADMIN_OWNER")).toEqual(ADMIN_PERMISSIONS);
   });
+  it("gives owner both beta admission permissions", () => {
+    expect(permissionsForRole("ADMIN_OWNER")).toEqual(
+      expect.arrayContaining(["beta.admission.read", "beta.admission.manage"]),
+    );
+  });
   it("maps ops to subscription operations and device revoke", () => {
     const permissions = permissionsForRole("ADMIN_OPS");
     expect(permissions).toContain("subscription.grant");
@@ -199,6 +204,11 @@ describe("P6.1 admin crypto and RBAC foundation", () => {
   it("allows support device revoke", () => {
     expect(permissionsForRole("ADMIN_SUPPORT")).toContain("device.revoke");
   });
+  it("gives support beta read without beta management", () => {
+    const permissions = permissionsForRole("ADMIN_SUPPORT");
+    expect(permissions).toContain("beta.admission.read");
+    expect(permissions).not.toContain("beta.admission.manage");
+  });
   it("denies support subscription grant", () => {
     expect(permissionsForRole("ADMIN_SUPPORT")).not.toContain(
       "subscription.grant",
@@ -224,6 +234,18 @@ describe("P6.1 admin crypto and RBAC foundation", () => {
           p.includes("revoke"),
       ),
     ).toBe(false);
+  });
+  it("keeps beta management exclusive to owner and beta operator", () => {
+    expect(permissionsForRole("ADMIN_BETA_OPERATOR")).toEqual([
+      "beta.admission.read",
+      "beta.admission.manage",
+    ]);
+    expect(permissionsForRole("ADMIN_OPS")).not.toContain(
+      "beta.admission.manage",
+    );
+    expect(permissionsForRole("ADMIN_BILLING_READONLY")).not.toContain(
+      "beta.admission.manage",
+    );
   });
   it("fails closed for an unknown role", () => {
     expect(permissionsForRole("ADMIN_UNKNOWN")).toEqual([]);

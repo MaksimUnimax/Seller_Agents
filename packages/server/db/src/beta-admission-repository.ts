@@ -79,8 +79,9 @@ export function createBetaAdmissionRepository(
           new_capacity: number | string;
           new_admitted: number | string;
           new_revision: number | string;
+          new_updated_at: Date | string;
         }>(
-          `SELECT payload_hash,new_mode,new_capacity,new_admitted,new_revision FROM beta_admission_mutations WHERE request_id_hash=$1`,
+          `SELECT payload_hash,new_mode,new_capacity,new_admitted,new_revision,new_updated_at FROM beta_admission_mutations WHERE request_id_hash=$1`,
           [input.requestIdHash],
         );
         if (prior.rows[0]) {
@@ -99,7 +100,7 @@ export function createBetaAdmissionRepository(
                   Number(prior.rows[0].new_admitted),
               ),
               revision: Number(prior.rows[0].new_revision),
-              updatedAt: current.updatedAt,
+              updatedAt: new Date(prior.rows[0].new_updated_at),
             },
           };
         }
@@ -131,12 +132,12 @@ export function createBetaAdmissionRepository(
           revision: number | string;
           updated_at: Date | string;
         }>(
-          `UPDATE beta_admission_state SET mode=$2,capacity=$3,revision=$4,updated_at=$5 WHERE id=1 RETURNING mode,capacity,admitted,revision,updated_at`,
+          `UPDATE beta_admission_state SET mode=$2,capacity=$3,revision=$4,updated_at=$5 WHERE id=$1 RETURNING mode,capacity,admitted,revision,updated_at`,
           [stateId, newMode, newCapacity, nextRevision, now],
         );
         const next = state(updated.rows[0]!);
         await tx.query(
-          `INSERT INTO beta_admission_mutations(request_id_hash,payload_hash,actor_principal_id,action,old_mode,old_capacity,old_admitted,old_revision,new_mode,new_capacity,new_admitted,new_revision) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
+          `INSERT INTO beta_admission_mutations(request_id_hash,payload_hash,actor_principal_id,action,old_mode,old_capacity,old_admitted,old_revision,new_mode,new_capacity,new_admitted,new_revision,new_updated_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
           [
             input.requestIdHash,
             input.payloadHash,
@@ -150,6 +151,7 @@ export function createBetaAdmissionRepository(
             next.capacity,
             next.admitted,
             next.revision,
+            next.updatedAt,
           ],
         );
         await tx.query(

@@ -126,6 +126,7 @@ export const betaAdmissionMutations = pgTable(
     newCapacity: integer("new_capacity").notNull(),
     newAdmitted: integer("new_admitted").notNull(),
     newRevision: integer("new_revision").notNull(),
+    newUpdatedAt: timestamp("new_updated_at", { withTimezone: true }).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),

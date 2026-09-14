@@ -108,7 +108,7 @@ export class BootstrapService {
     const issuedAt = now.toISOString();
     let expiresAt = new Date(now.getTime() + 15 * 60_000);
     let offlineGraceUntil = new Date(expiresAt.getTime() + 24 * 60 * 60_000);
-    if (commercialEligible) {
+    if (accessBasis === "COMMERCIAL") {
       const deadline = commercial!.value.accessUntil!;
       offlineGraceUntil = new Date(
         Math.min(offlineGraceUntil.getTime(), deadline.getTime()),

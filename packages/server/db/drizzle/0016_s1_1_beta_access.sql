@@ -62,6 +62,7 @@ CREATE TABLE "beta_admission_mutations" (
   "new_capacity" integer NOT NULL,
   "new_admitted" integer NOT NULL,
   "new_revision" integer NOT NULL,
+  "new_updated_at" timestamp with time zone NOT NULL,
   "created_at" timestamp with time zone NOT NULL DEFAULT now(),
   CONSTRAINT "beta_admission_mutations_request_unique" UNIQUE ("request_id_hash"),
   CONSTRAINT "beta_admission_mutations_actor_fk" FOREIGN KEY ("actor_principal_id") REFERENCES "admin_principals"("id") ON DELETE RESTRICT ON UPDATE RESTRICT,
