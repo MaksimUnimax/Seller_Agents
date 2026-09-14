@@ -8,7 +8,7 @@
 
 ## Объём текущего этапа
 
-D2.2 открыт новым поручением владельца «Делай» после отчёта D2.1: общая очередь и закреплённый контекст ручного пакета, guard до provider dispatch и доставки, source/ZIP/remote приёмка. Сервер, wire contracts, WB reference и live calls не менять. Полный WB adapter и каталог магазинов не объявлять реализованными этим шагом. Текущая квитанция: docs/migration/evidence/extension-context-d2-2-2026-09-14/README.md.
+D2.2 принят по source/package/remote CI/readback; этап был открыт новым поручением владельца «Делай» после отчёта D2.1: общая очередь и закреплённый контекст ручного пакета, guard до provider dispatch и доставки, source/ZIP/remote приёмка. Сервер, wire contracts, WB reference и live calls не менять. Полный WB adapter и каталог магазинов не объявлять реализованными этим шагом. Текущая квитанция: docs/migration/evidence/extension-context-d2-2-2026-09-14/README.md.
 
 D2 открыт новым поручением владельца «Делай» после приёмки D1.E1. D2.1 принят по source/package/remote CI и readback; квитанция: docs/migration/evidence/extension-core-d2-1-2026-09-14/README.md. Объём выполненного первого шага D2.1: выделить общие Work/discovery/execution/delivery-модули из закреплённого Ozon, подключить их в реальную development-сборку, сохранить provider policy через порты и исходные регрессии, выполнить проверки исходников/ZIP и опубликовать результат. D2.1 не объявляет весь D2 завершённым. WB reference, сервер и wire contracts не менять; WB R1–R8, live-provider вызовы, deploy и browser-store release не выполнять. Следующие реализации продолжаются по общей последовательности D2.
 

@@ -1,7 +1,7 @@
 # Общий roadmap
 
 Статусы относятся к Seller_Agents, а не автоматически к исходным проектам.
-D0 и D1 COMPLETED. D1.S1 (сервер), D1.E0 (карта расширений), D1.E1 (исходники/тесты/пакеты) приняты. D2 IN_PROGRESS, D2.1 ACCEPTED, D2.2 CANDIDATE; перенос не означает готовность единого продукта.
+D0 и D1 COMPLETED. D1.S1 (сервер), D1.E0 (карта расширений), D1.E1 (исходники/тесты/пакеты) приняты. D2 IN_PROGRESS, D2.1 ACCEPTED, D2.2 ACCEPTED; перенос не означает готовность единого продукта.
 
 | Этап | Работа | Критерий завершения |
 |---|---|---|
@@ -27,7 +27,7 @@ D0 и D1 COMPLETED. D1.S1 (сервер), D1.E0 (карта расширений
 
 ## D2 — внутренняя последовательность
 
-D2.2: очередь вынесена в bridge-core, контекст пакета защищает dispatch и delivery. [Приёмка](migration/evidence/extension-context-d2-2-2026-09-14/README.md) ожидает remote CI/readback. Настоящий каталог и WB adapter впереди.
+D2.2: очередь вынесена в bridge-core, контекст пакета защищает dispatch и delivery. [Приёмка](migration/evidence/extension-context-d2-2-2026-09-14/README.md) завершена: source/package/remote CI/readback PASS. Настоящий каталог и WB adapter впереди.
 
 Первый шаг D2.1: общие Work/discovery/execution/delivery-модули подключены в development-сборку Ozon 0.2.0. [Описание](development/EXTENSION_CORE.md), [приёмка](migration/evidence/extension-core-d2-1-2026-09-14/README.md): source/package/remote CI/readback PASS. Это начало последовательности ниже, а не готовое единое расширение.
 

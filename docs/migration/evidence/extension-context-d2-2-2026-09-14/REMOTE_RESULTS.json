@@ -1,0 +1,64 @@
+{
+  "commit": "6f3a356d0e5b7543f9f265d170c7dc333bf72801",
+  "run_id": 34835820799,
+  "core_job_id": 103949281924,
+  "artifact": {
+    "id": 10342954914,
+    "name": "extension-core-6f3a356d0e5b7543f9f265d170c7dc333bf72801",
+    "bytes": 1976354,
+    "digest": "sha256:feb4453dd4bd8d54892b3562ae347e9d7d554cd1d82c8ddf8c18eb9db6a93d21"
+  },
+  "outer_archive_hash": "MATCH",
+  "inner_package": {
+    "name": "SELLER_AGENTS_D2_2_v0.2.1_DEVELOPMENT.zip",
+    "bytes": 1561316,
+    "sha256": "2edb38989ced75ff028df0d17ae69ffc5d345490868276370490062bb4e8d26d",
+    "repeat_archive_match": true,
+    "source_extracted_bytes_match": true
+  },
+  "runtime_files": "36/36 MATCH",
+  "local_remote_receipts": "IDENTICAL",
+  "production_inputs": "67/67 MATCH TO FETCHED GIT",
+  "core_status": "PASS",
+  "gate_processes": 101,
+  "context_scenarios": 12,
+  "live_provider_calls": 0,
+  "installed_acceptance": false,
+  "full_ci": {
+    "id": 34835820799,
+    "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34835820799",
+    "head_sha": "6f3a356d0e5b7543f9f265d170c7dc333bf72801",
+    "status": "completed",
+    "conclusion": "success",
+    "started_at": "2026-09-14T10:58:35Z",
+    "updated_at": "2026-09-14T11:10:21Z",
+    "jobs": [
+      {
+        "id": 103949281789,
+        "name": "Baseline / ozon",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 103949281916,
+        "name": "Baseline / wb-nodes",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 103949281924,
+        "name": "Common core / source and package",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 103949282100,
+        "name": "Baseline / wb-browsers",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "stage_acceptance": "D2_2_ACCEPTED",
+  "overall_D2": "IN_PROGRESS"
+}

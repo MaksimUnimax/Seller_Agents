@@ -63,3 +63,10 @@
 - Общая очередь, безопасный snapshot и guard на асинхронных границах, до fetch и delivery; блокировка legacy pending API без context.
 - Сохранены Ozon policy/cache/quota/delivery wrappers; Performance bearer ограничен теми же credentials.
 - Добавлены 12 behavioral context-сценариев; пакет development 0.2.1. Remote acceptance pending.
+
+## 2026-09-14 — D2.2 accepted
+
+- Полный Extension CI 34835820799 на 6f3a356d завершён SUCCESS.
+- Exact source/ZIP route: 101 процесс PASS; 12 новых context-сценариев; старые behavioral assertions сохранены.
+- Artifact независимо скачан: 36 runtime files и 67 source inputs MATCH. 39 изменённых Git-файлов сверены.
+- D2.2 принят. WB adapter, каталог магазинов, popup, часовой TTL, auth/I1 и installed приёмка остаются открытыми.

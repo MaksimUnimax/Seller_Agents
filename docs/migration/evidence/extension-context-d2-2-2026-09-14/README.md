@@ -1,6 +1,6 @@
 # D2.2 — общая очередь и контекст пакета
 
-Дата: 2026-09-14. Статус: **CANDIDATE / REMOTE ACCEPTANCE PENDING**.
+Дата: 2026-09-14. Статус: **ACCEPTED — SOURCE / PACKAGE / REMOTE CI / READBACK PASS**.
 Base Seller_Agents: `56812e282dfb7ee48a6682277c68fd74ca716a60`. Основание: новое поручение владельца «Делай» после D2.1.
 
 ## Подтверждённая проблема
@@ -21,7 +21,9 @@ Development package 0.2.1 по-прежнему работает через од
 
 Локальный финальный маршрут: **PASS, 101 процесс**. Пакет `SELLER_AGENTS_D2_2_v0.2.1_DEVELOPMENT.zip`, 1561316 bytes, SHA-256 `2edb38989ced75ff028df0d17ae69ffc5d345490868276370490062bb4e8d26d`. Все 67 production inputs перечислены в receipt. Повтор сборки и source/extracted bytes MATCH. Проверка guard не читает сохранённые отчёты.
 
-Remote CI, независимое скачивание artifact и readback ещё ожидаются. Только после них D2.2 может быть принят. Общий D2 остаётся IN_PROGRESS.
+[Extension CI](https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34835820799) завершён SUCCESS на `6f3a356d0e5b7543f9f265d170c7dc333bf72801`, tree `e3071f87170ea14ae5069148e68541c251386cca`: Common core и все три baseline jobs. Скачанный CI artifact независимо проверен: внешний hash, внутренний package и 36 файлов совпали; состав 67 inputs идентичен локальному receipt.
+
+[REMOTE_RESULTS](REMOTE_RESULTS.json) содержит CI/job/artifact и hashes; [REMOTE_READBACK](REMOTE_READBACK.json) — сверку всех 39 изменённых Git-файлов и 67 production inputs. Завершающий commit меняет только документацию/evidence относительно проверенного кода. D2.2 принят, общий D2 остаётся IN_PROGRESS. Следующий шаг — WB marketplace adapter к общей очереди и прикладная модель магазинов по [плану](../../../development/EXTENSION_CORE.md). CI archives имеют ограниченный срок хранения; исходники, команды и hashes остаются в Git.
 
 ## Границы
 
