@@ -115,22 +115,29 @@ export function createDeviceManagementRepository(
           return { kind: "invalid-limit" as const };
         }
         if ("kind" in limit) {
-          if (limit.kind === "INELIGIBLE")
-            return { kind: "subscription-required" as const };
-          if (limit.kind === "ACCOUNT_NOT_FOUND")
-            return { kind: "closed" as const };
-          return { kind: "invalid-limit" as const };
+          if (limit.kind === "BETA_UNLIMITED_FOR_COMMERCIAL_COUNT") {
+            // Beta installations remain persisted and revocable, but are not
+            // subject to the commercial max_active entitlement.
+          } else {
+            if (limit.kind === "INELIGIBLE")
+              return { kind: "subscription-required" as const };
+            if (limit.kind === "ACCOUNT_NOT_FOUND")
+              return { kind: "closed" as const };
+            return { kind: "invalid-limit" as const };
+          }
         }
-        const count = await tx.query<{ count: string }>(
-          `SELECT count(*) count FROM devices WHERE account_id=$1 AND status='ACTIVE'`,
-          [a.approved_account_id],
-        );
-        if (Number(count.rows[0]?.count) >= limit.maxActive) {
-          await tx.query(
-            `INSERT INTO audit_events(actor_type,action,target_type,target_id,correlation_id) VALUES('SYSTEM','DEVICE_ACTIVATION_LIMIT_REACHED','DEVICE_AUTHORIZATION',$1,$2)`,
-            [a.id, input.correlationId],
+        if (!("kind" in limit)) {
+          const count = await tx.query<{ count: string }>(
+            `SELECT count(*) count FROM devices WHERE account_id=$1 AND status='ACTIVE'`,
+            [a.approved_account_id],
           );
-          return { kind: "limit" as const };
+          if (Number(count.rows[0]?.count) >= limit.maxActive) {
+            await tx.query(
+              `INSERT INTO audit_events(actor_type,action,target_type,target_id,correlation_id) VALUES('SYSTEM','DEVICE_ACTIVATION_LIMIT_REACHED','DEVICE_AUTHORIZATION',$1,$2)`,
+              [a.id, input.correlationId],
+            );
+            return { kind: "limit" as const };
+          }
         }
         const deviceId = randomUUID(),
           sessionId = randomUUID();

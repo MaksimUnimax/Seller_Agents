@@ -21,6 +21,8 @@ export const ApiErrorCodeV1Schema = z.enum([
   "AUTH_LOGIN_DENIED",
   "AUTH_SESSION_INVALID",
   "AUTH_CSRF_INVALID",
+  "BETA_CLOSED",
+  "BETA_CAPACITY_REACHED",
   "AUTH_REFRESH_INVALID",
   "DEVICE_AUTH_RATE_LIMITED",
   "DEVICE_AUTH_INVALID",
@@ -86,6 +88,7 @@ export const AdminMeResponseV1Schema = z
         "ADMIN_OPS",
         "ADMIN_SUPPORT",
         "ADMIN_BILLING_READONLY",
+        "ADMIN_BETA_OPERATOR",
       ]),
     ),
     permissions: z.array(z.string().regex(/^[a-z][a-z0-9]*(?:\.[a-z0-9]+)+$/)),
@@ -199,6 +202,74 @@ export const OtpVerifyResponseV1Schema = z.object({
   status: z.literal("authenticated"),
   expiresAt: z.string().datetime(),
 });
+const BetaActionV1Schema = z.enum([
+  "OPEN",
+  "PAUSE",
+  "CLOSE",
+  "ADD_CAPACITY",
+  "SET_CAPACITY",
+]);
+export const BetaAdmissionMutationBodyV1Schema = z
+  .object({
+    requestId: z
+      .string()
+      .min(16)
+      .max(128)
+      .regex(/^[A-Za-z0-9._:-]+$/),
+    expectedRevision: z.number().int().positive().safe(),
+    action: BetaActionV1Schema,
+    amount: z.number().int().positive().safe().optional(),
+    capacity: z.number().int().nonnegative().safe().optional(),
+    reason: z
+      .string()
+      .min(1)
+      .max(256)
+      .refine((value) =>
+        [...value].every((character) => {
+          const code = character.charCodeAt(0);
+          return code > 0x1f && code !== 0x7f;
+        }),
+      )
+      .transform((value) => value.trim())
+      .pipe(z.string().min(1).max(256)),
+  })
+  .strict()
+  .superRefine((value, context) => {
+    if (value.action === "ADD_CAPACITY" && value.amount === undefined)
+      context.addIssue({
+        code: "custom",
+        path: ["amount"],
+        message: "amount is required",
+      });
+    if (value.action === "SET_CAPACITY" && value.capacity === undefined)
+      context.addIssue({
+        code: "custom",
+        path: ["capacity"],
+        message: "capacity is required",
+      });
+    if (value.action !== "ADD_CAPACITY" && value.amount !== undefined)
+      context.addIssue({
+        code: "custom",
+        path: ["amount"],
+        message: "amount is not allowed",
+      });
+    if (value.action !== "SET_CAPACITY" && value.capacity !== undefined)
+      context.addIssue({
+        code: "custom",
+        path: ["capacity"],
+        message: "capacity is not allowed",
+      });
+  });
+export const BetaAdmissionResponseV1Schema = z
+  .object({
+    mode: z.enum(["CLOSED", "OPEN", "PAUSED"]),
+    capacity: z.number().int().nonnegative().safe(),
+    admitted: z.number().int().nonnegative().safe(),
+    remaining: z.number().int().nonnegative().safe(),
+    revision: z.number().int().positive().safe(),
+    updatedAt: z.string().datetime({ offset: true }),
+  })
+  .strict();
 export const RefreshRequestBodyV1Schema = z
   .object({ refreshToken: z.string().regex(/^[A-Za-z0-9_-]{43}$/) })
   .strict();
@@ -340,6 +411,8 @@ export const DeviceRevokeResponseV1Schema = z.object({
 });
 
 /** P5.6 read-only commercial portal contracts. */
+export const AccessBasisV1Schema = z.enum(["BETA", "COMMERCIAL", "NONE"]);
+export type AccessBasisV1 = z.infer<typeof AccessBasisV1Schema>;
 export const SubscriptionAccessReasonV1Schema = z.enum([
   "ACCOUNT_SUSPENDED",
   "NO_CURRENT_SUBSCRIPTION",
@@ -357,6 +430,7 @@ export const SubscriptionQueryV1Schema = z
 export const SubscriptionResponseV1Schema = z
   .object({
     accountId: z.uuid(),
+    accessBasis: AccessBasisV1Schema.optional(),
     access: z
       .object({
         status: z.enum(["ELIGIBLE", "INELIGIBLE"]),
@@ -593,6 +667,7 @@ export const BootstrapSnapshotPayloadV1Schema = z
     offlineGraceUntil: IsoTimestampV1Schema,
     serverTime: IsoTimestampV1Schema,
     account: z.object({ status: z.literal("ACTIVE") }).strict(),
+    accessBasis: AccessBasisV1Schema.optional(),
     subscription: SubscriptionV1Schema,
     // The pre-P4 device limit is an internal device-management rule.  It is
     // deliberately not part of the frozen bootstrap snapshot wire format.
@@ -827,6 +902,7 @@ export const AdminDevicesResponseV1Schema = AdminPage(AdminDeviceItemV1Schema);
 export const AdminSubscriptionResponseV1Schema = z
   .object({
     accountId: AdminUuid,
+    accessBasis: AccessBasisV1Schema.optional(),
     access: z
       .object({
         status: z.enum(["ELIGIBLE", "INELIGIBLE"]),

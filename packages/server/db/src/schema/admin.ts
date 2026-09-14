@@ -22,6 +22,7 @@ export const adminRole = pgEnum("admin_role", [
   "ADMIN_OPS",
   "ADMIN_SUPPORT",
   "ADMIN_BILLING_READONLY",
+  "ADMIN_BETA_OPERATOR",
 ]);
 
 export const adminPrincipals = pgTable(

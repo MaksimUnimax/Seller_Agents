@@ -41,6 +41,7 @@ describe("OpenAPI foundation", () => {
         "/v1/admin/accounts/{account_id}/subscription/{subscription_id}/restore",
         "/v1/admin/accounts/{account_id}/subscription/{subscription_id}/suspend",
         "/v1/admin/audit-events",
+        "/v1/admin/beta/admission",
         "/v1/admin/commercial/entitlements/definitions",
         "/v1/admin/commercial/entitlements/definitions/{entitlement_key}/deprecate",
         "/v1/admin/commercial/entitlements/definitions/{entitlement_key}/description",

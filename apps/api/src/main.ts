@@ -24,6 +24,7 @@ import {
   createP7AdminAiCommandRepository,
   createProfileLifecycleRepository,
   authorizeAdminMutationInTransaction,
+  createBetaAdmissionRepository,
 } from "@product/db";
 import { AuthService, deriveAuthKeys, loadAuthRootSecret } from "@product/auth";
 import { AdminAuthService, deriveAdminAuthKeys } from "@product/admin-auth";
@@ -31,6 +32,7 @@ import { AdminOpsService } from "@product/admin-ops";
 import { AdminBillingService } from "@product/admin-billing";
 import { createAdminCommercialService } from "@product/admin-commercial";
 import { AdminAiService } from "@product/admin-ai";
+import { BetaAdmissionService } from "@product/beta-access";
 import {
   DeviceAuthorizationService,
   deriveDeviceAuthKeys,
@@ -64,6 +66,9 @@ const database = createDatabaseRuntime(config.databaseUrl);
 const subscriptions = createP5SubscriptionRepository(database);
 const subscriptionAccess = createP5SubscriptionAccessResolver(subscriptions);
 const entitlements = createP4EntitlementRepository(database);
+const betaAdmission = new BetaAdmissionService(
+  createBetaAdmissionRepository(database),
+);
 const commercialAccess = new CommercialAccessService({
   accessResolver: subscriptionAccess,
   currentSubscriptionReader: subscriptions,
@@ -72,6 +77,8 @@ const commercialAccess = new CommercialAccessService({
 const commercialPortal = new CommercialPortalService(
   createP5CommercialPortalRepository(database),
   commercialAccess,
+  undefined,
+  betaAdmission,
 );
 const rootSecret = loadAuthRootSecret(process.env);
 const adminAuth = new AdminAuthService(
@@ -105,8 +112,15 @@ const app = createApiApp({
     rootSecret,
     loadAccessTokenSigningKey(process.env),
     {
-      resolve: (accountId, at) =>
-        commercialAccess.resolveDeviceAdmission(accountId, at ?? new Date()),
+      resolve: async (accountId, at) => {
+        const beta = await betaAdmission.resolve(accountId);
+        if (beta.kind === "BETA")
+          return { kind: "BETA_UNLIMITED_FOR_COMMERCIAL_COUNT" as const };
+        return commercialAccess.resolveDeviceAdmission(
+          accountId,
+          at ?? new Date(),
+        );
+      },
     },
   ),
   bootstrapService: new BootstrapService(
@@ -117,6 +131,7 @@ const app = createApiApp({
     new BootstrapAiResolutionService(
       createBootstrapAiResolutionRepository(database),
     ),
+    betaAdmission,
   ),
   publicCommercialCatalogReader: createP4CommercialCatalogRepository(database),
   commercialPortalService: commercialPortal,
@@ -145,6 +160,7 @@ const app = createApiApp({
       beforeMutation: authorizeAdminMutationInTransaction,
     }),
   ),
+  betaAdmissionService: betaAdmission,
 });
 let closing = false;
 async function shutdown(signal: string): Promise<void> {

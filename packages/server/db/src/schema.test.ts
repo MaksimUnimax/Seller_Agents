@@ -24,6 +24,8 @@ import {
   userStatus,
   subscriptionState,
   subscriptionTransitionSource,
+  betaMode,
+  adminRole,
 } from "./schema.js";
 
 it("exports the exact P2.1 lifecycle states", () => {
@@ -45,6 +47,11 @@ it("exports the exact P2.1 lifecycle states", () => {
     "REVOKED",
     "COMPROMISED",
   ]);
+});
+
+it("exports the S1.1 beta and admin role vocabulary", () => {
+  expect(betaMode.enumValues).toEqual(["CLOSED", "OPEN", "PAUSED"]);
+  expect(adminRole.enumValues).toContain("ADMIN_BETA_OPERATOR");
 });
 
 it("exports the exact P3.2 signing lifecycle values", () => {

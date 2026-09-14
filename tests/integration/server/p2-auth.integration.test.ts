@@ -34,6 +34,9 @@ async function clear() {
   await q(
     "TRUNCATE audit_events,auth_rate_limit_buckets,otp_email_jobs,otp_challenges,portal_sessions,user_identities,account_memberships,accounts,users CASCADE",
   );
+  await q(
+    "UPDATE beta_admission_state SET mode='OPEN',capacity=100000,admitted=0,revision=1 WHERE id=1",
+  );
 }
 function auth(now = () => new Date()) {
   return new AuthService(createAuthRepository(db), keys, now, () => code);
@@ -312,6 +315,148 @@ describe.sequential("P2.2 real PostgreSQL authentication matrix", () => {
     expect((await challenge(denied)).consumed_at).toBeTruthy();
   });
 
+  it("S1.1 replays one committed OTP verification only for the same idempotency key", async () => {
+    const id = await request("otp-replay@example.test");
+    const key = "otp-replay-key-1234";
+    const first = await auth().verifyOtp(
+      id,
+      code,
+      "198.51.104.40",
+      "accepted-request-id-replay-1",
+      key,
+    );
+    expect(first.ok).toBe(true);
+    if (!first.ok) throw new Error(first.code);
+    const replay = await auth().verifyOtp(
+      id,
+      code,
+      "198.51.104.41",
+      "accepted-request-id-replay-2",
+      key,
+    );
+    expect(replay).toEqual({ ok: true, value: first.value });
+    const differentKey = await auth().verifyOtp(
+      id,
+      code,
+      "198.51.104.42",
+      "accepted-request-id-replay-3",
+      "otp-replay-key-5678",
+    );
+    expect(differentKey).toEqual({ ok: false, code: "AUTH_OTP_INVALID" });
+    expect(
+      (await q<{ count: string }>("SELECT count(*)::text count FROM accounts"))
+        .rows[0]!.count,
+    ).toBe("1");
+    expect(
+      (
+        await q<{ count: string }>(
+          "SELECT count(*)::text count FROM beta_admissions",
+        )
+      ).rows[0]!.count,
+    ).toBe("1");
+    expect(
+      (
+        await q<{ admitted: number }>(
+          "SELECT admitted FROM beta_admission_state WHERE id=1",
+        )
+      ).rows[0]!.admitted,
+    ).toBe(1);
+    expect(
+      (
+        await q<{ count: string }>(
+          "SELECT count(*)::text count FROM portal_sessions",
+        )
+      ).rows[0]!.count,
+    ).toBe("1");
+  });
+
+  it("S1.1 admits exactly one winner for the last slot and leaves the loser partial-free", async () => {
+    await q(
+      "UPDATE beta_admission_state SET mode='OPEN',capacity=1,admitted=0,revision=1 WHERE id=1",
+    );
+    const one = await fixture("last-slot-one@example.test");
+    const two = await fixture("last-slot-two@example.test");
+    const results = await Promise.all([
+      auth().verifyOtp(
+        one,
+        code,
+        "198.51.106.1",
+        "accepted-request-id-last-slot-1",
+        "last-slot-key-1234",
+      ),
+      auth().verifyOtp(
+        two,
+        code,
+        "198.51.106.2",
+        "accepted-request-id-last-slot-2",
+        "last-slot-key-5678",
+      ),
+    ]);
+    expect(results.filter((result) => result.ok)).toHaveLength(1);
+    expect(
+      results.filter(
+        (result) => !result.ok && result.code === "BETA_CAPACITY_REACHED",
+      ),
+    ).toHaveLength(1);
+    expect(
+      (
+        await q<{ count: string }>(
+          "SELECT count(*)::text count FROM beta_admissions",
+        )
+      ).rows[0]!.count,
+    ).toBe("1");
+    expect(
+      (
+        await q<{ admitted: number; capacity: number }>(
+          "SELECT admitted,capacity FROM beta_admission_state WHERE id=1",
+        )
+      ).rows[0],
+    ).toEqual({ admitted: 1, capacity: 1 });
+    expect(
+      (
+        await q<{ count: string }>(
+          "SELECT count(*)::text count FROM users u JOIN user_identities i ON i.user_id=u.id WHERE i.normalized_identifier IN ($1,$2)",
+          ["last-slot-one@example.test", "last-slot-two@example.test"],
+        )
+      ).rows[0]!.count,
+    ).toBe("1");
+  });
+
+  it("S1.1 does not gate an existing login when beta registration is closed or full", async () => {
+    const existing = await request("existing-while-closed@example.test");
+    expect(
+      (
+        await auth().verifyOtp(
+          existing,
+          code,
+          "198.51.107.1",
+          "accepted-request-id-existing-1",
+        )
+      ).ok,
+    ).toBe(true);
+    await q(
+      "UPDATE beta_admission_state SET mode='CLOSED',capacity=1,admitted=1 WHERE id=1",
+    );
+    const later = await request("existing-while-closed@example.test");
+    expect(
+      (
+        await auth().verifyOtp(
+          later,
+          code,
+          "198.51.107.2",
+          "accepted-request-id-existing-2",
+        )
+      ).ok,
+    ).toBe(true);
+    expect(
+      (
+        await q<{ admitted: number }>(
+          "SELECT admitted FROM beta_admission_state WHERE id=1",
+        )
+      ).rows[0]!.admitted,
+    ).toBe(1);
+  });
+
   it("T2-11/T2-12/T2-13 stores only session hash, OTP artifact, and encrypted delivery", async () => {
     const email = "storage@example.test",
       id = await request(email);
@@ -527,6 +672,6 @@ describe.sequential("P2.2 real PostgreSQL authentication matrix", () => {
           "SELECT count(*)::text count FROM drizzle.__drizzle_migrations",
         )
       ).rows[0]!.count,
-    ).toBe("16");
+    ).toBe("17");
   });
 });

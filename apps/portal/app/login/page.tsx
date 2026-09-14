@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { controlPlane } from "../../lib/control-plane";
 import { safeReturnTo } from "../../lib/return-to";
@@ -9,6 +9,7 @@ function LoginContent() {
     [email, setEmail] = useState(""),
     [code, setCode] = useState(""),
     [challenge, setChallenge] = useState<string>(),
+    verifyIdempotencyKey = useRef<string | undefined>(undefined),
     [error, setError] = useState("");
   const request = async () => {
     const r = await controlPlane("/v1/auth/otp/request", {
@@ -19,15 +20,31 @@ function LoginContent() {
     const data = await r.json();
     if (!r.ok) return setError("Unable to request a login code.");
     setChallenge(data.challengeId);
+    verifyIdempotencyKey.current = crypto.randomUUID();
   };
   const verify = async () => {
     if (!challenge) return;
     const r = await controlPlane("/v1/auth/otp/verify", {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: {
+        "content-type": "application/json",
+        "idempotency-key": verifyIdempotencyKey.current ?? crypto.randomUUID(),
+      },
       body: JSON.stringify({ challengeId: challenge, code }),
     });
-    if (!r.ok) return setError("Invalid or expired code.");
+    if (!r.ok) {
+      const body = (await r.json().catch(() => null)) as {
+        error?: { code?: string };
+      } | null;
+      if (
+        body?.error?.code === "BETA_CLOSED" ||
+        body?.error?.code === "BETA_CAPACITY_REACHED"
+      )
+        return setError(
+          "Регистрация в бете пока закрыта. Если у вас уже есть аккаунт, войдите.",
+        );
+      return setError("Invalid or expired code.");
+    }
     router.replace(safeReturnTo(query.get("returnTo")));
   };
   return (

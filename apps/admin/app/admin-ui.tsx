@@ -33,7 +33,8 @@ type Section =
   | "prices"
   | "price"
   | "entitlements"
-  | "compatibility";
+  | "compatibility"
+  | "beta";
 type Notice = { kind: "error" | "success" | "info"; text: string } | null;
 type Page<T> = { items: T[]; nextCursor: string | null };
 type Account = {
@@ -64,9 +65,18 @@ type Device = {
 };
 type Subscription = {
   accountId: string;
+  accessBasis?: "BETA" | "COMMERCIAL" | "NONE";
   access: { status: string; reason: string | null };
   subscription: Record<string, unknown> | null;
   deviceAllowance: unknown;
+};
+type BetaState = {
+  mode: "CLOSED" | "OPEN" | "PAUSED";
+  capacity: number;
+  admitted: number;
+  remaining: number;
+  revision: number;
+  updatedAt: string;
 };
 
 const AdminContext = createContext<{
@@ -218,6 +228,7 @@ function PageMessage({ notice }: { notice: Notice }) {
 }
 
 const nav = [
+  ["Beta admission", "/beta", "beta.admission.read"],
   ["Accounts", "/accounts", "account.read"],
   ["Users", "/users", "user.read"],
   ["Principals", "/principals", "admin.principal.read"],
@@ -918,6 +929,11 @@ function AccountWorkspace() {
       {has(me, "subscription.read") && (
         <section className="card">
           <h2>Subscription</h2>
+          {subscription.data?.accessBasis === "BETA" && (
+            <p role="status">
+              BETA access is active; commercial subscription is not required.
+            </p>
+          )}
           <LoadState busy={subscription.busy} error={subscription.error} />
           <div className="form-grid">
             <label>
@@ -2097,6 +2113,189 @@ function Dashboard() {
   );
 }
 
+function BetaAdmissionPage() {
+  const { me, setNotice } = useAdmin();
+  const state = useData<BetaState>(
+    has(me, "beta.admission.read") ? "/v1/admin/beta/admission" : null,
+  );
+  const [action, setAction] = useState<
+    "OPEN" | "PAUSE" | "CLOSE" | "ADD_CAPACITY" | "SET_CAPACITY"
+  >("OPEN");
+  const [amount, setAmount] = useState("100");
+  const [reason, setReason] = useState("");
+  const [review, setReview] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const requestId = useRef<string | undefined>(undefined);
+  const current = state.data;
+  if (!has(me, "beta.admission.read")) return null;
+  const capacity = current?.capacity ?? 0;
+  const parsedAmount = Number(amount);
+  const nextCapacity =
+    action === "ADD_CAPACITY"
+      ? capacity + parsedAmount
+      : action === "SET_CAPACITY"
+        ? parsedAmount
+        : capacity;
+  const change =
+    action === "ADD_CAPACITY"
+      ? `capacity ${capacity} → ${nextCapacity} (+${parsedAmount})`
+      : action === "SET_CAPACITY"
+        ? `capacity ${capacity} → ${nextCapacity}`
+        : `mode ${current?.mode ?? "—"} → ${action}`;
+  const submit = async () => {
+    if (
+      !current ||
+      !reason.trim() ||
+      (action === "ADD_CAPACITY" &&
+        (!Number.isSafeInteger(parsedAmount) || parsedAmount < 1)) ||
+      (action === "SET_CAPACITY" &&
+        (!Number.isSafeInteger(parsedAmount) || parsedAmount < 0))
+    )
+      return;
+    setBusy(true);
+    requestId.current ??= crypto.randomUUID();
+    try {
+      await controlPlane("/v1/admin/beta/admission", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          requestId: requestId.current,
+          expectedRevision: current.revision,
+          action,
+          ...(action === "ADD_CAPACITY" ? { amount: parsedAmount } : {}),
+          ...(action === "SET_CAPACITY" ? { capacity: parsedAmount } : {}),
+          reason: reason.trim(),
+        }),
+      });
+      requestId.current = undefined;
+      setReview(false);
+      setReason("");
+      setNotice({ kind: "success", text: "Beta admission updated." });
+      await state.load();
+    } catch (error) {
+      if (
+        error instanceof ControlPlaneError &&
+        error.code === "ADMIN_STATE_STALE"
+      ) {
+        requestId.current = undefined;
+        setReview(false);
+        await state.load();
+        setNotice({
+          kind: "info",
+          text: "The beta state changed. Review the refreshed state before submitting again.",
+        });
+      } else setNotice({ kind: "error", text: safeError(error) });
+    } finally {
+      setBusy(false);
+    }
+  };
+  return (
+    <Shell title="Beta admission">
+      <LoadState busy={state.busy} error={state.error} />
+      {current && (
+        <>
+          <section className="card">
+            <h2>Current state</h2>
+            <Table
+              headers={[
+                "Mode",
+                "Capacity",
+                "Admitted",
+                "Remaining",
+                "Revision",
+              ]}
+              rows={[
+                [
+                  current.mode,
+                  current.capacity,
+                  current.admitted,
+                  current.remaining,
+                  current.revision,
+                ],
+              ]}
+            />
+          </section>
+          {has(me, "beta.admission.manage") && (
+            <section className="panel">
+              <div className="form-grid">
+                <label>
+                  Action
+                  <select
+                    value={action}
+                    onChange={(e) => setAction(e.target.value as typeof action)}
+                  >
+                    <option>OPEN</option>
+                    <option>PAUSE</option>
+                    <option>CLOSE</option>
+                    <option>ADD_CAPACITY</option>
+                    <option>SET_CAPACITY</option>
+                  </select>
+                </label>
+                {(action === "ADD_CAPACITY" || action === "SET_CAPACITY") && (
+                  <label>
+                    {action === "ADD_CAPACITY" ? "Positive amount" : "Capacity"}
+                    <input
+                      type="number"
+                      min={action === "ADD_CAPACITY" ? 1 : 0}
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
+                    />
+                  </label>
+                )}
+              </div>
+              <label>
+                Reason
+                <textarea
+                  value={reason}
+                  maxLength={256}
+                  onChange={(e) => setReason(e.target.value)}
+                  required
+                />
+              </label>
+              <button
+                type="button"
+                disabled={!reason.trim() || busy}
+                onClick={() => setReview(true)}
+              >
+                Review change
+              </button>
+              {review && (
+                <div
+                  className="confirm"
+                  role="dialog"
+                  aria-label="Confirm beta admission change"
+                >
+                  <p>
+                    <strong>Exact change</strong>
+                  </p>
+                  <p>{change}</p>
+                  <p>Reason: {reason || "(required)"}</p>
+                  <div className="actions">
+                    <button
+                      type="button"
+                      disabled={busy || !reason.trim()}
+                      onClick={() => void submit()}
+                    >
+                      Confirm
+                    </button>
+                    <button
+                      type="button"
+                      className="secondary"
+                      onClick={() => setReview(false)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </section>
+          )}
+        </>
+      )}
+    </Shell>
+  );
+}
+
 export function AdminScreen({ section }: { section: Section }) {
   switch (section) {
     case "dashboard":
@@ -2123,6 +2322,8 @@ export function AdminScreen({ section }: { section: Section }) {
       return <CatalogList type="entitlements" />;
     case "compatibility":
       return <Compatibility />;
+    case "beta":
+      return <BetaAdmissionPage />;
     default:
       return <Dashboard />;
   }

@@ -10,6 +10,7 @@ import {
   type SubscriptionAccessResult,
   type SubscriptionSnapshot,
 } from "@product/subscriptions";
+import type { BetaAccessResolution } from "@product/beta-access";
 
 export type SafeEntitlementMap = Record<string, boolean | number>;
 
@@ -267,6 +268,7 @@ export interface CommercialPortalRepository {
 
 export type PortalSubscriptionRead = {
   accountId: string;
+  accessBasis?: "BETA" | "COMMERCIAL" | "NONE";
   access: {
     status: "ELIGIBLE" | "INELIGIBLE";
     reason:
@@ -291,6 +293,9 @@ export class CommercialPortalService {
     private readonly repository: CommercialPortalRepository,
     private readonly commercialAccess: CommercialAccessService,
     private readonly now: () => Date = () => new Date(),
+    private readonly betaAccess?: {
+      resolve(accountId: string): Promise<BetaAccessResolution>;
+    },
   ) {}
 
   async readSubscription(
@@ -320,6 +325,10 @@ export class CommercialPortalService {
     if (access.kind === "ACCOUNT_NOT_FOUND") return access;
     if (access.kind === "CORRUPTED") return { kind: "SERVICE_UNAVAILABLE" };
     const record = await this.repository.readSubscription(accountId);
+    const beta = this.betaAccess
+      ? await this.betaAccess.resolve(accountId)
+      : { kind: "NONE" as const };
+    const betaEligible = beta.kind === "BETA";
     if (record && access.value.currentSubscription) {
       if (
         record.id !== access.value.currentSubscription.id ||
@@ -334,6 +343,27 @@ export class CommercialPortalService {
       return { kind: "SERVICE_UNAVAILABLE" };
     let allowance = { maxActive: null as number | null };
     const activeCount = await this.repository.countActiveDevices(accountId);
+    if (betaEligible) {
+      return {
+        kind: "OK",
+        value: {
+          accountId,
+          accessBasis: "BETA",
+          access: { status: "ELIGIBLE", reason: null },
+          subscription: record,
+          deviceAllowance: {
+            maxActive: null,
+            activeCount,
+            remaining: null,
+            overLimit: false,
+          },
+          billing: {
+            purchaseStatus: "UNAVAILABLE",
+            reason: "PAYMENT_GO_LIVE_DEFERRED",
+          },
+        },
+      };
+    }
     if (access.value.access.kind === "ELIGIBLE") {
       const admission = await this.commercialAccess.resolveDeviceAdmission(
         accountId,
@@ -347,6 +377,8 @@ export class CommercialPortalService {
       kind: "OK",
       value: {
         accountId,
+        accessBasis:
+          access.value.access.kind === "ELIGIBLE" ? "COMMERCIAL" : "NONE",
         access: {
           status:
             access.value.access.kind === "ELIGIBLE" ? "ELIGIBLE" : "INELIGIBLE",

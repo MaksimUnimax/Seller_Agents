@@ -1,6 +1,6 @@
 # Контракты и версии
 
-Сохраняем исходное семейство control_plane_v1 и принятые auth/bootstrap semantics. Ниже описаны необходимые расширения, ещё не реализованные в D0.
+Сохраняем исходное семейство control_plane_v1 и принятые auth/bootstrap semantics. Реализованный кандидат S1.1 добавляет обратно совместимые поля/коды для явного BETA-доступа; обязательное поле старого wire-контракта не переименовывается и не получает новую обязательную семантику.
 Точные URL новых endpoints определяются из схем при переносе; не создавать независимо написанный клиент по предположениям из Markdown.
 
 ## Идентификаторы
@@ -25,7 +25,13 @@ ConversationKey на сервере передаётся как account-scoped o
 ## Служебные операции
 
 - Auth/device activation/refresh: существующий контракт, ротация refresh атомарна; в установке один refresh flight.
-- Bootstrap: подписанные account/device/access/compatibility/AI-policy; расширяется явным accessBasis BETA без фиктивной подписки.
+- Bootstrap: подписанные account/device/access/compatibility/AI-policy; payload S1.1 дополнительно сообщает `accessBasis` (`BETA`, `COMMERCIAL`, `NONE`). Поле optional для старых потребителей, но сервер всегда выдаёт его. Для BETA подписка остаётся `NONE`, entitlement-коммерция не симулируется, а обычные TTL/offline-grace не ограничиваются несуществующим коммерческим expiry.
+- OTP verify принимает стабильный `Idempotency-Key` на логическую попытку. Сервер хранит только HMAC-идентификатор и минимальную квитанцию replay; портал переиспользует ключ только при retry той же попытки.
+- S1.1 admin contract: `GET/POST /v1/admin/beta/admission` с optimistic `revision`, bounded reason, explicit action и requestId.
+
+### Future I1 extension impact
+
+The unified extension is not imported in this repository. At I1 its bootstrap consumer must treat `accessBasis: BETA` as sufficient control-plane access, preserve `subscription.state=NONE` as a genuine no-subscription value, and avoid deriving a commercial device limit from the BETA basis. Existing extension bootstrap parsing must tolerate the optional field while the unified contract version remains `control_plane_v1`.
 - Shop metadata: список/создание/переименование/удаление, revision и idempotency; без raw credential.
 - Binding reconcile: изменения конкретных привязок с baseRevision/requestId и последними локальными маркерами.
 - Transfer request/status/channel: отдельный редкий путь с согласованием получателя.

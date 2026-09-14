@@ -101,6 +101,28 @@ export function generatePortalToken(): string {
 export function portalLookup(keys: AuthKeys, token: string): string {
   return hmac(keys.session, ["v1", token]);
 }
+export function otpVerifyIdempotencyHash(keys: AuthKeys, key: string): string {
+  return hmac(keys.session, ["v1", "otp-verify-idempotency", key]);
+}
+/** Reconstructs the same opaque session token for an authorized retry. */
+export function deriveOtpVerifyPortalToken(
+  keys: AuthKeys,
+  challengeId: string,
+  idempotencyKey: string,
+): string {
+  const value = createHmac("sha256", keys.session)
+    .update(`v1:otp-verify-session:${challengeId.length}:`)
+    .update(challengeId)
+    .update(`:${idempotencyKey.length}:`)
+    .update(idempotencyKey)
+    .digest();
+  return value.toString("base64url");
+}
+export function validOtpVerifyIdempotencyKey(
+  value: string | undefined,
+): value is string {
+  return !!value && /^[A-Za-z0-9._:-]{16,128}$/.test(value);
+}
 export function csrfToken(keys: AuthKeys, token: string): string {
   return hmac(keys.csrf, ["v1", token]);
 }
@@ -179,7 +201,9 @@ export type AuthResult<T> =
         | "AUTH_RATE_LIMITED"
         | "AUTH_OTP_INVALID"
         | "AUTH_LOGIN_DENIED"
-        | "AUTH_CSRF_INVALID";
+        | "AUTH_CSRF_INVALID"
+        | "BETA_CLOSED"
+        | "BETA_CAPACITY_REACHED";
     };
 export interface AuthRepository {
   listOwnedAccounts(userId: string): Promise<
@@ -204,6 +228,7 @@ export interface AuthRepository {
     code: string;
     ipKey: string;
     correlationId: string;
+    idempotencyHash: string;
     verify: (email: string, artifact: string) => boolean;
     sessionHash: string;
     expiresAt: Date;
@@ -254,13 +279,20 @@ export class AuthService {
     code: string,
     ip: string,
     correlationId: string,
+    idempotencyKey?: string,
   ): Promise<AuthResult<{ sessionToken: string; expiresAt: Date }>> {
-    const token = generatePortalToken();
+    const retryKey = validOtpVerifyIdempotencyKey(idempotencyKey)
+      ? idempotencyKey
+      : randomBytes(24).toString("base64url");
+    const token = validOtpVerifyIdempotencyKey(idempotencyKey)
+      ? deriveOtpVerifyPortalToken(this.keys, challengeId, retryKey)
+      : generatePortalToken();
     const result = await this.repository.verifyOtp({
       challengeId,
       code,
       ipKey: rateKey(this.keys, ip),
       correlationId,
+      idempotencyHash: otpVerifyIdempotencyHash(this.keys, retryKey),
       verify: (email, artifact) =>
         verifyOtpArtifact(this.keys, challengeId, email, code, artifact),
       sessionHash: portalLookup(this.keys, token),

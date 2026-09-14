@@ -1,3 +1,4 @@
+import { generateKeyPairSync } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import {
   EXCHANGE_RATE_LIMIT,
@@ -6,6 +7,7 @@ import {
   PENDING_RETRY_AFTER_SECONDS,
   PRE_ENTITLEMENT_ACTIVE_DEVICE_LIMIT,
   PreEntitlementDeviceLimitResolver,
+  DeviceManagementService,
   deriveDeviceManagementKeys,
   exchangeIdempotencyHash,
   exchangeRateKey,
@@ -50,5 +52,48 @@ describe("P2.5 device-management policy", () => {
         !Number.isInteger(maxActive) || maxActive < 0 || maxActive > 10_000,
       ).toBe(true);
     }
+  });
+
+  it("preserves the explicit beta unlimited policy without a numeric sentinel", async () => {
+    let resolveLimit:
+      | ((accountId: string, at: Date) => Promise<unknown>)
+      | undefined;
+    const service = new (class extends DeviceManagementService {
+      constructor() {
+        const pair = generateKeyPairSync("ed25519");
+        super(
+          {
+            consumeExchangeRate: async () => ({ allowed: true }),
+            exchange: async (input) => {
+              resolveLimit = input.resolveLimit;
+              return { kind: "closed" as const };
+            },
+            list: async () => ({ kind: "ok" as const, devices: [] }),
+            revoke: async () => "not-found" as const,
+          },
+          Buffer.alloc(32, 1),
+          {
+            keyId: "test",
+            privateKey: pair.privateKey,
+            publicKey: pair.publicKey,
+          },
+          {
+            resolve: async () => ({
+              kind: "BETA_UNLIMITED_FOR_COMMERCIAL_COUNT" as const,
+            }),
+          },
+        );
+      }
+    })();
+    await service.exchange(
+      "A".repeat(43),
+      "device-beta-key-1234",
+      "198.51.100.1",
+      "accepted-request-id-beta-device",
+    );
+    expect(resolveLimit).toBeDefined();
+    await expect(resolveLimit!("account", new Date())).resolves.toEqual({
+      kind: "BETA_UNLIMITED_FOR_COMMERCIAL_COUNT",
+    });
   });
 });

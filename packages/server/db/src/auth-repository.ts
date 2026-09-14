@@ -117,9 +117,24 @@ export function createAuthRepository(runtime: DatabaseRuntime): AuthRepository {
         ]);
         const c = challenge.rows[0];
         const now = new Date();
+        if (!c)
+          return { ok: false, code: "AUTH_OTP_INVALID" } as AuthResult<never>;
+        if (c.consumed_at) {
+          const replay = await tx.query<{ user_id: string; expires_at: Date }>(
+            `SELECT r.user_id,s.expires_at FROM otp_verify_replays r JOIN portal_sessions s ON s.id=r.portal_session_id JOIN users u ON u.id=r.user_id WHERE r.challenge_id=$1 AND r.idempotency_hash=$2 AND s.revoked_at IS NULL AND s.expires_at>now() AND u.status='ACTIVE'`,
+            [c.id, input.idempotencyHash],
+          );
+          if (replay.rows[0])
+            return {
+              ok: true,
+              value: {
+                sessionToken: "",
+                expiresAt: new Date(replay.rows[0].expires_at),
+              },
+            } as AuthResult<{ sessionToken: string; expiresAt: Date }>;
+          return { ok: false, code: "AUTH_OTP_INVALID" } as AuthResult<never>;
+        }
         if (
-          !c ||
-          c.consumed_at ||
           c.invalidated_at ||
           new Date(c.expires_at) <= now ||
           c.attempt_count >= c.max_attempts
@@ -154,6 +169,23 @@ export function createAuthRepository(runtime: DatabaseRuntime): AuthRepository {
         );
         let userId: string;
         if (!identity.rows[0]) {
+          const beta = await tx.query<{
+            mode: "CLOSED" | "OPEN" | "PAUSED";
+            capacity: number | string;
+            admitted: number | string;
+          }>(
+            "SELECT mode,capacity,admitted FROM beta_admission_state WHERE id=1 FOR UPDATE",
+          );
+          const betaState = beta.rows[0];
+          if (!betaState)
+            throw new Error("beta admission state is not initialized");
+          if (betaState.mode !== "OPEN")
+            return { ok: false, code: "BETA_CLOSED" } as AuthResult<never>;
+          if (Number(betaState.admitted) >= Number(betaState.capacity))
+            return {
+              ok: false,
+              code: "BETA_CAPACITY_REACHED",
+            } as AuthResult<never>;
           userId = randomUUID();
           const accountId = randomUUID();
           await tx.query(`INSERT INTO users(id) VALUES($1)`, [userId]);
@@ -167,8 +199,22 @@ export function createAuthRepository(runtime: DatabaseRuntime): AuthRepository {
             [userId, c.normalized_identity_target, now],
           );
           await tx.query(
+            `INSERT INTO beta_admissions(account_id,user_id,admitted_at) VALUES($1,$2,$3)`,
+            [accountId, userId, now],
+          );
+          const admitted = await tx.query<{ admitted: number | string }>(
+            `UPDATE beta_admission_state SET admitted=admitted+1,updated_at=$1 WHERE id=1 AND mode='OPEN' AND admitted<capacity RETURNING admitted`,
+            [now],
+          );
+          if (!admitted.rows[0])
+            throw new Error("beta admission state changed unexpectedly");
+          await tx.query(
             `INSERT INTO audit_events(actor_type,actor_id,action,target_type,target_id,correlation_id) VALUES('SYSTEM',$1,'AUTH_IDENTITY_CREATED','USER',$1,$2)`,
             [userId, input.correlationId],
+          );
+          await tx.query(
+            `INSERT INTO audit_events(actor_type,action,target_type,target_id,correlation_id,safe_metadata) VALUES('SYSTEM','BETA_ACCOUNT_ADMITTED','ACCOUNT',$1,$2,jsonb_build_object('accessBasis','BETA'))`,
+            [accountId, input.correlationId],
           );
         } else {
           userId = identity.rows[0].user_id;
@@ -187,6 +233,10 @@ export function createAuthRepository(runtime: DatabaseRuntime): AuthRepository {
         await tx.query(
           `INSERT INTO portal_sessions(id,user_id,session_token_hash,expires_at) VALUES($1,$2,$3,$4)`,
           [sessionId, userId, input.sessionHash, input.expiresAt],
+        );
+        await tx.query(
+          `INSERT INTO otp_verify_replays(challenge_id,idempotency_hash,user_id,portal_session_id,expires_at) VALUES($1,$2,$3,$4,$5)`,
+          [c.id, input.idempotencyHash, userId, sessionId, input.expiresAt],
         );
         await tx.query(
           `INSERT INTO audit_events(actor_type,actor_id,action,target_type,target_id,correlation_id) VALUES('USER',$1,'AUTH_OTP_VERIFIED','OTP',$2,$3),('USER',$1,'PORTAL_SESSION_CREATED','PORTAL_SESSION',$4,$3)`,

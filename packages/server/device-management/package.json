@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@product/commercial-access": "workspace:*",
+    "@product/beta-access": "workspace:*",
     "@product/device-auth": "workspace:*",
     "@product/extension-auth": "workspace:*",
     "@product/shared": "workspace:*"

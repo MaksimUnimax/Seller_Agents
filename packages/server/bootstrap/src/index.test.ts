@@ -1,5 +1,5 @@
 import { generateKeyPairSync } from "node:crypto";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { verifyBootstrapEnvelope } from "@product/remote-config";
 import { signBootstrapSnapshot } from "@product/remote-config";
 import { BootstrapError, BootstrapService } from "./index.js";
@@ -36,6 +36,7 @@ describe("BootstrapService", () => {
   function signedService(
     commercial: CommercialAccessResolution,
     now = "2026-01-01T00:00:00.000Z",
+    beta = false,
   ) {
     const pair = generateKeyPairSync("ed25519");
     return {
@@ -48,6 +49,8 @@ describe("BootstrapService", () => {
         },
         { now: () => new Date(now) },
         { resolve: async () => commercial },
+        undefined,
+        beta ? { resolve: async () => ({ kind: "BETA" as const }) } : undefined,
       ),
     };
   }
@@ -188,6 +191,93 @@ describe("BootstrapService", () => {
       expect(verified.payload.entitlements).toEqual({});
     }
   });
+
+  it("projects explicit BETA access without a subscription or commercial deadline", async () => {
+    const f = signedService(
+      {
+        kind: "OK",
+        value: {
+          accountId: subject.accountId,
+          currentSubscription: null,
+          access: { kind: "INELIGIBLE", reason: "NO_CURRENT_SUBSCRIPTION" },
+          planRevisionId: null,
+          entitlements: {},
+          accessUntil: null,
+        },
+      },
+      "2026-01-01T00:00:00.000Z",
+      true,
+    );
+    const envelope = await f.service.issue(subject, request);
+    const verified = verifyBootstrapEnvelope(
+      envelope,
+      new Map([["config-key", f.pair.publicKey]]),
+    );
+    expect(verified).toMatchObject({ ok: true });
+    if (verified.ok) {
+      expect(verified.payload.accessBasis).toBe("BETA");
+      expect(verified.payload.subscription).toEqual({
+        state: "NONE",
+        planRevision: null,
+      });
+      expect(verified.payload.expiresAt).toBe("2026-01-01T00:15:00.000Z");
+      expect(verified.payload.offlineGraceUntil).toBe(
+        "2026-01-02T00:15:00.000Z",
+      );
+    }
+  });
+  it.each([
+    ["one hour", new Date("2026-01-01T01:00:00.000Z")],
+    ["one millisecond", new Date("2026-01-01T00:00:00.001Z")],
+  ])(
+    "keeps BETA timing independent of a genuine commercial deadline %s",
+    async (_label, deadline) => {
+      const pair = generateKeyPairSync("ed25519");
+      const aiResolve = vi.fn(async () => ({
+        status: "UNAVAILABLE" as const,
+        detected: { family: "alpha", surface: "page", variant: null },
+        reason: "NO_PROFILE" as const,
+      }));
+      const betaWithAi = new BootstrapService(
+        policy,
+        {
+          sign: async (_keyId, payload) =>
+            signBootstrapSnapshot(payload, "config-key", pair.privateKey),
+        },
+        { now: () => new Date("2026-01-01T00:00:00.000Z") },
+        { resolve: async () => eligibleCommercial(deadline) },
+        { resolve: aiResolve } as never,
+        { resolve: async () => ({ kind: "BETA" as const }) },
+      );
+      const verified = verifyBootstrapEnvelope(
+        await betaWithAi.issue(subject, request),
+        new Map([["config-key", pair.publicKey]]),
+      );
+      expect(verified).toMatchObject({ ok: true });
+      if (verified.ok) {
+        expect(verified.payload.accessBasis).toBe("BETA");
+        expect(verified.payload.expiresAt).toBe("2026-01-01T00:15:00.000Z");
+        expect(verified.payload.offlineGraceUntil).toBe(
+          "2026-01-02T00:15:00.000Z",
+        );
+        expect(verified.payload.subscription).toEqual({
+          state: "ACTIVE",
+          planRevision: commercialSubscription.currentPlanRevisionId,
+        });
+        expect(verified.payload.entitlements).toEqual({
+          "source.ozon": true,
+          "device.max_active": 0,
+        });
+        expect(verified.payload.ai).toEqual(
+          expect.objectContaining({
+            status: "UNAVAILABLE",
+            reason: "NO_PROFILE",
+          }),
+        );
+      }
+      expect(aiResolve).toHaveBeenCalledOnce();
+    },
+  );
   it("composes and signs a complete fixed-time snapshot", async () => {
     const pair = generateKeyPairSync("ed25519");
     let reads = 0;
@@ -203,6 +293,7 @@ describe("BootstrapService", () => {
           return new Date("2026-01-01T00:00:00.000Z");
         },
       },
+      undefined,
     );
     const envelope = await service.issue(subject, request);
     const verified = verifyBootstrapEnvelope(

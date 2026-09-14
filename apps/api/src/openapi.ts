@@ -36,6 +36,7 @@ import { AdminOpsService, type AdminOpsRepository } from "@product/admin-ops";
 import { AdminAuthService } from "@product/admin-auth";
 import type { AdminCommercialService } from "@product/admin-commercial";
 import type { AdminAiService } from "@product/admin-ai";
+import { BetaAdmissionService } from "@product/beta-access";
 
 type JsonPrimitive = boolean | null | number | string;
 type JsonValue = JsonPrimitive | JsonValue[] | { [key: string]: JsonValue };
@@ -295,6 +296,18 @@ export async function generateOpenApiRepresentation(): Promise<string> {
     ),
     adminCommercialService,
     adminAiService: {} as AdminAiService,
+    betaAdmissionService: new BetaAdmissionService({
+      resolve: async () => ({ kind: "NONE" }),
+      read: async () => ({
+        mode: "CLOSED",
+        capacity: 0,
+        admitted: 0,
+        remaining: 0,
+        revision: 1,
+        updatedAt: new Date(),
+      }),
+      mutate: async () => ({ kind: "CONFLICT" }),
+    }),
   });
   try {
     await app.ready();

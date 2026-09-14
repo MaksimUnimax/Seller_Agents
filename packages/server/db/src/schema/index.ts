@@ -13,3 +13,4 @@ export * from "./reconciliation";
 export * from "./adapter-registry";
 export * from "./assignments";
 export * from "./health";
+export * from "./beta";
