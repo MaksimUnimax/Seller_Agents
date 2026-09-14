@@ -22,7 +22,7 @@ docs/migration/evidence/SERVER_IMPORT_ACCEPTANCE.
 
 Level 1: S1 — сервер бесплатной беты.
 Level 2: S1.1 — явный бесплатный доступ BETA и атомарный набор регистраций.
-На feature-ветке S1.1 имеет статус `IMPLEMENTED_CANDIDATE`; `OWNER_ARCHITECT_REVIEW_PENDING`. После независимого принятия следующий будущий серверный участок — ранний I1 (реальная авторизация расширения); S1.2 (реальная email-доставка/preprod) этим состоянием не начинается.
+S1.1 принят в canonical `main` как `DONE / REMOTE ACCEPTED`; post-merge authority и exact-head CI записаны в [S1.1 remote acceptance](../server/S1_1_REMOTE_ACCEPTANCE_2026-09-14.md). Следующий будущий серверный участок — ранний I1 (реальная авторизация расширения); S1.2 (реальная email-доставка/preprod) этим состоянием не начинается.
 До кода составить план затронутых существующих auth/access/admin модулей и согласованных контрактов по уже принятому ТЗ; не менять продуктовую механику.
 
 Требуемый результат:

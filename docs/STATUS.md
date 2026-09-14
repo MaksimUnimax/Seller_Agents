@@ -1,7 +1,7 @@
 # Текущее состояние
 
 Дата проверки: 2026-09-14.
-Этап: D1 COMPLETED — D1.S1/D1.E0/D1.E1 приняты. D1.E1 IMPORT_ACCEPTED: 232 файла, remote CI и readback PASS. D0 COMPLETED; D2 IN_PROGRESS, D2.1 ACCEPTED; D2.2 ACCEPTED — SOURCE/PACKAGE/REMOTE CI/READBACK PASS; D2.3 INTERNAL_ADAPTER_ACCEPTED — SOURCE/PACKAGE/REMOTE CI/READBACK PASS; D2.4 DEVELOPMENT_APPLICATION_VERIFIED — SOURCE/PACKAGE/NATIVE_FIXTURE/REMOTE_CI/READBACK PASS.
+Этап: D1 COMPLETED — D1.S1/D1.E0/D1.E1 приняты. D1.E1 IMPORT_ACCEPTED: 232 файла, remote CI и readback PASS. D0 COMPLETED; D2 IN_PROGRESS, D2.1 ACCEPTED; D2.2 ACCEPTED — SOURCE/PACKAGE/REMOTE CI/READBACK PASS; D2.3 INTERNAL_ADAPTER_ACCEPTED — SOURCE/PACKAGE/REMOTE CI/READBACK PASS; D2.4 DEVELOPMENT_APPLICATION_VERIFIED — SOURCE/PACKAGE/NATIVE_FIXTURE/REMOTE_CI/READBACK PASS; S1.1 DONE / REMOTE ACCEPTED.
 Product implementation: SERVER_IMPORTED_AND_VERIFIED; EXTENSION_BASELINES_IMPORTED_AND_VERIFIED; COMMON_CORE_COMPOSED_OZON_VERIFIED; BATCH_CONTEXT_VERIFIED; WB_INTERNAL_ADAPTER_VERIFIED; WB_APPLICATION_ROUTE_CONNECTED; COMBINED_OZON_WB_DEVELOPMENT_VERIFIED; REAL_ACCOUNT_AUTH_NOT_CONNECTED.
 Deployment: NOT_STARTED.
 Browser releases: NOT_CREATED.
@@ -15,9 +15,9 @@ Live provider tests in this stage: NOT_RUN.
 | WB 0.3.0 | 006af272; INSTALLED FAIL; provider-neutral migration REOPENED / COMPLETENESS NOT PROVEN | 40 runtime-файлов перенесены в reference; 52 исходных suites дают 1075/0 на source и ZIP; installed FAIL сохраняется |
 | Сервер | Замороженный P8.4 Foundation на 3f16bbf; H3 browser actions/P8.5/P8.6 не начаты | SERVER_IMPORT_ACCEPTED: новый полный CI PASS, 594-file readback MATCH; deployment не выполнен |
 | Единое расширение | Целевая архитектура согласована | D2.4: каталог, общий popup/Work и доставка в development 0.2.3; source/ZIP/native fixture/remote CI/readback PASS; beta auth и live pending |
-| Лимит регистраций беты | Новое требование владельца | S1.1 implementation candidate exists; local implementation/gates completed; OWNER_ARCHITECT_REVIEW_PENDING; remote acceptance pending until this A8 pass completes |
+| Лимит регистраций беты | Новое требование владельца | S1.1 DONE / REMOTE ACCEPTED; exact authority and CI are recorded in [S1.1 remote acceptance](server/S1_1_REMOTE_ACCEPTANCE_2026-09-14.md) |
 | Редкая синхронизация/перенос ключей | Приняты целевые механики | Специфицированы, не реализованы |
-| Сайт/админка | Исходные приложения сервера | Перенесены и проверены вместе с сервером; S1.1 beta access реализован кандидатом, ожидает независимой architect review |
+| Сайт/админка | Исходные приложения сервера | Перенесены и проверены вместе с сервером; S1.1 beta access/admin admission принят; real extension auth остаётся I1 |
 | Мониторинг DOM/API | Есть основа Health, целевые правила API watcher | Расписания в этом этапе не создавались |
 
 Снимки и подтверждения: [SOURCES](migration/SOURCES.md), [SOURCE_STATUS](migration/evidence/SOURCE_STATUS.md).
@@ -38,11 +38,11 @@ D1.E0: [карта расширений](migration/EXTENSION_IMPORT_MAP.md), [к
 
 Историческая приёмка D0: [DOCUMENTATION_ACCEPTANCE](migration/evidence/DOCUMENTATION_ACCEPTANCE.md). Новый сервер прошёл полный CI: 1272 unit, 1507 integration и 85 browser E2E, плюс отдельный regression пути Playwright. Квитанция и границы — [SERVER_IMPORT_ACCEPTANCE](migration/evidence/SERVER_IMPORT_ACCEPTANCE.md). Это серверная приёмка переноса; единое расширение и owner acceptance beta-кандидата остаются отдельными решениями.
 
-S1.1: free beta access and atomic admission реализованы на ветке `feature/server-beta-access` и опубликованы в PR #1; этот кандидат ожидает независимой architect review и не является принятым состоянием canonical `main` до фактического merge PR. В него входят beta access basis/admission, атомарная регистрация, OTP/admin/API/bootstrap и соответствующие PostgreSQL проверки; реальная account auth расширения по-прежнему не подключена.
+S1.1: free beta access and atomic admission приняты в canonical `main` merge-коммитом `d0b54aa5e659932d3fa2d996b572e06aadfffe62`; точная post-merge authority и exact-head CI записаны в [S1.1 remote acceptance](server/S1_1_REMOTE_ACCEPTANCE_2026-09-14.md). В принятую область входят beta access basis/admission, атомарная регистрация, OTP/admin/API/bootstrap и соответствующие PostgreSQL проверки; реальная account auth расширения по-прежнему не подключена.
 
 ## Следующий этап
 
-[D1.E1](migration/EXTENSION_IMPORT_NEXT_STEP.md) завершён. D2.1 и D2.2 приняты. D2.3 внутренний adapter принят по source/package/remote CI/readback. D2.4 соединение с каталогом/popup/Work/delivery принято в development 0.2.3. S1.1 остаётся кандидатом ветки/PR до независимой architect review и фактического merge в canonical `main`. Следующий будущий серверный участок после принятия S1.1 — ранний I1, реальная авторизация расширения на сервере; [границы](development/EXTENSION_APPLICATION.md). I1 и S1.2 этим состоянием не реализуются. Для серверной параллели сохраняется [поручение](development/SERVER_CODEX_HANDOFF.md); перенос расширений не реализует и не открывает H3/P8.5/P8.6. Если владелец передаст новую принятую версию расширения, сначала обновить источник и карту, не подменять выбранные байты по последнему имени ветки.
+[D1.E1](migration/EXTENSION_IMPORT_NEXT_STEP.md) завершён. D2.1 и D2.2 приняты. D2.3 внутренний adapter принят по source/package/remote CI/readback. D2.4 соединение с каталогом/popup/Work/delivery принято в development 0.2.3. S1.1 принят в canonical `main`; [post-merge authority и CI](server/S1_1_REMOTE_ACCEPTANCE_2026-09-14.md) зафиксированы. Следующий будущий серверный участок — ранний I1, реальная авторизация расширения на сервере; [границы](development/EXTENSION_APPLICATION.md). I1 и S1.2 этим состоянием не реализуются. Для серверной параллели сохраняется [поручение](development/SERVER_CODEX_HANDOFF.md); перенос расширений не реализует и не открывает H3/P8.5/P8.6. Если владелец передаст новую принятую версию расширения, сначала обновить источник и карту, не подменять выбранные байты по последнему имени ветки.
 WB R1–R8 остаются закрыты до установленной приёмки исправленного provider-neutral контура.
 
 ## Как обновлять
