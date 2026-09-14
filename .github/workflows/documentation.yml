@@ -2,7 +2,7 @@ name: Documentation CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, 'migration/**']
   pull_request:
   workflow_dispatch:
 

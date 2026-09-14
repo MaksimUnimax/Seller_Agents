@@ -1,8 +1,8 @@
 # Текущее состояние
 
 Дата проверки: 2026-09-14.
-Этап: D0 COMPLETED — каркас и спецификация опубликованы и проверены.
-Product implementation: NOT_IMPORTED.
+Этап: D1.S1 IN_PROGRESS — перенос сервера из новой замороженной точки. D0 COMPLETED.
+Product implementation: SERVER_IMPORT_CANDIDATE; EXTENSIONS_NOT_IMPORTED.
 Deployment: NOT_STARTED.
 Browser releases: NOT_CREATED.
 Live provider tests in this stage: NOT_RUN.
@@ -13,11 +13,11 @@ Live provider tests in this stage: NOT_RUN.
 |---|---|---|
 | Ozon | Текущая исполняемая линия 0.1.21; владелец продолжает разработку | Не перенесён |
 | WB 0.3.0 | INSTALLED FAIL; provider-neutral migration REOPENED / COMPLETENESS NOT PROVEN | Не перенесён; не принят как готовый общий runtime |
-| Сервер | P0–P7 приняты; P8.3 принят, exact-SHA Server CI №103 success | Не перенесён и не развёрнут здесь |
+| Сервер | Замороженный P8.4 Foundation на 3f16bbf; H3 browser actions/P8.5/P8.6 не начаты | Код перенесён в candidate; новые CI/readback ожидаются, deployment не выполнен |
 | Единое расширение | Целевая архитектура согласована | Не реализовано |
 | Лимит регистраций беты | Новое требование владельца | Специфицировано, не реализовано |
 | Редкая синхронизация/перенос ключей | Приняты целевые механики | Специфицированы, не реализованы |
-| Сайт/админка | Есть серверные исходные приложения | Не перенесены; пользовательские воронки отдельно отложены |
+| Сайт/админка | Исходные приложения сервера | Перенесены в candidate вместе с сервером; beta-механики ещё не реализованы |
 | Мониторинг DOM/API | Есть основа Health, целевые правила API watcher | Расписания в этом этапе не создавались |
 
 Снимки и подтверждения: [SOURCES](migration/SOURCES.md), [SOURCE_STATUS](migration/evidence/SOURCE_STATUS.md).
@@ -28,8 +28,8 @@ Live provider tests in this stage: NOT_RUN.
 
 ## Следующий этап
 
-D1: отдельный перенос после отчёта по D0 и дальнейшего поручения владельца. Основной архитектор переносит код; затем отдельный Codex развивает сервер параллельно объединению.
-До переноса обновить source snapshot. Продолжающуюся Ozon/WB работу не замораживать искусственно на этой дате.
+D1.S1: закончить проверки и readback сервера по [квитанции](migration/evidence/SERVER_IMPORT_ACCEPTANCE.md). После приёмки отдельный Codex получает [поручение](development/SERVER_CODEX_HANDOFF.md); перенос Ozon/WB идёт отдельно.
+Владелец сообщил остановку всех частей; серверная новая точка заменяет прежний b01b879. Перед переносом Ozon/WB отдельно сверить окончательные источники.
 WB R1–R8 остаются закрыты до установленной приёмки исправленного provider-neutral контура.
 
 ## Как обновлять

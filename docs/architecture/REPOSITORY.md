@@ -53,3 +53,9 @@ Release assets публикуются отдельно при выпуске; и
 Короткие ветки feature/…, fix/…, docs/…, migration/…. Не создавать постоянные параллельные Ozon/WB копии общего ядра.
 Сервер и расширение могут выпускаться разными версиями; совместимость определяют схемы и release manifest.
 Корневой lockfile появляется после реального импорта зависимостей и генерации package manager. В D0 поддельный lockfile не создаётся.
+
+## Фактическое размещение после серверного переноса
+
+Принятые 28 source packages разделены на 26 серверных доменов в packages/server и два общих пакета contracts/shared. Имена @product/* сохранены.
+Дополнительно материализованы docs/server, tooling/server, tests/integration/server, tests/e2e/server; OpenAPI находится в packages/contracts/openapi.
+Root lockfile перенесён из источника с адаптацией только workspace importer/link путей; frozen install проверяет согласованность. Версии внешних пакетов и их resolution/integrity не обновлялись.

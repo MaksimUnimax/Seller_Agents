@@ -1,0 +1,44 @@
+{
+  "name": "@product/api",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "openapi:generate": "tsx src/openapi.ts generate",
+    "openapi:check": "tsx src/openapi.ts check",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsup src/main.ts --format esm --target node24 --clean"
+  },
+  "dependencies": {
+    "@fastify/cookie": "11.1.2",
+    "@fastify/swagger": "9.8.1",
+    "@product/admin-auth": "workspace:*",
+    "@product/admin-ai": "workspace:*",
+    "@product/admin-billing": "workspace:*",
+    "@product/admin-commercial": "workspace:*",
+    "@product/plans": "workspace:*",
+    "@product/admin-ops": "workspace:*",
+    "@product/auth": "workspace:*",
+    "@product/bootstrap": "workspace:*",
+    "@product/commercial-access": "workspace:*",
+    "@product/commercial-catalog": "workspace:*",
+    "@product/contracts": "workspace:*",
+    "@product/db": "workspace:*",
+    "@product/device-auth": "workspace:*",
+    "@product/device-management": "workspace:*",
+    "@product/extension-auth": "workspace:*",
+    "@product/observability": "workspace:*",
+    "@product/remote-config": "workspace:*",
+    "@product/shared": "workspace:*",
+    "fastify": "5.8.5",
+    "fastify-type-provider-zod": "6.1.0",
+    "pino": "9.9.4",
+    "tsx": "4.20.5",
+    "zod": "4.1.5"
+  },
+  "devDependencies": {
+    "tsup": "8.5.0"
+  }
+}

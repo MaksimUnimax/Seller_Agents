@@ -1,6 +1,22 @@
-# packages/server
+# Server Domain / Shared Packages
 
-Существующие серверные домены переносятся с сохранением package boundaries. Каталоги доменов появятся по реальному source inventory, не фиктивными stubs.
+Approved package families include:
 
-Состояние D0: назначение каталога зафиксировано; production-реализация не перенесена.
-Границы: [архитектура](../../docs/architecture/OVERVIEW.md), [размещение](../../docs/architecture/REPOSITORY.md), [текущий статус](../../docs/STATUS.md).
+- `contracts`;
+- `db`;
+- `auth`;
+- `accounts`;
+- `devices`;
+- `plans`;
+- `billing`;
+- `entitlements`;
+- `remote-config`;
+- `adapter-registry`;
+- `compatibility`;
+- `diagnostics`;
+- `health-core`;
+- `notifications`;
+- `observability`;
+- `shared`.
+
+Create packages only when their roadmap step begins. Keep dependency direction and external-provider adapter rules from `../docs/DEVELOPMENT_RULES.md`.

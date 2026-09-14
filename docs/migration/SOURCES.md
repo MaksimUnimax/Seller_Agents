@@ -41,3 +41,9 @@
 Для каждого subsystem фиксировать source repo/branch/commit/path, release artifact/hash, authority, accepted behavior, зависимости, тесты и известные ограничения.
 Файлы, отсутствующие в package graph, не становятся production лишь потому, что найдены в Git.
 Никаких предположений «позже дата — значит принято», «больше байт — значит полнее», «все тесты зелёные — значит owner acceptance».
+
+## Новая замороженная точка сервера — поручение владельца 2026-09-14
+
+Для D1.S1 прежний b01b879 заменён на [3f16bbf6387cc62303e292fcfe61449c8f243b92](https://github.com/MaksimUnimax/blood_sand/commit/3f16bbf6387cc62303e292fcfe61449c8f243b92), feature/product-control-plane-p8-4-h3-2026-09-14.
+P8.4 Foundation принят; H3 browser actions/P8.5/P8.6 не начаты. Неопубликованные owner_refs/recommendations в объём remote-переноса не входят.
+Исторические snapshots выше сохранены как доказательство состояния D0.

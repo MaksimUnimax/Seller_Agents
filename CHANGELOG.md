@@ -9,3 +9,9 @@
 - Статус WB исправлен в текущем учёте: INSTALLED FAIL, migration REOPENED; R1–R8 заблокированы.
 - Разделены перенос, объединение, параллельная серверная разработка и выпуск.
 - Production-код, сборки и развёртывание не входят в эту ревизию.
+
+## 2026-09-14 — D1.S1 server import candidate
+
+- Импорт замороженного server P8.4 Foundation, 3f16bbf.
+- Новая структура, workspace paths и Server CI; без продолжения H3/P8.5/P8.6.
+- Source mapping, проверка Git blob SHA и поручение серверному Codex.

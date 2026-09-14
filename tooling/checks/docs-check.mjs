@@ -16,7 +16,7 @@ function checkDocumentation(files) {
   for (const p of required) if (!(p in files)) errors.push("Missing required file: " + p);
   let checkedLinks = 0;
   for (const p of paths) {
-    if (!/^[A-Za-z0-9._/-]+$/.test(p) || p.startsWith("/") || p.split("/").includes("..")) errors.push("Unsafe repository path: " + p);
+    if (!/^[A-Za-z0-9._/\[\]-]+$/.test(p) || p.startsWith("/") || p.split("/").includes("..")) errors.push("Unsafe repository path: " + p);
     const content = files[p];
     if (!content.endsWith("\n")) errors.push("Missing final newline: " + p);
     if (!p.endsWith(".md")) continue;

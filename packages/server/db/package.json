@@ -1,0 +1,51 @@
+{
+  "name": "@product/db",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./migrations": {
+      "types": "./src/migrations.ts",
+      "default": "./src/migrations.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests --exclude '**/*.integration.test.ts'",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx src/migrate.ts"
+  },
+  "dependencies": {
+    "@product/adapter-registry": "workspace:*",
+    "@product/admin-ai": "workspace:*",
+    "@product/auth": "workspace:*",
+    "@product/admin-auth": "workspace:*",
+    "@product/admin-billing": "workspace:*",
+    "@product/admin-ops": "workspace:*",
+    "@product/billing": "workspace:*",
+    "@product/commercial-catalog": "workspace:*",
+    "@product/commercial-access": "workspace:*",
+    "@product/compatibility": "workspace:*",
+    "@product/device-auth": "workspace:*",
+    "@product/device-management": "workspace:*",
+    "@product/entitlements": "workspace:*",
+    "@product/extension-auth": "workspace:*",
+    "@product/health": "workspace:*",
+    "@product/plans": "workspace:*",
+    "@product/pricing": "workspace:*",
+    "@product/shared": "workspace:*",
+    "@product/subscriptions": "workspace:*",
+    "@product/remote-config": "workspace:*",
+    "drizzle-orm": "0.45.2",
+    "pg": "8.16.3"
+  },
+  "devDependencies": {
+    "@types/pg": "8.15.5",
+    "drizzle-kit": "0.31.4",
+    "tsx": "4.20.5"
+  }
+}

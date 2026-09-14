@@ -16,3 +16,6 @@ test-results/
 *.pem
 *.key
 .DS_Store
+*.tsbuildinfo
+owner_refs/
+recommendations/

@@ -1,0 +1,5 @@
+packages/contracts/openapi/openapi.json
+docs/
+node_modules/
+dist/
+.next/
