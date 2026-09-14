@@ -1,6 +1,8 @@
 # Общее ядро расширения
 
-Текущий шаг D2.2: общая очередь и закреплённый контекст пакета в development-сборке 0.2.1. Это Ozon carrier, не общая бета Ozon/WB. [Приёмка D2.2](../migration/evidence/extension-context-d2-2-2026-09-14/README.md); [принятый предыдущий шаг D2.1](../migration/evidence/extension-core-d2-1-2026-09-14/README.md).
+Текущий шаг: [D2.3 — внутренний WB adapter/shared queue](EXTENSION_WB_ADAPTER.md), source/ZIP LOCAL PASS, remote приёмка ожидается. WB popup/content пока не подключены.
+
+Принятый шаг D2.2: общая очередь и закреплённый контекст пакета в development-сборке 0.2.1. Это Ozon carrier, не общая бета Ozon/WB. [Приёмка D2.2](../migration/evidence/extension-context-d2-2-2026-09-14/README.md); [принятый предыдущий шаг D2.1](../migration/evidence/extension-core-d2-1-2026-09-14/README.md).
 
 ## Реальная граница модулей
 
@@ -55,7 +57,7 @@ Node 24.19.0, Python 3.12.14. [composition.json](../../apps/extension/compositio
 
 ## Оставшийся D2
 
-1. Подключить WB adapter к общей очереди, с WB host/schema/read policy и полной сверкой общих зависимостей; без второй копии worker.
+1. D2.3: WB adapter подключён к общей очереди на уровне внутренних портов, сохранены pinned host/contract/read policy и карта зависимостей; source/ZIP LOCAL PASS. Прикладной маршрут WB ещё не подключён; schema/live certification не заявляется. См. [D2.3](EXTENSION_WB_ADAPTER.md).
 2. Перевести прикладную Work/Start и delivery orchestration на общую модель магазина, заменить временный local scope; единая карточка магазинов и popup Ozon/WB.
 3. Удалить клиентский autorun и согласовать Show/Hide отдельно от отмены по целевому UX. Текущее legacy поведение не объявляется уже исправленным.
 4. Унифицировать техническое хранилище и часовой TTL всех payload-копий.

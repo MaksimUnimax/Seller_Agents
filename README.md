@@ -2,7 +2,7 @@
 
 Единый продукт: расширение связывает выбранный пользователем веб-ИИ с Ozon и Wildberries; сервер обеспечивает аккаунты, конфигурацию и обслуживание. Позиционирование: «Ваш ИИ-сотрудник для работы с данными магазина».
 
-**Сервер перенесён и проверен. Перенос исходников Ozon 0.1.22 и WB 0.3.0 принят по результатам D1.E1. D2.1 и D2.2 приняты: общее ядро, очередь и защита контекста; единого Ozon/WB выпуска и production-развёртывания ещё нет.**
+**Сервер перенесён и проверен. Перенос исходников Ozon 0.1.22 и WB 0.3.0 принят по результатам D1.E1. D2.1 и D2.2 приняты: общее ядро, очередь и защита контекста. D2.3: внутренний WB adapter прошёл локальные source/ZIP проверки; единого Ozon/WB выпуска и production-развёртывания ещё нет.**
 
 Первая бета бесплатная, с регистрацией и управляемым числом новых участников. Продажи и изменения в кабинетах не выполняются: продукт предоставляет проверенные операции чтения и получения отчётов.
 
@@ -31,7 +31,7 @@
 
 ## Текущий этап
 
-D0 и D1 завершены, включая D1.S1, D1.E0 и D1.E1. В D1.E1: 232 файла исходников и проверок перенесены по [карте](docs/migration/EXTENSION_IMPORT_MAP.md); [приёмка переноса](docs/migration/evidence/extension-import-2026-09-14/README.md) завершена: remote CI и readback PASS. [Команды расширений](docs/development/EXTENSION_BASELINE.md). D2.1 принят: общие модули включены в проверенную development-сборку; [проверка](docs/migration/evidence/extension-core-d2-1-2026-09-14/README.md) и [команды](docs/development/EXTENSION_CORE.md). D2.2: [общая очередь и контекст пакета](docs/migration/evidence/extension-context-d2-2-2026-09-14/README.md), приёмка source/package/remote CI/readback PASS. Сервер развивается параллельно отдельным Codex.
+D0 и D1 завершены, включая D1.S1, D1.E0 и D1.E1. В D1.E1: 232 файла исходников и проверок перенесены по [карте](docs/migration/EXTENSION_IMPORT_MAP.md); [приёмка переноса](docs/migration/evidence/extension-import-2026-09-14/README.md) завершена: remote CI и readback PASS. [Команды расширений](docs/development/EXTENSION_BASELINE.md). D2.1 принят: общие модули включены в проверенную development-сборку; [проверка](docs/migration/evidence/extension-core-d2-1-2026-09-14/README.md) и [команды](docs/development/EXTENSION_CORE.md). D2.2: [общая очередь и контекст пакета](docs/migration/evidence/extension-context-d2-2-2026-09-14/README.md), приёмка source/package/remote CI/readback PASS. D2.3: [внутренний WB adapter и общая очередь](docs/development/EXTENSION_WB_ADAPTER.md), LOCAL SOURCE/PACKAGE PASS; remote приёмка ожидается. WB popup/content ещё не подключены. Сервер развивается параллельно отдельным Codex.
 
 **WB 0.3.0: INSTALLED FAIL по последней проверке владельца. Полнота Ozon → WB переноса не доказана; R1–R8 закрыты до установленной приёмки исправленного общего механизма.** Исторический 1075/0 не отменяет этот результат.
 

@@ -2,6 +2,7 @@
 from pathlib import Path
 import argparse
 import importlib.util
+import json
 import re
 import shutil
 import sys
@@ -28,7 +29,7 @@ def compose(directory):
     directory.mkdir(parents=True, exist_ok=False)
     baseline.verify_import()
     recipe = baseline.read_json(RECIPE)
-    assert recipe["version"] == "0.2.1" and recipe["stage"] == "D2.2"
+    assert recipe["version"] == "0.2.2" and recipe["stage"] == "D2.3"
     inputs = {}
     read_input("apps/extension/composition.json", inputs)
     output = {}
@@ -38,6 +39,16 @@ def compose(directory):
     for target, sources in recipe["bundles"].items():
         assert target in output
         output[target] = b"\n;\n".join(read_input(source, inputs) for source in sources)
+    for target, bundle in recipe.get("isolated_bundles", {}).items():
+        assert target not in output
+        # WB authority and fixed-host transport cannot replace any Ozon global.
+        prefix = b"(() => { const scope = Object.create(null); (function(globalThis) {\n"
+        suffix = b"\n})(scope); globalThis.SellerAgentsWBReference = Object.freeze({contract: scope.WBContract, credentials: scope.WBCredentials, guidance: scope.WBGuidance, transport: scope.ProviderTransportCore}); })();\n"
+        output[target] = prefix + b"\n;\n".join(read_input(p, inputs) for p in bundle["reference_sources"]) + suffix
+        output[target] += b"\n;\n".join(read_input(p, inputs) for p in bundle["sources"])
+    for target in recipe.get("worker_postload", []):
+        assert target in output
+        output["service_worker_entry.js"] += ("\nimportScripts(" + json.dumps(target) + ");\n").encode()
     worker = output["service_worker.js"].decode("utf-8")
     for row in recipe["worker_function_replacements"]:
         pattern = r"(?ms)^(?:async )?function " + re.escape(row["function"]) + r"\(.*?^}$"
@@ -63,7 +74,7 @@ def compose(directory):
     baseline.write_json(manifest_path, manifest)
     files = [{"path": p.relative_to(directory).as_posix(), "sha256": baseline.sha256(p.read_bytes()),
               "bytes": p.stat().st_size} for p in sorted(directory.rglob("*")) if p.is_file()]
-    assert len(files) == 36
+    assert len(files) == 36 + len(recipe.get("isolated_bundles", {}))
     return {"stage": recipe["stage"], "version": recipe["version"], "purpose": recipe["purpose"],
             "inputs": inputs, "files": files, "installed_acceptance": False}
 
@@ -75,7 +86,7 @@ def build(output):
     receipt = compose(runtime)
     second = output / "repeat-runtime"
     assert compose(second) == receipt
-    name = "SELLER_AGENTS_D2_2_v0.2.1_DEVELOPMENT.zip"
+    name = "SELLER_AGENTS_D2_3_v0.2.2_DEVELOPMENT.zip"
     archive = output / name
     repeat = output / "repeat.zip"
     for source, target in [(runtime, archive), (second, repeat)]:

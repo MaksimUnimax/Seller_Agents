@@ -70,3 +70,10 @@
 - Exact source/ZIP route: 101 процесс PASS; 12 новых context-сценариев; старые behavioral assertions сохранены.
 - Artifact независимо скачан: 36 runtime files и 67 source inputs MATCH. 39 изменённых Git-файлов сверены.
 - D2.2 принят. WB adapter, каталог магазинов, popup, часовой TTL, auth/I1 и installed приёмка остаются открытыми.
+
+## 2026-09-14 — D2.3 internal WB adapter candidate
+
+- WB API authority изолирована от Ozon globals; adapter исполняется через общую очередь, без старого WB worker/popup.
+- Await guards выделены из Ozon в один общий модуль; сохранены его regressions. Добавлены WB контекст, локальная HELP/ошибки, shared observed Retry-After и сохранение результата перед остановкой из-за ошибки квоты.
+- 17 новых групп WB, 105 source/ZIP процессов PASS; version 0.2.2, 37 файлов. Remote приёмка ожидается.
+- Это внутренний API: реальный WB popup/content/Start/delivery ещё не соединён. Catalog/часовой TTL/I1/installed acceptance остаются открыты, R1–R8 закрыты.

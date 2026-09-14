@@ -52,4 +52,6 @@ PostgreSQL хранит учётные данные сервиса и опера
 
 ## Начало D2
 
-D2.1/D2.2 подключают общее ядро, очередь и защиту контекста к development Ozon carrier через явные provider/compat ports. [Реализованные границы](../development/EXTENSION_CORE.md) отделены от оставшейся монолитной оркестрации. Registry/transport WB, новая многомагазинность и серверная авторизация клиента этим шагом не реализованы.
+D2.1/D2.2 подключают общее ядро, очередь и защиту контекста к development Ozon carrier через явные provider/compat ports. [Реализованные границы](../development/EXTENSION_CORE.md) отделены от оставшейся монолитной оркестрации. Registry/transport WB, новая многомагазинность и серверная авторизация клиента шагами D2.1/D2.2 не реализованы.
+
+D2.3 добавляет [внутренний WB adapter](../development/EXTENSION_WB_ADAPTER.md) с изолированной authority и общей guarded queue. 0.2.2 остаётся Ozon carrier: WB popup/content/Start и прикладная доставка ещё не подключены; новый adapter не меняет сервер и manifest permissions.

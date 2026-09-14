@@ -1171,6 +1171,10 @@
               (result.external_request_executed === true ||
                 result.bridge_error !== true),
           });
+          if (result.stop_after_result) {
+            await failOwner(result.stop_after_result, "Результат сохранён; продолжение пакета остановлено.");
+            return { ok: false, code: result.stop_after_result };
+          }
         }
       });
     }

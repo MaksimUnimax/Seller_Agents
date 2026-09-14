@@ -77,7 +77,7 @@ def ozon_route(runner, work, runtime, label, source_route, expected_version="0.1
     prod = ozon / "dist-step7-candidate"
     manifest = baseline.read_json(prod / "manifest.json")
     permission = baseline.read_json(ROOT / "tests/fixtures/imported/ozon-permissions-0aa8f535/manifest.json")
-    assert expected_version in ("0.1.22", "0.2.0", "0.2.1")
+    assert expected_version in ("0.1.22", "0.2.0", "0.2.1", "0.2.2")
     assert manifest["manifest_version"] == 3 and manifest["version"] == expected_version
     for key in ("permissions", "host_permissions"):
         assert manifest[key] == permission[key], key
@@ -97,7 +97,7 @@ def ozon_route(runner, work, runtime, label, source_route, expected_version="0.1
     swagger = v / "swagger-read-surface-patch-2026-09-13"
     repaired = v / "swagger-read-surface-live-repair-2026-09-13"
     effect = v / "read-effect-repair-v1"
-    if expected_version == "0.2.1":
+    if expected_version in ("0.2.1", "0.2.2"):
         corrective = effect / "run_live_gate_corrective_regression.mjs"
         original_corrective = corrective.read_text()
         old_guard = r"if \(!commandRequiresPersonalDataPolicy\(entry\.command\) \|\| personalDataEnabled\) return entry;"
@@ -141,7 +141,7 @@ def ozon_route(runner, work, runtime, label, source_route, expected_version="0.1
             "prepareProviderQuotaForCommand(physicalCommandForQuota)": "prepareQuota(physicalCommandForQuota)",
             "executeOzonCore(liveEntry.command_text": "execute(liveEntry.command_text",
         }
-        if expected_version == "0.2.1" and kind == "predispatch":
+        if expected_version in ("0.2.1", "0.2.2") and kind == "predispatch":
             # Only the four renamed ports in the structural order assertion change.
             # The original test and RED route remain untouched; all behavior assertions stay intact.
             original_source = green_script.read_text()
@@ -165,7 +165,7 @@ def ozon_route(runner, work, runtime, label, source_route, expected_version="0.1
         runner.run(label + "-" + name, ["node", *args], cwd=repo)
     baseline.write_json(runner.output / (label + "-authority.json"),
                         {"version_and_permission_checks": "PASS", "route_invocations": len(steps),
-                         "source_route": source_route, "runtime_file_count": 36})
+                         "source_route": source_route, "runtime_file_count": len(texts)})
 
 
 def wb_route(runner, runtime, label, mode):

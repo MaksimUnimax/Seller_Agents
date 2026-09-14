@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "stage": "D2.2",
-  "version": "0.2.1",
-  "purpose": "DEVELOPMENT_OZON_CARRIER_NOT_COMBINED_BETA",
+  "stage": "D2.3",
+  "version": "0.2.2",
+  "purpose": "DEVELOPMENT_OZON_CARRIER_WITH_INTERNAL_WB_ADAPTER_NOT_COMBINED_BETA",
   "baseline": "apps/extension/src/imported/ozon-v0.1.22",
   "bundles": {
     "shared/work_session_model.js": [
@@ -26,6 +26,8 @@
     "packages/bridge-core/src/execution/local-operations.js",
     "packages/bridge-core/src/execution/context.js",
     "packages/bridge-core/src/execution/batch-queue.js",
+    "packages/bridge-core/src/execution/guarded-queue.js",
+    "packages/bridge-core/src/execution/observed-quota.js",
     "apps/extension/src/background/context/runtime-context.js"
   ],
   "worker_initializer": {
@@ -127,5 +129,24 @@
     "Ozon prompts and UI except package version",
     "WB reference immutable",
     "server untouched"
+  ],
+  "isolated_bundles": {
+    "shared/wb_adapter.js": {
+      "reference_sources": [
+        "migration/reference/wildberries-v0.3.0/runtime/shared/wb_operations.js",
+        "migration/reference/wildberries-v0.3.0/runtime/shared/wb_credentials.js",
+        "migration/reference/wildberries-v0.3.0/runtime/shared/wb_contract.js",
+        "migration/reference/wildberries-v0.3.0/runtime/shared/wb_guidance_registry.js",
+        "migration/reference/wildberries-v0.3.0/runtime/shared/wb_guidance.js",
+        "migration/reference/wildberries-v0.3.0/runtime/shared/provider_transport_core.js"
+      ],
+      "sources": [
+        "packages/marketplaces/wildberries/src/adapter.js",
+        "packages/marketplaces/wildberries/src/batch-adapter.js"
+      ]
+    }
+  },
+  "worker_postload": [
+    "shared/wb_adapter.js"
   ]
 }

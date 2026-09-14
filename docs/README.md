@@ -27,6 +27,8 @@
 
 ## Разработка и выпуск
 
+- [D2.3: WB adapter, зависимости и прикладные границы](development/EXTENSION_WB_ADAPTER.md), [квитанция](migration/evidence/extension-wb-adapter-d2-3-2026-09-14/README.md).
+
 - [D2.2: очередь и контекст пакета](migration/evidence/extension-context-d2-2-2026-09-14/README.md).
 
 - [Общее ядро D2.1/D2.2 и development-сборка](development/EXTENSION_CORE.md), [квитанция](migration/evidence/extension-core-d2-1-2026-09-14/README.md).
