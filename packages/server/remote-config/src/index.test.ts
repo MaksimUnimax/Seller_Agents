@@ -1,5 +1,5 @@
 import { generateKeyPairSync, sign } from "node:crypto";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   BootstrapRequestV1Schema,
   BootstrapSnapshotPayloadV1Schema,
@@ -10,6 +10,7 @@ import {
   canonicalizeJson,
   configRolloutSelectionModeV1,
   configReleaseHashes,
+  CreateRolloutCommandSchema,
   rolloutBucketV1,
   selectRolloutCandidateV1,
   signBootstrapSnapshot,
@@ -17,6 +18,7 @@ import {
   verifyBootstrapEnvelope,
   verifyBootstrapEnvelopeV2,
   resolveSigningKeyLifecycle,
+  resolveP3BootstrapPolicy,
   type TrustedConfigSigningKeyRing,
 } from "./index.js";
 
@@ -83,6 +85,72 @@ describe("bootstrap.config rollout selection semantics", () => {
     ["RETIRED", "ORDINARY_LATEST"],
   ] as const)("maps %s to %s", (state, mode) => {
     expect(configRolloutSelectionModeV1(state)).toBe(mode);
+  });
+});
+
+describe("version-scoped v2 config selection", () => {
+  it("does not admit a second durable config rollout key", () => {
+    expect(
+      CreateRolloutCommandSchema.safeParse({
+        rolloutKey: "bootstrap.config.v2",
+        targetKind: "CONFIG_RELEASE",
+        subjectKind: "ACCOUNT",
+      }).success,
+    ).toBe(false);
+  });
+
+  it("uses ordinary latest v2 without consulting bootstrap.config", async () => {
+    const latest = {
+      configVersion: 22,
+      contractVersion: "control_plane_v2" as const,
+      snapshotVersion: "bootstrap_snapshot_v2" as const,
+      envelopeVersion: "bootstrap_envelope_v2" as const,
+      contentHashSha256: "a".repeat(64),
+      sourceFingerprintSha256: "b".repeat(64),
+      signingKeyId: "config-v2",
+      publishedAt: new Date("2026-09-04T00:00:00.000Z"),
+      createdAt: new Date("2026-09-04T00:00:00.000Z"),
+    };
+    const findRolloutByKey = vi.fn(() => {
+      throw new Error("v2 must not consult bootstrap.config");
+    });
+    const catalog = {
+      findLatestConfigRelease: vi.fn(async (version: string) =>
+        version === "control_plane_v2" ? latest : undefined,
+      ),
+      findRolloutByKey,
+      listConfigCompatibilityPolicyRevisions: async () => [],
+      listConfigFeatureRules: async () => [],
+      listConfigFeatureRolloutRevisions: async () => [],
+      findExtensionRelease: async () => undefined,
+      listReleaseContracts: async () => [],
+      listReleaseBrowsers: async () => [],
+      listBlockedVersions: async () => [],
+      findConfigRelease: async () => undefined,
+      findLatestRolloutRevision: async () => undefined,
+      findRolloutById: async () => undefined,
+      findFeatureRuleRevision: async () => undefined,
+      findFeatureDefinition: async () => undefined,
+      findSigningKey: async () => undefined,
+      listSigningKeyEvents: async () => [],
+      listConfigReleaseCompatibilityPolicies: async () => [],
+      listCompatibilityPolicyRevisions: async () => [],
+    };
+    const result = await resolveP3BootstrapPolicy(
+      {
+        contractVersion: "control_plane_v2",
+        extensionVersion: "1.2.3",
+        browser: { family: "chrome", version: "120" },
+        accountId: "account-a",
+        deviceId: "device-a",
+      },
+      catalog,
+    );
+    expect(result).toMatchObject({ configVersion: 22 });
+    expect(catalog.findLatestConfigRelease).toHaveBeenCalledWith(
+      "control_plane_v2",
+    );
+    expect(findRolloutByKey).not.toHaveBeenCalled();
   });
 });
 

@@ -43,14 +43,26 @@ function key(keyId: string) {
     fingerprint: createHash("sha256").update(der).digest("hex"),
   };
 }
-async function addConfig(db: DatabaseRuntime, keyId: string) {
+async function addConfig(
+  db: DatabaseRuntime,
+  keyId: string,
+  contractVersion: "control_plane_v1" | "control_plane_v2" = "control_plane_v1",
+) {
+  const snapshotVersion =
+    contractVersion === "control_plane_v1"
+      ? "bootstrap_snapshot_v1"
+      : "bootstrap_snapshot_v2";
+  const envelopeVersion =
+    contractVersion === "control_plane_v1"
+      ? "bootstrap_envelope_v1"
+      : "bootstrap_envelope_v2";
   return (
     await db.query<{ configVersion: number }>(
       'INSERT INTO config_releases(contract_version,snapshot_version,envelope_version,content_hash_sha256,source_fingerprint_sha256,signing_key_id,published_at) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING config_version AS "configVersion"',
       [
-        "control_plane_v1",
-        "bootstrap_snapshot_v1",
-        "bootstrap_envelope_v1",
+        contractVersion,
+        snapshotVersion,
+        envelopeVersion,
         "a".repeat(64),
         "b".repeat(64),
         keyId,
@@ -341,6 +353,27 @@ describe.sequential("P3.5 real PostgreSQL signing-key lifecycle", () => {
     ).rejects.toThrow("SIGNING_KEY_IN_USE");
     await expect(
       p.retireSigningKey({ keyId: k1.keyId, reasonCode: "cutover" }, context),
+    ).resolves.toMatchObject({ eventType: "RETIRED" });
+  });
+
+  it("protects the ordinary-latest v2 signing key without a v2 rollout", async () => {
+    const k1 = key("p35-v2-ordinary-k1"),
+      k2 = key("p35-v2-ordinary-k2");
+    await seedKey(db, k1);
+    await seedKey(db, k2);
+    await addConfig(db, k2.keyId, "control_plane_v2");
+    const p = createP3PolicyPublicationRepository(db);
+    await expect(
+      p.retireSigningKey(
+        { keyId: k2.keyId, reasonCode: "v2-cutover" },
+        context,
+      ),
+    ).rejects.toThrow("SIGNING_KEY_IN_USE");
+    await expect(
+      p.retireSigningKey(
+        { keyId: k1.keyId, reasonCode: "v2-cutover" },
+        context,
+      ),
     ).resolves.toMatchObject({ eventType: "RETIRED" });
   });
 

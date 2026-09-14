@@ -549,7 +549,7 @@ export interface P3BootstrapPolicyCatalog
   ): Promise<CompatibilityPolicyRevision[]>;
 }
 
-/** The exact P3.3 bootstrap.config selectable set, shared by retirement safety. */
+/** Selectable CONFIG_RELEASE rows for a contract-version stream. */
 export async function listP3SelectableConfigReleases(
   catalog: Pick<
     P3BootstrapPolicyCatalog,
@@ -558,7 +558,14 @@ export async function listP3SelectableConfigReleases(
     | "findConfigRelease"
     | "findLatestConfigRelease"
   >,
+  contractVersion: ContractVersion = "control_plane_v1",
 ): Promise<ConfigRelease[]> {
+  // V2 has no CONFIG_RELEASE rollout authority in I1. It is selected from
+  // its own version-scoped ordinary-latest stream.
+  if (contractVersion === "control_plane_v2") {
+    const ordinary = await catalog.findLatestConfigRelease(contractVersion);
+    return ordinary ? [ordinary] : [];
+  }
   const rollout = await catalog.findRolloutByKey("bootstrap.config");
   if (!rollout) {
     const ordinary = await catalog.findLatestConfigRelease("control_plane_v1");
@@ -590,7 +597,17 @@ export async function listP3SelectableConfigReleases(
       ? undefined
       : catalog.findConfigRelease(revision.candidateConfigVersion),
   ]);
-  if (!baseline || !candidate) throw new Error("P3_ROLLOUT_SOURCE_INVALID");
+  if (
+    !baseline ||
+    !candidate ||
+    baseline.contractVersion !== "control_plane_v1" ||
+    baseline.snapshotVersion !== "bootstrap_snapshot_v1" ||
+    baseline.envelopeVersion !== "bootstrap_envelope_v1" ||
+    candidate.contractVersion !== "control_plane_v1" ||
+    candidate.snapshotVersion !== "bootstrap_snapshot_v1" ||
+    candidate.envelopeVersion !== "bootstrap_envelope_v1"
+  )
+    throw new Error("P3_ROLLOUT_SOURCE_INVALID");
   return selectionMode === "BASELINE_ONLY" ? [baseline] : [baseline, candidate];
 }
 export type ResolveP3BootstrapPolicyInput = {
@@ -627,46 +644,55 @@ export async function resolveP3BootstrapPolicy(
 > {
   let selected: ConfigRelease | undefined;
   try {
-    const configRollout = await catalog.findRolloutByKey("bootstrap.config");
-    if (!configRollout)
+    // The accepted v1 rollout remains authoritative for v1. V2 is an
+    // explicit version-scoped ordinary-latest selection and must not consult
+    // (or require) a bootstrap.config CONFIG_RELEASE rollout.
+    if (input.contractVersion === "control_plane_v2") {
       selected = await catalog.findLatestConfigRelease(input.contractVersion);
-    else {
-      if (
-        configRollout.targetKind !== "CONFIG_RELEASE" ||
-        configRollout.rolloutKey !== "bootstrap.config" ||
-        configRollout.cohortSeed.length !== 32
-      )
-        return { failure: "ROLLOUT_SOURCE_INVALID" };
-      const revision = await catalog.findLatestRolloutRevision(
-        configRollout.id,
-      );
-      if (!revision) return { failure: "ROLLOUT_SOURCE_INVALID" };
-      if (
-        revision.targetKind !== "CONFIG_RELEASE" ||
-        revision.rolloutId !== configRollout.id
-      )
-        return { failure: "ROLLOUT_SOURCE_INVALID" };
-      const selectionMode = configRolloutSelectionModeV1(revision.state);
-      if (selectionMode === "ORDINARY_LATEST")
+    } else {
+      const configRollout = await catalog.findRolloutByKey("bootstrap.config");
+      if (!configRollout)
         selected = await catalog.findLatestConfigRelease(input.contractVersion);
       else {
-        const subjectId =
-          configRollout.subjectKind === "ACCOUNT"
-            ? input.accountId
-            : input.deviceId;
-        const candidate = selectRolloutCandidateV1({
-          state: revision.state,
-          percentageBps: revision.percentageBps,
-          rolloutKey: configRollout.rolloutKey,
-          cohortSeed: configRollout.cohortSeed,
-          subjectKind: configRollout.subjectKind,
-          subjectId,
-        });
-        selected = await catalog.findConfigRelease(
-          selectionMode === "BASELINE_ONLY" || !candidate
-            ? revision.baselineConfigVersion!
-            : revision.candidateConfigVersion!,
+        if (
+          configRollout.targetKind !== "CONFIG_RELEASE" ||
+          configRollout.rolloutKey !== "bootstrap.config" ||
+          configRollout.cohortSeed.length !== 32
+        )
+          return { failure: "ROLLOUT_SOURCE_INVALID" };
+        const revision = await catalog.findLatestRolloutRevision(
+          configRollout.id,
         );
+        if (!revision) return { failure: "ROLLOUT_SOURCE_INVALID" };
+        if (
+          revision.targetKind !== "CONFIG_RELEASE" ||
+          revision.rolloutId !== configRollout.id
+        )
+          return { failure: "ROLLOUT_SOURCE_INVALID" };
+        const selectionMode = configRolloutSelectionModeV1(revision.state);
+        if (selectionMode === "ORDINARY_LATEST")
+          selected = await catalog.findLatestConfigRelease(
+            input.contractVersion,
+          );
+        else {
+          const subjectId =
+            configRollout.subjectKind === "ACCOUNT"
+              ? input.accountId
+              : input.deviceId;
+          const candidate = selectRolloutCandidateV1({
+            state: revision.state,
+            percentageBps: revision.percentageBps,
+            rolloutKey: configRollout.rolloutKey,
+            cohortSeed: configRollout.cohortSeed,
+            subjectKind: configRollout.subjectKind,
+            subjectId,
+          });
+          selected = await catalog.findConfigRelease(
+            selectionMode === "BASELINE_ONLY" || !candidate
+              ? revision.baselineConfigVersion!
+              : revision.candidateConfigVersion!,
+          );
+        }
       }
     }
     if (!selected) return { failure: "NO_CONFIG_RELEASE" };

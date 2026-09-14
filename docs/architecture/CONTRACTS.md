@@ -4,6 +4,9 @@
 установленных клиентов. I1-SRV.1 использует отдельный `control_plane_v2` /
 `bootstrap_snapshot_v2` / `bootstrap_envelope_v2`: строгий v1 payload остаётся
 без `account.id`, а v2 подписывает канонический Seller Agents account UUID.
+Для v1 сохраняется rollout authority `bootstrap.config`; v2 в этой волне
+выбирает только последний опубликованный `CONFIG_RELEASE` своей версии.
+Отдельный `bootstrap.config.v2` rollout и миграция базы не вводятся.
 Точные URL новых endpoints определяются из схем при переносе; не создавать независимо написанный клиент по предположениям из Markdown.
 
 ## Идентификаторы

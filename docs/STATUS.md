@@ -40,7 +40,7 @@ D1.E0: [карта расширений](migration/EXTENSION_IMPORT_MAP.md), [к
 
 S1.1: free beta access and atomic admission приняты в canonical `main` merge-коммитом `d0b54aa5e659932d3fa2d996b572e06aadfffe62`; точная post-merge authority и exact-head CI записаны в [S1.1 remote acceptance](server/S1_1_REMOTE_ACCEPTANCE_2026-09-14.md). В принятую область входят beta access basis/admission, атомарная регистрация, OTP/admin/API/bootstrap и соответствующие PostgreSQL проверки; реальная account auth расширения по-прежнему не подключена.
 
-I1-SRV.0 AUDIT COMPLETE; I1-SRV.1 CORRECTED VERSIONED CANDIDATE; OWNER_ARCHITECT_REVIEW_PENDING. Ветка `feature/server-i1-auth-bootstrap` сохраняет строгий v1 bootstrap payload для существующих клиентов и добавляет v2 path со стабильным каноническим Seller Agents account UUID, выбранным из authenticated subject и включённым в подпись. D2.4 остаётся `DEVELOPMENT_APPLICATION_VERIFIED`, `REAL_ACCOUNT_AUTH_NOT_CONNECTED` сохраняется; I1-SRV.2 и последующие шаги, S1.2 и интеграция runtime не начаты.
+I1-SRV.0 AUDIT COMPLETE; I1-SRV.1 CORRECTED VERSIONED CANDIDATE; OWNER_ARCHITECT_REVIEW_PENDING. Ветка `feature/server-i1-auth-bootstrap` сохраняет строгий v1 bootstrap payload для существующих клиентов и добавляет v2 path со стабильным каноническим Seller Agents account UUID, выбранным из authenticated subject и включённым в подпись. V1 сохраняет rollout authority `bootstrap.config`; v2 выбирает только version-scoped ordinary-latest CONFIG_RELEASE. `bootstrap.config.v2` rollout и миграции не добавляются. D2.4 остаётся `DEVELOPMENT_APPLICATION_VERIFIED`, `REAL_ACCOUNT_AUTH_NOT_CONNECTED` сохраняется; I1-SRV.2 и последующие шаги, S1.2 и интеграция runtime не начаты.
 
 ## Следующий этап
 

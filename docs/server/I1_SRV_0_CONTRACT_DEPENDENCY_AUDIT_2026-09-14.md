@@ -21,6 +21,11 @@ against their own published config/policy rows. The account object remains
 strict in both schemas. There is no connected production extension consumer
 yet (`REAL_ACCOUNT_AUTH_NOT_CONNECTED`), so v2 is available for the planned
 consumer migration without making existing v1 clients reject their payload.
+V1 keeps the accepted `bootstrap.config` CONFIG_RELEASE rollout authority.
+V2 uses only explicit version-scoped ordinary-latest CONFIG_RELEASE selection;
+no `bootstrap.config.v2` rollout or database migration is introduced. Feature
+rollouts linked by a selected v2 release continue to use the existing
+feature-rule machinery.
 
 ## Dependency map
 
@@ -53,7 +58,9 @@ UUID inside the v2 signed payload schema, canonicalized into the signed bytes,
 and therefore any account identity tampering fails cryptographic verification.
 Device ID remains an authenticated comparison input and is not added to the
 signed payload. No marketplace/store identifier, credential, migration, table,
-or second auth namespace was introduced.
+or second auth namespace was introduced. Signing-key retirement safety also
+protects the ordinary-latest v2 release; v2 cannot be selected by the v1
+`bootstrap.config` rollout.
 
 Focused tests cover v1 compatibility, v2 subject binding, signed account
 identity, canonical signing, signer key-id consistency, and existing
