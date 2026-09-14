@@ -22,7 +22,6 @@ import type {
 } from "./target-registry.js";
 import {
   CHATGPT_STANDARD_H3_PROFILE,
-  chatGPTConversationIdentity,
   standardAssistantMessages,
   standardCodeSurfaces,
   standardComposerRoots,
@@ -33,6 +32,8 @@ import {
   standardStopControls,
   standardSurfaceRoot,
   standardMessageId,
+  resolveChatGPTConversationIdentity,
+  type ChatGPTConversationIdentityResolution,
 } from "./standard-h3-profile.js";
 
 const STANDARD_PROFILE: H3SurfaceProfile = Object.freeze({
@@ -88,6 +89,10 @@ function safeTurnId(value: string | null): string | null {
     : null;
 }
 
+type ConversationBinding =
+  | Readonly<{ state: "UNBOUND_FRESH" }>
+  | Readonly<{ state: "BOUND"; id: string }>;
+
 function isExpectedChecks(checks: readonly H3BridgeSurfaceCheck[]): boolean {
   return (
     checks.length === EXPECTED_CHECKS.length &&
@@ -142,7 +147,7 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
   #input: Locator | undefined;
   #assistantMessages: Locator | undefined;
   #associatedResponse: Locator | undefined;
-  #conversationId: string | undefined;
+  #conversationBinding: ConversationBinding = { state: "UNBOUND_FRESH" };
   #baselineMessageIds = new Set<string>();
   #baselineMessageCount = 0;
   #promptInserted = false;
@@ -179,10 +184,13 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
       ) {
         return fail(await surface.count());
       }
-      const conversationId = await this.#resolveConversationId(page);
-      if (!conversationId) return fail();
+      const identity = await this.#resolveConversationIdentity(page);
+      if (identity.kind === "CONFLICT") return fail();
       this.#surface = surface;
-      this.#conversationId = conversationId;
+      this.#conversationBinding =
+        identity.kind === "BOUND"
+          ? { state: "BOUND", id: identity.id }
+          : { state: "UNBOUND_FRESH" };
       this.#assistantMessages = standardAssistantMessages(surface);
       this.#baselineMessageCount = await this.#assistantMessages.count();
       if (this.#baselineMessageCount > 64)
@@ -201,7 +209,7 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
   public async identifyApprovedComposer(): Promise<H3StrategyStepResult> {
     return this.#safe(async () => {
       const surface = this.#surface;
-      if (!surface || !this.#conversationId) return fail();
+      if (!surface) return fail();
       const composers = standardComposerRoots(surface);
       if ((await composers.count()) !== 1) return fail(await composers.count());
       const composer = composers.first();
@@ -270,26 +278,45 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
     return this.#safe(async () => {
       if (!this.#sendInvoked || !this.#surface) return fail();
       const stop = standardStopControls(this.#surface);
-      try {
-        await stop.first().waitFor({ state: "visible", timeout: 30_000 });
-        this.#busyObserved = true;
-        return pass(1, true);
-      } catch {
-        // A very fast response can remove Stop before it is sampled.
+      const deadline = Date.now() + 30_000;
+      const freshBindingDeadline = Date.now() + 2_000;
+      while (Date.now() < deadline) {
+        const identity = await this.#resolveConversationIdentity(this.#page);
+        if (!this.#acceptPostSendIdentity(identity)) return fail();
+        const bound = this.#conversationBinding.state === "BOUND";
+        const stopVisible = await stop
+          .first()
+          .isVisible({ timeout: 250 })
+          .catch(() => false);
         const messages = this.#assistantMessages;
-        if (messages && (await messages.count()) > this.#baselineMessageCount) {
+        if (
+          bound &&
+          (stopVisible ||
+            (messages && (await messages.count()) > this.#baselineMessageCount))
+        ) {
           this.#busyObserved = true;
           return pass(1, true);
         }
-        return fail();
+        const responseObserved =
+          messages && (await messages.count()) > this.#baselineMessageCount;
+        if (
+          !bound &&
+          (stopVisible || responseObserved) &&
+          Date.now() >= freshBindingDeadline
+        )
+          return fail();
+        // This is a bounded observation poll, not a sleep used as identity
+        // truth. Route/canonical identity is re-read on every iteration.
+        await new Promise((resolve) => setTimeout(resolve, 25));
       }
+      return fail();
     });
   }
 
   public async observeResponse(): Promise<H3StrategyStepResult> {
     return this.#safe(async () => {
       const messages = this.#assistantMessages;
-      const conversationId = this.#conversationId;
+      const conversationId = this.#boundConversationId();
       if (!this.#sendInvoked || !messages || !conversationId) return fail();
       try {
         await messages.nth(this.#baselineMessageCount).waitFor({
@@ -343,7 +370,7 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
       const composer = this.#composer;
       const page = this.#page;
       const target = this.#target;
-      const conversationId = this.#conversationId;
+      const conversationId = this.#boundConversationId();
       if (
         !response ||
         !composer ||
@@ -399,7 +426,7 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
     this.#input = undefined;
     this.#assistantMessages = undefined;
     this.#associatedResponse = undefined;
-    this.#conversationId = undefined;
+    this.#conversationBinding = { state: "UNBOUND_FRESH" };
     this.#baselineMessageIds.clear();
     this.#baselineMessageCount = 0;
     this.#promptInserted = false;
@@ -450,12 +477,39 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
     return null;
   }
 
-  async #resolveConversationId(page: Page): Promise<string | null> {
-    const canonicalHref = await page
-      .locator('link[rel="canonical"]')
-      .getAttribute("href")
-      .catch(() => null);
-    return chatGPTConversationIdentity(page.url(), canonicalHref);
+  async #resolveConversationIdentity(
+    page: Page | undefined,
+  ): Promise<ChatGPTConversationIdentityResolution> {
+    if (!page) return { kind: "UNBOUND_FRESH" };
+    const canonical = page.locator('link[rel="canonical"]');
+    const canonicalHref =
+      (await canonical.count()) === 1
+        ? await canonical.getAttribute("href")
+        : null;
+    return resolveChatGPTConversationIdentity(page.url(), canonicalHref);
+  }
+
+  #boundConversationId(): string | null {
+    return this.#conversationBinding.state === "BOUND"
+      ? this.#conversationBinding.id
+      : null;
+  }
+
+  #acceptPostSendIdentity(
+    identity: ChatGPTConversationIdentityResolution,
+  ): boolean {
+    if (identity.kind === "CONFLICT") return false;
+    if (this.#conversationBinding.state === "BOUND") {
+      return (
+        identity.kind === "BOUND" &&
+        identity.id === this.#conversationBinding.id
+      );
+    }
+    if (identity.kind === "BOUND") {
+      this.#conversationBinding = { state: "BOUND", id: identity.id };
+      return true;
+    }
+    return true;
   }
 
   async #resolveEditableInput(composer: Locator): Promise<Locator | null> {
@@ -541,7 +595,9 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
     conversationId: string,
   ): Promise<boolean> {
     const page = this.#page;
-    if (!page || (await this.#resolveConversationId(page)) !== conversationId)
+    if (!page) return false;
+    const identity = await this.#resolveConversationIdentity(page);
+    if (identity.kind !== "BOUND" || identity.id !== conversationId)
       return false;
     return (await standardMessageId(locator)) !== null;
   }

@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import {
   CHATGPT_STANDARD_H3_PROFILE,
   chatGPTConversationIdentity,
+  resolveChatGPTConversationIdentity,
 } from "./standard-h3-profile.js";
 
 const source = (name: string) =>
@@ -57,5 +58,24 @@ describe("packaged ChatGPT Standard H3 profile", () => {
     expect(
       chatGPTConversationIdentity("https://chatgpt.com/", null),
     ).toBeNull();
+  });
+
+  it("models fresh and bound identity states without accepting conflicts", () => {
+    const id = "00000000-0000-4000-8000-000000000001";
+    expect(
+      resolveChatGPTConversationIdentity("https://chatgpt.com/", null),
+    ).toEqual({ kind: "UNBOUND_FRESH" });
+    expect(
+      resolveChatGPTConversationIdentity(
+        `https://chatgpt.com/c/${id}`,
+        `https://chatgpt.com/c/${id}`,
+      ),
+    ).toEqual({ kind: "BOUND", id });
+    expect(
+      resolveChatGPTConversationIdentity(
+        `https://chatgpt.com/c/${id}`,
+        "https://chatgpt.com/c/00000000-0000-4000-8000-000000000002",
+      ),
+    ).toEqual({ kind: "CONFLICT" });
   });
 });

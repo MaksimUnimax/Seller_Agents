@@ -14,6 +14,44 @@ the immutable local `CHATGPT_STANDARD_H3_V2` profile in
 locator builders and the existing B2 engine; no caller selector, URL, script,
 raw prompt, raw response, or remote override is accepted.
 
+### Second architectural correction: fresh-chat identity lifecycle
+
+The original B3 implementation coupled Standard surface identification to
+fixture-only `hf-*`/`data-hf-*` markers. The first correction preserved the
+real-authority `CHATGPT_STANDARD_H3_V2` profile and removed that coupling.
+
+The exact previous CI candidate was run `34869901458` (job `104062922373`),
+for head `0fcc31fe8c31105e6338016e8797df1359af171a`. Its failing Standard E2E
+path was reproduced locally before this correction: the strategy required a
+conversation identity before Send, while a fresh root had no route/canonical
+`/c/<UUID>` identity yet. The resulting valid-path failure was the fresh-chat
+lifecycle defect; the conversation-change case was also classified as a
+separate pre-correction identity-observation defect. The remote log endpoint
+was unavailable in this execution environment, so the local reproduction is
+the recorded failure evidence rather than a claim of direct log readback.
+
+The corrected strategy carries a small typed binding state:
+
+- `UNBOUND_FRESH`: an allowed Standard root may identify its surface,
+  composer, and insert the packaged prompt without a conversation UUID.
+- `BOUND`: an existing authoritative route/canonical identity is bound before
+  Send, or a fresh identity is bound once during post-Send observation.
+
+The mature read-only identity authority is
+`apps/extension/src/imported/ozon-v0.1.22/shared/conversation_identity.js`.
+The packaged profile mirrors its same-origin `/c/<UUID>` route/canonical
+semantics and rejects route/canonical conflicts. Response association,
+completion, and Bridge validation require a stable bound identity. A never-
+binding fresh run or any identity mutation fails within the bounded
+observation path, with no resend.
+
+The deterministic fixture now includes fresh-root/no-ID, existing stable
+conversation, never-bind, existing-identity-change, fresh-bound-identity-change,
+and route/canonical-conflict variants. Fresh variants intentionally do not
+pre-seed a canonical conversation link; one valid route/canonical identity is
+created only after the single Send. Historical assistant content remains a
+baseline and cannot satisfy response association.
+
 The deterministic fixture now models the profile's real ChatGPT semantics:
 the bounded document root plus `/c/<UUID>` route/canonical identity, `#prompt-textarea` and the
 accepted prompt fallbacks, `button[data-testid="send-button"]`,
@@ -56,12 +94,19 @@ intentionally conservative and classify unknown accessible dialogs as bounded
 - The fixture has no production-only success path and no strategy-visible
   test bookkeeping.
 
-The full deterministic matrix is 25/25 PASS in real Chromium. It covers valid
+The full deterministic matrix is 31/31 PASS in real Chromium. It covers valid
 Standard, wrong/missing surface, blocker states, all composer/send failures,
 old-response exclusion, busy/response/completion failures, code/Copy drift,
-conversation change, and delivery-path drift. Normal PASS and every post-send
-failure recorded exactly one fixture Send activation; all pre-send and blocker
-cases recorded zero. Stop never increments the Send counter.
+fresh-root binding, existing-conversation binding, never-bind, identity
+mutation, route/canonical conflict, conversation change, and delivery-path
+drift. Normal PASS and every post-send failure recorded exactly one fixture
+Send activation; all pre-send and blocker cases recorded zero. Stop never
+increments the Send counter.
+
+Focused health-runner unit coverage is 73/73 green, including H2, the B2
+engine, the packaged action vocabulary, the V2 profile, and explicit
+`UNBOUND_FRESH`/`BOUND`/conflict identity resolution cases. The H2 Chromium
+regression is 13/13 green.
 
 No Work strategy, B5 persistence, live H3 acceptance, P8.5 scheduling,
 database migration, contract change, Stream A edit, extension edit, provider

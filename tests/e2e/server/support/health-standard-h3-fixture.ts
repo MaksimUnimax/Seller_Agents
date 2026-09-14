@@ -4,6 +4,12 @@ import { CHATGPT_STANDARD_H3_PROFILE } from "../../../../apps/health-runner/src/
 
 export type HealthStandardH3FixtureVariant =
   | "VALID"
+  | "FRESH_ROOT_NO_ID"
+  | "EXISTING_CONVERSATION"
+  | "IDENTITY_NEVER_BINDS"
+  | "EXISTING_IDENTITY_CHANGES"
+  | "FRESH_BOUND_IDENTITY_CHANGES"
+  | "ROUTE_CANONICAL_CONFLICT"
   | "WORK_SURFACE"
   | "MISSING_SURFACE"
   | "LOGIN_EXPIRED"
@@ -42,6 +48,7 @@ const HEALTH_PROMPT = getPackagedH3Prompt("BRIDGE_COMMAND_SMOKE_V1");
 const STANDARD_SELECTORS = CHATGPT_STANDARD_H3_PROFILE.selectors;
 const CONVERSATION_ID = "00000000-0000-4000-8000-000000000001";
 const CHANGED_CONVERSATION_ID = "00000000-0000-4000-8000-000000000003";
+const FRESH_BOUND_CONVERSATION_ID = "00000000-0000-4000-8000-000000000004";
 const BLOCKERS: Readonly<
   Partial<Record<HealthStandardH3FixtureVariant, string>>
 > = {
@@ -133,8 +140,22 @@ function fixtureHtml(
     "BUSY_TIMEOUT",
     "RESPONSE_MISSING",
   ].includes(variant);
-  const canonicalHref = `${origin}/c/${CONVERSATION_ID}`;
-  return `<!doctype html><html><head><title>ChatGPT</title><link rel="canonical" href="${canonicalHref}"></head>
+  const startsFresh = [
+    "VALID",
+    "FRESH_ROOT_NO_ID",
+    "IDENTITY_NEVER_BINDS",
+    "FRESH_BOUND_IDENTITY_CHANGES",
+  ].includes(variant);
+  const canonicalId =
+    variant === "ROUTE_CANONICAL_CONFLICT"
+      ? CHANGED_CONVERSATION_ID
+      : startsFresh
+        ? null
+        : CONVERSATION_ID;
+  const canonicalMarkup = canonicalId
+    ? `<link rel="canonical" href="${origin}/c/${canonicalId}">`
+    : "";
+  return `<!doctype html><html><head><title>ChatGPT</title>${canonicalMarkup}</head>
 <body>${surface}${checkpointMarkup(blocker ?? "")}
 <script>
   const prompt = document.querySelector('#prompt-textarea');
@@ -147,6 +168,24 @@ function fixtureHtml(
       sendCount += 1;
       fetch('/fixture-action?kind=send-click&count=' + sendCount);
       if (sendCount !== 1) return;
+      const bindConversation = (id) => {
+        history.replaceState({}, '', '/c/' + id);
+        let canonical = document.querySelector('link[rel="canonical"]');
+        if (!canonical) {
+          canonical = document.createElement('link');
+          canonical.rel = 'canonical';
+          document.head.appendChild(canonical);
+        }
+        canonical.href = ${JSON.stringify(origin)} + '/c/' + id;
+      };
+      if (${JSON.stringify(variant === "VALID" || variant === "FRESH_ROOT_NO_ID")})
+        setTimeout(() => bindConversation(${JSON.stringify(CONVERSATION_ID)}), 5);
+      if (${JSON.stringify(variant === "FRESH_BOUND_IDENTITY_CHANGES")}) {
+        setTimeout(() => bindConversation(${JSON.stringify(FRESH_BOUND_CONVERSATION_ID)}), 5);
+        setTimeout(() => bindConversation(${JSON.stringify(CHANGED_CONVERSATION_ID)}), 120);
+      }
+      if (${JSON.stringify(variant === "EXISTING_IDENTITY_CHANGES" || variant === "CONVERSATION_CHANGED")})
+        setTimeout(() => bindConversation(${JSON.stringify(CHANGED_CONVERSATION_ID)}), 5);
       const stop = document.querySelector('button[data-testid="stop-button"]');
       if (stop && ${JSON.stringify(variant !== "BUSY_TIMEOUT")}) stop.hidden = false;
       if (${JSON.stringify(variant === "DELIVERY_MISSING")}) document.querySelector('#composer-submit-button')?.remove();
@@ -186,11 +225,23 @@ export async function startHealthStandardH3Fixture(): Promise<HealthStandardH3Fi
       response.end(JSON.stringify({ promptMatches, sendActivations }));
       return;
     }
+    const requestedVariant = new URL(
+      request.url ?? "/",
+      "http://127.0.0.1",
+    ).searchParams.get("fixture");
     const variant = (
-      path === "/auth/login" ? "LOGIN_EXPIRED" : path.slice(1).toUpperCase()
+      path === "/auth/login"
+        ? "LOGIN_EXPIRED"
+        : (requestedVariant ?? path.slice(1).toUpperCase())
     ) as HealthStandardH3FixtureVariant;
     const variants: readonly HealthStandardH3FixtureVariant[] = [
       "VALID",
+      "FRESH_ROOT_NO_ID",
+      "EXISTING_CONVERSATION",
+      "IDENTITY_NEVER_BINDS",
+      "EXISTING_IDENTITY_CHANGES",
+      "FRESH_BOUND_IDENTITY_CHANGES",
+      "ROUTE_CANONICAL_CONFLICT",
       "WORK_SURFACE",
       "MISSING_SURFACE",
       "LOGIN_EXPIRED",
@@ -242,8 +293,24 @@ export async function startHealthStandardH3Fixture(): Promise<HealthStandardH3Fi
   const origin = `http://127.0.0.1:${address.port}`;
   return {
     origin,
-    startUrl: (variant, bookkeeping = true) =>
-      `${origin}${variant === "LOGIN_EXPIRED" ? "/auth/login" : `/${variant.toLowerCase()}`}${bookkeeping ? "" : "?bookkeeping-off"}`,
+    startUrl: (variant, bookkeeping = true) => {
+      const boundRoute = [
+        "EXISTING_CONVERSATION",
+        "EXISTING_IDENTITY_CHANGES",
+        "ROUTE_CANONICAL_CONFLICT",
+      ].includes(variant);
+      const path =
+        variant === "LOGIN_EXPIRED"
+          ? "/auth/login"
+          : boundRoute
+            ? `/c/${CONVERSATION_ID}`
+            : `/${variant.toLowerCase()}`;
+      const params = new URLSearchParams();
+      if (boundRoute) params.set("fixture", variant);
+      if (!bookkeeping) params.set("bookkeeping-off", "");
+      const query = params.toString();
+      return `${origin}${path}${query ? `?${query}` : ""}`;
+    },
     get promptMatches() {
       return promptMatches;
     },

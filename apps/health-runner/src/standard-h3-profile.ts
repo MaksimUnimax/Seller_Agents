@@ -167,15 +167,35 @@ export function chatGPTConversationIdentity(
   pageUrl: string,
   canonicalHref: string | null,
 ): string | null {
+  const resolution = resolveChatGPTConversationIdentity(pageUrl, canonicalHref);
+  return resolution.kind === "BOUND" ? resolution.id : null;
+}
+
+export type ChatGPTConversationIdentityResolution =
+  | Readonly<{ kind: "BOUND"; id: string }>
+  | Readonly<{ kind: "UNBOUND_FRESH" }>
+  | Readonly<{ kind: "CONFLICT" }>;
+
+/**
+ * Same-origin route/canonical identity semantics adapted from the imported
+ * ChatGPT conversation authority. A root/new-chat page is a valid unbound
+ * state; it is not treated as an identity failure before Send.
+ */
+export function resolveChatGPTConversationIdentity(
+  pageUrl: string,
+  canonicalHref: string | null,
+): ChatGPTConversationIdentityResolution {
   try {
     const page = new URL(pageUrl);
     const fromUrl = chatGPTConversationIdFromUrl(page.toString());
     const fromCanonical = canonicalHref
       ? chatGPTConversationIdFromCanonical(page.origin, canonicalHref)
       : null;
-    if (fromUrl && fromCanonical && fromUrl !== fromCanonical) return null;
-    return fromUrl ?? fromCanonical;
+    if (fromUrl && fromCanonical && fromUrl !== fromCanonical)
+      return { kind: "CONFLICT" };
+    const id = fromUrl ?? fromCanonical;
+    return id ? { kind: "BOUND", id } : { kind: "UNBOUND_FRESH" };
   } catch {
-    return null;
+    return { kind: "UNBOUND_FRESH" };
   }
 }

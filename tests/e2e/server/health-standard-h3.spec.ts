@@ -121,6 +121,56 @@ test.describe("B3 packaged ChatGPT Standard H3", () => {
     }
   });
 
+  test("supports a fresh root with no pre-send conversation identity", async () => {
+    const fixture = await startHealthStandardH3Fixture();
+    try {
+      const result = await runVariant(fixture, "FRESH_ROOT_NO_ID");
+      expect(result.outcome).toBe("PASS");
+      expect(result.completedSteps).toHaveLength(9);
+      await waitForFixtureState(fixture, {
+        promptMatches: 1,
+        sendActivations: 1,
+      });
+    } finally {
+      await fixture.close();
+    }
+  });
+
+  test("supports an existing bound conversation with stable identity", async () => {
+    const fixture = await startHealthStandardH3Fixture();
+    try {
+      const result = await runVariant(fixture, "EXISTING_CONVERSATION");
+      expect(result.outcome).toBe("PASS");
+      await waitForFixtureState(fixture, {
+        promptMatches: 1,
+        sendActivations: 1,
+      });
+    } finally {
+      await fixture.close();
+    }
+  });
+
+  test("bounds a fresh send when conversation identity never binds", async () => {
+    const fixture = await startHealthStandardH3Fixture();
+    try {
+      const result = await runVariant(fixture, "IDENTITY_NEVER_BINDS");
+      expect(result.failureCode).toBe("BUSY_OBSERVATION_FAILED");
+      await waitForFixtureState(fixture, {
+        promptMatches: 1,
+        sendActivations: 1,
+      });
+    } finally {
+      await fixture.close();
+    }
+  });
+
+  test("rejects a deterministic route/canonical identity conflict before Send", async () => {
+    await expectNoSend(
+      "ROUTE_CANONICAL_CONFLICT",
+      "SURFACE_IDENTIFICATION_FAILED",
+    );
+  });
+
   test("fixture bookkeeping is irrelevant to production contour discovery", async () => {
     const fixture = await startHealthStandardH3Fixture();
     try {
@@ -251,13 +301,32 @@ test.describe("B3 packaged ChatGPT Standard H3", () => {
 
   test.describe("post-send failures never retry", () => {
     for (const [variant, failureCode] of [
+      ["EXISTING_IDENTITY_CHANGES", "BUSY_OBSERVATION_FAILED"],
+      ["FRESH_BOUND_IDENTITY_CHANGES", "BRIDGE_SURFACE_VALIDATION_FAILED"],
+    ] as const) {
+      test(`${variant} is bounded after one Send`, async () => {
+        const fixture = await startHealthStandardH3Fixture();
+        try {
+          const result = await runVariant(fixture, variant);
+          expect(result.failureCode).toBe(failureCode);
+          await waitForFixtureState(fixture, {
+            promptMatches: 1,
+            sendActivations: 1,
+          });
+        } finally {
+          await fixture.close();
+        }
+      });
+    }
+
+    for (const [variant, failureCode] of [
       ["BUSY_TIMEOUT", "BUSY_TIMEOUT"],
       ["RESPONSE_MISSING", "RESPONSE_TIMEOUT"],
       ["COMPLETION_MISSING", "COMPLETION_TIMEOUT"],
       ["CODE_BLOCK_MISSING", "BRIDGE_SURFACE_VALIDATION_FAILED"],
       ["COPY_MISSING", "BRIDGE_SURFACE_VALIDATION_FAILED"],
       ["COPY_MISMATCHED", "BRIDGE_SURFACE_VALIDATION_FAILED"],
-      ["CONVERSATION_CHANGED", "RESPONSE_OBSERVATION_FAILED"],
+      ["CONVERSATION_CHANGED", "BUSY_OBSERVATION_FAILED"],
       ["DELIVERY_MISSING", "BRIDGE_SURFACE_VALIDATION_FAILED"],
     ] as const) {
       test(`${variant} activates Send once`, async () => {
