@@ -14,6 +14,7 @@ import {
   OtpVerifyBodyV1Schema,
   OtpVerifyResponseV1Schema,
 } from "@product/contracts";
+import { validOtpVerifyIdempotencyKey } from "@product/auth";
 import { ControlledError } from "./app.js";
 
 const sessionCookie = "pcp_portal_session",
@@ -33,16 +34,25 @@ export function registerAuthRoutes(
       | "AUTH_RATE_LIMITED"
       | "AUTH_OTP_INVALID"
       | "AUTH_LOGIN_DENIED"
-      | "AUTH_CSRF_INVALID",
+      | "AUTH_CSRF_INVALID"
+      | "BETA_CLOSED"
+      | "BETA_CAPACITY_REACHED",
   ) =>
     new ControlledError(
       code,
       code === "AUTH_RATE_LIMITED"
         ? "Authentication rate limited"
-        : "Authentication failed",
+        : code === "BETA_CLOSED"
+          ? "Beta registration is currently closed. If you already have an account, sign in."
+          : code === "BETA_CAPACITY_REACHED"
+            ? "Beta registration is currently full. If you already have an account, sign in."
+            : "Authentication failed",
       code === "AUTH_RATE_LIMITED"
         ? 429
-        : code === "AUTH_LOGIN_DENIED" || code === "AUTH_CSRF_INVALID"
+        : code === "AUTH_LOGIN_DENIED" ||
+            code === "AUTH_CSRF_INVALID" ||
+            code === "BETA_CLOSED" ||
+            code === "BETA_CAPACITY_REACHED"
           ? 403
           : 401,
     );
@@ -87,11 +97,19 @@ export function registerAuthRoutes(
     },
     async (request, reply) => {
       const body = OtpVerifyBodyV1Schema.parse(request.body);
+      const idempotencyKey = request.headers["idempotency-key"];
+      if (
+        idempotencyKey !== undefined &&
+        (typeof idempotencyKey !== "string" ||
+          !validOtpVerifyIdempotencyKey(idempotencyKey))
+      )
+        throw new ControlledError("INVALID_REQUEST", "Invalid request", 400);
       const result = await auth.verifyOtp(
         body.challengeId,
         body.code,
         request.ip,
         request.id,
+        typeof idempotencyKey === "string" ? idempotencyKey : undefined,
       );
       if (!result.ok) throw error(result.code);
       const options = {

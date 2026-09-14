@@ -8,6 +8,7 @@ import {
   type AccessTokenSigningKey,
 } from "@product/extension-auth";
 import type { CommercialDeviceAdmission } from "@product/commercial-access";
+import type { BetaDeviceAdmission } from "@product/beta-access";
 
 export const PRE_ENTITLEMENT_ACTIVE_DEVICE_LIMIT = 1;
 export const EXCHANGE_REPLAY_WINDOW_MS = 120_000;
@@ -27,7 +28,11 @@ export interface DeviceLimitResolver {
   resolve(
     accountId: string,
     at?: Date,
-  ): Promise<{ maxActive: number; source: string } | CommercialDeviceAdmission>;
+  ): Promise<
+    | { maxActive: number; source: string }
+    | CommercialDeviceAdmission
+    | BetaDeviceAdmission
+  >;
 }
 export class PreEntitlementDeviceLimitResolver implements DeviceLimitResolver {
   async resolve() {
@@ -97,7 +102,9 @@ export interface DeviceManagementRepository {
       accountId: string,
       at: Date,
     ) => Promise<
-      { maxActive: number; source: string } | CommercialDeviceAdmission
+      | { maxActive: number; source: string }
+      | CommercialDeviceAdmission
+      | BetaDeviceAdmission
     >;
   }): Promise<
     | {
@@ -193,6 +200,11 @@ export class DeviceManagementService {
       correlationId,
       resolveLimit: async (accountId, at) => {
         const value = await this.limits.resolve(accountId, at);
+        if (
+          "kind" in value &&
+          value.kind === "BETA_UNLIMITED_FOR_COMMERCIAL_COUNT"
+        )
+          return value;
         if ("kind" in value && value.kind === "ELIGIBLE")
           return { maxActive: value.maxActive, source: value.source };
         if ("kind" in value) return value;

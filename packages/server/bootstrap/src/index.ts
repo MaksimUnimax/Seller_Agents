@@ -10,6 +10,7 @@ import {
 } from "@product/remote-config";
 import { BootstrapSnapshotPayloadV1Schema } from "@product/contracts";
 import { BootstrapAiResolutionService } from "./ai-resolution.js";
+import type { BetaAccessResolution } from "@product/beta-access";
 
 export * from "./ai-resolution.js";
 
@@ -29,6 +30,9 @@ export type BootstrapClock = { now(): Date };
 export type BootstrapCommercialAccessResolver = {
   resolve(accountId: string, at: Date): Promise<CommercialAccessResolution>;
 };
+export type BootstrapBetaAccessResolver = {
+  resolve(accountId: string): Promise<BetaAccessResolution>;
+};
 export class BootstrapError extends Error {
   constructor(public readonly code: "DEVICE_MISMATCH" | "UNAVAILABLE") {
     super(code);
@@ -41,6 +45,7 @@ export class BootstrapService {
     private readonly clock: BootstrapClock = { now: () => new Date() },
     private readonly commercialAccess?: BootstrapCommercialAccessResolver,
     private readonly aiResolution?: BootstrapAiResolutionService,
+    private readonly betaAccess?: BootstrapBetaAccessResolver,
   ) {}
   async issue(
     subject: BootstrapSubject,
@@ -63,7 +68,17 @@ export class BootstrapService {
     if (commercial && commercial.kind !== "OK")
       throw new BootstrapError("UNAVAILABLE");
     const currentSubscription = commercial?.value.currentSubscription ?? null;
-    const eligible = commercial?.value.access.kind === "ELIGIBLE";
+    const commercialEligible = commercial?.value.access.kind === "ELIGIBLE";
+    const beta = this.betaAccess
+      ? await this.betaAccess.resolve(subject.accountId)
+      : { kind: "NONE" as const };
+    const betaEligible = beta.kind === "BETA";
+    const eligible = betaEligible || commercialEligible;
+    const accessBasis = betaEligible
+      ? "BETA"
+      : commercialEligible
+        ? "COMMERCIAL"
+        : "NONE";
     let ai: BootstrapSnapshotPayloadV1["ai"] = { status: "UNCONFIGURED" };
     if (request.detectedAi) {
       const detected = {
@@ -71,7 +86,7 @@ export class BootstrapService {
         surface: request.detectedAi.surface,
         variant: request.detectedAi.variant ?? null,
       };
-      if (commercial && !eligible) {
+      if (!eligible) {
         ai = { status: "UNAVAILABLE", detected, reason: "NO_PROFILE" };
       } else if (this.aiResolution) {
         try {
@@ -93,7 +108,7 @@ export class BootstrapService {
     const issuedAt = now.toISOString();
     let expiresAt = new Date(now.getTime() + 15 * 60_000);
     let offlineGraceUntil = new Date(expiresAt.getTime() + 24 * 60 * 60_000);
-    if (eligible) {
+    if (commercialEligible) {
       const deadline = commercial!.value.accessUntil!;
       offlineGraceUntil = new Date(
         Math.min(offlineGraceUntil.getTime(), deadline.getTime()),
@@ -113,6 +128,7 @@ export class BootstrapService {
       expiresAt: expiresAt.toISOString(),
       offlineGraceUntil: offlineGraceUntil.toISOString(),
       account: { status: "ACTIVE" },
+      accessBasis,
       subscription: currentSubscription
         ? {
             state: currentSubscription.state,
@@ -121,7 +137,7 @@ export class BootstrapService {
         : { state: "NONE", planRevision: null },
       devicePolicy: { status: "ACTIVE" },
       compatibility: result.compatibility,
-      entitlements: eligible ? commercial!.value.entitlements : {},
+      entitlements: commercialEligible ? commercial!.value.entitlements : {},
       features: result.features,
       ai,
     });

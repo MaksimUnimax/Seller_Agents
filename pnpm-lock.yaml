@@ -106,6 +106,9 @@ importers:
       '@product/auth':
         specifier: workspace:*
         version: link:../../packages/server/auth
+      '@product/beta-access':
+        specifier: workspace:*
+        version: link:../../packages/server/beta-access
       '@product/bootstrap':
         specifier: workspace:*
         version: link:../../packages/server/bootstrap
@@ -231,6 +234,15 @@ importers:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.5.18)(tsx@4.20.5)(typescript@5.9.2)(yaml@2.9.0)
 
+  packages/contracts:
+    dependencies:
+      '@product/shared':
+        specifier: workspace:*
+        version: link:../shared
+      zod:
+        specifier: 4.1.5
+        version: 4.1.5
+
   packages/server/adapter-registry:
     dependencies:
       '@product/remote-config':
@@ -324,6 +336,8 @@ importers:
         specifier: workspace:*
         version: link:../../shared
 
+  packages/server/beta-access: {}
+
   packages/server/billing:
     dependencies:
       '@product/commercial-catalog':
@@ -344,6 +358,9 @@ importers:
       '@product/adapter-registry':
         specifier: workspace:*
         version: link:../adapter-registry
+      '@product/beta-access':
+        specifier: workspace:*
+        version: link:../beta-access
       '@product/commercial-access':
         specifier: workspace:*
         version: link:../commercial-access
@@ -359,6 +376,9 @@ importers:
 
   packages/server/commercial-access:
     dependencies:
+      '@product/beta-access':
+        specifier: workspace:*
+        version: link:../beta-access
       '@product/entitlements':
         specifier: workspace:*
         version: link:../entitlements
@@ -390,15 +410,6 @@ importers:
         specifier: 4.1.5
         version: 4.1.5
 
-  packages/contracts:
-    dependencies:
-      '@product/shared':
-        specifier: workspace:*
-        version: link:../shared
-      zod:
-        specifier: 4.1.5
-        version: 4.1.5
-
   packages/server/db:
     dependencies:
       '@product/adapter-registry':
@@ -419,6 +430,9 @@ importers:
       '@product/auth':
         specifier: workspace:*
         version: link:../auth
+      '@product/beta-access':
+        specifier: workspace:*
+        version: link:../beta-access
       '@product/billing':
         specifier: workspace:*
         version: link:../billing
@@ -486,6 +500,9 @@ importers:
 
   packages/server/device-management:
     dependencies:
+      '@product/beta-access':
+        specifier: workspace:*
+        version: link:../beta-access
       '@product/commercial-access':
         specifier: workspace:*
         version: link:../commercial-access
@@ -593,12 +610,6 @@ importers:
         specifier: 4.1.5
         version: 4.1.5
 
-  packages/shared:
-    dependencies:
-      zod:
-        specifier: 4.1.5
-        version: 4.1.5
-
   packages/server/simulated-extension-client:
     dependencies:
       '@product/adapter-registry':
@@ -625,6 +636,12 @@ importers:
       '@product/plans':
         specifier: workspace:*
         version: link:../plans
+      zod:
+        specifier: 4.1.5
+        version: 4.1.5
+
+  packages/shared:
+    dependencies:
       zod:
         specifier: 4.1.5
         version: 4.1.5

@@ -70,6 +70,32 @@ Fields:
 
 No plaintext OTP persisted.
 
+### `beta_admission_state`
+
+The singleton (`id = 1`) stores `mode` (`CLOSED`, `OPEN`, `PAUSED`), integer
+`capacity`, cumulative integer `admitted`, positive `revision`, and
+`updated_at`. Database checks enforce `0 <= admitted <= capacity` and the
+singleton key. Production starts at `CLOSED`, capacity `0`, admitted `0`.
+
+### `beta_admissions`
+
+Durable one-per-account admission membership with unique account and user
+references plus `admitted_at`. It is not decremented automatically when an
+account is suspended or removed.
+
+### `otp_verify_replays`
+
+Stores a challenge reference, HMAC idempotency identity, user/session
+references, and expiry. It contains no plaintext OTP, idempotency key, or
+portal token. Challenge uniqueness permits replay only for the same committed
+verification attempt.
+
+### `beta_admission_mutations`
+
+Idempotent admin mutation ledger keyed by HMAC request identity. It records
+safe action, actor, old/new mode/capacity/admitted/revision, and timestamp;
+the separate audit event records the bounded reason and correlation identity.
+
 ## 3. Devices and sessions
 
 ### `devices`

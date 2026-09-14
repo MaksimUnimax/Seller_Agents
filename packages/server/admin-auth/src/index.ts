@@ -13,6 +13,7 @@ export const ADMIN_ROLES = [
   "ADMIN_OPS",
   "ADMIN_SUPPORT",
   "ADMIN_BILLING_READONLY",
+  "ADMIN_BETA_OPERATOR",
 ] as const;
 export type AdminRole = (typeof ADMIN_ROLES)[number];
 
@@ -44,6 +45,8 @@ export const ADMIN_PERMISSIONS = [
   "ai.profile.manage",
   "ai.assignment.read",
   "ai.assignment.manage",
+  "beta.admission.read",
+  "beta.admission.manage",
 ] as const;
 export type AdminPermission = (typeof ADMIN_PERMISSIONS)[number];
 
@@ -89,6 +92,7 @@ const rolePermissions: Record<AdminRole, readonly AdminPermission[]> = {
     "billing.read",
     "admin.audit.read",
   ],
+  ADMIN_BETA_OPERATOR: ["beta.admission.read", "beta.admission.manage"],
 };
 
 export function isAdminRole(value: string): value is AdminRole {

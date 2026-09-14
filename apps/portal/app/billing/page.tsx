@@ -4,6 +4,7 @@ import { controlPlane } from "../../lib/control-plane";
 
 type Account = { id: string; displayName: string | null; status: string };
 type SubscriptionData = {
+  accessBasis?: "BETA" | "COMMERCIAL" | "NONE";
   access: { status: "ELIGIBLE" | "INELIGIBLE"; reason: string | null };
   subscription: {
     state: string;
@@ -96,6 +97,12 @@ export default function Billing() {
       </label>
       {subscription && (
         <>
+          {subscription.accessBasis === "BETA" && (
+            <p role="status">
+              Free beta access is active. No subscription or commercial device
+              limit is required.
+            </p>
+          )}
           <h2>Current subscription</h2>
           <p>
             Access: {subscription.access.status}

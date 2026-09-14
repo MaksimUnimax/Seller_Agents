@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@product/adapter-registry": "workspace:*",
+    "@product/beta-access": "workspace:*",
     "@product/compatibility": "workspace:*",
     "@product/commercial-access": "workspace:*",
     "@product/contracts": "workspace:*",

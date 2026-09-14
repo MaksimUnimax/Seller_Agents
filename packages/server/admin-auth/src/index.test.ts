@@ -60,16 +60,19 @@ function service(
 }
 
 describe("P6.1 admin crypto and RBAC foundation", () => {
-  it("defines exactly the four initial roles", () => {
+  it("defines the initial roles plus the dedicated beta operator", () => {
     expect(ADMIN_ROLES).toEqual([
       "ADMIN_OWNER",
       "ADMIN_OPS",
       "ADMIN_SUPPORT",
       "ADMIN_BILLING_READONLY",
+      "ADMIN_BETA_OPERATOR",
     ]);
   });
   it("defines the frozen permission vocabulary without later domains", () => {
-    expect(ADMIN_PERMISSIONS).toHaveLength(27);
+    expect(ADMIN_PERMISSIONS).toHaveLength(29);
+    expect(ADMIN_PERMISSIONS).toContain("beta.admission.read");
+    expect(ADMIN_PERMISSIONS).toContain("beta.admission.manage");
     expect(ADMIN_PERMISSIONS.filter((p) => p.startsWith("ai."))).toEqual([
       "ai.registry.read",
       "ai.registry.manage",

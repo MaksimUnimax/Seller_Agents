@@ -56,6 +56,12 @@ Properties:
 - single-use;
 - attempt/expiry enforcement;
 - audit security event.
+- The portal sends an `Idempotency-Key` for each logical verification action and
+  reuses it only for an uncertain retry. The server stores an HMAC identity and
+  minimum replay receipt; another key cannot reuse a consumed OTP.
+- A valid new identity is admitted only inside the same transaction as OTP
+  consumption, account creation, session creation, and the beta counter update.
+  Safe admission failures are `BETA_CLOSED` and `BETA_CAPACITY_REACHED`.
 
 ### `POST /v1/auth/logout`
 
@@ -161,6 +167,24 @@ Portal session auth; the caller must be the account owner and supplies
 `accountId`. Returns safe, account-scoped payment history with bounded cursor
 pagination and no provider, event, reconciliation, or idempotency internals.
 Responses are `Cache-Control: no-store`.
+
+### `GET /v1/admin/beta/admission`
+
+Requires the separate admin session and `beta.admission.read`. Returns
+`mode`, `capacity`, cumulative `admitted`, computed `remaining`, `revision`,
+and `updatedAt`. The response is `Cache-Control: no-store`.
+
+### `POST /v1/admin/beta/admission`
+
+Requires the separate admin session, CSRF, and `beta.admission.manage`. The
+body contains `requestId`, `expectedRevision`, `action` (`OPEN`, `PAUSE`,
+`CLOSE`, `ADD_CAPACITY`, or `SET_CAPACITY`), the action-specific bounded
+integer, and a bounded non-empty `reason`. Stale revisions return
+`ADMIN_STATE_STALE`; invalid state transitions/capacity return
+`ADMIN_CONFLICT`. A repeated requestId with the same payload replays the
+committed state without a second mutation or audit event; a different payload
+conflicts. Admin audit stores safe before/after state, actor, reason, revision,
+and hashed request identity only.
 
 ### `POST /v1/billing/checkouts` (deferred)
 

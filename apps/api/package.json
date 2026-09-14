@@ -21,6 +21,7 @@
     "@product/plans": "workspace:*",
     "@product/admin-ops": "workspace:*",
     "@product/auth": "workspace:*",
+    "@product/beta-access": "workspace:*",
     "@product/bootstrap": "workspace:*",
     "@product/commercial-access": "workspace:*",
     "@product/commercial-catalog": "workspace:*",

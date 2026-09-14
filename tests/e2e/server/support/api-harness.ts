@@ -24,6 +24,7 @@ import {
   createP7AdminAiCommandRepository,
   createProfileLifecycleRepository,
   authorizeAdminMutationInTransaction,
+  createBetaAdmissionRepository,
 } from "@product/db";
 import { AuthService, deriveAuthKeys } from "@product/auth";
 import { AdminAuthService, deriveAdminAuthKeys } from "@product/admin-auth";
@@ -31,6 +32,7 @@ import { AdminOpsService } from "@product/admin-ops";
 import { AdminBillingService } from "@product/admin-billing";
 import { createAdminCommercialService } from "@product/admin-commercial";
 import { AdminAiService } from "@product/admin-ai";
+import { BetaAdmissionService } from "@product/beta-access";
 import {
   DeviceAuthorizationService,
   deriveDeviceAuthKeys,
@@ -110,6 +112,7 @@ async function main(): Promise<void> {
       p3Catalog.findSigningKey(keyId),
     );
     const subscriptionRepository = createP5SubscriptionRepository(database);
+    const betaAdmission = new BetaAdmissionService(createBetaAdmissionRepository(database));
     const adminAuth = new AdminAuthService(
       createAdminAuthRepository(database),
       deriveAdminAuthKeys(root),
@@ -140,11 +143,12 @@ async function main(): Promise<void> {
         root,
         signingKey,
         {
-          resolve: (accountId, at) =>
-            commercialAccess.resolveDeviceAdmission(
-              accountId,
-              at ?? new Date(),
-            ),
+          resolve: async (accountId, at) => {
+            const beta = await betaAdmission.resolve(accountId);
+            if (beta.kind === "BETA")
+              return { kind: "BETA_UNLIMITED_FOR_COMMERCIAL_COUNT" as const };
+            return commercialAccess.resolveDeviceAdmission(accountId, at ?? new Date());
+          },
         },
       ),
       bootstrapService: new BootstrapService(
@@ -155,10 +159,13 @@ async function main(): Promise<void> {
         new BootstrapAiResolutionService(
           createBootstrapAiResolutionRepository(database),
         ),
+        betaAdmission,
       ),
       commercialPortalService: new CommercialPortalService(
         createP5CommercialPortalRepository(database),
         commercialAccess,
+        undefined,
+        betaAdmission,
       ),
       adminAuthService: adminAuth,
       adminOpsService: new AdminOpsService(
@@ -166,6 +173,8 @@ async function main(): Promise<void> {
         new CommercialPortalService(
           createP5CommercialPortalRepository(database),
           commercialAccess,
+          undefined,
+          betaAdmission,
         ),
       ),
       adminBillingService: new AdminBillingService(
@@ -188,6 +197,7 @@ async function main(): Promise<void> {
           beforeMutation: authorizeAdminMutationInTransaction,
         }),
       ),
+      betaAdmissionService: betaAdmission,
     });
     await app.listen({ host: "127.0.0.1", port: 3100 });
   } catch (error) {

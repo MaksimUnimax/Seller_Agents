@@ -88,6 +88,11 @@ async function ensureDefaultCommercialSubscription(): Promise<void> {
   );
   const account = accounts[0];
   if (!account) return;
+  // Existing E2E coverage intentionally exercises commercial-only accounts.
+  // The login flow creates a beta account when admission is open, so convert
+  // this fixture account to the separately seeded commercial state without
+  // decrementing cumulative beta admitted capacity.
+  await sql("DELETE FROM beta_admissions WHERE account_id=$1", [account.id]);
   const existing = await sql<{ id: string }>(
     "SELECT id FROM subscriptions WHERE account_id=$1 AND state <> 'EXPIRED'",
     [account.id],
