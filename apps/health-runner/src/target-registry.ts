@@ -7,6 +7,7 @@ const TARGET_KEY_PATTERN = /^[a-z][a-z0-9_]{0,63}$/;
 export const ControlledTargetKeySchema = z
   .string()
   .regex(TARGET_KEY_PATTERN, "invalid controlled target key");
+export type ControlledTargetKey = z.infer<typeof ControlledTargetKeySchema>;
 
 const ControlledTargetDefinitionSchema = z
   .object({

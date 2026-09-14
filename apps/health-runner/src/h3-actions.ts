@@ -14,7 +14,7 @@ const H3ProfileShape = {
   profileRevision: z.literal(1),
 } as const;
 
-const H3SurfaceProfileSchema = z
+export const H3SurfaceProfileSchema = z
   .discriminatedUnion("surface", [
     z
       .object({
@@ -114,6 +114,11 @@ export const H3PackagedActionSchema = z
   .readonly();
 export type H3PackagedAction = z.infer<typeof H3PackagedActionSchema>;
 
+export type H3BridgeSurfaceCheck = Extract<
+  H3PackagedAction,
+  { kind: "VALIDATE_BRIDGE_SURFACES" }
+>["checks"][number];
+
 export const H3_PACKAGED_ACTION_KIND_ORDER = H3_BEHAVIOR_STEP_ORDER;
 
 export type H3PackagedActionSequence = readonly [
@@ -144,6 +149,10 @@ const PACKAGED_H3_PROFILES: Readonly<Record<H3Surface, H3SurfaceProfile>> =
 
 export function getPackagedH3Profile(surface: H3Surface): H3SurfaceProfile {
   return H3SurfaceProfileSchema.parse(PACKAGED_H3_PROFILES[surface]);
+}
+
+export function parseH3SurfaceProfile(input: unknown): H3SurfaceProfile {
+  return H3SurfaceProfileSchema.parse(input);
 }
 
 export function parseH3PackagedAction(input: unknown): H3PackagedAction {
