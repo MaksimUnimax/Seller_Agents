@@ -149,8 +149,12 @@ that readback because its deterministic completion matrix did not prove the
 fail-closed invariant. Final correction-head CI is recorded below after the
 exact new candidate run completes.
 
-### Final exact candidate CI
+### Final exact candidate CI readback
 
-- Candidate SHA: `PENDING_LOCAL_VALIDATION`
-- Server CI run/job: `PENDING_PUSH`
-- Terminal result: `PENDING_PUSH`
+- Code correction candidate SHA: `aa5ea7d2b1d3b8a78338928f566c9ed9b36e3698`
+- Remote feature ref: confirmed at that exact SHA before this evidence
+  readback commit.
+- Server CI run/job: not readable from the connected GitHub Actions account;
+  direct run-list, exact-commit workflow-runs, workflow-run, workflow-jobs,
+  combined-status, and repository metadata endpoints all returned GitHub 404.
+- Terminal result: `EXTERNAL_BLOCKER` (no CI success is claimed).
