@@ -8,7 +8,7 @@ commit 3f16bbf6387cc62303e292fcfe61449c8f243b92.
 
 Прочитать сначала [общие решения](../decisions/DECISIONS.md), [поручение продолжения](../development/SERVER_CODEX_HANDOFF.md) и [квитанцию переноса](../migration/evidence/SERVER_IMPORT_ACCEPTANCE.md).
 Новые общепродуктовые решения имеют приоритет над старым порядком «Bridge только P11», платным первым выпуском и коммерческим лимитом установок.
-Пока перенесено исходное поведение; бесплатная beta eligibility, quota регистрации и прочие новые механики ещё требуют реализации.
+S1.1 free beta eligibility и quota регистрации приняты в canonical `main`; точная приёмка записана в [S1.1 remote acceptance](S1_1_REMOTE_ACCEPTANCE_2026-09-14.md). Реальная авторизация единого расширения и email/preprod остаются будущими участками I1 и S1.2.
 
 Команды и окружение: [LOCAL_DEVELOPMENT](LOCAL_DEVELOPMENT.md).
 
