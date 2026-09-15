@@ -118,3 +118,36 @@ export function createPackagedStandardH3TargetRegistry(): ControlledTargetRegist
     },
   ]);
 }
+
+/** The credential-free production target for the authenticated Work profile. */
+export function createPackagedWorkH3TargetRegistry(): ControlledTargetRegistry {
+  return new ControlledTargetRegistry([
+    {
+      key: "chatgpt_work_health",
+      startUrl: "https://chatgpt.com/",
+      allowedTopLevelOrigins: ["https://chatgpt.com"],
+      browserFamily: "chrome",
+      navigationTimeoutMs: 15_000,
+    },
+  ]);
+}
+
+/** Both packaged ChatGPT targets; no caller-supplied target is added. */
+export function createPackagedH3TargetRegistry(): ControlledTargetRegistry {
+  return new ControlledTargetRegistry([
+    {
+      key: "chatgpt_standard_health",
+      startUrl: "https://chatgpt.com/",
+      allowedTopLevelOrigins: ["https://chatgpt.com"],
+      browserFamily: "chrome",
+      navigationTimeoutMs: 15_000,
+    },
+    {
+      key: "chatgpt_work_health",
+      startUrl: "https://chatgpt.com/",
+      allowedTopLevelOrigins: ["https://chatgpt.com"],
+      browserFamily: "chrome",
+      navigationTimeoutMs: 15_000,
+    },
+  ]);
+}

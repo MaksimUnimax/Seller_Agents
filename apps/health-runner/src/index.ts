@@ -14,6 +14,8 @@ export {
   ControlledTargetKeySchema,
   createControlledTargetRegistry,
   createPackagedStandardH3TargetRegistry,
+  createPackagedWorkH3TargetRegistry,
+  createPackagedH3TargetRegistry,
 } from "./target-registry.js";
 export type { ControlledTarget } from "./target-registry.js";
 export type { ControlledTargetKey } from "./target-registry.js";
@@ -116,6 +118,18 @@ export type {
   SafeStructuralMetadata,
   SafeStructuralObservation,
 } from "./strategies.js";
+export {
+  CHATGPT_WORK_H3_PROFILE,
+  hasPositiveWorkMarker,
+  parseWorkRoute,
+  resolveWorkRoute,
+} from "./work-h3-profile.js";
+export type {
+  ChatGPTWorkH3Profile,
+  WorkRouteIdentity,
+  WorkRouteResolution,
+} from "./work-h3-profile.js";
+export { createChatGPTWorkH3Strategy } from "./work-h3-strategy.js";
 export class NoopBrowserDriver implements BrowserDriver {
   public readonly sessionKind = "EPHEMERAL_CONTROLLED" as const;
   public constructor(public readonly family: BrowserFamily) {}

@@ -36,6 +36,7 @@ import {
   resolveChatGPTConversationIdentity,
   type ChatGPTConversationIdentityResolution,
 } from "./standard-h3-profile.js";
+import { hasPositiveWorkMarker } from "./work-h3-profile.js";
 
 const STANDARD_PROFILE: H3SurfaceProfile = Object.freeze({
   surface: CHATGPT_STANDARD_H3_PROFILE.surface,
@@ -185,6 +186,9 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
       ) {
         return fail(await surface.count());
       }
+      // B4 isolation correction: a positively identified Work header is not
+      // allowed to satisfy the Standard strategy on shared ChatGPT DOM.
+      if (await hasPositiveWorkMarker(page)) return fail();
       const identity = await this.#resolveConversationIdentity(page);
       if (identity.kind === "CONFLICT") return fail();
       this.#surface = surface;

@@ -3,7 +3,7 @@
 Date: 2026-09-15  
 Roadmap: P8.4 / B4_CHATGPT_WORK_H3  
 Branch: `feature/server-health-h3-p8-4`  
-Outcome: `EXTERNAL_BLOCKER`
+Outcome: `IMPLEMENTED CANDIDATE — LOCAL PASS; REMOTE EXACT-HEAD ACCEPTANCE PENDING`
 
 ## Execution boundary
 
@@ -125,3 +125,78 @@ CONTRACT_CHANGE = 0
 
 The next action is to return control to the Stream B architect with the exact
 external prerequisite above.
+
+## Blocker resolution and owner-approved capture authority — 2026-09-15
+
+The previous `EXTERNAL_BLOCKER` remains historical evidence: B4 was correctly
+blocked because repository authority contained no real authenticated Work
+surface identity. The owner has now supplied an approved authenticated,
+sanitized Opera Browser Connector capture. It resolves the structural B4
+prerequisite only; it is not controlled Health-account reachability or B7 live
+acceptance.
+
+The accepted capture establishes:
+
+- origin `https://chatgpt.com`;
+- supporting route shape
+  `https://chatgpt.com/g/g-p-<PROJECT_ID>/c/<CONVERSATION_UUID>`;
+- route shape is not Work proof and real route components are never persisted;
+- the positive authenticated header/top-bar marker is the exact Russian
+  localized string `Работа`;
+- `CHATGPT_WORK_H3_V1`, revision `1`, is explicitly bound to locale `ru-RU`;
+- State A is an idle empty textbox named `Чат с ChatGPT`, with placeholder
+  `Работайте над чем угодно` and no Send activation;
+- State B is text-present with accessible Send `Отправить промпт`, including
+  while another generation signal is active;
+- State C is empty-composer generation with `Отслеживание`, `Выполняется`,
+  and Stop `Остановить ответ`;
+- Stop is observation-only and never a Send or Send-counter event.
+
+The Work strategy positively gates controlled target policy, approved origin,
+bounded project/conversation route shape, and one unambiguous visible
+header-owned `Работа` marker. A marker in ordinary message/composer content,
+an ambiguous marker, route-only context, or a shared Send control cannot prove
+Work. Route/project and conversation ownership are held ephemerally and drift
+fails closed.
+
+The strategy reuses the accepted B2 engine in the fixed nine-step order and
+reuses mature common ChatGPT response mechanics only after Work gating:
+assistant message identity, attached/non-empty response, busy/completion
+signals, code surface, native Copy ownership, conversation identity, and
+delivery insertion ownership. The mature
+`chatgptWorkSubmitButton()` contour is supporting Send authority only; it is
+not surface identity. There is one physical Send maximum, no Enter fallback,
+retry, or navigation repair. Completion remains fail closed. Dynamic strings
+such as `Выполнено за <duration>` and `Обработка заняла <duration>` remain
+supporting observations, not mandatory selectors.
+
+Standard received only the narrow B4 isolation correction: a positively
+identified header-owned Work marker causes Standard surface identification to
+fail before Send. Standard mechanics otherwise remain unchanged. Deterministic
+proof covers Standard+Standard PASS, Work+Work PASS, Standard+Work fail before
+Send, Work+Standard fail before Send, shared Send without Work marker, route
+without Work marker, and message-content-only marker.
+
+Implementation and deterministic acceptance are present in:
+
+- `apps/health-runner/src/work-h3-profile.ts` and
+  `apps/health-runner/src/work-h3-strategy.ts`;
+- `apps/health-runner/src/browser-driver.ts`, `target-registry.ts`, and the
+  public registry exports;
+- `tests/e2e/server/support/health-work-h3-fixture.ts` and
+  `tests/e2e/server/health-work-h3.spec.ts`;
+- `apps/health-runner/src/work-h3-profile.test.ts` and target/source guards.
+
+The fixture uses only fake test project/conversation identifiers and test
+bookkeeping. Production Work code never queries fixture bookkeeping. Evidence
+and execution results contain bounded metadata only: no real project ID,
+conversation UUID, project/account identity, raw authenticated DOM, node IDs,
+cookies, tokens, storage, prompt, response, conversation, screenshot, or
+clipboard content is persisted or exposed.
+
+Focused local gates recorded for this candidate are Work Chromium 34/34 PASS,
+normal/precedence/Stop Work cases 9/9 PASS across three repetitions, Standard
+B3 Chromium 36/36 PASS, and health-runner unit coverage 73/73 PASS. H2, B1,
+and B2 remain covered by the existing regression suite. Exact candidate SHA
+and terminal Server CI run/head are recorded in the final terminal report;
+this document makes no B7 live-acceptance claim.
