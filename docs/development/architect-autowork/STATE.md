@@ -1,8 +1,8 @@
-# Seller Agents — единый cursor перед переносом в авторежим
+# Seller Agents — единый cursor
 
-Дата: 2026-09-15. Статус: I1_C1_R1_REWORK_REQUIRED / READY_FOR_NEW_CHAT / AUTOWORK_NOT_STARTED.
+Дата: 2026-09-15. Статус: I1_C1_R2_PREPARED / OWNER_START_RECEIVED / BRIDGE_ACK_PENDING.
 
-Владелец остановил прежние Stream A и Stream B и передал оба основному архитектору. Terminal report текущего Codex получен и независимо проверен: R1 требует исправлений. Следующий согласованный шаг — перенос в новый чат и запуск там авторежима. Здесь новых задач исполнителю не выдавать. Сохранение промптов не запускает авторежим.
+Владелец остановил прежние Stream A и Stream B и передал оба основному архитектору. В новом диалоге восстановление завершено; владелец дал явную команду «поехали». R1 остаётся REWORK_REQUIRED. Подготовлена одна следующая задача R2; сохранение документа не доказывает её захват Bridge или запуск CLI.
 
 ## Роли
 
@@ -16,9 +16,9 @@ Astra / очень высокая глубина рассуждения — гл
 - Base линии: bc0cd0088ca50ba06021ea602a46bdd90de91378.
 - Draft PR: https://github.com/MaksimUnimax/Seller_Agents/pull/7 — открыт, не принят и не слит.
 - Verdict: REWORK_REQUIRED. C1 остаётся открытым.
-- Новое задание I1-C1-R2: НЕ ВЫДАНО. Исполняемый prompt в этом чате не создавался.
+- Следующая задача: SA-I1-C1-R2-20260915-01, I1-C1 / R2 / G1–G6. Полный подготовленный prompt: tasks/I1_C1_R2_2026-09-15.md. Статус транспорта: BRIDGE_ACK_PENDING; предназначен для однократной публикации в финальном кодовом блоке после сохранения/readback.
 - Bridge run/job ID не предоставлены. По terminal report текущий исполнитель закончил; транспортный ID и факт остановки процесса самостоятельно не выдумывать.
-- Следующее действие: перенести эти материалы в новый чат; после восстановления и явного запуска авторежима подготовить точную реализацию G1–G6 из сохранённого ревью. Старое R1 не отправлять повторно и его аудит без новых изменений не повторять целиком.
+- Следующее действие: один раз опубликовать подготовленный R2 prompt; затем ждать подтверждения/terminal report. После возможного обрыва сначала сверить последний assistant turn и существующий job, не повторять prepared prompt автоматически. Старое R1 не отправлять повторно.
 
 ## Результат R1
 
@@ -26,7 +26,7 @@ references/I1_C1_R1_REVIEW.md — независимый verdict, причины
 
 Пять source-level наблюдений дефектов: второй login не запускает polling; 401 retry не вызывает refresh; signed MAINTENANCE сохраняет Work; invalid signature сохраняет Work; minimumExtensionVersion 0.99.0 пропускается клиентом 0.2.4. Шесть контрольных сценариев прежних исправлений прошли. Никакой installed/live приёмки этими VM probes не заявлено.
 
-CI связан с feature head 9e80, но PR checkout имеет виртуальный merge SHA 1bfa2821016f8c3a3a585f72c0e60011db872ed1 поверх main 5d7c8853. I1 job 104350849918 SUCCESS; installed API/portal/PG job 104350849730 FAILURE: ошибочный repo/tests/tests путь к make-browser-config.mjs. Common source/package 104350903002 SUCCESS; native application 104350903139 FAILURE: ожидание аккаунта. Ozon/WB nodes и docs прошли; WB browsers был IN_PROGRESS при последнем чтении. Не называть весь CI зелёным.
+CI связан с feature head 9e80, но PR checkout имеет виртуальный merge SHA 1bfa2821016f8c3a3a585f72c0e60011db872ed1 поверх main 5d7c8853. I1 job 104350849918 SUCCESS; installed API/portal/PG job 104350849730 FAILURE: ошибочный repo/tests/tests путь к make-browser-config.mjs. Common source/package 104350903002 SUCCESS; native application 104350903139 FAILURE: ожидание аккаунта. Ozon/WB nodes и docs прошли; новый readback job 104350902975 (WB browsers) подтвердил completed / SUCCESS. Native application job остаётся FAILURE; весь CI не зелёный.
 
 Reported ZIP SHA-256 2580015cdf174c909e6733197d3b609ba10c3fe35008090df13ebc17a838d00f совпадает с published receipt; собственный byte readback заявленного ZIP в R1 review не выполнен.
 
@@ -63,7 +63,7 @@ Reported ZIP SHA-256 2580015cdf174c909e6733197d3b609ba10c3fe35008090df13ebc17a83
 4. Согласовать объединение принятых клиентской и серверной веток с новым main; не терять ни одну линию и не применять ours/theirs вслепую.
 5. Далее актуальный продуктовый roadmap; не требовать весь P8–P10 раньше раннего I1 и не объявлять внешние этапы закрытыми без их приёмки.
 
-Terminal report уже проверен. Новые coding tasks начинаются после договорённого перехода и запуска авторежима в новом чате, не здесь.
+R1 terminal report уже проверен. В новом чате получена команда запуска; подготовлен только R2, последующие задачи не выдавались.
 
 ## Протокол Bridge и переноса
 
@@ -72,3 +72,18 @@ Terminal report уже проверен. Новые coding tasks начинаю�
 Business Bridge ZIP 2.0.0.23 независимо сверён: cfd62cbcfb05abc2dc646b6caa893b20f5bcd1abd53be8e3e811c7aff3f1dd24. Полная документация прочитана, исторические противоречия сопоставлены с выбранными текущими source paths. Текущий ZIP имеет composer-empty send loop; это не one-click/real-user-turn модель из всех старых записей. Аудит и patch Business Bridge не входят в текущую задачу.
 
 Промпт не включает авторежим сам. Новый диалог привязывается к фактическому профилю владельцем; после восстановления и проверки отсутствия незавершённого прежнего job запускается «▶ Авторежим». Никакой миграции старого active run по предположению.
+
+## Подготовка R2 в новом диалоге — 2026-09-15
+
+Актуальные remote refs повторно сверены: main 5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c; client 9e80e8ad531f079b38bf03b9e29f171c87c477c0; Health a80cd3706a10d25079fedb9553fc7f5b2fc21683. Новых implementation commits не обнаружено. По сохранённому terminal report R1 завершён; прямого инструмента установленного Bridge в текущей среде не обнаружено, run/job IDs не предоставлены. Факт отсутствия всех процессов на сервере не утверждается.
+
+Архитектор прочитал конкретные client/runtime/harness/packaging/contract consumers и R1 reproduction script, без повторного полного аудита и без запуска provider calls. Решения R2:
+- generation/attempt/session-owned polling, activation и refresh flights;
+- force refresh после 401 с защитой от повтора уже завершённой текущей ротации;
+- restrictive in-memory authority invalidation до storage I/O, durable fallback removal и явная граница при полном отказе хранения;
+- saEnabled обозначает готовность composed application, а не авторизацию: после потери аккаунта не переходить в standalone fallback; Work permission проверяется отдельно локальными guards;
+- полноценные SemVer и Chromium version comparisons по контрактной грамматике;
+- installed harness ROOT parents[4], реальный #confirm и корректное ожидание signed-out;
+- native harness: закончить пустой restore, записать fixture authority, закрыть Chromium context, открыть тот же временный persistent profile с тем же runtime/trust и дождаться штатного restore нового worker. В реальном local API auth gate перезапуска между аккаунтами и storage injection нет.
+
+Это source-based проектирование следующего исправления, не новые runtime PASS. Старые R1/Health verdict и очередь сохранены. Передача prompt в Bridge и начало CLI должны подтверждаться фактическим уведомлением.
