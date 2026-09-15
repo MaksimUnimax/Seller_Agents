@@ -7,13 +7,10 @@ import {
 } from "../../../packages/server/db/src/index.js";
 import {
   RegisterSigningKeyCommandSchema,
-  createPublicTrustBundle,
   resolveP3BootstrapPolicy,
   resolveSigningKeyLifecycle,
   rolloutBucketV1,
   serializePublicTrustBundle,
-  SigningKeyEventSchema,
-  SigningKeyMetadataSchema,
   verifyBootstrapEnvelope,
 } from "../../../packages/server/remote-config/src/index.js";
 import { BootstrapService } from "../../../packages/server/bootstrap/src/index.js";
@@ -32,6 +29,7 @@ import {
   rule,
 } from "./p3-3-support.js";
 import { runMigrations } from "../../../packages/server/db/src/migrations.js";
+import { readBundle } from "../../../tooling/server/export-config-trust-bundle.js";
 
 const dbUrl = process.env.DATABASE_URL;
 if (!dbUrl)
@@ -599,6 +597,7 @@ describe.sequential("P3.5 real PostgreSQL signing-key lifecycle", () => {
   it("exports registry public material deterministically and excludes revoked keys", async () => {
     const active = key("p35-export-active");
     const retired = key("p35-export-retired");
+    const retiredOld = key("p35-export-retired-old");
     const registered = key("p35-export-registered");
     const revoked = key("p35-export-revoked");
     const p = createP3PolicyPublicationRepository(db);
@@ -606,6 +605,11 @@ describe.sequential("P3.5 real PostgreSQL signing-key lifecycle", () => {
     await seedKey(db, retired);
     await p.retireSigningKey(
       { keyId: retired.keyId, reasonCode: "overlap" },
+      context,
+    );
+    await seedKey(db, retiredOld);
+    await p.retireSigningKey(
+      { keyId: retiredOld.keyId, reasonCode: "overlap" },
       context,
     );
     await p.registerSigningKey(
@@ -617,33 +621,57 @@ describe.sequential("P3.5 real PostgreSQL signing-key lifecycle", () => {
       { keyId: revoked.keyId, reasonCode: "incident" },
       context,
     );
-    const rows = await db.query(
-      'SELECT key_id AS "keyId",algorithm,public_key_spki_der AS "publicKeySpkiDer",public_key_sha256 AS "publicKeySha256",created_at AS "createdAt" FROM signing_keys ORDER BY key_id',
-    );
-    const entries = [];
-    for (const row of rows.rows) {
-      const metadata = SigningKeyMetadataSchema.parse(row);
-      const events = await db.query(
-        'SELECT id,key_id AS "keyId",event_type AS "eventType",occurred_at AS "occurredAt",reason_code AS "reasonCode",created_at AS "createdAt" FROM signing_key_events WHERE key_id=$1 ORDER BY occurred_at,id',
-        [metadata.keyId],
-      );
-      entries.push({
-        metadata,
-        lifecycle: resolveSigningKeyLifecycle(
-          events.rows.map((event) => SigningKeyEventSchema.parse(event)),
-        ),
-      });
-    }
-    const bundle = createPublicTrustBundle(entries);
+    const defaultBundle = await readBundle(db, []);
+    expect(defaultBundle.keys.map((entry) => entry.keyId)).toEqual([
+      active.keyId,
+    ]);
+    const bundle = await readBundle(db, [retired.keyId]);
     expect(bundle.keys.map((entry) => entry.keyId)).toEqual([
       active.keyId,
       retired.keyId,
     ]);
     expect(bundle.keys[1]!.trustEligibility).toBe("VERIFICATION_OVERLAP");
-    expect(serializePublicTrustBundle(bundle)).toEqual(
-      serializePublicTrustBundle(
-        createPublicTrustBundle([...entries].reverse()),
+    expect(
+      bundle.keys.find((entry) => entry.keyId === active.keyId),
+    ).toMatchObject({
+      publicKey: active.der.toString("base64"),
+      fingerprintSha256: active.fingerprint,
+      lifecycle: "ACTIVE",
+    });
+    expect(
+      bundle.keys.find((entry) => entry.keyId === retired.keyId),
+    ).toMatchObject({
+      publicKey: retired.der.toString("base64"),
+      fingerprintSha256: retired.fingerprint,
+      lifecycle: "RETIRED",
+    });
+    expect(
+      (await readBundle(db, [retiredOld.keyId])).keys.map(
+        (entry) => entry.keyId,
       ),
+    ).toEqual([active.keyId, retiredOld.keyId]);
+    expect(
+      (
+        await db.query<{ eventType: string }>(
+          'SELECT event_type AS "eventType" FROM signing_key_events WHERE key_id=$1',
+          [retiredOld.keyId],
+        )
+      ).rows.map((entry) => entry.eventType),
+    ).toEqual(["REGISTERED", "ACTIVATED", "RETIRED"]);
+    expect(await readBundle(db, [])).not.toEqual(
+      await readBundle(db, [retired.keyId]),
+    );
+    await expect(readBundle(db, [revoked.keyId])).rejects.toThrow(
+      "P3_PUBLIC_TRUST_KEY_REVOKED_OVERLAP",
+    );
+    await expect(readBundle(db, [registered.keyId])).rejects.toThrow(
+      "P3_PUBLIC_TRUST_KEY_REGISTERED_OVERLAP",
+    );
+    await expect(readBundle(db, ["p35-export-unknown"])).rejects.toThrow(
+      "P3_PUBLIC_TRUST_KEY_UNKNOWN_OVERLAP",
+    );
+    expect(serializePublicTrustBundle(bundle)).toEqual(
+      serializePublicTrustBundle(await readBundle(db, [retired.keyId])),
     );
     expect(JSON.stringify(bundle)).not.toMatch(/PRIVATE KEY|privateKey/i);
   });

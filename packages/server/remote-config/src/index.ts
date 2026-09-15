@@ -146,6 +146,8 @@ export const PublicTrustBundleSchema = z
 export type PublicTrustBundleKey = z.infer<typeof PublicTrustBundleKeySchema>;
 export type PublicTrustBundle = z.infer<typeof PublicTrustBundleSchema>;
 
+export type PublicTrustBundleOverlapKeyIds = readonly string[];
+
 /**
  * Builds the public trust handoff consumed by a separately authenticated
  * extension release. REGISTERED keys are not yet trusted; RETIRED keys remain
@@ -157,20 +159,23 @@ export function createPublicTrustBundle(
     metadata: SigningKeyMetadata;
     lifecycle: SigningKeyLifecycleResult;
   }[],
+  overlapKeyIds: PublicTrustBundleOverlapKeyIds,
 ): PublicTrustBundle {
+  const selectedOverlapKeyIds = new Set<string>();
+  for (const keyId of overlapKeyIds) {
+    if (selectedOverlapKeyIds.has(keyId))
+      throw new Error("P3_PUBLIC_TRUST_KEY_DUPLICATE_OVERLAP");
+    selectedOverlapKeyIds.add(keyId);
+  }
   const keys: PublicTrustBundleKey[] = [];
   const keyIds = new Set<string>();
   const fingerprints = new Set<string>();
+  const lifecycleByKeyId = new Map<string, SigningKeyLifecycleResult>();
+  const fingerprintByKeyId = new Map<string, string>();
   for (const entry of entries) {
     const metadata = SigningKeyMetadataSchema.parse(entry.metadata);
     if (entry.lifecycle.state === "INVALID")
       throw new Error("P3_PUBLIC_TRUST_KEY_INVALID_LIFECYCLE");
-    if (
-      entry.lifecycle.state === "UNREGISTERED" ||
-      entry.lifecycle.state === "REGISTERED" ||
-      entry.lifecycle.state === "REVOKED"
-    )
-      continue;
     let publicKey: KeyObject;
     try {
       publicKey = createPublicKey({
@@ -192,11 +197,31 @@ export function createPublicTrustBundle(
       throw new Error("P3_PUBLIC_TRUST_KEY_ALIAS_CONFLICT");
     keyIds.add(metadata.keyId);
     fingerprints.add(fingerprint);
+    lifecycleByKeyId.set(metadata.keyId, entry.lifecycle);
+    fingerprintByKeyId.set(metadata.keyId, fingerprint);
+  }
+  for (const keyId of selectedOverlapKeyIds) {
+    const lifecycle = lifecycleByKeyId.get(keyId);
+    if (!lifecycle) throw new Error("P3_PUBLIC_TRUST_KEY_UNKNOWN_OVERLAP");
+    if (lifecycle.state === "REVOKED")
+      throw new Error("P3_PUBLIC_TRUST_KEY_REVOKED_OVERLAP");
+    if (lifecycle.state === "REGISTERED")
+      throw new Error("P3_PUBLIC_TRUST_KEY_REGISTERED_OVERLAP");
+    if (lifecycle.state !== "RETIRED")
+      throw new Error("P3_PUBLIC_TRUST_KEY_OVERLAP_NOT_RETIRED");
+  }
+  for (const entry of entries) {
+    const metadata = SigningKeyMetadataSchema.parse(entry.metadata);
     const lifecycle = entry.lifecycle.state;
+    if (
+      lifecycle !== "ACTIVE" &&
+      (lifecycle !== "RETIRED" || !selectedOverlapKeyIds.has(metadata.keyId))
+    )
+      continue;
     keys.push({
       keyId: metadata.keyId,
       publicKey: metadata.publicKeySpkiDer.toString("base64"),
-      fingerprintSha256: fingerprint,
+      fingerprintSha256: fingerprintByKeyId.get(metadata.keyId)!,
       lifecycle,
       trustEligibility:
         lifecycle === "ACTIVE"
