@@ -1,6 +1,6 @@
 # I1-SRV.2 Device Authorization / Token / Refresh / Revoke Integration Acceptance
 
-Date: 2026-09-15  
+Date: 2026-09-15
 Status: `I1-SRV.2 IMPLEMENTED CANDIDATE / OWNER_ARCHITECT_REVIEW_PENDING`
 
 ## Scope and base
