@@ -7,8 +7,8 @@ import type {
 import type { Logger } from "pino";
 import {
   ApiErrorEnvelopeV1Schema,
-  BootstrapRequestV1Schema,
-  SignedBootstrapEnvelopeV1Schema,
+  BootstrapRequestSchema,
+  SignedBootstrapEnvelopeSchema,
 } from "@product/contracts";
 import type { BootstrapService } from "@product/bootstrap";
 import type {
@@ -38,9 +38,9 @@ export function registerBootstrapRoutes(
     "/v1/bootstrap",
     {
       schema: {
-        body: BootstrapRequestV1Schema,
+        body: BootstrapRequestSchema,
         response: {
-          200: SignedBootstrapEnvelopeV1Schema,
+          200: SignedBootstrapEnvelopeSchema,
           400: ApiErrorEnvelopeV1Schema,
           401: ApiErrorEnvelopeV1Schema,
           403: ApiErrorEnvelopeV1Schema,
@@ -58,11 +58,13 @@ export function registerBootstrapRoutes(
       },
     },
     async (request) => {
-      const parsed = BootstrapRequestV1Schema.safeParse(request.body);
+      const parsed = BootstrapRequestSchema.safeParse(request.body);
       if (!parsed.success)
         throw new ControlledError("INVALID_REQUEST", "Invalid request", 400);
       try {
-        return await service.issue(request.extensionPrincipal!, parsed.data);
+        return parsed.data.contractVersion === "control_plane_v2"
+          ? await service.issueV2(request.extensionPrincipal!, parsed.data)
+          : await service.issue(request.extensionPrincipal!, parsed.data);
       } catch (error) {
         if (error instanceof BootstrapError && error.code === "DEVICE_MISMATCH")
           throw new ControlledError("DEVICE_MISMATCH", "Device mismatch", 403);

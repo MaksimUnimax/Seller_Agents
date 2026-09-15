@@ -3,7 +3,10 @@ import {
   type BootstrapAiResolutionV1,
   type BootstrapDetectedAiV1,
 } from "@product/contracts";
-import { compareChromiumVersionV1 } from "@product/compatibility";
+import {
+  compareChromiumVersionV1,
+  type ContractVersion,
+} from "@product/compatibility";
 import {
   profileRevisionFingerprint,
   selectAssignedProfileRevision,
@@ -16,7 +19,7 @@ type BrowserFamily = "chrome" | "yandex_chromium";
 
 export type BootstrapAiResolutionInput = {
   detected: BootstrapDetectedAiV1;
-  contractVersion: "control_plane_v1";
+  contractVersion: ContractVersion;
   extensionVersion: string;
   browser: { family: BrowserFamily; version: string };
   accountId: string;

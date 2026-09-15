@@ -119,9 +119,10 @@ async function requireCurrentSelectableConfigKeys(q: {
   query: DatabaseQuery["query"];
 }): Promise<Set<string>> {
   const ordinary = await q.query<{ signingKeyId: string }>(
-    'SELECT signing_key_id AS "signingKeyId" FROM config_releases WHERE contract_version=$1 ORDER BY config_version DESC LIMIT 1',
-    ["control_plane_v1"],
+    'SELECT DISTINCT ON (contract_version) signing_key_id AS "signingKeyId" FROM config_releases WHERE contract_version=ANY($1::varchar[]) ORDER BY contract_version,config_version DESC',
+    [["control_plane_v1", "control_plane_v2"]],
   );
+  const selectable = new Set(ordinary.rows.map((row) => row.signingKeyId));
   const rollout = await q.query<{
     id: string;
     targetKind: string;
@@ -130,8 +131,7 @@ async function requireCurrentSelectableConfigKeys(q: {
     'SELECT id,target_kind AS "targetKind",rollout_key AS "rolloutKey" FROM rollouts WHERE rollout_key=$1',
     ["bootstrap.config"],
   );
-  if (!rollout.rows[0])
-    return new Set(ordinary.rows.map((row) => row.signingKeyId));
+  if (!rollout.rows[0]) return selectable;
   if (
     rollout.rows[0].targetKind !== "CONFIG_RELEASE" ||
     rollout.rows[0].rolloutKey !== "bootstrap.config"
@@ -146,10 +146,9 @@ async function requireCurrentSelectableConfigKeys(q: {
     [rollout.rows[0].id],
   );
   const selected = revision.rows[0];
-  if (!selected) return new Set(ordinary.rows.map((row) => row.signingKeyId));
+  if (!selected) return selectable;
   const selectionMode = configRolloutSelectionModeV1(selected.state);
-  if (selectionMode === "ORDINARY_LATEST")
-    return new Set(ordinary.rows.map((row) => row.signingKeyId));
+  if (selectionMode === "ORDINARY_LATEST") return selectable;
   if (
     selected.baselineConfigVersion === null ||
     selected.candidateConfigVersion === null
@@ -159,13 +158,22 @@ async function requireCurrentSelectableConfigKeys(q: {
     selectionMode === "BASELINE_ONLY"
       ? [selected.baselineConfigVersion]
       : [selected.baselineConfigVersion, selected.candidateConfigVersion];
-  const releases = await q.query<{ signingKeyId: string }>(
-    'SELECT signing_key_id AS "signingKeyId" FROM config_releases WHERE config_version=ANY($1::int[])',
+  const releases = await q.query<{
+    signingKeyId: string;
+    contractVersion: string;
+  }>(
+    'SELECT signing_key_id AS "signingKeyId",contract_version AS "contractVersion" FROM config_releases WHERE config_version=ANY($1::int[])',
     [configVersions],
   );
-  if (releases.rows.length !== configVersions.length)
+  // bootstrap.config is the v1 rollout authority. A v2 release may never be
+  // selected through this rollout, even if a row was manually corrupted.
+  if (
+    releases.rows.length !== configVersions.length ||
+    releases.rows.some((row) => row.contractVersion !== "control_plane_v1")
+  )
     throw new Error("P3_ROLLOUT_SOURCE_INVALID");
-  return new Set(releases.rows.map((row) => row.signingKeyId));
+  for (const row of releases.rows) selectable.add(row.signingKeyId);
+  return selectable;
 }
 async function validateConfigSources(
   q: { query: DatabaseRuntime["query"] },
@@ -205,7 +213,7 @@ async function validateConfigSources(
     const p = rowPolicy(raw);
     const scope = p.browserFamily ?? "global";
     if (
-      p.contractVersion !== "control_plane_v1" ||
+      p.contractVersion !== value.contractVersion ||
       scopes.has(scope) ||
       (p.browserFamily === null && p.minimumBrowserVersion !== null) ||
       p.maintenanceMode !== (p.maintenanceCode !== null) ||
@@ -233,7 +241,7 @@ async function validateConfigSources(
   for (const raw of rules.rows) {
     const rule = P3FeatureRuleSchema.parse(raw);
     if (
-      rule.contractVersion !== "control_plane_v1" ||
+      rule.contractVersion !== value.contractVersion ||
       features.has(rule.featureKey)
     )
       throw new Error("P3_FEATURE_RULE_SOURCE_INVALID");
@@ -269,7 +277,7 @@ async function validateConfigSources(
     const pair = baseline.rows.map((r) => P3FeatureRuleSchema.parse(r));
     if (
       pair[0]!.featureKey !== pair[1]!.featureKey ||
-      pair.some((r) => r.contractVersion !== "control_plane_v1") ||
+      pair.some((r) => r.contractVersion !== value.contractVersion) ||
       !ruleById.has(revision.baselineFeatureRuleRevisionId!) ||
       rolloutFeatures.has(pair[0]!.featureKey)
     )
@@ -282,7 +290,7 @@ function rowPolicy(row: Record<string, unknown>): CompatibilityPolicyRevision {
     id: String(row.id),
     policyKey: String(row.policyKey),
     revision: Number(row.revision),
-    contractVersion: "control_plane_v1",
+    contractVersion: String(row.contractVersion),
     browserFamily: row.browserFamily as "chrome" | "yandex_chromium" | null,
     minimumExtensionVersion: row.minimumExtensionVersion as string | null,
     recommendedExtensionVersion: row.recommendedExtensionVersion as
@@ -488,7 +496,7 @@ export function createP3PolicyPublicationRepository(
           [value.policyKey],
         );
         const r = await q.query<Record<string, unknown>>(
-          'INSERT INTO compatibility_policy_revisions(policy_key,revision,contract_version,browser_family,minimum_extension_version,recommended_extension_version,minimum_browser_version,maintenance_mode,maintenance_code,published_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id,policy_key AS "policyKey",revision,contract_version, browser_family AS "browserFamily",minimum_extension_version AS "minimumExtensionVersion",recommended_extension_version AS "recommendedExtensionVersion",minimum_browser_version AS "minimumBrowserVersion",maintenance_mode AS "maintenanceMode",maintenance_code AS "maintenanceCode",published_at AS "publishedAt",created_at AS "createdAt"',
+          'INSERT INTO compatibility_policy_revisions(policy_key,revision,contract_version,browser_family,minimum_extension_version,recommended_extension_version,minimum_browser_version,maintenance_mode,maintenance_code,published_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id,policy_key AS "policyKey",revision,contract_version AS "contractVersion",browser_family AS "browserFamily",minimum_extension_version AS "minimumExtensionVersion",recommended_extension_version AS "recommendedExtensionVersion",minimum_browser_version AS "minimumBrowserVersion",maintenance_mode AS "maintenanceMode",maintenance_code AS "maintenanceCode",published_at AS "publishedAt",created_at AS "createdAt"',
           [
             value.policyKey,
             next.rows[0]!.revision,
@@ -606,6 +614,27 @@ export function createP3PolicyPublicationRepository(
             value.candidateConfigVersion !== undefined)
         )
           throw new Error("P3_ROLLOUT_TARGET_SHAPE_INVALID");
+        if (configShape) {
+          const configs = await q.query<{
+            configVersion: number;
+            contractVersion: string;
+            snapshotVersion: string;
+            envelopeVersion: string;
+          }>(
+            'SELECT config_version AS "configVersion",contract_version AS "contractVersion",snapshot_version AS "snapshotVersion",envelope_version AS "envelopeVersion" FROM config_releases WHERE config_version=ANY($1::int[])',
+            [[value.baselineConfigVersion!, value.candidateConfigVersion!]],
+          );
+          if (
+            configs.rows.length !== 2 ||
+            configs.rows.some(
+              (config) =>
+                config.contractVersion !== "control_plane_v1" ||
+                config.snapshotVersion !== "bootstrap_snapshot_v1" ||
+                config.envelopeVersion !== "bootstrap_envelope_v1",
+            )
+          )
+            throw new Error("P3_ROLLOUT_SOURCE_INVALID");
+        }
         const r = await q.query<{ id: string; revision: number }>(
           "INSERT INTO rollout_revisions(rollout_id,target_kind,revision,state,percentage_bps,baseline_config_version,candidate_config_version,baseline_feature_rule_revision_id,candidate_feature_rule_revision_id,published_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id,revision",
           [

@@ -1,7 +1,11 @@
 import { generateKeyPairSync } from "node:crypto";
 import { describe, expect, it, vi } from "vitest";
-import { verifyBootstrapEnvelope } from "@product/remote-config";
-import { signBootstrapSnapshot } from "@product/remote-config";
+import {
+  signBootstrapSnapshot,
+  signBootstrapSnapshotV2,
+  verifyBootstrapEnvelope,
+  verifyBootstrapEnvelopeV2,
+} from "@product/remote-config";
 import { BootstrapError, BootstrapService } from "./index.js";
 import type { CommercialAccessResolution } from "@product/commercial-access";
 
@@ -46,6 +50,8 @@ describe("BootstrapService", () => {
         {
           sign: async (_keyId, payload) =>
             signBootstrapSnapshot(payload, "config-key", pair.privateKey),
+          signV2: async (_keyId, payload) =>
+            signBootstrapSnapshotV2(payload, "config-key", pair.privateKey),
         },
         { now: () => new Date(now) },
         { resolve: async () => commercial },
@@ -54,6 +60,38 @@ describe("BootstrapService", () => {
       ),
     };
   }
+
+  it("keeps v1 payloads compatible and binds the account only in v2", async () => {
+    const { service, pair } = signedService(eligibleCommercial());
+    const v1 = verifyBootstrapEnvelope(
+      await service.issue(subject, request),
+      new Map([["config-key", pair.publicKey]]),
+    );
+    const v2 = verifyBootstrapEnvelopeV2(
+      await service.issueV2(subject, {
+        ...request,
+        contractVersion: "control_plane_v2",
+      }),
+      new Map([["config-key", pair.publicKey]]),
+    );
+    expect(v1).toMatchObject({
+      ok: true,
+      payload: {
+        contractVersion: "control_plane_v1",
+        snapshotVersion: "bootstrap_snapshot_v1",
+        account: { status: "ACTIVE" },
+      },
+    });
+    if (v1.ok) expect(v1.payload.account).not.toHaveProperty("id");
+    expect(v2).toMatchObject({
+      ok: true,
+      payload: {
+        contractVersion: "control_plane_v2",
+        snapshotVersion: "bootstrap_snapshot_v2",
+        account: { id: subject.accountId, status: "ACTIVE" },
+      },
+    });
+  });
   const commercialSubscription = {
     id: subject.accountId,
     accountId: subject.accountId,
