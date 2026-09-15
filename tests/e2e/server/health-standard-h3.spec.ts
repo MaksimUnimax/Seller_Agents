@@ -300,30 +300,20 @@ test.describe("B3 packaged ChatGPT Standard H3", () => {
   });
 
   test.describe("post-send failures never retry", () => {
-    for (const [variant, failureCode] of [
-      ["EXISTING_IDENTITY_CHANGES", "BUSY_OBSERVATION_FAILED"],
-      ["FRESH_BOUND_IDENTITY_CHANGES", "BRIDGE_SURFACE_VALIDATION_FAILED"],
+    for (const [variant, failureStep, failureCode] of [
+      ["EXISTING_IDENTITY_CHANGES", "OBSERVE_BUSY", "BUSY_OBSERVATION_FAILED"],
+      [
+        "FRESH_BOUND_IDENTITY_CHANGES",
+        "OBSERVE_COMPLETION",
+        "COMPLETION_OBSERVATION_FAILED",
+      ],
     ] as const) {
       test(`${variant} is bounded after one Send`, async () => {
         const fixture = await startHealthStandardH3Fixture();
         try {
           const result = await runVariant(fixture, variant);
-          if (variant === "FRESH_BOUND_IDENTITY_CHANGES") {
-            // The fixture's second identity transition is intentionally
-            // asynchronous. Under different suite load, the same
-            // fail-closed identity invariant is observed either while
-            // completing or at the final bridge validation boundary.
-            expect(result.failureCode).toBe(
-              result.failureStep === "OBSERVE_COMPLETION"
-                ? "COMPLETION_OBSERVATION_FAILED"
-                : "BRIDGE_SURFACE_VALIDATION_FAILED",
-            );
-            expect(result.failureStep).toMatch(
-              /OBSERVE_COMPLETION|VALIDATE_BRIDGE_SURFACES/,
-            );
-          } else {
-            expect(result.failureCode).toBe(failureCode);
-          }
+          expect(result.failureStep).toBe(failureStep);
+          expect(result.failureCode).toBe(failureCode);
           expect(result.outcome).toBe("FAIL");
           await waitForFixtureState(fixture, {
             promptMatches: 1,

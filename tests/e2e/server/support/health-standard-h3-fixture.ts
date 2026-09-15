@@ -110,18 +110,25 @@ function newResponseMarkup(variant: HealthStandardH3FixtureVariant): string {
   const responseSelfBusy = [
     "COMPLETION_MISSING",
     "RESPONSE_SELF_BUSY_STUCK",
+    "FRESH_BOUND_IDENTITY_CHANGES",
     "IDENTITY_CHANGES_DURING_COMPLETION",
   ].includes(variant);
   const otherBusyRemains = variant === "STOP_CLEARS_BUT_OTHER_BUSY_REMAINS";
   const emptyResponse = variant === "EMPTY_RESPONSE_AFTER_GENERATION";
+  const responseText =
+    variant === "FRESH_BOUND_IDENTITY_CHANGES" || emptyResponse
+      ? ""
+      : "Completed response";
   const code =
-    variant === "CODE_BLOCK_MISSING" || emptyResponse
+    variant === "CODE_BLOCK_MISSING" ||
+    variant === "FRESH_BOUND_IDENTITY_CHANGES" ||
+    emptyResponse
       ? ""
       : `<div data-writing-block-fullscreen-editor-region><button aria-label="${variant === "COPY_MISSING" ? "Copy unavailable" : "Copy"}" type="button">Copy</button><pre><code>${variant === "COPY_MISMATCHED" ? "UNEXPECTED_HEALTH_TOKEN" : "BRIDGE_HEALTHCHECK_V1"}</code></pre></div>`;
   const busyMarker = otherBusyRemains
     ? '<div aria-busy="true" data-generation-marker="other"></div>'
     : "";
-  return `${busyMarker}<section data-turn="assistant" data-turn-id="turn-response"${responseSelfBusy ? ' aria-busy="true"' : ""}><p>${emptyResponse ? "" : "Completed response"}</p>${code}</section>`;
+  return `${busyMarker}<section data-turn="assistant" data-turn-id="turn-response"${responseSelfBusy ? ' aria-busy="true"' : ""}><p>${responseText}</p>${code}</section>`;
 }
 
 function checkpointMarkup(kind: string): string {
@@ -169,8 +176,12 @@ function fixtureHtml(
   const canonicalMarkup = canonicalId
     ? `<link rel="canonical" href="${origin}/c/${canonicalId}">`
     : "";
+  const freshGenerationSignal =
+    variant === "FRESH_BOUND_IDENTITY_CHANGES"
+      ? '<div aria-busy="true" data-fixture-generation="fresh-bound"></div>'
+      : "";
   return `<!doctype html><html><head><title>ChatGPT</title>${canonicalMarkup}</head>
-<body>${surface}${checkpointMarkup(blocker ?? "")}
+<body>${surface}${freshGenerationSignal}${checkpointMarkup(blocker ?? "")}
 <script>
   const prompt = document.querySelector('#prompt-textarea');
   const main = document.querySelector('main');
@@ -195,17 +206,24 @@ function fixtureHtml(
       if (${JSON.stringify(variant === "VALID" || variant === "FRESH_ROOT_NO_ID")})
         setTimeout(() => bindConversation(${JSON.stringify(CONVERSATION_ID)}), 5);
       if (${JSON.stringify(variant === "FRESH_BOUND_IDENTITY_CHANGES")}) {
-        setTimeout(() => bindConversation(${JSON.stringify(FRESH_BOUND_CONVERSATION_ID)}), 5);
-        setTimeout(() => bindConversation(${JSON.stringify(CHANGED_CONVERSATION_ID)}), 120);
+        // Bind the first identity as part of the post-Send lifecycle. Using
+        // a timer here could let a slow physical click outlive both fresh
+        // identity transitions before OBSERVE_BUSY starts.
+        bindConversation(${JSON.stringify(FRESH_BOUND_CONVERSATION_ID)});
       }
       if (${JSON.stringify(variant === "EXISTING_IDENTITY_CHANGES")})
-        setTimeout(() => bindConversation(${JSON.stringify(CHANGED_CONVERSATION_ID)}), 5);
+        setTimeout(() => {
+          bindConversation(${JSON.stringify(CHANGED_CONVERSATION_ID)});
+          // This negative variant must not expose a busy-success signal
+          // until its post-Send identity drift has been observable.
+          if (stop) stop.hidden = false;
+        }, 5);
       if (${JSON.stringify(variant === "CONVERSATION_CHANGED")})
         bindConversation(${JSON.stringify(CHANGED_CONVERSATION_ID)});
       if (${JSON.stringify(variant === "IDENTITY_CHANGES_DURING_COMPLETION")})
         setTimeout(() => bindConversation(${JSON.stringify(CHANGED_CONVERSATION_ID)}), 500);
       const stop = document.querySelector('button[data-testid="stop-button"]');
-      if (stop && ${JSON.stringify(variant !== "BUSY_TIMEOUT")}) stop.hidden = false;
+      if (stop && ${JSON.stringify(!["BUSY_TIMEOUT", "EXISTING_IDENTITY_CHANGES"].includes(variant))}) stop.hidden = false;
       if (${JSON.stringify(variant === "DELIVERY_MISSING")}) document.querySelector('#composer-submit-button')?.remove();
       if (!${JSON.stringify(responseEnabled)}) return;
       setTimeout(() => {
@@ -213,8 +231,20 @@ function fixtureHtml(
         main?.querySelector('section[data-fixture-conversation="active"]')?.insertAdjacentHTML('beforeend', ${JSON.stringify(newResponseMarkup(variant))});
         const response = document.querySelector('section[data-turn="assistant"][data-turn-id="turn-response"]');
         if (!response) return;
-        if (${JSON.stringify(!["COMPLETION_MISSING", "RESPONSE_SELF_BUSY_STUCK", "IDENTITY_CHANGES_DURING_COMPLETION"].includes(variant))}) response.removeAttribute('aria-busy');
-        if (${JSON.stringify(variant !== "COMPLETION_MISSING" && variant !== "BUSY_CLEARS_BUT_STOP_REMAINS")}) { if (stop) stop.hidden = true; }
+        if (${JSON.stringify(!["COMPLETION_MISSING", "RESPONSE_SELF_BUSY_STUCK", "FRESH_BOUND_IDENTITY_CHANGES", "IDENTITY_CHANGES_DURING_COMPLETION"].includes(variant))}) response.removeAttribute('aria-busy');
+        if (${JSON.stringify(!["COMPLETION_MISSING", "BUSY_CLEARS_BUT_STOP_REMAINS", "FRESH_BOUND_IDENTITY_CHANGES"].includes(variant))}) { if (stop) stop.hidden = true; }
+        if (${JSON.stringify(variant === "FRESH_BOUND_IDENTITY_CHANGES")}) {
+          setTimeout(() => {
+            bindConversation(${JSON.stringify(CHANGED_CONVERSATION_ID)});
+            // Keep the authoritative generation signal active until the
+            // identity transition is published inside OBSERVE_COMPLETION.
+            if (stop) stop.hidden = true;
+            document
+              .querySelector('[data-fixture-generation="fresh-bound"]')
+              ?.remove();
+            response.removeAttribute("aria-busy");
+          }, 100);
+        }
       }, 40);
     });
   });

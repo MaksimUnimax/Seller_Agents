@@ -4,6 +4,8 @@ Date: 2026-09-14
 Branch: `feature/server-health-h3-p8-4`  
 Rejected predecessor: `d727d372cc01fb0554de98126d16d63cf842d5fb`  
 Accepted B2 ancestor: `0474d83e27074f9f61a41efd13e916d2ab75d20c`
+Rejected Stream B head before this correction: `dca878b1540ff3c8550db2bdb459a12e4e6cb1e8`
+Rejected Server CI: run `34886710705`, tested SHA `dca878b1540ff3c8550db2bdb459a12e4e6cb1e8`
 
 ## Correction
 
@@ -90,6 +92,34 @@ surfaces, and native Copy buttons labelled `Copy`/`Копировать`. Fixtur
 bookkeeping is limited to orthogonal `data-fixture-*` attributes and server
 counters; the production strategy never queries them.
 
+### Deterministic identity-lifecycle correction
+
+The rejected Stream B head exposed two fixture-ordering defects. In
+`EXISTING_IDENTITY_CHANGES`, the fixture changed the route/canonical identity
+about 5 ms after Send but exposed Stop synchronously in the click handler.
+`OBSERVE_BUSY` could therefore pass while the existing identity was still
+unchanged; the later response-correlation check correctly failed closed as
+`RESPONSE_OBSERVATION_FAILED`. The corrected fixture keeps Stop hidden until
+the 5 ms identity mutation is published, so `OBSERVE_BUSY` deterministically
+returns `BUSY_OBSERVATION_FAILED`. Send remains physically activated once.
+
+In `FRESH_BOUND_IDENTITY_CHANGES`, the fresh root began unbound, bound its
+first identity about 5 ms after Send, and exposed a completed response with
+all generation signals cleared about 40 ms after Send. The second identity
+mutation was scheduled at 120 ms, after completion could already pass and the
+run could reach cleanup. The corrected fixture keeps the authoritative Stop
+generation signal active through that second transition and clears it only
+when the changed identity is published. `OBSERVE_COMPLETION` consequently
+revalidates the identity while it is actively observing and returns
+`COMPLETION_OBSERVATION_FAILED`.
+The assistant turn is still attached and associated under the first fresh
+identity before that transition; its content remains incomplete while the
+generation signal is active, so completion cannot pass early.
+
+These are fixture-only lifecycle corrections. Standard production identity
+discovery, binding, response association, completion revalidation, fail-closed
+semantics, timeouts, and the one-Send/no-retry behavior remain unchanged.
+
 ## Authority ledger
 
 | Contour | Packaged Standard authority | Fixture mirror |
@@ -150,15 +180,14 @@ and run `34879404332` for
 `104094860512`. The latter passed every earlier Server CI gate and failed only
 at `pnpm test:e2e`.
 
-Local CI-equivalent reproduction recovered the B3-specific timing defect that
-was not visible in the unavailable remote log: under H2-to-B3 suite load,
-`FRESH_BOUND_IDENTITY_CHANGES` can observe its intentionally asynchronous
-second identity transition during `OBSERVE_COMPLETION`, while the test had
-required the later `BRIDGE_SURFACE_VALIDATION_FAILED` boundary. The strategy
-correctly fails closed in either boundary and sends exactly once. The coherent
-test correction is
-`1e480743b625d4edefbe9209172aac3c6cfbfa20`; the corrected Standard suite is
-36/36, the H2 regression is 13/13, and clean migrated full E2E is 121/121.
+Local CI-equivalent reproduction of the rejected head recovered the
+B3-specific timing defect that was not visible in the unavailable remote log:
+the old fixture allowed `FRESH_BOUND_IDENTITY_CHANGES` to finish completion
+before its 120 ms mutation, so the test had weakened the expected boundary to
+`OBSERVE_COMPLETION` or `VALIDATE_BRIDGE_SURFACES`. That load-dependent
+classification was incorrect for this negative case. The correction restores
+the strict `OBSERVE_COMPLETION`/`COMPLETION_OBSERVATION_FAILED` expectation
+and orders the event inside that observation boundary.
 
 The same full E2E run against the database populated by the repository's
 integration suite also reproduced a separate pre-B3 failure in
@@ -166,12 +195,9 @@ integration suite also reproduced a separate pre-B3 failure in
 locator resolving four elements. That file is unchanged by B3 and is outside
 the allowed correction paths; the fresh-database control passes it.
 
-### Current exact candidate CI readback
+### Verification boundary for this correction
 
-- Implementation candidate SHA: `1e480743b625d4edefbe9209172aac3c6cfbfa20`
-- Remote feature ref: confirmed at that exact SHA before this evidence
-  correction.
-- Server CI run/job: pending exact authenticated readback in the architect's
-  Actions context; this execution context cannot read the private Actions
-  endpoints.
-- Terminal result: not claimed. No CI success is recorded here.
+This lifecycle correction, its focused assertions, and this evidence are one
+coherent implementation candidate. The terminal report records the exact
+remote head and terminal Server CI run after verification. No CI success is
+claimed by this evidence until that exact-SHA run reaches `SUCCESS`.
