@@ -11,19 +11,74 @@ const api = 'WB_API_V1 {"operation":"seller_info","params":{}}';
 const plain = x => JSON.parse(JSON.stringify(x));
 function fakeIDB() {
   const records = new Map();
+  const stats = { reads: 0, writes: 0 };
   return { records, open() {
     const request = {};
     queueMicrotask(() => { request.result = { objectStoreNames: { contains: () => true }, close() {}, transaction() {
       const tx = { objectStore() { const op = (kind, value) => {
         const r = {};
-        queueMicrotask(() => { if (kind === 'put') records.set(value.artifact_key, value);
-          if (kind === 'delete') records.delete(value);
+        queueMicrotask(() => { if (kind === 'get' || kind === 'all') stats.reads++;
+          if (kind === 'put') { stats.writes++; records.set(value.artifact_key, value); }
+          if (kind === 'delete') { stats.writes++; records.delete(value); }
           r.result = kind === 'get' ? records.get(value) : kind === 'all' ? [...records.values()] : value?.artifact_key;
           r.onsuccess?.(); queueMicrotask(() => tx.oncomplete?.()); }); return r;
       }; return { get: k => op('get', k), put: v => op('put', v), delete: k => op('delete', k), getAll: () => op('all') }; } }; return tx;
     } }; request.onsuccess?.(); }); return request;
-  } };
+  }, stats };
 }
+async function popupState(worker, tabId) {
+  return worker.request({ type: 'SA_POPUP_STATE', tab_id: tabId }, { url: 'chrome-extension://core-fixture/popup.html' });
+}
+await test('APP-00-popup-state-is-available-without-AI-tab', async () => {
+  const signedOut = await makeWorker(runtime, { seedAuthority: false, fetch: async () => { throw new Error('signed-out popup must not call control plane'); } });
+  try {
+    for (const tabId of [999, 0, 1001]) {
+      const state = await popupState(signedOut, tabId);
+      assert.equal(state.ok, true, JSON.stringify(state));
+      assert.deepEqual(plain(state.identity), { ai_id: null, origin: null, conversation_id: null, status: 'unavailable', source: 'none', chat_path: '' });
+      assert.equal(state.conversation_key, null); assert.equal(state.pending, null); assert.equal(state.work, null); assert.equal(state.operation, null);
+      assert.equal(state.context.work_active, false); assert.equal(state.context.button_visible, false);
+    }
+  } finally { signedOut.close(); }
+
+  const pending = await makeWorker(runtime, { seedAuthority: false, fetch: async url => {
+    if (url.endsWith('/v1/device-authorizations')) return new Response(JSON.stringify({ status: 'pending', authorizationId: '44444444-4444-4444-8444-444444444444', deviceCode: 'D'.repeat(43), userCode: 'ABCD-EFGH', expiresAt: new Date(Date.now() + 60000).toISOString() }), { headers: { 'content-type': 'application/json' } });
+    throw new Error('unexpected pending fixture request ' + url);
+  } });
+  try {
+    const started = await pending.request({ type: 'SA_AUTH_START', tab_id: pending.tabId }, { url: 'chrome-extension://core-fixture/popup.html' }); assert.equal(started.ok, true, JSON.stringify(started)); assert.equal(started.auth.pending.userCode, 'ABCD-EFGH');
+    const state = await popupState(pending, 999);
+    assert.equal(state.ok, true, JSON.stringify(state)); assert.equal(state.auth.pending.userCode, 'ABCD-EFGH');
+    assert.deepEqual(plain(state.identity), { ai_id: null, origin: null, conversation_id: null, status: 'unavailable', source: 'none', chat_path: '' });
+    assert.equal(state.account.kind, 'signed_out'); assert.equal(state.stores.length, 0); assert.equal(state.work, null);
+  } finally { pending.close(); }
+
+  const accountOnly = await makeWorker(runtime);
+  try {
+    const saved = await accountOnly.request({ type: 'SA_STORE_SAVE', tab_id: accountOnly.tabId, store: wb('FIXTURE_ACCOUNT_ONLY_TOKEN') }, { url: 'chrome-extension://core-fixture/popup.html' }); assert.equal(saved.ok, true, JSON.stringify(saved));
+    const state = await popupState(accountOnly, 999);
+    assert.equal(state.ok, true, JSON.stringify(state)); assert.equal(state.auth.authenticated, true); assert.equal(state.auth.accountId, accountOnly.accountId);
+    assert.equal(state.stores.length, 1); assert.equal(state.stores[0].id, saved.store.id); assert.deepEqual(plain(state.identity), { ai_id: null, origin: null, conversation_id: null, status: 'unavailable', source: 'none', chat_path: '' });
+    assert.equal(state.conversation_key, null); assert.equal(state.pending, null); assert.equal(state.work, null); assert.equal(state.operation, null); assert.equal(state.context.work_active, false);
+  } finally { accountOnly.close(); }
+
+  const supported = await makeWorker(runtime);
+  try {
+    const state = await popupState(supported, supported.tabId);
+    assert.equal(state.ok, true, JSON.stringify(state)); assert.equal(state.identity.ai_id, 'chatgpt'); assert.equal(state.identity.conversation_id, supported.identity.conversation_id);
+    assert.match(state.conversation_key, /chatgpt\.com\|core-fixture-dialogue/);
+  } finally { supported.close(); }
+
+  const noConversation = await makeWorker(runtime);
+  try {
+    noConversation.setDialogue('');
+    const saved = await noConversation.request({ type: 'SA_STORE_SAVE', tab_id: noConversation.tabId, store: wb('FIXTURE_PENDING_START_TOKEN') }, { url: 'chrome-extension://core-fixture/popup.html' });
+    const started = await noConversation.request({ type: 'SA_WORK_START', tab_id: noConversation.tabId, store_id: saved.store.id, confirm_change: true }, { url: 'chrome-extension://core-fixture/popup.html' });
+    assert.equal(started.ok, true, JSON.stringify(started));
+    const state = await popupState(noConversation, noConversation.tabId);
+    assert.equal(state.identity.ai_id, 'chatgpt'); assert.equal(state.identity.conversation_id, null); assert.equal(state.conversation_key, null); assert.ok(state.pending);
+  } finally { noConversation.close(); }
+});
 async function setup(options = {}) {
   const idb = fakeIDB();
   const worker = await makeWorker(runtime, { indexedDB: idb, fetch: async (url, init, n) => options.fetch ? options.fetch(url, init, n) : new Response('{"result":{"value":42}}', { headers: { 'content-type': 'application/json' } }), ...options });

@@ -342,6 +342,7 @@ export async function makeWorker(directory, options = {}) {
   return {
     network,
     messages,
+    idb: options.indexedDB,
     backing,
     identity,
     accountId,

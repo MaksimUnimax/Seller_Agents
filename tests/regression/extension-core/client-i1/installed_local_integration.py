@@ -161,7 +161,7 @@ def run(runtime, output):
                         if portal_page.get_by_role("status").inner_text() != "Device approved. Return to the extension to finish activation.":
                             raise RuntimeError("device approval did not reach the successful status")
                         portal_page.close()
-                        popup.wait_for_function("document.querySelector('#account').innerText.includes('Аккаунт ·')")
+                        popup.wait_for_function("() => document.querySelector('#account').innerText.includes('Аккаунт ·')")
                         stage = "bootstrap_observed"
                         return worker.evaluate("""async () => { const authority = await SellerAgentsControlClient.getAuthority(); const status = await SellerAgentsControlClient.status(); return { account: authority?.payload?.account?.id || null, device: authority?.deviceId || null, session: authority?.sessionId || null, authenticated: status.authenticated, workAllowed: status.workAllowed }; }""")
 
@@ -174,7 +174,7 @@ def run(runtime, output):
                     popup.fill("#token", "FIXTURE_BROWSER_PERSONAL_TOKEN")
                     popup.fill("#name", "Аккаунт A WB")
                     popup.click("#save")
-                    popup.wait_for_function("document.querySelector('#stores').innerText.includes('Аккаунт A WB')")
+                    popup.wait_for_function("() => document.querySelector('#stores').innerText.includes('Аккаунт A WB')")
                     # Portal logout only clears the portal cookie; extension D3 logout is not tested here.
                     portal_page = context.new_page()
                     portal_page.goto(f"http://127.0.0.1:{portal_port}/")
@@ -186,7 +186,7 @@ def run(runtime, output):
                     popup.click("#auth-reset")
                     popup.locator("#confirmation").wait_for()
                     popup.locator("#confirmation #confirm").click()
-                    popup.wait_for_function("document.querySelector('#auth-start').offsetParent !== null && document.querySelector('#account').innerText.includes('Вход не выполнен')")
+                    popup.wait_for_function("() => document.querySelector('#auth-start').offsetParent !== null && document.querySelector('#account').innerText.includes('Вход не выполнен')")
                     second_identity = activate("i1-client-two@example.test")
                     assert popup.locator("#account").inner_text() != first_account
                     assert "Аккаунт A WB" not in popup.locator("#stores").inner_text()
@@ -202,6 +202,23 @@ def run(runtime, output):
                     assert control_counts == {"device_start": 2, "exchange": 2, "bootstrap": 2}
                     assert bff_counts == {"otp_request_202": 2, "otp_verify_200": 2, "logout_204": 1}
                     result.update(status="PASS", installed_acceptance=True, browser=context.browser.version, checks=["real API device start", "portal OTP/approve", "device exchange", "browser V2 bootstrap", "account-scoped WB catalog", "account reset and second account isolation"], same_worker=same_worker, distinct_accounts=distinct_accounts, distinct_device_sessions=distinct_device_sessions, distinct_authorizations=True, control_counts=control_counts, bff_counts=bff_counts, logout_cleared=logout_cleared, fixture_accounts_prepared=2, beta_unchanged=True)
+                except Exception:
+                    try:
+                        diagnostic = worker.evaluate("""async () => {
+                          const status = await SellerAgentsControlClient.status();
+                          const code = String(status?.lastError?.code || "");
+                          return {
+                            pending: Boolean(status?.pending),
+                            authenticated: status?.authenticated === true,
+                            workAllowed: status?.workAllowed === true,
+                            codePresent: Boolean(code),
+                            errorCode: /^[A-Z0-9_]{1,80}$/.test(code) ? code : null
+                          };
+                        }""")
+                        result["failure_diagnostic"] = {"stage": stage, **diagnostic}
+                    except Exception:
+                        result["failure_diagnostic"] = {"stage": stage, "read_failed": True, "error_code": "DIAGNOSTIC_READ_FAILED"}
+                    raise
                 finally:
                     context.close()
         except SafeStageError as error:

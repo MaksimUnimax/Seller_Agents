@@ -147,10 +147,15 @@ async function saInvalidateAuthority() {
 }
 SellerAgentsControlClient.onAuthorityChanged(() => saInvalidateAuthority());
 async function saPopupState(tabId) {
-  const live = await tabIdentity(normalizeTabId(tabId));
-  const key = live.conversation_id ? conversationKeyFromIdentity(live) : null;
+  let live = { ai_id: null, origin: null, conversation_id: null, status: "unavailable", source: "none", chat_path: "" };
+  let usableIdentity = false;
+  try {
+    live = await tabIdentity(normalizeTabId(tabId));
+    usableIdentity = true;
+  } catch (_) {}
+  const key = usableIdentity && live.conversation_id ? conversationKeyFromIdentity(live) : null;
   const context = await saPublicContext(key);
-  const pending = (await getPendingWorkStarts())[String(tabId)] || null;
+  const pending = usableIdentity ? (await getPendingWorkStarts())[String(tabId)] || null : null;
   const auth = await SellerAgentsControlClient.status();
   const work = key ? await workSessionFor(key) : null;
   const publicWork = auth.workAllowed ? work : work ? { ...work, state: OzonWorkSessionModel.STATES.INACTIVE } : null;

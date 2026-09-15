@@ -103,6 +103,17 @@ def run(runtime,output,private_key):
               fixtureFetches.push(String(url));
               return globalThis.fixtureBinary ? new Response(new Uint8Array([37,80,68,70,45,49,10,0,255]),{headers:{'content-type':'application/pdf','content-disposition':'attachment; filename="native-report.pdf"'}}) : new Response('{"result":{"fixture":42}}',{headers:{'content-type':'application/json'}});
             }}""")
+            # A popup opened as its own extension tab must render account state
+            # without borrowing an AI-tab query override. It has no supported
+            # AI context, so Start remains disabled even for the restored account.
+            own_popup=context.new_page();own_popup.on('pageerror',lambda e:errors.append(str(e)))
+            own_popup.goto(worker.url.rsplit('/',1)[0]+'/popup.html')
+            until(lambda: 'Аккаунт · 11111111' in own_popup.locator('#account').inner_text())
+            assert own_popup.locator('#catalog').is_visible()
+            own_popup.click('#wildberries');own_popup.click('#add');own_popup.fill('#token','FIXTURE_NATIVE_OWN_TAB_TOKEN');own_popup.fill('#name','Own-tab fixture store');own_popup.click('#save')
+            until(lambda: 'Own-tab fixture store' in own_popup.locator('#stores').inner_text())
+            assert own_popup.locator('#start').is_disabled()
+            own_popup.close()
             popup=context.new_page();popup.on('pageerror',lambda e:errors.append(str(e)))
             popup.add_init_script(f"const originalQuery=chrome.tabs.query.bind(chrome.tabs);chrome.tabs.query=(query)=>query.active?Promise.resolve([{{id:{tab_id}}}]):originalQuery(query);")
             popup.goto(worker.url.rsplit('/',1)[0]+'/popup.html')
