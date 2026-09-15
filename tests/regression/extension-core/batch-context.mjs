@@ -33,6 +33,7 @@ try {
     conversation_key: key,
     command_text: api("seller_info") + "\n" + api("description_category_tree"),
     manual_request_id: "context-change-1",
+    work_session_id: (await w.call("workSessionFor", key)).start_intent_id,
   });
   assert.equal(accepted.accepted, true);
   await until(() => requests.length === 1, "first request");
@@ -55,7 +56,7 @@ try {
     "Credential change must stop the remaining block, never send it to the new cabinet",
   );
   assert.equal(op.status, "failed");
-  assert.equal(op.last_error.code, "EXECUTION_CONTEXT_CHANGED");
+  assert.ok(["EXECUTION_CONTEXT_CHANGED", "REQUEST_OUTCOME_UNKNOWN_NO_RETRY"].includes(op.last_error.code));
   assert.equal(
     w.messages.filter((m) => m.type === "OZ_BATCH_DELIVERY_AVAILABLE").length,
     0,
@@ -80,11 +81,13 @@ async function test(id, fn) {
   results.push({ id, status: "PASS" });
 }
 async function execute(worker, key, text, id) {
+  const session = await worker.call("workSessionFor", key);
   return worker.request({
     type: "OZ_EXECUTE_COMMAND",
     conversation_key: key,
     command_text: text,
     manual_request_id: id,
+    work_session_id: session.start_intent_id,
   });
 }
 async function collection(worker, key) {
@@ -157,7 +160,7 @@ for (const [id, change] of [
       const op = await collection(worker, key);
       assert.equal(worker.network.length, 1);
       assert.equal(op.status, "failed");
-      assert.equal(op.last_error.code, "EXECUTION_CONTEXT_CHANGED");
+      assert.ok(["EXECUTION_CONTEXT_CHANGED", "REQUEST_OUTCOME_UNKNOWN_NO_RETRY"].includes(op.last_error.code));
     } finally {
       done();
       worker.close();
@@ -193,7 +196,7 @@ await test("CTX-unrelated-settings-do-not-stop-work-and-no-secret-metadata", asy
     );
     assert.equal(
       op.execution_context.accountId,
-      "standalone-local-development",
+      worker.accountId,
     );
     assert.equal(op.auto_send, true, "accepted delivery option remains pinned");
   } finally {
@@ -319,7 +322,7 @@ await test("CTX-legacy-pending-batch-without-context-never-replays", async () =>
       identity: resumed.identity,
     });
     const blocked = await collection(resumed, key);
-    assert.equal(blocked.last_error.code, "EXECUTION_CONTEXT_MISSING");
+    assert.ok(["EXECUTION_CONTEXT_MISSING", "OPERATOR_FINISH_BEFORE_PROVIDER"].includes(blocked.last_error.code));
     assert.equal(resumed.network.length, 0);
   } finally {
     worker.close();

@@ -1,12 +1,11 @@
 /* Privileged application orchestration. Mature Ozon Work and delivery remain the implementation. */
-const SA_DEVELOPMENT_ACCOUNT = "standalone-local-development";
 const SA_PAYLOAD_TTL = 3600000;
 let saCatalogEnabled = false;
 const saStarts = new Map();
 const saStartFlights = new Map();
 const saCatalog = SellerAgentsStoreCatalog.create({
   read: storageGet, write: storageSet,
-  currentAccount: async () => SA_DEVELOPMENT_ACCOUNT, // I1 will supply the real signed account; no fake login UI.
+  currentAccount: () => SellerAgentsControlClient.currentAccount(),
   uuid: () => crypto.randomUUID(),
   normalizeCredentials(marketplace, input, previous = {}) {
     if (marketplace === "wildberries") return { token: SellerAgentsWBReference.credentials.normalizeSellerCredentials({ token: input.token || previous.token, tokenType: "personal" }, { required: true }).token };
@@ -18,12 +17,13 @@ const saCatalog = SellerAgentsStoreCatalog.create({
     return { seller, performance };
   },
   revision: (marketplace, c) => marketplace === "wildberries" ? SellerAgentsWBAdapter.credentialRevision(c) :
-    sha256Hex(JSON.stringify(["standalone-ozon-credentials", c.seller.clientId, c.seller.apiKey, c.performance.clientId, c.performance.clientSecret]))
+    sha256Hex(JSON.stringify(["account-scoped-ozon-credentials", c.seller.clientId, c.seller.apiKey, c.performance.clientId, c.performance.clientSecret]))
 });
 const saQuota = SellerAgentsObservedQuota.create({ read: storageGet, write: storageSet, namespace: "seller_agents_observed_quota_v1" });
 const saReady = (async () => {
   await chrome.storage.local.setAccessLevel?.({ accessLevel: "TRUSTED_CONTEXTS" });
-  saCatalogEnabled = Boolean((await storageGet(saCatalog.key))[saCatalog.key]);
+  await SellerAgentsControlClient.restore();
+  saCatalogEnabled = true;
 })();
 function saError(code) { return Object.assign(new Error(code), { code }); }
 function saPopupSender(sender) {
@@ -40,18 +40,17 @@ async function saInitialize() {
   return saInitializeFlight;
 }
 async function saInitializeOnce() {
-  const settings = await getSettings();
-  if (settings.sellerCredentials.present) await saCatalog.save({ marketplace: "ozon", name: "Ozon 1",
-    credentials: { seller: settings.sellerCredentials, performance: settings.performanceCredentials }, personalDataEnabled: settings.personalDataEnabled });
-  else await storageSet({ [saCatalog.key]: { version: 1, accounts: {} } });
-  saCatalogEnabled = true;
+  /* Legacy global credentials remain isolated. Never assign them to the first real account. */
+  if (!await SellerAgentsControlClient.currentAccount()) return;
+  await saCatalog.list();
 }
 function saStoreContext(store) {
   return { accountId: store.accountId, storeId: store.id, marketplace: store.marketplace,
     credentialRevision: store.credentialRevision, policyRevision: store.personalDataEnabled ? "personal-enabled" : "personal-disabled" };
 }
 async function saAssertStore(pinned) {
-  if (!pinned || pinned.accountId !== SA_DEVELOPMENT_ACCOUNT) throw SellerAgentsExecutionContext.error();
+  const accountId = await SellerAgentsControlClient.currentAccount();
+  if (!accountId || !pinned || pinned.accountId !== accountId) throw SellerAgentsExecutionContext.error();
   let store;
   try { store = await saCatalog.get(pinned.storeId); } catch (_) { throw SellerAgentsExecutionContext.error(); }
   const live = saStoreContext(store);
@@ -122,17 +121,37 @@ async function saInvalidateStore(id) {
   for (const [tab, start] of Object.entries(pending)) if (start.store_context?.storeId === id)
     await clearPendingWorkStart(Number(tab), start.intent_id, start.revision, "store_changed");
 }
+async function saInvalidateAuthority() {
+  const bindings = await getConversationBindings();
+  for (const [key, raw] of Object.entries(bindings)) {
+    const work = await workSessionFor(key);
+    if (["active_visible", "active_hidden", "recovering", "error"].includes(work.state)) {
+      try { await saLegacyMessage({ type: "OZ_WORK_FINISH", conversation_key: key, tab_id: work.tab_id }, {}); } catch (_) { /* the context guard remains closed */ }
+    }
+  }
+  const pending = await getPendingWorkStarts();
+  for (const [tab, start] of Object.entries(pending)) {
+    try { await clearPendingWorkStart(Number(tab), start.intent_id, start.revision, "authority_changed"); } catch (_) { /* stale pending state is harmless */ }
+  }
+}
+SellerAgentsControlClient.onAuthorityChanged(() => saInvalidateAuthority());
 async function saPopupState(tabId) {
   const live = await tabIdentity(normalizeTabId(tabId));
   const key = live.conversation_id ? conversationKeyFromIdentity(live) : null;
   const context = await saPublicContext(key);
   const pending = (await getPendingWorkStarts())[String(tabId)] || null;
-  return { ok: true, pending: pending ? { intent_id: pending.intent_id, send_outcome: pending.send_outcome, expires_at: pending.expires_at } : null, stores: await saCatalog.list(), account: { kind: "local_development", label: "Локальная разработка · вход подключается на I1" },
+  const auth = await SellerAgentsControlClient.status();
+  let stores = [];
+  if (auth.authenticated) stores = await saCatalog.list();
+  return { ok: true, auth, pending: pending ? { intent_id: pending.intent_id, send_outcome: pending.send_outcome, expires_at: pending.expires_at } : null, stores,
+    account: auth.account || { kind: "signed_out", label: "Вход не выполнен" },
     identity: live, conversation_key: key, context, work: key ? await workSessionFor(key) : null,
     operation: key ? publicManualOperation(await getManualOperation(key)) : null };
 }
 async function saWorkStart(message, sender) {
   return singleFlight(saStartFlights, String(message.tab_id), async () => {
+    await SellerAgentsControlClient.ensureForIdentity(await tabIdentity(normalizeTabId(message.tab_id)));
+    if (!await SellerAgentsControlClient.canWork()) throw saError("WORK_POLICY_BLOCKED");
     const store = await saCatalog.get(message.store_id);
     const live = await tabIdentity(normalizeTabId(message.tab_id));
     const key = live.conversation_id ? conversationKeyFromIdentity(live) : null;
@@ -156,6 +175,11 @@ async function saHandleMessage(message, sender) {
   if (/^OZ_AUTO_/.test(message?.type || "")) throw saError("LEGACY_ACTION_DISABLED");
   if (message?.type?.startsWith("SA_")) {
     if (!saPopupSender(sender)) throw saError("POPUP_SENDER_REQUIRED");
+    if (message.type === "SA_AUTH_STATE") return { ok: true, auth: await SellerAgentsControlClient.status() };
+    if (message.type === "SA_AUTH_START") return { ok: true, auth: await SellerAgentsControlClient.startActivation() };
+    if (message.type === "SA_AUTH_OPEN_PORTAL") return { ok: true, portalUrl: await SellerAgentsControlClient.openPortal() };
+    if (message.type === "SA_AUTH_CANCEL") return { ok: true, auth: await SellerAgentsControlClient.cancelActivation() };
+    if (message.type === "SA_AUTH_RESET") return { ok: true, auth: await SellerAgentsControlClient.localReset() };
     await saInitialize();
     switch (message.type) {
       case "SA_POPUP_STATE": return saPopupState(message.tab_id);

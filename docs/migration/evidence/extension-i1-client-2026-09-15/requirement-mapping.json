@@ -1,0 +1,27 @@
+{
+  "stage": "I1-C1",
+  "environment": "LOCAL DEVELOPMENT",
+  "base": "bc0cd0088ca50ba06021ea602a46bdd90de91378",
+  "task_head": "ba7ca3185dd3e3141af505697642e07b49d6e864",
+  "requirements": {
+    "SA-AUTH-01": ["A13", "device activation, privileged token storage, stable polling/refresh generation"],
+    "SA-SHOP-01": ["A20", "signed V2 account-scoped catalog"],
+    "SA-SHOP-04": ["A30", "account/store async guards and legacy isolation"],
+    "SA-WORK-01": ["A31", "verified local authority gates Work"],
+    "SA-WORK-02": ["A31", "authority generation invalidates late work"],
+    "SA-WORK-03": ["A31", "existing Finish/no-replay/context assertions retained"],
+    "SA-SYNC-01": ["A32", "one installation refresh flight"],
+    "SA-SYNC-02": ["A32", "stable idempotency through rotation commit"],
+    "SA-QUOTA-01": ["A31", "existing local quota guards retained"],
+    "SA-DATA-02": ["A30", "catalog data remains account scoped"]
+  },
+  "server_smoke": {
+    "api_origin": "http://127.0.0.1:43100",
+    "portal_origin": "http://127.0.0.1:43101",
+    "postgres": "disposable tmpfs PostgreSQL 18",
+    "otp": "fixed local test delivery; not email evidence",
+    "outcome": "activation approve, exchange activated, bootstrap_envelope_v2"
+  },
+  "native_browser": {"status": "OPEN_CI_GATE", "reason": "local headless extension startup did not complete with filesystem at 100%"},
+  "not_claimed": ["full I1", "I1-SRV.4", "I1-SRV.5", "D3", "preprod", "email delivery", "browser-store release", "all browsers"]
+}

@@ -1,0 +1,54 @@
+name: Extension I1-C1 client
+
+on:
+  push:
+    branches: [main, "feature/extension-i1-client-2026-09-15"]
+    paths:
+      - "apps/extension/**"
+      - "packages/control-client/**"
+      - "packages/bridge-core/src/{stores,execution,work}/**"
+      - "tooling/build/extension_composed.py"
+      - "tooling/checks/extension_i1.py"
+      - "tests/regression/extension-core/**"
+      - ".github/workflows/extension-i1-ci.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "apps/extension/**"
+      - "packages/control-client/**"
+      - "packages/bridge-core/src/{stores,execution,work}/**"
+      - "tooling/build/extension_composed.py"
+      - "tooling/checks/extension_i1.py"
+      - "tests/regression/extension-core/**"
+      - ".github/workflows/extension-i1-ci.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: extension-i1-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  client-i1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: python tooling/checks/extension_i1.py --output build/ci-extension-i1
+        env:
+          SA_NODE_BIN: node
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: python tests/regression/extension-core/client-i1/browser_verifier.py --runtime build/ci-extension-i1/package/runtime --output build/ci-extension-i1/browser
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: extension-i1-${{ github.sha }}
+          path: build/ci-extension-i1

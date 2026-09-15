@@ -1,8 +1,9 @@
-"""Compose the first common-core development carrier from reviewed inputs."""
+"""Compose the I1-C1 common-core development carrier from reviewed inputs."""
 from pathlib import Path
 import argparse
 import importlib.util
 import json
+import os
 import re
 import shutil
 import sys
@@ -29,7 +30,7 @@ def compose(directory):
     directory.mkdir(parents=True, exist_ok=False)
     baseline.verify_import()
     recipe = baseline.read_json(RECIPE)
-    assert recipe["version"] == "0.2.3" and recipe["stage"] == "D2.4"
+    assert recipe["version"] == "0.2.4" and recipe["stage"] == "I1-C1"
     inputs = {}
     read_input("apps/extension/composition.json", inputs)
     output = {}
@@ -64,6 +65,18 @@ def compose(directory):
     assert worker.count(init["old"]) == 1
     worker = worker.replace(init["old"], read_input(init["replacement"], inputs).decode().rstrip())
     output["service_worker.js"] = b"\n;\n".join(read_input(path, inputs) for path in recipe["worker_prelude"]) + b"\n;\n" + worker.encode()
+    packaged_config = os.environ.get("SA_PACKAGED_CONFIG_JSON")
+    if packaged_config:
+        try:
+            parsed_config = json.loads(packaged_config)
+            assert isinstance(parsed_config, dict)
+            assert set(parsed_config) >= {"environment", "controlApiOrigin", "portalOrigin", "extensionVersion", "contractVersion", "trustBundle"}
+            assert parsed_config["environment"] == "LOCAL DEVELOPMENT"
+            assert parsed_config["extensionVersion"] == recipe["version"]
+            config_bytes = json.dumps(parsed_config, ensure_ascii=False, separators=(",", ":"))
+        except (AssertionError, TypeError, ValueError) as error:
+            raise AssertionError("invalid SA_PACKAGED_CONFIG_JSON") from error
+        output["service_worker.js"] = b"globalThis.__SELLER_AGENTS_PACKAGED_CONFIG__=" + json.dumps(config_bytes).encode() + b";\n" + output["service_worker.js"]
     for patch in json.loads(read_input(recipe["application_patches"], inputs)):
         text = output[patch["target"]].decode()
         assert text.count(patch["old"]) == 1, (patch["target"], patch["old"][:100], text.count(patch["old"]))
@@ -79,12 +92,18 @@ def compose(directory):
     manifest["name"] = "Seller Agents Development — Ozon + WB"
     manifest["action"]["default_title"] = "Seller Agents"
     manifest["description"] = "Данные магазинов Ozon и Wildberries в вашем ИИ. Development-сборка."
-    manifest["host_permissions"] += recipe["marketplace_hosts"]
+    control_hosts = recipe.get("control_hosts", [])
+    if packaged_config:
+        control_hosts = [parsed_config["controlApiOrigin"].rstrip("/") + "/*", parsed_config["portalOrigin"].rstrip("/") + "/*"]
+    manifest["host_permissions"] = list(dict.fromkeys(manifest["host_permissions"] + recipe["marketplace_hosts"] + control_hosts))
     baseline.write_json(manifest_path, manifest)
     files = [{"path": p.relative_to(directory).as_posix(), "sha256": baseline.sha256(p.read_bytes()),
               "bytes": p.stat().st_size} for p in sorted(directory.rglob("*")) if p.is_file()]
     assert len(files) == len(output)
     return {"stage": recipe["stage"], "version": recipe["version"], "purpose": recipe["purpose"],
+            "environment": "LOCAL DEVELOPMENT",
+            "packaged_origins": {"controlApi": parsed_config["controlApiOrigin"] if packaged_config else recipe.get("control_api_origin", "http://127.0.0.1:43100"),
+                                 "portal": parsed_config["portalOrigin"] if packaged_config else recipe.get("portal_origin", "http://127.0.0.1:43101")},
             "inputs": inputs, "files": files, "installed_acceptance": False}
 
 
@@ -95,7 +114,7 @@ def build(output):
     receipt = compose(runtime)
     second = output / "repeat-runtime"
     assert compose(second) == receipt
-    name = "SELLER_AGENTS_D2_4_v0.2.3_DEVELOPMENT.zip"
+    name = "SELLER_AGENTS_I1_C1_v0.2.4_LOCAL_DEVELOPMENT.zip"
     archive = output / name
     repeat = output / "repeat.zip"
     for source, target in [(runtime, archive), (second, repeat)]:

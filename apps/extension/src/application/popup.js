@@ -6,7 +6,8 @@ const texts = { ACCESS_CONFIRMED: "Доступ подтверждён этой 
   CHECK_FAILED: "Не удалось проверить: сеть, ответ площадки или формат запроса", STORE_CHANGE_CONFIRMATION_REQUIRED: "Подтвердите смену магазина",
   WORK_SESSION_ALREADY_ACTIVE: "Этот магазин уже подключён", STORE_NOT_FOUND: "Магазин удалён. Откройте список заново",
   POPUP_CONTEXT_STALE: "Диалог изменился. Откройте расширение в нужной вкладке", WORK_START_UNSUPPORTED_PAGE: "Откройте поддерживаемый ИИ: ChatGPT или Алису",
-  EXECUTION_CONTEXT_CHANGED: "Магазин или рабочая сессия изменились. Нажмите «Начать работу»", RESULT_EXPIRED: "Часовой срок результата истёк", NO_QUOTA_WAIT: "Нет пакета, ожидающего продолжения" };
+  EXECUTION_CONTEXT_CHANGED: "Магазин или рабочая сессия изменились. Нажмите «Начать работу»", RESULT_EXPIRED: "Часовой срок результата истёк", NO_QUOTA_WAIT: "Нет пакета, ожидающего продолжения",
+  AUTH_REQUIRED: "Выполните вход через портал", WORK_POLICY_BLOCKED: "Работа недоступна: подписанная политика не разрешила этот профиль ИИ", DEVICE_AUTH_CLOSED: "Попытка входа закрыта. Начните новую попытку", BOOTSTRAP_EXPIRED: "Проверенная сессия истекла. Выполните вход заново" };
 async function request(type, fields = {}) {
   const response = await chrome.runtime.sendMessage({ type, tab_id: tabId, ...fields });
   if (!response?.ok) throw new Error(texts[response?.code] || `Действие не выполнено: ${response?.code || "нет ответа расширения"}`);
@@ -15,7 +16,16 @@ async function request(type, fields = {}) {
 async function action(fn) { if (busy) return; busy = true; $("status").textContent = "Выполняем…"; try { await fn(); await refresh(); $("status").textContent = "Готово"; } catch (e) { $("status").textContent = e.message; } finally { busy = false; } }
 function selected() { return state?.stores.find(x => x.id === selectedId); }
 function render() {
+  const authenticated = state.auth?.authenticated === true;
   $("account").textContent = state.account.label;
+  $("auth").hidden = authenticated;
+  $("catalog").hidden = !authenticated;
+  $("auth-status").textContent = state.auth?.lastError ? (texts[state.auth.lastError.code] || state.auth.lastError.code) : authenticated ? "Вход подтверждён подписанным bootstrap V2." : state.auth?.pending ? "Откройте портал и подтвердите устройство для своего аккаунта." : "Войдите, чтобы подключить принадлежащий вам аккаунт.";
+  $("auth-code").textContent = state.auth?.pending ? `Код подтверждения: ${state.auth.pending.userCode}` : "";
+  $("auth-open").hidden = !state.auth?.pending;
+  $("auth-start").textContent = state.auth?.pending ? "Открыть портал ещё раз" : "Войти через портал";
+  $("auth-reset").hidden = !authenticated && !state.auth?.pending;
+  if (!authenticated) return;
   for (const id of ["ozon", "wildberries"]) $(id).setAttribute("aria-pressed", String(id === marketplace));
   const choices = state.stores.filter(s => s.marketplace === marketplace);
   if (!choices.some(x => x.id === selectedId)) selectedId = choices[0]?.id || "";
@@ -66,12 +76,15 @@ $("reject").onclick = () => { confirmAction = null; $("confirmation").hidden = t
 $("visibility").onclick = () => action(() => request(state.context.button_visible ? "OZ_WORK_HIDE" : "OZ_WORK_SHOW", { conversation_key: state.conversation_key }));
 $("finish").onclick = () => action(() => request("OZ_WORK_FINISH", { conversation_key: state.conversation_key }));
 $("resume").onclick = () => action(() => request("SA_RESUME_QUOTA"));
+$("auth-start").onclick = () => action(() => request("SA_AUTH_START"));
+$("auth-open").onclick = () => action(() => request("SA_AUTH_OPEN_PORTAL"));
+$("auth-reset").onclick = () => confirm("Локально завершить текущую сессию и выбрать аккаунт заново? Сохранённые магазины останутся изолированными по аккаунту.", () => request("SA_AUTH_RESET"));
 for (const part of ["seller", "performance", "token"]) $("check-" + part).onclick = () => action(() => request("SA_STORE_CHECK", { store_id: selectedId, part }));
 chrome.tabs.query({ active: true, currentWindow: true }).then(tabs => { tabId = tabs[0]?.id; return refresh(true); }).catch(e => { $("status").textContent = e.message; });
 
 let refreshTimer;
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area !== "local" || !Object.keys(changes).some(key => ["seller_agents_stores_v1", "ozmb_work_sessions_v1", "ozmb_pending_work_starts_v1", "ozmb_conversation_bindings", "ozmb_manual_operations"].includes(key))) return;
+  if (area !== "local" || !Object.keys(changes).some(key => ["seller_agents_control_auth_v2", "seller_agents_stores_v1", "ozmb_work_sessions_v1", "ozmb_pending_work_starts_v1", "ozmb_conversation_bindings", "ozmb_manual_operations"].includes(key))) return;
   clearTimeout(refreshTimer);
   refreshTimer = setTimeout(() => { if (!busy && tabId) refresh().catch(e => { $("status").textContent = e.message; }); }, 100);
 });

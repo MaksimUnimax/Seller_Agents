@@ -2,6 +2,8 @@
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Seller Agents</title><link rel="stylesheet" href="popup.css"></head>
 <body><main>
 <header><strong>Seller Agents</strong><span id="account">Локальная разработка</span></header>
+<section id="auth" class="auth"><h2>Подключение аккаунта</h2><p id="auth-status" role="status">Проверяем сессию…</p><p id="auth-code" class="hint"></p><div class="row"><button id="auth-start" class="primary">Войти через портал</button><button id="auth-open" hidden>Открыть портал</button><button id="auth-reset" hidden>Сменить аккаунт</button></div><p class="hint">Расширение не получает пароль или OTP. Подтверждение выполняется на доверенном портале.</p></section>
+<section id="catalog">
 <div class="marketplaces" role="group" aria-label="Маркетплейс"><button id="ozon" aria-pressed="true">Ozon</button><button id="wildberries" aria-pressed="false">WB</button></div>
 <label>Магазин<select id="stores" aria-label="Магазин"></select></label>
 <div class="row"><button id="add">Добавить магазин</button><button id="edit">Изменить</button><button id="remove">Удалить</button></div>
@@ -17,7 +19,8 @@
 </form>
 <section id="checks"><div class="row"><button id="check-seller">Проверить Seller</button><button id="check-performance">Проверить Performance</button><button id="check-token">Проверить токен WB</button></div><p id="verification" class="hint"></p></section>
 <section class="work"><h2>Текущий диалог</h2><p id="connection">Определяем ИИ…</p><p id="selection" class="hint"></p><button id="start" class="primary">Начать работу</button><div class="row"><button id="visibility">Скрыть кнопку</button><button id="finish">Завершить</button></div><button id="resume" hidden>Продолжить пакет после ожидания</button></section>
+</section>
 <section id="confirmation" hidden><p id="confirmation-text"></p><div class="row"><button id="confirm">Подтвердить</button><button id="reject">Отмена</button></div></section>
 <p id="status" role="status" aria-live="polite"></p>
-<footer>Development 0.2.3 · результаты сразу в ИИ · буфер до 1 часа</footer>
+<footer>LOCAL DEVELOPMENT · I1-C1 · результаты сразу в ИИ · буфер до 1 часа</footer>
 </main><script src="popup.js"></script></body></html>

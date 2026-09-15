@@ -4,6 +4,17 @@ import path from "node:path";
 import vm from "node:vm";
 import { webcrypto } from "node:crypto";
 
+const AUTH_STORAGE_KEY = "seller_agents_control_auth_v2";
+function canonical(value) {
+  if (value === null) return "null";
+  if (typeof value === "boolean") return value ? "true" : "false";
+  if (typeof value === "string") return JSON.stringify(value);
+  if (typeof value === "number") return String(value);
+  if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;
+  return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonical(value[key])}`).join(",")}}`;
+}
+const b64url = (value) => Buffer.from(value).toString("base64url");
+
 export async function until(fn, description) {
   const end = Date.now() + 3500;
   while (Date.now() < end) {
@@ -20,6 +31,37 @@ export async function makeWorker(directory, options = {}) {
     connectListeners = [],
     timers = new Set();
   const backing = options.backing || { local: {}, session: {} };
+  const accountId = options.accountId || "11111111-1111-4111-8111-111111111111";
+  const deviceId = options.deviceId || "22222222-2222-4222-8222-222222222222";
+  const sessionId = options.sessionId || "33333333-3333-4333-8333-333333333333";
+  const signing = await webcrypto.subtle.generateKey({ name: "Ed25519" }, true, ["sign", "verify"]);
+  const spki = new Uint8Array(await webcrypto.subtle.exportKey("spki", signing.publicKey));
+  const fingerprint = Buffer.from(await webcrypto.subtle.digest("SHA-256", spki)).toString("hex");
+  const keyId = "fixture-key";
+  const fixtureConfig = options.packagedConfig || {
+    environment: "LOCAL DEVELOPMENT",
+    controlApiOrigin: "http://127.0.0.1:43100",
+    portalOrigin: "http://127.0.0.1:43101",
+    extensionVersion: "0.2.4",
+    contractVersion: "control_plane_v2",
+    trustBundle: { trustBundleVersion: "bootstrap_trust_bundle_v1", algorithm: "Ed25519", publicKeyFormat: "spki_der", publicKeyEncoding: "base64", fingerprintAlgorithm: "sha256", fingerprintEncoding: "lowercase_hex", keys: [{ keyId, publicKey: Buffer.from(spki).toString("base64"), fingerprintSha256: fingerprint, lifecycle: "ACTIVE", trustEligibility: "SIGNING_AND_VERIFICATION" }] },
+  };
+  if (options.seedAuthority !== false && !backing.local[AUTH_STORAGE_KEY]) {
+    const issued = new Date(Date.now() - 1000).toISOString();
+    const serverTime = new Date().toISOString();
+    const expires = new Date(Date.now() + 3600000).toISOString();
+    const grace = new Date(Date.now() + 7200000).toISOString();
+    const payload = { snapshotVersion: "bootstrap_snapshot_v2", contractVersion: "control_plane_v2", configVersion: 1, issuedAt: issued, expiresAt: expires, offlineGraceUntil: grace, serverTime,
+      accessBasis: "BETA", account: { id: accountId, status: "ACTIVE" }, subscription: { state: "NONE", planRevision: null }, devicePolicy: { status: "ACTIVE" },
+      compatibility: { extension: { status: "SUPPORTED", minimumVersion: null }, browser: { status: "SUPPORTED" } }, entitlements: {}, features: {},
+      ai: { status: "RESOLVED", detected: { family: "chatgpt", surface: "web", variant: null }, profile: { profileKey: "fixture-profile", revision: 1, scopeVariant: null, schemaVersion: "adapter_profile_v1", contentSha256: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", content: {}, compatibility: {} } } };
+    const payloadBytes = new TextEncoder().encode(canonical(payload));
+    const domain = new Uint8Array([...new TextEncoder().encode("product-control-plane/bootstrap-snapshot/v1"), 0, ...new TextEncoder().encode(keyId), 0]);
+    const signed = new Uint8Array(domain.length + payloadBytes.length); signed.set(domain); signed.set(payloadBytes, domain.length);
+    const signature = await webcrypto.subtle.sign("Ed25519", signing.privateKey, signed);
+    backing.local[AUTH_STORAGE_KEY] = { generation: 1, credentials: { deviceId, sessionId, tokenType: "Bearer", accessToken: "fixture_access_token", accessTokenExpiresAt: expires, refreshToken: "A".repeat(43), refreshTokenExpiresAt: grace }, pending: null, rotation: null,
+      authority: { verified: true, payload, envelope: { envelopeVersion: "bootstrap_envelope_v2", algorithm: "Ed25519", keyId, payload: b64url(payloadBytes), signature: b64url(signature) }, deviceId, sessionId }, lastError: null };
+  }
   let context,
     request,
     promptOutcome = options.promptOutcome ?? "sent";
@@ -167,6 +209,7 @@ export async function makeWorker(directory, options = {}) {
     AbortController,
     Blob,
     indexedDB: options.indexedDB,
+    __SELLER_AGENTS_PACKAGED_CONFIG__: JSON.stringify(fixtureConfig),
     structuredClone,
     queueMicrotask,
     atob,
@@ -225,6 +268,12 @@ export async function makeWorker(directory, options = {}) {
     { filename: "service_worker_entry.js" },
   );
   // Default sender reflects the mature popup/content ownership of each message.
+  let fixtureStoreId = null;
+  const adaptFixtureMessage = (message) => {
+    if (message.type === "OZ_SAVE_GLOBAL_SETTINGS") return { type: "SA_STORE_SAVE", store: { id: fixtureStoreId, marketplace: "ozon", name: "Ozon fixture", personalDataEnabled: message.personal_data_enabled === true, credentials: { seller: { clientId: message.seller_client_id || "FIXTURE_CLIENT", apiKey: message.seller_api_key || "FIXTURE_KEY" }, performance: { clientId: message.performance_client_id || "", clientSecret: message.performance_client_secret || "" } } } };
+    if (message.type === "OZ_WORK_START") return { type: "SA_WORK_START", store_id: fixtureStoreId, tab_id: message.tab_id, confirm_change: true, start_intent_id: message.start_intent_id || crypto.randomUUID() };
+    return message;
+  };
   request = (message, sender = /^OZ_(?:SAVE_|RESET_|CLEAR_|SET_|GET_SETTINGS_STATE|GET_GLOBAL_SETTINGS_STATE|GET_DIAGNOSTICS|BIND_CONVERSATION|TEST_CONNECTION|REFRESH_SELLER_API_METADATA|WORK_START$|WORK_SHOW$|WORK_HIDE$|WORK_FINISH$|WORK_REFRESH$|WORK_RESUME$)/.test(message.type) ? { url: chrome.runtime.getURL("popup.html") } : { tab }) =>
     new Promise((resolve, reject) => {
       const timeout = setTimeout(
@@ -232,8 +281,10 @@ export async function makeWorker(directory, options = {}) {
         4000,
       );
       try {
-        listeners.at(-1)(clone(message), clone(sender), (response) => {
+        const wireMessage = adaptFixtureMessage(message);
+        listeners.at(-1)(clone(wireMessage), clone(sender), (response) => {
           clearTimeout(timeout);
+          if (wireMessage.type === "SA_STORE_SAVE" && response?.ok) fixtureStoreId = response.store.id;
           resolve(response);
         });
       } catch (error) {
@@ -249,6 +300,7 @@ export async function makeWorker(directory, options = {}) {
     messages,
     backing,
     identity,
+    accountId,
     tabId,
     request,
     popup: (message) => request(message, { url: chrome.runtime.getURL("popup.html") }),
@@ -264,17 +316,12 @@ export async function makeWorker(directory, options = {}) {
     },
     call,
     async settings() {
-      const response = await request({
-        type: "OZ_SAVE_GLOBAL_SETTINGS",
-        auto_send: true,
-        personal_data_enabled: true,
-        seller_client_id: "FIXTURE_CLIENT",
-        seller_api_key: "FIXTURE_KEY",
-      });
+      const response = await request({ type: "SA_STORE_SAVE", store: { id: fixtureStoreId, marketplace: "ozon", name: "Ozon fixture", personalDataEnabled: true, credentials: { seller: { clientId: "FIXTURE_CLIENT", apiKey: "FIXTURE_KEY" }, performance: {} } } }, { url: chrome.runtime.getURL("popup.html") });
+      if (response?.ok) fixtureStoreId = response.store.id;
       assert.equal(response.ok, true, JSON.stringify(response));
     },
     async start() {
-      const response = await request({ type: "OZ_WORK_START", tab_id: tabId });
+      const response = await request({ type: "SA_WORK_START", store_id: fixtureStoreId, tab_id: tabId, confirm_change: true, start_intent_id: crypto.randomUUID() }, { url: chrome.runtime.getURL("popup.html") });
       assert.equal(response.ok, true, JSON.stringify(response));
       const pending = await until(async () => {
         const row = (await call("getPendingWorkStarts"))[tabId];

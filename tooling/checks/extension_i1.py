@@ -1,0 +1,65 @@
+"""Run the I1-C1 client composition and its source/package regressions."""
+from pathlib import Path
+import argparse
+import importlib.util
+import json
+import os
+import platform
+import subprocess
+
+ROOT = Path(__file__).resolve().parents[2]
+def load(name, path):
+    spec = importlib.util.spec_from_file_location(name, ROOT / path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+composed = load("extension_i1_composed", "tooling/build/extension_composed.py")
+original = load("extension_i1_runner", "tooling/checks/extension_import.py")
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    output = args.output.resolve()
+    output.mkdir(parents=True, exist_ok=False)
+    node = os.environ.get("SA_NODE_BIN", "node")
+    result = {"stage": "I1-C1", "status": "RUNNING", "os": platform.system(),
+              "python": platform.python_version(), "node": subprocess.check_output([node, "--version"], text=True).strip(),
+              "installed_acceptance": False}
+    runner = original.Runner(output)
+    try:
+        original.negative_control(output)
+        source, extracted, receipt = composed.build(output / "package")
+        assert receipt["stage"] == "I1-C1" and receipt["version"] == "0.2.4"
+        result["composition"] = receipt
+        for runtime, label in ((source, "i1-source"), (extracted, "i1-package")):
+            manifest = composed.baseline.read_json(runtime / "manifest.json")
+            assert manifest["version"] == "0.2.4"
+            assert "http://127.0.0.1:43100/*" in manifest["host_permissions"]
+            assert "http://127.0.0.1:43101/*" in manifest["host_permissions"]
+            for file in sorted(runtime.rglob("*.js")):
+                runner.run(label + "-syntax-" + file.stem, [node, "--check", file])
+            tests = [
+                ("contracts", ROOT / "tests/regression/extension-core/core-contracts.mjs"),
+                ("worker", ROOT / "tests/regression/extension-core/worker-lifecycle.mjs"),
+                ("context", ROOT / "tests/regression/extension-core/batch-context.mjs"),
+                ("wb", ROOT / "tests/regression/extension-core/wb-adapter.mjs"),
+                ("application", ROOT / "tests/regression/extension-core/application.mjs"),
+                ("i1-lifecycle", ROOT / "tests/regression/extension-core/client-i1/client-lifecycle.mjs"),
+            ]
+            for test_name, test in tests:
+                runner.run(label + "-" + test_name, [node, test, runtime])
+            runner.run(label + "-i1-verifier", [node, ROOT / "tests/regression/extension-core/client-i1/verifier.mjs", ROOT / "packages/control-client/src/crypto.js"])
+        result["status"] = "PASS"
+    except Exception as error:
+        result["status"] = "FAIL"
+        result["error"] = type(error).__name__ + ": " + str(error)
+    finally:
+        result["gate_processes"] = len(runner.rows)
+        composed.baseline.write_json(output / "summary.json", result)
+    print(json.dumps({k: v for k, v in result.items() if k != "composition"}, ensure_ascii=False, indent=2))
+    return 0 if result["status"] == "PASS" else 1
+
+if __name__ == "__main__":
+    raise SystemExit(main())
