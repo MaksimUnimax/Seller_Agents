@@ -196,7 +196,8 @@ clipboard content is persisted or exposed.
 
 Focused local gates recorded for this candidate are Work Chromium 34/34 PASS,
 normal/precedence/Stop Work cases 9/9 PASS across three repetitions, Standard
-B3 Chromium 36/36 PASS, and health-runner unit coverage 73/73 PASS. H2, B1,
-and B2 remain covered by the existing regression suite. Exact candidate SHA
-and terminal Server CI run/head are recorded in the final terminal report;
-this document makes no B7 live-acceptance claim.
+B3 Chromium 36/36 PASS, health-runner unit coverage 77/77 PASS, and full
+server E2E 155/155 PASS. H2, B1, and B2 remain covered by the existing
+regression suite. Exact candidate SHA and terminal Server CI run/head are
+recorded in the final terminal report; this document makes no B7
+live-acceptance claim.
