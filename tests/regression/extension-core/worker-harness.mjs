@@ -314,7 +314,7 @@ export async function makeWorker(directory, options = {}) {
   // Default sender reflects the mature popup/content ownership of each message.
   let fixtureStoreId = null;
   const adaptFixtureMessage = (message) => {
-    if (message.type === "OZ_SAVE_GLOBAL_SETTINGS") return { type: "SA_STORE_SAVE", store: { id: fixtureStoreId, marketplace: "ozon", name: "Ozon fixture", personalDataEnabled: message.personal_data_enabled === true, credentials: { seller: { clientId: message.seller_client_id || "FIXTURE_CLIENT", apiKey: message.seller_api_key || "FIXTURE_KEY" }, performance: { clientId: message.performance_client_id || "FIXTURE_PERFORMANCE_CLIENT", clientSecret: message.performance_client_secret || "FIXTURE_PERFORMANCE_SECRET" } } } };
+    if (message.type === "OZ_SAVE_GLOBAL_SETTINGS") return { type: "SA_STORE_SAVE", store: { id: fixtureStoreId, marketplace: "ozon", name: "Ozon fixture", personalDataEnabled: message.personal_data_enabled === true, credentials: { seller: { clientId: message.seller_client_id || "FIXTURE_CLIENT", apiKey: message.seller_api_key || "FIXTURE_KEY" }, performance: { clientId: message.performance_client_id || "", clientSecret: message.performance_client_secret || "" } } } };
     if (message.type === "OZ_WORK_START") return { type: "SA_WORK_START", store_id: fixtureStoreId, tab_id: message.tab_id, confirm_change: true, start_intent_id: message.start_intent_id || crypto.randomUUID() };
     return message;
   };
@@ -362,7 +362,7 @@ export async function makeWorker(directory, options = {}) {
     listenerCounts() { return { attachmentPorts: connectListeners.length, storageWake: storageChangedListeners.length, runtime: listeners.length }; },
     call,
     async settings() {
-      const response = await request({ type: "SA_STORE_SAVE", store: { id: fixtureStoreId, marketplace: "ozon", name: "Ozon fixture", personalDataEnabled: true, credentials: { seller: { clientId: "FIXTURE_CLIENT", apiKey: "FIXTURE_KEY" }, performance: { clientId: "FIXTURE_PERFORMANCE_CLIENT", clientSecret: "FIXTURE_PERFORMANCE_SECRET" } } } }, { url: chrome.runtime.getURL("popup.html") });
+      const response = await request({ type: "SA_STORE_SAVE", store: { id: fixtureStoreId, marketplace: "ozon", name: "Ozon fixture", personalDataEnabled: true, credentials: { seller: { clientId: "FIXTURE_CLIENT", apiKey: "FIXTURE_KEY" }, performance: {} } } }, { url: chrome.runtime.getURL("popup.html") });
       if (response?.ok) fixtureStoreId = response.store.id;
       assert.equal(response.ok, true, JSON.stringify(response));
     },

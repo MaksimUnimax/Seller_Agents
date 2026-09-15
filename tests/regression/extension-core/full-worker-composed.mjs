@@ -35,7 +35,8 @@ for (const [alias, params] of cases) {
     const countsBefore = worker.listenerCounts();
     assert.ok(countsBefore.attachmentPorts >= 1, `${alias}: attachment port loaded`);
     assert.ok(countsBefore.storageWake >= 1, `${alias}: storage wake loaded`);
-    await worker.settings();
+    const saved = await worker.popup({ type: "SA_STORE_SAVE", store: { marketplace: "ozon", name: "Ozon + Performance fixture", personalDataEnabled: true, credentials: { seller: { clientId: "FIXTURE_CLIENT", apiKey: "FIXTURE_KEY" }, performance: { clientId: "FIXTURE_PERFORMANCE_CLIENT", clientSecret: "FIXTURE_PERFORMANCE_SECRET" } } } });
+    assert.equal(saved.ok, true, JSON.stringify(saved));
     const key = await worker.start();
     const command = { operation: alias, params };
     const text = `OZON_API_V1\n${JSON.stringify(command)}`;
@@ -51,6 +52,8 @@ for (const [alias, params] of cases) {
     const events = name => diagnostics.filter(row => row.event === name);
     const started = events("OZON_REQUEST_STARTED");
     const finished = events("OZON_REQUEST_FINISHED");
+    assert.equal(events("MANUAL_BATCH_FAILED").length, 0);
+    assert.equal(events("BATCH_PROCESSOR_UNCAUGHT").length, 0);
     assert.equal(events("BATCH_CAPABILITY_PLANNING_COMPLETED").length, 1);
     assert.equal(events("BATCH_QUERY_PLANNING_COMPLETED").length, 1);
     assert.equal(events("BATCH_REQUEST_STARTED").length, 1);
@@ -63,11 +66,20 @@ for (const [alias, params] of cases) {
     assert.equal(started[0].physical_command_fingerprint, expected);
     const provider = worker.network.filter(row => row.url.startsWith("https://api-performance.ozon.ru/") || row.url.startsWith("https://api-seller.ozon.ru/"));
     const auth = worker.network.filter(row => row.url === "https://api-performance.ozon.ru/api/client/token");
-    assert.equal(provider.filter(row => row.url !== "https://api-performance.ozon.ru/api/client/token").length, 1);
-    if (alias.startsWith("performance_")) assert.equal(auth.length, 1);
+    const performanceBusiness = provider.filter(row => row.url.startsWith("https://api-performance.ozon.ru/") && row.url !== "https://api-performance.ozon.ru/api/client/token");
+    const sellerBusiness = provider.filter(row => row.url.startsWith("https://api-seller.ozon.ru/"));
+    if (alias.startsWith("performance_")) {
+      assert.equal(performanceBusiness.length, 1);
+      assert.equal(sellerBusiness.length, 0);
+      assert.equal(auth.length, 1);
+    } else {
+      assert.equal(performanceBusiness.length, 0);
+      assert.equal(sellerBusiness.length, 1);
+      assert.equal(auth.length, 0);
+    }
     passes.push(alias);
   } finally { worker.close(); }
 }
 
 assert.equal(independentFingerprint({ operation: "description_category_dependent_attribute_values", params: cases.at(-1)[1] }), "cd4bce38");
-console.log(JSON.stringify({ status: "PASS", setup: "SA_STORE_SAVE+SA_WORK_START+real_start_ack_identity", cases: passes.length, aliases: passes, exact_once: true, semantic_fingerprint: "cd4bce38", workers_closed: true }));
+console.log(JSON.stringify({ status: "PASS", setup: "SA_STORE_SAVE+SA_WORK_START+real_start_ack_identity", cases: passes.length, aliases: passes, exact_once: true, failure_events_zero: ["MANUAL_BATCH_FAILED", "BATCH_PROCESSOR_UNCAUGHT"], provider_split_asserted: true, semantic_fingerprint: "cd4bce38", workers_closed: true }));

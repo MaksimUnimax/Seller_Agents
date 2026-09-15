@@ -6,7 +6,9 @@
   /* Must remain byte-for-byte compatible with StableMachineIdentifierV1. */
   const MACHINE = /^[a-z0-9][a-z0-9._-]*$/;
   const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  const SEMVER = /^[0-9]+\.[0-9]+\.[0-9]+(?:[-+][A-Za-z0-9.-]+)?$/;
+  /* Browser-safe copy of packages/shared/src/index.ts SemVerV1Schema. */
+  const SEMVER = /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*))*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/;
+  function semver(value) { return typeof value === "string" && value.length >= 1 && value.length <= 64 && SEMVER.test(value); }
   const B64URL = /^[A-Za-z0-9_-]+$/;
   const B64 = /^[A-Za-z0-9+/]+={0,2}$/;
   const hex = bytes => [...new Uint8Array(bytes)].map(x => x.toString(16).padStart(2, "0")).join("");
@@ -120,7 +122,7 @@
     if (issued > server || issued >= expires || expires >= grace) return false;
     if (!exact(value.subscription, ["state", "planRevision"]) || !["NONE", "TRIAL", "ACTIVE", "GRACE", "PAST_DUE", "CANCELED", "EXPIRED", "SUSPENDED"].includes(value.subscription.state) || (value.subscription.state === "NONE" ? value.subscription.planRevision !== null : !machine(value.subscription.planRevision))) return false;
     if (!exact(value.devicePolicy, ["status"]) || value.devicePolicy.status !== "ACTIVE") return false;
-    if (!exact(value.compatibility, ["extension", "browser"]) || !exact(value.compatibility.extension, ["status", "minimumVersion"]) || !["SUPPORTED", "UPDATE_RECOMMENDED", "UPDATE_REQUIRED"].includes(value.compatibility.extension.status) || (value.compatibility.extension.minimumVersion !== null && !SEMVER.test(value.compatibility.extension.minimumVersion)) || !exact(value.compatibility.browser, ["status"]) || !["SUPPORTED", "UNSUPPORTED_BROWSER", "MAINTENANCE"].includes(value.compatibility.browser.status)) return false;
+    if (!exact(value.compatibility, ["extension", "browser"]) || !exact(value.compatibility.extension, ["status", "minimumVersion"]) || !["SUPPORTED", "UPDATE_RECOMMENDED", "UPDATE_REQUIRED"].includes(value.compatibility.extension.status) || (value.compatibility.extension.minimumVersion !== null && !semver(value.compatibility.extension.minimumVersion)) || !exact(value.compatibility.browser, ["status"]) || !["SUPPORTED", "UNSUPPORTED_BROWSER", "MAINTENANCE"].includes(value.compatibility.browser.status)) return false;
     if (!record(value.entitlements) || Object.keys(value.entitlements).length > 128 || !Object.entries(value.entitlements).every(([k, v]) => machine(k) && (typeof v === "boolean" || (Number.isSafeInteger(v) && !Object.is(v, -0)) || machine(v)))) return false;
     if (!record(value.features) || Object.keys(value.features).length > 128 || !Object.entries(value.features).every(([k, v]) => machine(k) && typeof v === "boolean")) return false;
     return ai(value.ai);

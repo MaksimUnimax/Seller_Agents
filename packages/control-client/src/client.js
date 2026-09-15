@@ -264,7 +264,7 @@
           credentials = clone(state.credentials); authority = clone(state.authority); continue;
         }
         if (failure.status === 401) await invalidateUnauthorized(context, failure);
-        else if (failure.status === 403 || (failure.code === "CONTROL_RESPONSE_TOO_LARGE" && failure.status === 200)) await invalidateKnown(context, failure, false);
+        else if (failure.status === 403 || (failure.code === "CONTROL_RESPONSE_TOO_LARGE" && failure.responseOk === true)) await invalidateKnown(context, failure, false);
         throw failure;
       }
       let verified;

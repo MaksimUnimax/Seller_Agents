@@ -6,11 +6,33 @@ the private key remains in that API process and is never copied to the package.
 """
 from pathlib import Path
 import argparse, json, os, re, subprocess, tempfile, time, urllib.request
+from urllib.parse import urlparse
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[4]
 NODE = os.environ.get("SA_NODE_BIN", "node")
 PNPM = os.environ.get("SA_PNPM_BIN", "pnpm")
+
+class SafeStageError(RuntimeError):
+    def __init__(self, stage, status, code):
+        super().__init__(f"{stage}: status={status} error_code={code}")
+        self.stage, self.status, self.code = stage, status, code
+
+def response_code(response):
+    try:
+        value = response.json()
+    except Exception:
+        value = None
+    code = value.get("error", {}).get("code") if isinstance(value, dict) else None
+    return code if isinstance(code, str) and re.fullmatch(r"[A-Z0-9_]{1,80}", code) else "UNALLOWLISTED_ERROR"
+
+def expect_portal_post(page, portal_port, endpoint, action, expected, stage):
+    with page.expect_response(lambda r: r.request.method == "POST" and r.url == f"http://127.0.0.1:{portal_port}/api/control-plane{endpoint}") as pending:
+        action()
+    response = pending.value
+    if response.status != expected:
+        raise SafeStageError(stage, response.status, response_code(response))
+    return response
 
 def wait_for(url, timeout=60):
     deadline = time.monotonic() + timeout
@@ -44,15 +66,22 @@ def run(runtime, output):
     with tempfile.TemporaryDirectory(prefix="seller-agents-i1-local-") as temp:
         temp_path = Path(temp)
         trust_path = temp_path / "public-trust-bundle.json"
+        fixture_evidence_path = temp_path / "fixture-evidence.json"
         private_placeholder = temp_path / "unused-private-key.der"
         try:
-            subprocess.run([PNPM, "db:migrate"], cwd=ROOT, env=env, check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
-            api_env = {**env, "SA_I1_PUBLIC_TRUST_BUNDLE_PATH": str(trust_path)}
+            try:
+                subprocess.run([PNPM, "db:migrate"], cwd=ROOT, env=env, check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+            except subprocess.CalledProcessError as error:
+                result.update(status="FAIL", stage="database_migrate", error=type(error).__name__, safe_failure={"stage": "database_migrate", "status": None, "error_code": "DATABASE_MIGRATION_FAILED"}, safe_counts={"control_responses": 0}, migration_exit_code=error.returncode)
+                raise
+            api_env = {**env, "SA_I1_PUBLIC_TRUST_BUNDLE_PATH": str(trust_path), "SA_I1_FIXTURE_EVIDENCE_PATH": str(fixture_evidence_path)}
             api = subprocess.Popen([PNPM, "--filter", "@product/api", "exec", "tsx", "../../tests/regression/extension-core/client-i1/api-harness.ts"], cwd=ROOT, env=api_env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
             processes.append(api)
             wait_for(f"http://127.0.0.1:{api_port}/health/ready")
             if not trust_path.exists():
                 raise RuntimeError("API did not export public trust bundle")
+            if not fixture_evidence_path.exists() or json.loads(fixture_evidence_path.read_text())["existing_fixture_accounts"] != 2 or json.loads(fixture_evidence_path.read_text())["beta_unchanged"] is not True:
+                raise RuntimeError("API fixture preparation evidence is incomplete")
             config = subprocess.check_output([NODE, str(ROOT / "tests/regression/extension-core/client-i1/make-browser-config.mjs"), str(private_placeholder), str(trust_path)], cwd=ROOT, env=env, text=True)
             package_root = temp_path / "package"
             build_env = {**env, "SA_PACKAGED_CONFIG_JSON": config}
@@ -73,7 +102,14 @@ def run(runtime, output):
                 try:
                     context.route("https://**/*", lambda route: route.fulfill(body=fixture, content_type="text/html") if route.request.url.startswith("https://chatgpt.com/c/") else route.abort())
                     control_responses = []
-                    context.on("response", lambda response: control_responses.append((response.url, response.status)) if f"127.0.0.1:{api_port}/v1/" in response.url else None)
+                    authorization_ids = set()
+                    def observe_control(response):
+                        parsed = urlparse(response.url)
+                        if parsed.netloc == f"127.0.0.1:{api_port}" and parsed.path.startswith("/v1/"):
+                            control_responses.append(("direct_extension", parsed.path, response.status))
+                        elif parsed.netloc == f"127.0.0.1:{portal_port}" and parsed.path.startswith("/api/control-plane/"):
+                            control_responses.append(("portal_bff", parsed.path.removeprefix("/api/control-plane"), response.status))
+                    context.on("response", observe_control)
                     worker = context.service_workers[0] if context.service_workers else context.wait_for_event("serviceworker")
                     worker_sentinel = worker.evaluate("""() => { if (!globalThis.__saI1WorkerSentinel) globalThis.__saI1WorkerSentinel = crypto.randomUUID(); return globalThis.__saI1WorkerSentinel; }""")
                     chat = context.new_page()
@@ -92,15 +128,19 @@ def run(runtime, output):
                         portal_page.wait_for_url("**/login?returnTo=*")
                         portal_page.locator('input[type="email"]').wait_for(state="visible")
                         portal_page.locator('input[type="email"]').fill(email)
-                        portal_page.get_by_role("button", name="Send code").click()
+                        expect_portal_post(portal_page, portal_port, "/v1/auth/otp/request", lambda: portal_page.get_by_role("button", name="Send code").click(), 202, "otp_request")
                         portal_page.locator('input[inputmode="numeric"]').wait_for(state="visible")
                         portal_page.locator('input[inputmode="numeric"]').fill("424242")
-                        portal_page.get_by_role("button", name="Verify").click()
+                        expect_portal_post(portal_page, portal_port, "/v1/auth/otp/verify", lambda: portal_page.get_by_role("button", name="Verify").click(), 200, "otp_verify")
                         stage = "activation_redirect"
                         portal_page.wait_for_url("**/activate?authorizationId=*")
+                        activation_id = re.search(r"[?&]authorizationId=([0-9a-f-]{36})", portal_page.url, re.I)
+                        if activation_id is None:
+                            raise RuntimeError("activation redirect did not contain a bounded authorization id")
+                        authorization_ids.add(activation_id.group(1).lower())
                         stage = "activation_preview"
                         portal_page.locator("dl dd").first.wait_for(state="visible")
-                        portal_page.locator('select option:not([value=""])').first.wait_for(state="attached")
+                        portal_page.locator('select option:not([value=""]):not([disabled])').first.wait_for(state="attached")
                         popup.locator("#auth-code").wait_for(state="visible")
                         stage = "activation_approval"
                         popup.wait_for_function("""() => { const text = document.querySelector('#auth-code')?.textContent || ''; return /[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{4}-[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{4}$/.test(text.trim()); }""")
@@ -109,9 +149,14 @@ def run(runtime, output):
                         if code_match is None:
                             raise RuntimeError("auth code UI did not reach a valid bounded state")
                         code = code_match.group(1)
-                        portal_page.locator("select").select_option(index=1)
+                        active_option = portal_page.locator('select option:not([value=""]):not([disabled])').first
+                        active_option.wait_for(state="attached")
+                        active_value = active_option.get_attribute("value")
+                        if not active_value:
+                            raise RuntimeError("activation account selector has no active value")
+                        portal_page.locator("select").select_option(value=active_value)
                         portal_page.get_by_label("User code").fill(code)
-                        portal_page.get_by_role("button", name="Approve").click()
+                        expect_portal_post(portal_page, portal_port, f"/v1/device-authorizations/{activation_id.group(1)}/approve", lambda: portal_page.get_by_role("button", name="Approve").click(), 200, "activation_approval")
                         portal_page.get_by_role("status").wait_for(state="visible")
                         if portal_page.get_by_role("status").inner_text() != "Device approved. Return to the extension to finish activation.":
                             raise RuntimeError("device approval did not reach the successful status")
@@ -134,7 +179,9 @@ def run(runtime, output):
                     portal_page = context.new_page()
                     portal_page.goto(f"http://127.0.0.1:{portal_port}/")
                     logout_status = portal_page.evaluate("""async () => { const csrf = document.cookie.split(';').map(x => x.trim()).find(x => x.startsWith('pcp_csrf=')); const response = await fetch('/api/control-plane/v1/auth/logout', {method:'POST', headers: csrf ? {'x-csrf-token': csrf.slice(9)} : {}}); return response.status; }""")
-                    assert logout_status == 200
+                    assert logout_status == 204
+                    logout_cleared = not any(cookie["name"] in {"pcp_portal_session", "pcp_csrf"} for cookie in context.cookies(f"http://127.0.0.1:{portal_port}/"))
+                    assert logout_cleared
                     portal_page.close()
                     popup.click("#auth-reset")
                     popup.locator("#confirmation").wait_for()
@@ -147,15 +194,23 @@ def run(runtime, output):
                     same_worker = worker_sentinel == worker_sentinel_after
                     distinct_accounts = first_identity["account"] != second_identity["account"]
                     distinct_device_sessions = (first_identity["device"], first_identity["session"]) != (second_identity["device"], second_identity["session"])
-                    authorization_ids = {url.rsplit("/", 1)[-1] for url, status in control_responses if re.fullmatch(rf"http://127\.0\.0\.1:{api_port}/v1/device-authorizations/[0-9a-f-]+", url) and status == 200}
-                    assert same_worker and distinct_accounts and distinct_device_sessions and len(authorization_ids) >= 2
-                    control_counts = {"device_start": sum(1 for url, status in control_responses if url.endswith("/v1/device-authorizations") and status == 200), "exchange": sum(1 for url, status in control_responses if url.endswith("/v1/device-authorizations/token") and status == 200), "bootstrap": sum(1 for url, status in control_responses if url.endswith("/v1/bootstrap") and status == 200)}
-                    assert control_counts["device_start"] >= 2 and control_counts["exchange"] >= 2 and control_counts["bootstrap"] >= 2
-                    result.update(status="PASS", installed_acceptance=True, browser=context.browser.version, checks=["real API device start", "portal OTP/approve", "device exchange", "browser V2 bootstrap", "account-scoped WB catalog", "account reset and second account isolation"], same_worker=same_worker, distinct_accounts=distinct_accounts, distinct_device_sessions=distinct_device_sessions, distinct_authorizations=len(authorization_ids) >= 2, control_counts=control_counts, portal_logout_http_ok=True)
+                    assert same_worker and distinct_accounts and distinct_device_sessions and len(authorization_ids) == 2
+                    direct = [(endpoint, status) for surface, endpoint, status in control_responses if surface == "direct_extension"]
+                    bff = [(endpoint, status) for surface, endpoint, status in control_responses if surface == "portal_bff"]
+                    control_counts = {"device_start": sum(1 for endpoint, status in direct if endpoint == "/v1/device-authorizations" and status == 201), "exchange": sum(1 for endpoint, status in direct if endpoint == "/v1/device-authorizations/token" and status == 200), "bootstrap": sum(1 for endpoint, status in direct if endpoint == "/v1/bootstrap" and status == 200)}
+                    bff_counts = {"otp_request_202": sum(1 for endpoint, status in bff if endpoint == "/v1/auth/otp/request" and status == 202), "otp_verify_200": sum(1 for endpoint, status in bff if endpoint == "/v1/auth/otp/verify" and status == 200), "logout_204": sum(1 for endpoint, status in bff if endpoint == "/v1/auth/logout" and status == 204)}
+                    assert control_counts == {"device_start": 2, "exchange": 2, "bootstrap": 2}
+                    assert bff_counts == {"otp_request_202": 2, "otp_verify_200": 2, "logout_204": 1}
+                    result.update(status="PASS", installed_acceptance=True, browser=context.browser.version, checks=["real API device start", "portal OTP/approve", "device exchange", "browser V2 bootstrap", "account-scoped WB catalog", "account reset and second account isolation"], same_worker=same_worker, distinct_accounts=distinct_accounts, distinct_device_sessions=distinct_device_sessions, distinct_authorizations=True, control_counts=control_counts, bff_counts=bff_counts, logout_cleared=logout_cleared, fixture_accounts_prepared=2, beta_unchanged=True)
                 finally:
                     context.close()
+        except SafeStageError as error:
+            result.update(status="FAIL", stage=error.stage, error=type(error).__name__, safe_failure={"stage": error.stage, "status": error.status, "error_code": error.code}, safe_counts={"control_responses": len(locals().get("control_responses", []))})
+            raise
         except Exception as error:
-            result.update(status="FAIL", stage=locals().get("stage", "unknown"), error=type(error).__name__, safe_counts={"control_responses": len(locals().get("control_responses", []))})
+            if result.get("stage") == "database_migrate":
+                raise
+            result.update(status="FAIL", stage=locals().get("stage", "unknown"), error=type(error).__name__, safe_failure={"stage": locals().get("stage", "unknown"), "status": None, "error_code": "UNAVAILABLE"}, safe_counts={"control_responses": len(locals().get("control_responses", []))})
             raise
         finally:
             for process in reversed(processes):
