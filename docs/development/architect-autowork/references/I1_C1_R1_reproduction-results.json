@@ -1,0 +1,71 @@
+{
+  "head": "9e80e8ad531f079b38bf03b9e29f171c87c477c0",
+  "method": "Unmodified published client modules; published makeWorker support; independent scenarios; Node VM, controlled HTTP, disposable WebCrypto Ed25519 keys. Not live or installed acceptance.",
+  "sourceSha256": {
+    "packages/control-client/src/config.js": "4f82d77163eb181e2f9dbfb693368a6c673ad0ab19abf476935c5883bc71c000",
+    "packages/control-client/src/crypto.js": "18ccb022a9a39ff0c95b243f043973111cfc768ca4b1e197705b38359184c8eb",
+    "packages/control-client/src/client.js": "bfa80af05c30dd561a636d532984d76a760d9af4597791559a62662a23292039"
+  },
+  "observations": [
+    {
+      "id": "R1_SECOND_LOGIN_NEVER_POLLS",
+      "defectReproduced": true,
+      "starts": 2,
+      "exchanges": 1,
+      "secondPending": true
+    },
+    {
+      "id": "R1_401_RETRY_SKIPS_REFRESH",
+      "defectReproduced": true,
+      "bootstrapRequests": 2,
+      "refreshRequests": 0,
+      "sameRejectedAccessTokenTwice": true,
+      "finalAuthorityCleared": true
+    },
+    {
+      "id": "R1_SIGNED_MAINTENANCE_RETAINS_WORK",
+      "defectReproduced": true,
+      "error": "BOOTSTRAP_EXPIRED_OR_INCOMPATIBLE",
+      "workAllowedAfterRejection": true,
+      "nextEnsureUsesOldAuthorityWithoutRequest": true
+    },
+    {
+      "id": "R1_INVALID_SIGNATURE_RETAINS_WORK",
+      "defectReproduced": true,
+      "error": "BOOTSTRAP_INVALID_SIGNATURE",
+      "workAllowedAfterRejection": true,
+      "nextEnsureUsesOldAuthorityWithoutRequest": true
+    },
+    {
+      "id": "R1_PROFILE_MINIMUM_MINOR_VERSION_BYPASSED",
+      "defectReproduced": true,
+      "installedVersion": "0.2.4",
+      "signedMinimumVersion": "0.99.0",
+      "workAllowed": true
+    },
+    {
+      "id": "F1_CANCELLED_START",
+      "controlPassed": true
+    },
+    {
+      "id": "F3_OLD_REFRESH_PRESERVES_NEW_ACCOUNT_SAME_WORKER",
+      "controlPassed": true
+    },
+    {
+      "id": "F5_COMPATIBLE_BOOTSTRAP_NO_INVALIDATION_CALLBACK",
+      "controlPassed": true
+    },
+    {
+      "id": "F8_DIGIT_FIRST_IDENTIFIER",
+      "controlPassed": true
+    },
+    {
+      "id": "F6_OVERSIZED_ENVELOPE_REJECTED",
+      "controlPassed": true
+    },
+    {
+      "id": "F7_RESTART_SAME_BACKING",
+      "controlPassed": true
+    }
+  ]
+}

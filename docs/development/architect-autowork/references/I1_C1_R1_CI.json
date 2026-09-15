@@ -1,0 +1,95 @@
+{
+  "reviewedHead": "9e80e8ad531f079b38bf03b9e29f171c87c477c0",
+  "event": "pull_request",
+  "checkedOutMerge": "1bfa2821016f8c3a3a585f72c0e60011db872ed1",
+  "baseMain": "5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+  "observedDate": "2026-09-15",
+  "jobs": [
+    {
+      "id": 104350849730,
+      "runId": 34959926666,
+      "name": "Installed local API / portal / PostgreSQL acceptance",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34959926666/job/104350849730"
+    },
+    {
+      "id": 104350849918,
+      "runId": 34959926666,
+      "name": "client-i1",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34959926666/job/104350849918"
+    },
+    {
+      "id": 104350902969,
+      "runId": 34959926657,
+      "name": "Baseline / wb-nodes",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34959926657/job/104350902969"
+    },
+    {
+      "id": 104350902975,
+      "runId": 34959926657,
+      "name": "Baseline / wb-browsers",
+      "status": "in_progress",
+      "conclusion": null,
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34959926657/job/104350902975"
+    },
+    {
+      "id": 104350903002,
+      "runId": 34959926657,
+      "name": "Common core / source and package",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34959926657/job/104350903002"
+    },
+    {
+      "id": 104350903056,
+      "runId": 34959926657,
+      "name": "Baseline / ozon",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34959926657/job/104350903056"
+    },
+    {
+      "id": 104350903139,
+      "runId": 34959926657,
+      "name": "Common application / native Chromium fixture",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34959926657/job/104350903139"
+    }
+  ],
+  "documentation": [
+    {
+      "id": 34959926633,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34959926633"
+    }
+  ],
+  "failureEvidence": [
+    {
+      "job": 104350849730,
+      "lines": [
+        "2026-09-15T10:49:15.6921762Z HEAD is now at 1bfa282 Merge 9e80e8ad531f079b38bf03b9e29f171c87c477c0 into 5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+        "2026-09-15T10:50:00.6414627Z Error: Cannot find module '/home/runner/work/Seller_Agents/Seller_Agents/tests/tests/regression/extension-core/client-i1/make-browser-config.mjs'",
+        "2026-09-15T10:50:00.6421747Z   code: 'MODULE_NOT_FOUND',"
+      ]
+    },
+    {
+      "job": 104350903139,
+      "lines": [
+        "2026-09-15T10:49:01.5710785Z HEAD is now at 1bfa282 Merge 9e80e8ad531f079b38bf03b9e29f171c87c477c0 into 5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+        "2026-09-15T10:50:20.1868999Z {\"status\": \"FAIL\", \"live_provider_calls\": 0, \"installed_acceptance\": false, \"scope\": \"native Chromium fixture; popup active-tab port controlled; synthetic AI/fetch\", \"error\": \"Timed out waiting for browser state\", \"traceback\": \"Traceback (most recent call last):\\n  File \\\"/home/runner/work/Seller_Agents/Seller_Agents/tests/regression/extension-core/browser_application.py\\\", line 97, in run\\n    until(lambda: 'Аккаунт · 11111111' in popup.locator('#account').inner_text())\\n  File \\\"/home/runner/work/Seller_Agents/Seller_Agents/tests/regression/extension-core/browser_application.py\\\", line 17, in until\\n    raise AssertionError('Timed out waiting for browser state')\\nAssertionError: Timed out waiting for browser state\\n\", \"page_errors\": []}"
+      ]
+    }
+  ],
+  "package": {
+    "reportedSha256": "2580015cdf174c909e6733197d3b609ba10c3fe35008090df13ebc17a838d00f",
+    "matchesPublishedReceipt": true,
+    "independentArchiveByteReadback": false
+  }
+}
