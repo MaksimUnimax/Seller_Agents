@@ -16,6 +16,7 @@ import {
 import type { KeyObject } from "node:crypto";
 import {
   InMemoryBootstrapSnapshotStore,
+  isTerminallyInvalidatedCache,
   normalizeRequestContext,
   requestContextsEqual,
   validateBootstrapCacheRecord,
@@ -26,7 +27,10 @@ import {
   type ValidatedBootstrapCache,
 } from "./bootstrap-cache.js";
 import {
-  classifyBootstrapFreshness,
+  evaluateCachedBootstrapEligibility,
+  type OfflineFallbackTrigger,
+} from "./offline-policy.js";
+import {
   resolveClientCompatibility,
   type SignedOperationalResult,
 } from "./bootstrap-policy.js";
@@ -41,6 +45,7 @@ import {
 } from "./detector.js";
 export * from "./bootstrap-cache.js";
 export * from "./bootstrap-policy.js";
+export * from "./offline-policy.js";
 export * from "./ai-binding.js";
 export * from "./detector.js";
 export type ExchangeResult =
@@ -68,12 +73,15 @@ export type BootstrapPolicyUnavailableReason =
   | "CACHE_INVALID"
   | "CACHE_EXPIRED"
   | "NO_MATCHING_CACHE"
+  | "NETWORK_TRANSPORT"
   | "CLOCK_UNSAFE"
   | "SERVER_TIME_ROLLBACK"
   | "INVALID_LIVE_FRESHNESS"
   | "SECURITY_FAILURE"
   | "HTTP_ERROR"
-  | "AUTHORIZATION_DENIED";
+  | "AUTHORIZATION_DENIED"
+  | "TERMINALLY_INVALIDATED"
+  | "CACHE_STATE_PERSISTENCE_FAILED";
 export type BootstrapPolicyResult =
   | SignedOperationalResult
   | {
@@ -241,21 +249,43 @@ export class SimulatedExtensionClient {
   }
   async refresh(idempotencyKey = crypto.randomUUID()): Promise<boolean> {
     if (!this.credentials) return false;
-    const response = await this.fetcher(
-      `${this.controlPlaneApiOrigin}/v1/auth/refresh`,
-      {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          "idempotency-key": idempotencyKey,
+    const key = this.cacheKey();
+    let response: Response;
+    try {
+      response = await this.fetcher(
+        `${this.controlPlaneApiOrigin}/v1/auth/refresh`,
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            "idempotency-key": idempotencyKey,
+          },
+          body: JSON.stringify({ refreshToken: this.credentials.refreshToken }),
         },
-        body: JSON.stringify({ refreshToken: this.credentials.refreshToken }),
-      },
-    );
-    if (!response.ok) return false;
-    const value = RefreshResponseV1Schema.parse(await response.json());
-    this.credentials = { ...this.credentials, ...value };
-    return true;
+      );
+    } catch {
+      return false;
+    }
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}));
+      if (
+        response.status === 401 &&
+        ApiErrorEnvelopeV1Schema.safeParse(body).success &&
+        (body as { error: { code: string } }).error.code ===
+          "AUTH_REFRESH_INVALID"
+      ) {
+        await this.markTerminallyInvalidated(key);
+        this.credentials = undefined;
+      }
+      return false;
+    }
+    try {
+      const value = RefreshResponseV1Schema.parse(await response.json());
+      this.credentials = { ...this.credentials, ...value };
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   async bootstrap(
@@ -320,6 +350,7 @@ export class SimulatedExtensionClient {
     const key: BootstrapSnapshotStoreKey = {
       controlPlaneApiOrigin: this.controlPlaneApiOrigin,
       deviceId: this.credentials.deviceId,
+      sessionId: this.credentials.sessionId,
       contractVersion: context.contractVersion,
     };
     const cacheState = await this.loadCacheState(key, context);
@@ -329,20 +360,41 @@ export class SimulatedExtensionClient {
       lastConfigVersion: cacheState.matching?.payload.configVersion ?? null,
     };
 
-    let live: BootstrapResult;
-    try {
-      live = await this.bootstrap(liveRequest);
-    } catch {
-      return this.useOfflineCache(
-        cacheState.matching,
-        cacheState.reason,
-        context,
-      );
-    }
-
-    if (live.kind === "HTTP_ERROR") {
-      if (live.status === 401 || live.status === 403) {
-        await this.removeCache(key);
+    let live: BootstrapResult = {
+      kind: "HTTP_ERROR",
+      status: 503,
+      code: "HTTP_ERROR",
+    };
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        live = await this.bootstrap(liveRequest);
+      } catch {
+        if (
+          !cacheState.matching &&
+          cacheState.reason === "NO_MATCHING_CACHE" &&
+          !cacheState.contextMismatch &&
+          !cacheState.terminallyInvalidated
+        )
+          return { kind: "UNAVAILABLE", reason: "NETWORK_TRANSPORT" };
+        return this.useOfflineCache(
+          cacheState.matching,
+          key,
+          cacheState.reason,
+          context,
+          cacheState.terminallyInvalidated,
+          "NETWORK_TRANSPORT",
+          cacheState.contextMismatch,
+        );
+      }
+      if (live.kind !== "HTTP_ERROR") break;
+      if (
+        live.status === 401 &&
+        live.code === "UNAUTHORIZED" &&
+        attempt === 0
+      ) {
+        if (await this.refresh()) continue;
+        await this.markTerminallyInvalidated(key);
+        this.credentials = undefined;
         return {
           kind: "UNAVAILABLE",
           reason: "AUTHORIZATION_DENIED",
@@ -350,6 +402,25 @@ export class SimulatedExtensionClient {
           error: live.code,
         };
       }
+      if (live.status === 401 || live.status === 403) {
+        await this.markTerminallyInvalidated(key);
+        this.credentials = undefined;
+        return {
+          kind: "UNAVAILABLE",
+          reason: "AUTHORIZATION_DENIED",
+          status: live.status,
+          error: live.code,
+        };
+      }
+      if (live.status === 503 && cacheState.matching)
+        return this.useOfflineCache(
+          cacheState.matching,
+          key,
+          cacheState.reason,
+          context,
+          cacheState.terminallyInvalidated,
+          "SERVER_TRANSIENT",
+        );
       return {
         kind: "UNAVAILABLE",
         reason: "HTTP_ERROR",
@@ -364,6 +435,8 @@ export class SimulatedExtensionClient {
         error: live.error,
       };
 
+    if (live.kind !== "VERIFIED")
+      return { kind: "UNAVAILABLE", reason: "HTTP_ERROR" };
     const liveAi = this.validateAi(live.payload, context);
     if (!liveAi.ok)
       return {
@@ -397,6 +470,7 @@ export class SimulatedExtensionClient {
       cacheVersion: "bootstrap_cache_v1",
       controlPlaneApiOrigin: this.controlPlaneApiOrigin,
       deviceId: this.credentials.deviceId,
+      sessionId: this.credentials.sessionId,
       requestContext: context,
       envelope: live.envelope,
       trustedServerTimeHighWatermark: new Date(
@@ -451,6 +525,8 @@ export class SimulatedExtensionClient {
   ): Promise<{
     matching?: ValidatedBootstrapCache;
     reason: "CACHE_INVALID" | "NO_MATCHING_CACHE";
+    terminallyInvalidated?: boolean;
+    contextMismatch?: boolean;
   }> {
     let raw: unknown;
     try {
@@ -459,6 +535,8 @@ export class SimulatedExtensionClient {
       return { reason: "NO_MATCHING_CACHE" };
     }
     if (raw === undefined) return { reason: "NO_MATCHING_CACHE" };
+    if (isTerminallyInvalidatedCache(raw, key))
+      return { reason: "NO_MATCHING_CACHE", terminallyInvalidated: true };
     const validated = validateBootstrapCacheRecord(
       raw,
       key,
@@ -478,15 +556,30 @@ export class SimulatedExtensionClient {
     );
     return requestContextsEqual(validated.value.record.requestContext, context)
       ? { matching: validated.value, reason: "NO_MATCHING_CACHE" }
-      : { reason: "NO_MATCHING_CACHE" };
+      : { reason: "NO_MATCHING_CACHE", contextMismatch: true };
   }
 
   private async useOfflineCache(
     cached: ValidatedBootstrapCache | undefined,
+    key: BootstrapSnapshotStoreKey,
     noCacheReason: "CACHE_INVALID" | "NO_MATCHING_CACHE",
     context: BootstrapRequestContext,
+    terminallyInvalidated = false,
+    fallbackTrigger: OfflineFallbackTrigger = "NETWORK_TRANSPORT",
+    contextMismatch = false,
   ): Promise<BootstrapPolicyResult> {
-    if (!cached) return { kind: "UNAVAILABLE", reason: noCacheReason };
+    if (!cached)
+      return {
+        kind: "UNAVAILABLE",
+        reason: terminallyInvalidated
+          ? "TERMINALLY_INVALIDATED"
+          : contextMismatch
+            ? noCacheReason
+            : fallbackTrigger === "NETWORK_TRANSPORT" &&
+                noCacheReason === "NO_MATCHING_CACHE"
+              ? "NETWORK_TRANSPORT"
+              : noCacheReason,
+      };
     const ai = this.validateAi(cached.payload, {
       detectedAi: context.detectedAi,
       contractVersion: context.contractVersion,
@@ -519,22 +612,113 @@ export class SimulatedExtensionClient {
       runtimeNowMs,
       this.effectiveNowHighWatermarkMs ?? -Infinity,
     );
+    const observedEffectiveNowMs = Math.max(
+      cached.trustedServerTimeHighWatermarkMs,
+      cached.persistedEffectiveTimeHighWatermarkMs,
+      this.effectiveNowHighWatermarkMs ?? -Infinity,
+    );
+    const decision = evaluateCachedBootstrapEligibility({
+      verification: { ok: true, payload: cached.payload },
+      cachedContext: cached.record.requestContext,
+      currentContext: context,
+      effectiveNowMs,
+      observedEffectiveNowMs,
+      fallbackTrigger,
+      terminallyInvalidated,
+    });
+    if (decision.decision === "DENY") {
+      if (decision.reason === "TERMINALLY_INVALIDATED")
+        return { kind: "UNAVAILABLE", reason: "TERMINALLY_INVALIDATED" };
+      if (decision.reason === "CLOCK_ROLLBACK")
+        return { kind: "UNAVAILABLE", reason: "CLOCK_UNSAFE" };
+      if (decision.reason === "CACHE_EXPIRED") {
+        this.effectiveNowHighWatermarkMs = effectiveNowMs;
+        if (this.runtimeAnchor)
+          this.runtimeAnchor = { effectiveNowMs, monotonicNowMs };
+        if (!(await this.persistEffectiveTimeHighWatermark(cached, key)))
+          return {
+            kind: "UNAVAILABLE",
+            reason: "CACHE_STATE_PERSISTENCE_FAILED",
+          };
+        return { kind: "UNAVAILABLE", reason: "CACHE_EXPIRED" };
+      }
+      return {
+        kind: "UNAVAILABLE",
+        reason:
+          decision.reason === "CONTEXT_MISMATCH"
+            ? "NO_MATCHING_CACHE"
+            : "SECURITY_FAILURE",
+        error: decision.reason,
+      };
+    }
     this.effectiveNowHighWatermarkMs = effectiveNowMs;
     if (this.runtimeAnchor)
       this.runtimeAnchor = { effectiveNowMs, monotonicNowMs };
-    const freshness = classifyBootstrapFreshness({
-      effectiveNowMs,
-      expiresAt: cached.payload.expiresAt,
-      offlineGraceUntil: cached.payload.offlineGraceUntil,
-    });
-    if (freshness === "EXPIRED")
-      return { kind: "UNAVAILABLE", reason: "CACHE_EXPIRED" };
+    if (!(await this.persistEffectiveTimeHighWatermark(cached, key)))
+      return {
+        kind: "UNAVAILABLE",
+        reason: "CACHE_STATE_PERSISTENCE_FAILED",
+      };
     return {
-      kind: resolveClientCompatibility(cached.payload),
+      kind: resolveClientCompatibility(
+        decision.payload as BootstrapSnapshotPayloadV1,
+      ),
       source: "CACHE",
-      freshness,
-      payload: cached.payload,
+      freshness: decision.freshness === "FRESH" ? "FRESH" : "OFFLINE_GRACE",
+      payload: decision.payload as BootstrapSnapshotPayloadV1,
     };
+  }
+
+  private cacheKey(): BootstrapSnapshotStoreKey {
+    if (!this.credentials) throw new Error("credentials are absent");
+    return {
+      controlPlaneApiOrigin: this.controlPlaneApiOrigin,
+      deviceId: this.credentials.deviceId,
+      sessionId: this.credentials.sessionId,
+      contractVersion: "control_plane_v1",
+    };
+  }
+
+  private async markTerminallyInvalidated(
+    key: BootstrapSnapshotStoreKey,
+  ): Promise<boolean> {
+    try {
+      await this.snapshotStore.markTerminallyInvalidated(key);
+      return true;
+    } catch {
+      // Removal is a bounded fail-closed fallback for stores that cannot
+      // establish the terminal marker. A later restart then has no cache to
+      // bypass the observed terminal online result.
+      try {
+        await this.snapshotStore.remove(key);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+  }
+
+  private async persistEffectiveTimeHighWatermark(
+    cached: ValidatedBootstrapCache,
+    key: BootstrapSnapshotStoreKey,
+  ): Promise<boolean> {
+    const persistedFloorMs = cached.persistedEffectiveTimeHighWatermarkMs;
+    const effectiveNowMs = this.effectiveNowHighWatermarkMs!;
+    if (effectiveNowMs <= persistedFloorMs) return true;
+    try {
+      await this.snapshotStore.save(key, {
+        ...cached.record,
+        // This local metadata is the durable effective-time floor. The
+        // signed envelope and its signed deadlines remain byte-for-byte
+        // unchanged.
+        lastObservedWallTimeHighWatermark: new Date(
+          effectiveNowMs,
+        ).toISOString(),
+      });
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   private validateAi(

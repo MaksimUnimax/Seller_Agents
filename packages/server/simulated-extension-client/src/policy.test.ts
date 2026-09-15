@@ -1,6 +1,9 @@
 import { generateKeyPairSync } from "node:crypto";
 import { describe, expect, it } from "vitest";
-import { signBootstrapSnapshot } from "@product/remote-config";
+import {
+  signBootstrapSnapshot,
+  verifyBootstrapEnvelope,
+} from "@product/remote-config";
 import type { BootstrapSnapshotPayloadV1 } from "@product/contracts";
 import {
   InMemoryBootstrapSnapshotStore,
@@ -53,6 +56,8 @@ class TestStore implements BootstrapSnapshotStore {
   removes = 0;
   failSave = false;
   failLoad = false;
+  failTerminalMarker = false;
+  failRemove = false;
 
   async load(): Promise<unknown> {
     if (this.failLoad) throw new Error("storage unavailable");
@@ -69,7 +74,13 @@ class TestStore implements BootstrapSnapshotStore {
   }
 
   async remove(): Promise<void> {
+    if (this.failRemove) throw new Error("storage unavailable");
     this.removes++;
+    this.value = undefined;
+  }
+
+  async markTerminallyInvalidated(): Promise<void> {
+    if (this.failTerminalMarker) throw new Error("storage unavailable");
     this.value = undefined;
   }
 }
@@ -254,6 +265,155 @@ describe("P3.6 cache and policy", () => {
     });
   });
 
+  it("persists each accepted offline effective-time advance", async () => {
+    const time = deterministicClock();
+    const store = new TestStore();
+    const first = activated({ store, clock: time.clock });
+    await first.client.bootstrapWithPolicy(REQUEST);
+    const envelope = structuredClone(store.value!.envelope);
+    const offline = activated({
+      store,
+      clock: time.clock,
+      fetch: async () => {
+        throw new TypeError("offline");
+      },
+    });
+
+    for (const [wall, monotonic, expected] of [
+      [Date.parse("2026-01-01T00:01:00.000Z"), 1, "2026-01-01T00:01:00.000Z"],
+      [Date.parse("2026-01-01T00:04:00.000Z"), 4, "2026-01-01T00:04:00.000Z"],
+      [Date.parse("2026-01-01T00:07:00.000Z"), 7, "2026-01-01T00:07:00.000Z"],
+    ] as const) {
+      time.set(wall, monotonic);
+      expect(await offline.client.bootstrapWithPolicy(REQUEST)).toMatchObject({
+        kind: "READY",
+        source: "CACHE",
+      });
+      expect(store.value?.lastObservedWallTimeHighWatermark).toBe(expected);
+    }
+    expect(store.value?.lastObservedWallTimeHighWatermark).toBe(
+      "2026-01-01T00:07:00.000Z",
+    );
+    time.set(Date.parse("2026-01-01T00:03:00.000Z"), 8);
+    expect(await offline.client.bootstrapWithPolicy(REQUEST)).toMatchObject({
+      kind: "READY",
+      source: "CACHE",
+    });
+    expect(store.value?.lastObservedWallTimeHighWatermark).toBe(
+      "2026-01-01T00:07:00.000Z",
+    );
+    expect(store.value?.envelope).toEqual(envelope);
+    expect(store.value?.envelope.payload).toBe(envelope.payload);
+    expect(store.value?.envelope.signature).toBe(envelope.signature);
+    expect(
+      verifyBootstrapEnvelope(
+        store.value!.envelope,
+        new Map([["k1", first.key.publicKey]]),
+      ),
+    ).toMatchObject({
+      ok: true,
+      payload: {
+        expiresAt: "2026-01-01T00:05:00.000Z",
+        offlineGraceUntil: "2026-01-01T00:10:00.000Z",
+      },
+    });
+  });
+
+  it("preserves the advanced floor across restart and wall-clock rollback", async () => {
+    const time = deterministicClock();
+    const store = new TestStore();
+    const first = activated({ store, clock: time.clock });
+    await first.client.bootstrapWithPolicy(REQUEST);
+    const offline = activated({
+      store,
+      clock: time.clock,
+      fetch: async () => {
+        throw new TypeError("offline");
+      },
+    });
+    time.set(Date.parse("2026-01-01T00:09:00.000Z"), 9);
+    expect(await offline.client.bootstrapWithPolicy(REQUEST)).toMatchObject({
+      kind: "READY",
+      source: "CACHE",
+      freshness: "OFFLINE_GRACE",
+    });
+    expect(store.value?.lastObservedWallTimeHighWatermark).toBe(
+      "2026-01-01T00:09:00.000Z",
+    );
+
+    time.set(Date.parse("2026-01-01T00:01:00.000Z"), 1);
+    const restarted = activated({
+      store,
+      clock: time.clock,
+      fetch: async () => {
+        throw new TypeError("offline");
+      },
+    });
+    expect(await restarted.client.bootstrapWithPolicy(REQUEST)).toMatchObject({
+      kind: "READY",
+      source: "CACHE",
+      freshness: "OFFLINE_GRACE",
+    });
+    expect(store.value?.lastObservedWallTimeHighWatermark).toBe(
+      "2026-01-01T00:09:00.000Z",
+    );
+  });
+
+  it("keeps a cache expired after restart when the durable floor reaches grace end", async () => {
+    const time = deterministicClock();
+    const store = new TestStore();
+    const first = activated({ store, clock: time.clock });
+    await first.client.bootstrapWithPolicy(REQUEST);
+    time.set(Date.parse("2026-01-01T00:10:00.000Z"), 10);
+    const expired = activated({
+      store,
+      clock: time.clock,
+      fetch: async () => {
+        throw new TypeError("offline");
+      },
+    });
+    expect(await expired.client.bootstrapWithPolicy(REQUEST)).toEqual({
+      kind: "UNAVAILABLE",
+      reason: "CACHE_EXPIRED",
+    });
+    expect(store.value?.lastObservedWallTimeHighWatermark).toBe(
+      "2026-01-01T00:10:00.000Z",
+    );
+
+    time.set(Date.parse("2026-01-01T00:01:00.000Z"), 1);
+    const restarted = activated({
+      store,
+      clock: time.clock,
+      fetch: async () => {
+        throw new TypeError("offline");
+      },
+    });
+    expect(await restarted.client.bootstrapWithPolicy(REQUEST)).toEqual({
+      kind: "UNAVAILABLE",
+      reason: "CACHE_EXPIRED",
+    });
+  });
+
+  it("fails closed when advancing the offline floor cannot be persisted", async () => {
+    const time = deterministicClock();
+    const store = new TestStore();
+    const first = activated({ store, clock: time.clock });
+    await first.client.bootstrapWithPolicy(REQUEST);
+    store.failSave = true;
+    time.set(Date.parse("2026-01-01T00:01:00.000Z"), 1);
+    const offline = activated({
+      store,
+      clock: time.clock,
+      fetch: async () => {
+        throw new TypeError("offline");
+      },
+    });
+    expect(await offline.client.bootstrapWithPolicy(REQUEST)).toEqual({
+      kind: "UNAVAILABLE",
+      reason: "CACHE_STATE_PERSISTENCE_FAILED",
+    });
+  });
+
   it("fails cached use closed when the active monotonic clock rolls back", async () => {
     const time = deterministicClock();
     const store = new TestStore();
@@ -405,7 +565,7 @@ describe("P3.6 cache and policy", () => {
     });
   });
 
-  it("does not turn an HTTP response into same-attempt cache success", async () => {
+  it("uses a previously verified cache for an audited transient bootstrap 503", async () => {
     const store = new TestStore();
     const first = activated({ store });
     await first.client.bootstrapWithPolicy(REQUEST);
@@ -423,11 +583,22 @@ describe("P3.6 cache and policy", () => {
           { status: 503 },
         ),
     });
-    expect(await second.client.bootstrapWithPolicy(REQUEST)).toEqual({
+    expect(await second.client.bootstrapWithPolicy(REQUEST)).toMatchObject({
+      kind: "READY",
+      source: "CACHE",
+      freshness: "FRESH",
+    });
+  });
+
+  it("keeps a transport failure distinct when no cache exists", async () => {
+    const client = activated({
+      fetch: async () => {
+        throw new TypeError("DNS failure");
+      },
+    }).client;
+    expect(await client.bootstrapWithPolicy(REQUEST)).toEqual({
       kind: "UNAVAILABLE",
-      reason: "HTTP_ERROR",
-      status: 503,
-      error: "BOOTSTRAP_UNAVAILABLE",
+      reason: "NETWORK_TRANSPORT",
     });
   });
 
@@ -451,6 +622,108 @@ describe("P3.6 cache and policy", () => {
       expect(store.value).toBeUndefined();
     },
   );
+
+  it("persists terminal online invalidation for the same device/session scope", async () => {
+    const store = new InMemoryBootstrapSnapshotStore();
+    const first = activated({ store });
+    await first.client.bootstrapWithPolicy(REQUEST);
+    const denied = activated({
+      store,
+      fetch: async () =>
+        new Response(
+          JSON.stringify({
+            error: {
+              code: "UNAUTHORIZED",
+              message: "Unauthorized",
+              correlationId: "corr",
+            },
+          }),
+          { status: 401 },
+        ),
+    });
+    expect(await denied.client.bootstrapWithPolicy(REQUEST)).toMatchObject({
+      kind: "UNAVAILABLE",
+      reason: "AUTHORIZATION_DENIED",
+    });
+    const offline = activated({
+      store,
+      fetch: async () => {
+        throw new TypeError("offline");
+      },
+    });
+    expect(await offline.client.bootstrapWithPolicy(REQUEST)).toEqual({
+      kind: "UNAVAILABLE",
+      reason: "TERMINALLY_INVALIDATED",
+    });
+    const unrelated = activated({
+      store,
+      fetch: async () => {
+        throw new TypeError("offline");
+      },
+    });
+    (
+      unrelated.client as unknown as { credentials: { sessionId: string } }
+    ).credentials.sessionId = "123e4567-e89b-42d3-a456-426614174099";
+    expect(await unrelated.client.bootstrapWithPolicy(REQUEST)).toEqual({
+      kind: "UNAVAILABLE",
+      reason: "NETWORK_TRANSPORT",
+    });
+  });
+
+  it("fails closed after terminal-marker persistence fails by removing the cache", async () => {
+    const store = new TestStore();
+    const first = activated({ store });
+    await first.client.bootstrapWithPolicy(REQUEST);
+    store.failTerminalMarker = true;
+    const denied = activated({
+      store,
+      fetch: async () =>
+        new Response(
+          JSON.stringify({
+            error: {
+              code: "UNAUTHORIZED",
+              message: "Unauthorized",
+              correlationId: "corr",
+            },
+          }),
+          { status: 401 },
+        ),
+    });
+    expect(await denied.client.bootstrapWithPolicy(REQUEST)).toMatchObject({
+      kind: "UNAVAILABLE",
+      reason: "AUTHORIZATION_DENIED",
+    });
+    const restarted = activated({
+      store,
+      fetch: async () => {
+        throw new TypeError("offline");
+      },
+    });
+    expect(await restarted.client.bootstrapWithPolicy(REQUEST)).toEqual({
+      kind: "UNAVAILABLE",
+      reason: "NETWORK_TRANSPORT",
+    });
+  });
+
+  it("clears credentials after an explicit invalid refresh response", async () => {
+    const client = activated({
+      fetch: async () =>
+        new Response(
+          JSON.stringify({
+            error: {
+              code: "AUTH_REFRESH_INVALID",
+              message: "Authentication failed",
+              correlationId: "corr",
+            },
+          }),
+          { status: 401 },
+        ),
+    }).client;
+    await expect(client.refresh()).resolves.toBe(false);
+    expect(
+      (client as unknown as { credentials?: unknown }).credentials,
+    ).toBeUndefined();
+  });
 
   it("does not fall back after a 200 verification failure", async () => {
     const store = new TestStore();
@@ -510,7 +783,12 @@ describe("P3.6 cache and policy", () => {
       extensionVersion: "2.0.0",
       detectedAi: { family: "chat", surface: "work", variant: null },
     });
-    expect(result).toMatchObject({ kind: "UNAVAILABLE", reason: "HTTP_ERROR" });
+    expect(result).toMatchObject({
+      kind: "UNAVAILABLE",
+      reason: "HTTP_ERROR",
+      status: 503,
+      error: "BOOTSTRAP_UNAVAILABLE",
+    });
     expect(requestBody?.lastConfigVersion).toBeNull();
   });
 

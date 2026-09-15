@@ -390,6 +390,9 @@ describe("P7.3 packaged detection and client binding", () => {
       remove: async () => {
         record = undefined;
       },
+      markTerminallyInvalidated: async () => {
+        record = undefined;
+      },
     };
     const key = generateKeyPairSync("ed25519");
     const client = new SimulatedExtensionClient({
@@ -496,6 +499,9 @@ describe("P7.3 packaged detection and client binding", () => {
         record = structuredClone(value);
       },
       remove: async () => {
+        record = undefined;
+      },
+      markTerminallyInvalidated: async () => {
         record = undefined;
       },
     };

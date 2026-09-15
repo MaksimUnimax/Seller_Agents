@@ -53,6 +53,9 @@ class E2EStore implements BootstrapSnapshotStore {
   async remove(): Promise<void> {
     this.record = undefined;
   }
+  async markTerminallyInvalidated(): Promise<void> {
+    this.record = undefined;
+  }
 }
 
 function controlledClock(): {

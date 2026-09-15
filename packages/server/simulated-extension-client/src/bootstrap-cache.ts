@@ -42,10 +42,23 @@ const BootstrapCacheRecordSchema = z
     cacheVersion: z.literal(BOOTSTRAP_CACHE_VERSION),
     controlPlaneApiOrigin: z.string().url(),
     deviceId: z.uuid(),
+    sessionId: z.uuid(),
     requestContext: CacheRequestContextSchema,
     envelope: SignedBootstrapEnvelopeV1Schema,
     trustedServerTimeHighWatermark: IsoTimestampSchema,
+    // Legacy field name retained for the v1 reference record. It is the
+    // durable effective-time floor, not merely an observation of wall time.
     lastObservedWallTimeHighWatermark: IsoTimestampSchema,
+  })
+  .strict();
+const TerminalInvalidationRecordSchema = z
+  .object({
+    cacheVersion: z.literal("bootstrap_cache_terminal_v1"),
+    controlPlaneApiOrigin: z.string().url(),
+    deviceId: z.uuid(),
+    sessionId: z.uuid(),
+    contractVersion: z.literal("control_plane_v1"),
+    state: z.literal("TERMINALLY_INVALIDATED"),
   })
   .strict();
 
@@ -69,31 +82,48 @@ export type BootstrapCacheRecord = {
   cacheVersion: typeof BOOTSTRAP_CACHE_VERSION;
   controlPlaneApiOrigin: string;
   deviceId: string;
+  sessionId: string;
   requestContext: BootstrapRequestContext;
   envelope: SignedBootstrapEnvelopeV1;
   trustedServerTimeHighWatermark: string;
+  /** Durable local effective-time floor; the legacy field name is retained. */
   lastObservedWallTimeHighWatermark: string;
+};
+export type TerminalInvalidationRecord = {
+  cacheVersion: "bootstrap_cache_terminal_v1";
+  controlPlaneApiOrigin: string;
+  deviceId: string;
+  sessionId: string;
+  contractVersion: "control_plane_v1";
+  state: "TERMINALLY_INVALIDATED";
 };
 
 export type BootstrapSnapshotStoreKey = {
   controlPlaneApiOrigin: string;
   deviceId: string;
+  sessionId: string;
   contractVersion: "control_plane_v1";
 };
 
 /** A deliberately narrow port; it is not a generic local-storage API. */
 export interface BootstrapSnapshotStore {
   load(key: BootstrapSnapshotStoreKey): Promise<unknown | undefined>;
+  /** A save must never lower the durable effective-time floor for the key. */
   save(
     key: BootstrapSnapshotStoreKey,
     record: BootstrapCacheRecord,
   ): Promise<void>;
   remove(key: BootstrapSnapshotStoreKey): Promise<void>;
+  /** Must durably replace the scoped cache with a terminal marker. */
+  markTerminallyInvalidated(key: BootstrapSnapshotStoreKey): Promise<void>;
 }
 
 /** Deterministic reference storage. A Bridge adapter is deferred to P11. */
 export class InMemoryBootstrapSnapshotStore implements BootstrapSnapshotStore {
-  private readonly records = new Map<string, BootstrapCacheRecord>();
+  private readonly records = new Map<
+    string,
+    BootstrapCacheRecord | TerminalInvalidationRecord
+  >();
 
   async load(key: BootstrapSnapshotStoreKey): Promise<unknown | undefined> {
     const value = this.records.get(storeKey(key));
@@ -104,11 +134,37 @@ export class InMemoryBootstrapSnapshotStore implements BootstrapSnapshotStore {
     key: BootstrapSnapshotStoreKey,
     record: BootstrapCacheRecord,
   ): Promise<void> {
+    const existing = this.records.get(storeKey(key));
+    if (existing?.cacheVersion === "bootstrap_cache_terminal_v1") return;
+    if (existing?.cacheVersion === BOOTSTRAP_CACHE_VERSION) {
+      record = {
+        ...record,
+        lastObservedWallTimeHighWatermark: new Date(
+          Math.max(
+            Date.parse(existing.lastObservedWallTimeHighWatermark),
+            Date.parse(record.lastObservedWallTimeHighWatermark),
+          ),
+        ).toISOString(),
+      };
+    }
     this.records.set(storeKey(key), structuredClone(record));
   }
 
   async remove(key: BootstrapSnapshotStoreKey): Promise<void> {
     this.records.delete(storeKey(key));
+  }
+
+  async markTerminallyInvalidated(
+    key: BootstrapSnapshotStoreKey,
+  ): Promise<void> {
+    this.records.set(storeKey(key), {
+      cacheVersion: "bootstrap_cache_terminal_v1",
+      controlPlaneApiOrigin: key.controlPlaneApiOrigin,
+      deviceId: key.deviceId,
+      sessionId: key.sessionId,
+      contractVersion: key.contractVersion,
+      state: "TERMINALLY_INVALIDATED",
+    });
   }
 }
 
@@ -159,6 +215,7 @@ export type ValidatedBootstrapCache = {
   record: BootstrapCacheRecord;
   payload: BootstrapSnapshotPayloadV1;
   trustedServerTimeHighWatermarkMs: number;
+  persistedEffectiveTimeHighWatermarkMs: number;
   lastObservedWallTimeHighWatermarkMs: number;
 };
 
@@ -166,6 +223,20 @@ export type CacheValidationFailure =
   | "MALFORMED_RECORD"
   | "INVALID_ENVELOPE"
   | "INCONSISTENT_TIME_METADATA";
+
+export function isTerminallyInvalidatedCache(
+  input: unknown,
+  key: BootstrapSnapshotStoreKey,
+): boolean {
+  const parsed = TerminalInvalidationRecordSchema.safeParse(input);
+  return (
+    parsed.success &&
+    parsed.data.controlPlaneApiOrigin === key.controlPlaneApiOrigin &&
+    parsed.data.deviceId === key.deviceId &&
+    parsed.data.sessionId === key.sessionId &&
+    parsed.data.contractVersion === key.contractVersion
+  );
+}
 
 export function validateBootstrapCacheRecord(
   input: unknown,
@@ -180,6 +251,7 @@ export function validateBootstrapCacheRecord(
   if (
     record.controlPlaneApiOrigin !== key.controlPlaneApiOrigin ||
     record.deviceId !== key.deviceId ||
+    record.sessionId !== key.sessionId ||
     record.requestContext.contractVersion !== key.contractVersion
   )
     return { ok: false, error: "MALFORMED_RECORD" };
@@ -209,7 +281,8 @@ export function validateBootstrapCacheRecord(
       lastObservedWallTimeHighWatermarkMs,
       payloadServerTimeMs,
     ].every(Number.isFinite) ||
-    trustedServerTimeHighWatermarkMs < payloadServerTimeMs
+    trustedServerTimeHighWatermarkMs < payloadServerTimeMs ||
+    lastObservedWallTimeHighWatermarkMs < trustedServerTimeHighWatermarkMs
   )
     return { ok: false, error: "INCONSISTENT_TIME_METADATA" };
   return {
@@ -218,6 +291,8 @@ export function validateBootstrapCacheRecord(
       record,
       payload: verified.payload,
       trustedServerTimeHighWatermarkMs,
+      persistedEffectiveTimeHighWatermarkMs:
+        lastObservedWallTimeHighWatermarkMs,
       lastObservedWallTimeHighWatermarkMs,
     },
   };
@@ -227,6 +302,7 @@ function storeKey(key: BootstrapSnapshotStoreKey): string {
   return JSON.stringify([
     key.controlPlaneApiOrigin,
     key.deviceId,
+    key.sessionId,
     key.contractVersion,
   ]);
 }
