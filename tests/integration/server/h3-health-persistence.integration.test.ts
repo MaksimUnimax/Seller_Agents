@@ -32,12 +32,102 @@ const runtime = createDatabaseRuntime(connectionString);
 const repository = createHealthPersistenceRepository(runtime);
 
 function event(step: H3BehaviorStep, outcome: "PASS" | "FAIL" | "UNCERTAIN") {
+  const result = outcome === "PASS" ? "PASS" : outcome;
+  const observation = (
+    contourKey: string,
+    strategyId: string,
+    evidenceKind: "NONE" | "METADATA" | "STATE_TRANSITION_TRACE" = "NONE",
+  ) => ({
+    contourKey,
+    observationStatus: "PRESENT",
+    primaryStrategyOutcome: result,
+    fallbackStrategyOutcomes: [],
+    selectedStrategyId: result === "PASS" ? strategyId : null,
+    structuralOutcome: result,
+    behavioralOutcome: result,
+    fallbackQuality: "NOT_APPLICABLE",
+    environmentStatus: "VALID",
+    uncertaintyReason: null,
+    evidenceKind,
+  });
+  const observations =
+    outcome === "UNCERTAIN"
+      ? []
+      : step === "IDENTIFY_SURFACE"
+        ? [
+            observation("C01_PAGE_IDENTITY", "PAGE_HOST_MARKER", "METADATA"),
+            observation("C13_BLOCKING_STATE", "BLOCKING_MARKER", "METADATA"),
+          ]
+        : step === "IDENTIFY_COMPOSER"
+          ? [observation("C03_COMPOSER_ROOT", "COMPOSER_CONTAINER", "METADATA")]
+          : step === "INSERT_PROMPT"
+            ? [observation("C04_COMPOSER_INPUT", "EDITABLE_INPUT", "METADATA")]
+            : step === "SEND_ONCE"
+              ? [
+                  observation(
+                    "C05_SEND_CONTROL",
+                    "SEMANTIC_SEND_CONTROL",
+                    "STATE_TRANSITION_TRACE",
+                  ),
+                ]
+              : step === "OBSERVE_BUSY"
+                ? [
+                    observation(
+                      "C06_BUSY_STOP_STATE",
+                      "BUSY_INDICATOR",
+                      "STATE_TRANSITION_TRACE",
+                    ),
+                  ]
+                : step === "OBSERVE_RESPONSE"
+                  ? [
+                      observation(
+                        "C02_CONVERSATION_ROOT",
+                        "CONVERSATION_ANCHOR",
+                        "METADATA",
+                      ),
+                      observation(
+                        "C07_ASSISTANT_MESSAGE",
+                        "ASSISTANT_MESSAGE_REGION",
+                      ),
+                    ]
+                  : step === "OBSERVE_COMPLETION"
+                    ? [
+                        observation(
+                          "C08_MESSAGE_COMPLETION",
+                          "COMPLETION_MARKER",
+                          "STATE_TRANSITION_TRACE",
+                        ),
+                      ]
+                    : step === "VALIDATE_BRIDGE_SURFACES"
+                      ? [
+                          observation(
+                            "C09_COMMAND_CODE_BLOCK_SURFACE",
+                            "COMMAND_SURFACE",
+                          ),
+                          observation(
+                            "C10_NATIVE_COPY_CONTROL",
+                            "NATIVE_COPY_CONTROL",
+                            "METADATA",
+                          ),
+                          observation(
+                            "C11_CONVERSATION_IDENTITY",
+                            "CONVERSATION_IDENTIFIER",
+                            "METADATA",
+                          ),
+                          observation(
+                            "C12_DELIVERY_INSERTION_PATH",
+                            "DELIVERY_TARGET",
+                            "STATE_TRANSITION_TRACE",
+                          ),
+                        ]
+                      : [];
   return {
     step,
     outcome,
     durationMs: 4,
     markerCount: null,
     transitionObserved: null,
+    observations,
   };
 }
 
@@ -114,13 +204,9 @@ function suiteFor(surface: "standard" | "work"): HealthSuiteDefinition {
   });
 }
 
-function context(
-  suite: HealthSuiteDefinition,
-  idempotencyKey: string,
-): H3HealthPersistenceContext {
+function context(suite: HealthSuiteDefinition): H3HealthPersistenceContext {
   return {
     suite,
-    idempotencyKey,
     startedAt: "2026-09-15T11:00:00.000Z",
     completedAt: "2026-09-15T11:00:01.000Z",
     browserRuntime: {
@@ -139,11 +225,10 @@ function context(
 async function persist(
   surface: "standard" | "work",
   result: ReturnType<typeof H3ExecutionResultSchema.parse>,
-  key: string,
 ) {
   const command = createH3HealthPersistenceCommand(
     result,
-    context(suiteFor(surface), key),
+    context(suiteFor(surface)),
   );
   const run = await repository.persistCompletedHealthRun(command);
   return {
@@ -200,7 +285,6 @@ describe("B5 durable Standard/Work H3 evidence", () => {
       const stored = await persist(
         surface,
         execution(executionSurface, "PASS", PASS_EVENTS, null, null, null),
-        `b5-${surface}-pass-1`,
       );
       expect(stored.run.healthLevel).toBe("H3");
       expect(stored.run.healthState).toBe("HEALTHY");
@@ -208,7 +292,7 @@ describe("B5 durable Standard/Work H3 evidence", () => {
       expect(stored.run.browserVersion).toBe("120.0.0.0");
       expect(stored.run.profileRevision).toBe(surface === "standard" ? 2 : 1);
       expect(stored.contours).toHaveLength(13);
-      expect(stored.evidence).toHaveLength(13);
+      expect(stored.evidence).toHaveLength(11);
       expect(
         stored.evidence.every((item) => item.evidenceId.length === 36),
       ).toBe(true);
@@ -239,7 +323,6 @@ describe("B5 durable Standard/Work H3 evidence", () => {
           "OBSERVE_RESPONSE",
           null,
         ),
-        `b5-${surface}-fail-1`,
       );
       expect(stored.run.healthState).toBe("BROKEN");
       expect(
@@ -251,7 +334,7 @@ describe("B5 durable Standard/Work H3 evidence", () => {
         stored.evidence.some(
           (item) => item.classification === "BOUNDED_FRAGMENT",
         ),
-      ).toBe(true);
+      ).toBe(false);
     },
   );
 
@@ -271,7 +354,6 @@ describe("B5 durable Standard/Work H3 evidence", () => {
           "IDENTIFY_SURFACE",
           "LOGIN_EXPIRED",
         ),
-        `b5-${surface}-uncertain-1`,
       );
       expect(stored.run.healthState).toBe("UNKNOWN");
       expect(
@@ -287,20 +369,4 @@ describe("B5 durable Standard/Work H3 evidence", () => {
       );
     },
   );
-
-  it("does not duplicate a durable Work PASS on application retry", async () => {
-    const suite = suiteFor("work");
-    const command = createH3HealthPersistenceCommand(
-      execution("CHATGPT_WORK", "PASS", PASS_EVENTS, null, null, null),
-      context(suite, "b5-work-idempotent-pass"),
-    );
-    const first = await repository.persistCompletedHealthRun(command);
-    const second = await repository.persistCompletedHealthRun(command);
-    expect(second).toEqual(first);
-    const count = await runtime.query<{ count: string }>(
-      "SELECT count(*)::text AS count FROM health_runs WHERE id=$1",
-      [first.id],
-    );
-    expect(count.rows[0]?.count).toBe("1");
-  });
 });

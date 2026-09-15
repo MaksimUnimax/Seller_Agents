@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { randomUUID } from "node:crypto";
 import {
   BASELINE_HEALTH_SUITE,
   HealthContourResultSchema,
@@ -11,12 +11,11 @@ import {
   H3ExecutionResultSchema,
   type H3ExecutionResult,
 } from "./h3-engine.js";
-import { type H3BehaviorStep } from "./h3-contracts.js";
+import {
+  H3ContourObservationSchema,
+  type H3ContourObservation,
+} from "./h3-strategy.js";
 import { BrowserRuntimeMetadataSchema as RunnerBrowserRuntimeMetadataSchema } from "./h2.js";
-
-const H3HealthIdempotencyKeySchema = z
-  .string()
-  .regex(/^[a-z0-9][a-z0-9._:-]{0,127}$/);
 const IsoTimestampSchema = z.string().datetime({ offset: true });
 
 /**
@@ -28,7 +27,6 @@ const IsoTimestampSchema = z.string().datetime({ offset: true });
 export const H3HealthPersistenceContextSchema = z
   .object({
     suite: HealthSuiteDefinitionSchema,
-    idempotencyKey: H3HealthIdempotencyKeySchema,
     startedAt: IsoTimestampSchema,
     completedAt: IsoTimestampSchema,
     browserRuntime: RunnerBrowserRuntimeMetadataSchema,
@@ -72,145 +70,101 @@ export const H3HealthPersistenceCommandSchema = z
     classifierVersion: z.string().min(1).max(64),
     startedAt: z.date(),
     completedAt: z.date(),
-    idempotencyKey: H3HealthIdempotencyKeySchema,
   })
   .strict();
 export type H3HealthPersistenceCommand = z.infer<
   typeof H3HealthPersistenceCommandSchema
 >;
 
-const CONTOUR_STEP: Readonly<
-  Record<HealthContourResult["contourKey"], H3BehaviorStep | null>
-> = Object.freeze({
-  C01_PAGE_IDENTITY: "IDENTIFY_SURFACE",
-  C02_CONVERSATION_ROOT: "IDENTIFY_SURFACE",
-  C03_COMPOSER_ROOT: "IDENTIFY_COMPOSER",
-  C04_COMPOSER_INPUT: "INSERT_PROMPT",
-  C05_SEND_CONTROL: "SEND_ONCE",
-  C06_BUSY_STOP_STATE: "OBSERVE_BUSY",
-  C07_ASSISTANT_MESSAGE: "OBSERVE_RESPONSE",
-  C08_MESSAGE_COMPLETION: "OBSERVE_COMPLETION",
-  C09_COMMAND_CODE_BLOCK_SURFACE: "VALIDATE_BRIDGE_SURFACES",
-  C10_NATIVE_COPY_CONTROL: "VALIDATE_BRIDGE_SURFACES",
-  C11_CONVERSATION_IDENTITY: "VALIDATE_BRIDGE_SURFACES",
-  C12_DELIVERY_INSERTION_PATH: "VALIDATE_BRIDGE_SURFACES",
-  C13_BLOCKING_STATE: null,
-});
-
-const EVIDENCE_RULE: Readonly<
-  Record<
-    HealthContourResult["contourKey"],
-    HealthContourResult["evidence"][number]["ruleId"]
-  >
-> = Object.freeze({
-  C01_PAGE_IDENTITY: "SAFE_ELEMENT_METADATA",
-  C02_CONVERSATION_ROOT: "SAFE_ELEMENT_METADATA",
-  C03_COMPOSER_ROOT: "SAFE_ELEMENT_METADATA",
-  C04_COMPOSER_INPUT: "SAFE_ELEMENT_METADATA",
-  C05_SEND_CONTROL: "STATE_TRANSITION_TRACE",
-  C06_BUSY_STOP_STATE: "STATE_TRANSITION_TRACE",
-  C07_ASSISTANT_MESSAGE: "BOUNDED_DOM_FRAGMENT",
-  C08_MESSAGE_COMPLETION: "STATE_TRANSITION_TRACE",
-  C09_COMMAND_CODE_BLOCK_SURFACE: "BOUNDED_DOM_FRAGMENT",
-  C10_NATIVE_COPY_CONTROL: "SAFE_ELEMENT_METADATA",
-  C11_CONVERSATION_IDENTITY: "SAFE_ELEMENT_METADATA",
-  C12_DELIVERY_INSERTION_PATH: "STATE_TRANSITION_TRACE",
-  C13_BLOCKING_STATE: "SAFE_ELEMENT_METADATA",
-});
-
-function opaqueEvidenceId(namespace: string, contourKey: string): string {
-  const bytes = createHash("sha256")
-    .update("p8-health-evidence-reference-v1\0")
-    .update(namespace)
-    .update("\0")
-    .update(contourKey)
-    .digest()
-    .subarray(0, 16);
-  bytes[6] = (bytes[6]! & 0x0f) | 0x50;
-  bytes[8] = (bytes[8]! & 0x3f) | 0x80;
-  const hex = bytes.toString("hex");
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
-}
-
-function eventOutcome(
-  event: H3ExecutionResult["events"][number] | undefined,
-): "PASS" | "FAIL" | "UNCERTAIN" {
-  if (!event || event.outcome === "NOT_RUN") return "FAIL";
-  return event.outcome;
-}
-
 function evidenceFor(
-  namespace: string,
-  contourKey: HealthContourResult["contourKey"],
-  classification: "METADATA" | "BOUNDED_FRAGMENT",
-  ruleId: HealthContourResult["evidence"][number]["ruleId"],
+  contour: HealthSuiteDefinition["contours"][number],
+  observation: H3ContourObservation,
 ) {
-  return {
-    evidenceId: opaqueEvidenceId(namespace, contourKey),
-    ruleId,
-    classification,
-    sha256: null,
-    sizeBytes: null,
-  } as const;
+  const ruleId =
+    observation.evidenceKind === "METADATA"
+      ? "SAFE_ELEMENT_METADATA"
+      : observation.evidenceKind === "STATE_TRANSITION_TRACE"
+        ? "STATE_TRANSITION_TRACE"
+        : null;
+  if (!ruleId || !contour.safeEvidenceRuleIds.includes(ruleId)) return [];
+  return [
+    {
+      evidenceId: randomUUID(),
+      ruleId,
+      classification: "METADATA",
+      sha256: null,
+      sizeBytes: null,
+    } as const,
+  ];
 }
 
-function outcomeForContour(
+function observationForContour(
   execution: H3ExecutionResult,
   contourKey: HealthContourResult["contourKey"],
-): H3ExecutionResult["events"][number]["outcome"] | null {
-  if (contourKey === "C13_BLOCKING_STATE") {
-    return execution.environmentUncertainty === null ? "PASS" : "UNCERTAIN";
-  }
-  const step = CONTOUR_STEP[contourKey];
-  if (!step) return null;
-  const event = execution.events.find((candidate) => candidate.step === step);
-  return event ? eventOutcome(event) : null;
+): H3ContourObservation | null {
+  const observations = execution.events.flatMap((event) => event.observations);
+  const matches = observations.filter(
+    (observation) => observation.contourKey === contourKey,
+  );
+  if (matches.length > 1) throw new Error("DUPLICATE_H3_CONTOUR_OBSERVATION");
+  return matches[0] ? H3ContourObservationSchema.parse(matches[0]) : null;
 }
 
 function contourResult(
   execution: H3ExecutionResult,
   contour: HealthSuiteDefinition["contours"][number],
-  namespace: string,
 ): HealthContourResult {
-  const outcome = outcomeForContour(execution, contour.key);
-  const present = outcome !== null;
-  const evidenceRule = EVIDENCE_RULE[contour.key];
-  const evidence = present
-    ? [
-        evidenceFor(
-          namespace,
-          contour.key,
-          evidenceRule === "BOUNDED_DOM_FRAGMENT"
-            ? "BOUNDED_FRAGMENT"
-            : "METADATA",
-          evidenceRule,
-        ),
-      ]
-    : [];
+  const observation = observationForContour(execution, contour.key);
   const environmentUncertainty = execution.environmentUncertainty;
+  const fallbackObservation =
+    contour.key === "C13_BLOCKING_STATE" && !observation
+      ? H3ContourObservationSchema.parse({
+          contourKey: contour.key,
+          observationStatus: "PRESENT",
+          primaryStrategyOutcome:
+            environmentUncertainty === null ? "PASS" : "UNCERTAIN",
+          fallbackStrategyOutcomes: [],
+          selectedStrategyId:
+            environmentUncertainty === null ? contour.primaryStrategyId : null,
+          structuralOutcome:
+            environmentUncertainty === null ? "PASS" : "UNCERTAIN",
+          behavioralOutcome:
+            environmentUncertainty === null ? "PASS" : "UNCERTAIN",
+          fallbackQuality: "NOT_APPLICABLE",
+          environmentStatus:
+            environmentUncertainty === null ? "VALID" : "UNCERTAIN",
+          uncertaintyReason: environmentUncertainty,
+          evidenceKind: environmentUncertainty === null ? "METADATA" : "NONE",
+        })
+      : observation;
+  const present = fallbackObservation?.observationStatus === "PRESENT";
   const parsed = HealthContourResultSchema.parse({
     contourKey: contour.key,
     required: contour.required,
     failureSeverity: contour.failureSeverity,
     observationStatus: present ? "PRESENT" : "NOT_OBSERVED",
     primaryStrategyId: contour.primaryStrategyId,
-    primaryStrategyOutcome: present ? outcome : "NOT_ATTEMPTED",
-    fallbackStrategyOutcomes: [],
-    selectedStrategyId: present ? contour.primaryStrategyId : null,
+    primaryStrategyOutcome: present
+      ? fallbackObservation.primaryStrategyOutcome
+      : "NOT_ATTEMPTED",
+    fallbackStrategyOutcomes: present
+      ? fallbackObservation.fallbackStrategyOutcomes
+      : [],
+    selectedStrategyId: present ? fallbackObservation.selectedStrategyId : null,
     structuralOutcome: present
-      ? outcome === "PASS"
-        ? "PASS"
-        : outcome
+      ? fallbackObservation.structuralOutcome
       : "NOT_RUN",
     behavioralOutcome: present
-      ? outcome === "PASS"
-        ? "PASS"
-        : outcome
+      ? fallbackObservation.behavioralOutcome
       : "NOT_RUN",
-    fallbackQuality: "NOT_APPLICABLE",
-    environmentStatus: environmentUncertainty === null ? "VALID" : "UNCERTAIN",
-    uncertaintyReason: environmentUncertainty,
-    evidence,
+    fallbackQuality: present
+      ? fallbackObservation.fallbackQuality
+      : "NOT_APPLICABLE",
+    environmentStatus: present
+      ? fallbackObservation.environmentStatus
+      : "VALID",
+    uncertaintyReason: present ? fallbackObservation.uncertaintyReason : null,
+    evidence: present ? evidenceFor(contour, fallbackObservation) : [],
   });
   return parsed;
 }
@@ -245,7 +199,7 @@ export function createH3HealthPersistenceCommand(
     throw new Error("H3_PROFILE_REVISION_SCOPE_MISMATCH");
   }
   const results = context.suite.contours.map((contour) =>
-    contourResult(execution, contour, context.idempotencyKey),
+    contourResult(execution, contour),
   );
   return H3HealthPersistenceCommandSchema.parse({
     suite: context.suite,
@@ -256,7 +210,6 @@ export function createH3HealthPersistenceCommand(
     classifierVersion: context.classifierVersion,
     startedAt: new Date(context.startedAt),
     completedAt: new Date(context.completedAt),
-    idempotencyKey: context.idempotencyKey,
   });
 }
 

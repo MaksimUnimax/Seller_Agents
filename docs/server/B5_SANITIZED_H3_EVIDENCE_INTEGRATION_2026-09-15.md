@@ -4,6 +4,13 @@ Date: 2026-09-15
 Roadmap: P8.4 / B5_SANITIZED_H3_EVIDENCE_INTEGRATION
 Branch: `feature/server-health-h3-p8-4`
 Accepted B4 base: `53419eb57cc222254e14b5dc273a37249487331c`
+Rejected initial B5 head: `3138966bb0d1cd66e060b43703169975f48e9265`
+
+The initial B5 candidate was rejected by architecture review for aggregate
+step-to-contour truth loss, fallback provenance loss, C09–C12 bridge
+aggregation, P8.5 deduplication/idempotency leakage, and synthetic
+bounded-fragment references without captured fragments. This document records
+the correction only; B6, B7, B8, and P8.5 are not started.
 
 ## Scope and authority
 
@@ -43,8 +50,8 @@ Health scope, then emits only an `H3HealthPersistenceCommand` containing:
 - `PASS`, `FAIL`, or `UNCERTAIN` contour outcomes;
 - existing environment uncertainty codes;
 - existing timestamps and H3 level/classifier version;
-- opaque UUID evidence references with existing rule/classification metadata;
-- a bounded safe retry key used only by the repository's deterministic run ID.
+- opaque server-random UUID evidence references with existing rule/classification
+  metadata.
 
 Unknown source fields are rejected by strict schemas. No recursive source
 copying exists. `markerCount` and `transitionObserved` remain ephemeral H3
@@ -53,21 +60,49 @@ validated at capture but omitted when the existing Health scope has no typed
 durable field for them. Existing scope fields retain browser family/version,
 surface/profile revision, extension version, and engine version.
 
-The mapper associates H3 actions with the existing contour authority: surface
-and composer actions feed C01–C04, Send feeds C05, busy/response/completion
-feed C06–C08, Bridge-surface validation feeds C09–C12, and the existing
-environment uncertainty vocabulary feeds C13. It creates no second run/result
-hierarchy and no arbitrary JSON diagnostic/evidence bag.
+The corrected path is:
+
+`Standard/Work surface strategy → strict typed contour observations → common
+H3 engine safe event → B5 mapper → HealthContourResult → classifyHealth() →
+P8.2 persistence`.
+
+`H3ContourObservation` is a closed, strict allowlist containing only the
+contour key, Health-owned primary/fallback outcomes, selected packaged
+strategy, structural and behavioral outcomes, fixed fallback quality,
+environment status/reason, and a bounded evidence kind. It contains no
+selector, raw DOM/HTML, prompt, response, URL/route, project/conversation/
+message identifier, browser handle, arbitrary text/JSON, or executable field.
+There is no generic metadata bag and no second classifier or H3 engine.
+
+C02 is emitted only after completed-flow conversation ownership is established;
+surface identification alone cannot make C02 pass. Standard and Work preserve
+actual primary/fallback choices. The implemented Standard semantic Send
+fallback is tested as primary FAIL plus `COMPOSER_ACTION_CONTROL` PASS with
+`APPROVED_EQUIVALENT`, producing canonical `DRIFT`. Completion's idle-state
+fallback is marked `MATERIALLY_DEGRADED` because the repository authority
+describes that path as less reliable. No favorable quality is caller-supplied.
+
+Bridge validation independently evaluates C09 command surface, C10 native
+Copy, C11 conversation identity, and C12 delivery insertion. The fixed H3
+bridge step may fail while durable results preserve `C09 PASS, C10 FAIL, C11
+PASS, C12 PASS`; canonical classification is `DEGRADED`, not `BROKEN` solely
+because C10 failed. Structural and behavioral outcomes are preserved
+independently.
 
 ## Evidence reference policy
 
 The current schema calls the opaque key `evidence_id` (UUID), rather than
-`evidence_ref`. B5 preserves that authority. IDs are server-derived from a
-bounded B5 namespace and contour key, are valid PostgreSQL UUIDs, and contain
-no route, project, conversation, message, account, prompt, response, seller,
-credential, cookie, token, or storage material. Evidence rows contain only the
-existing `rule_id`, `classification`, nullable hash, nullable bounded size,
-and creation timestamp. No evidence bytes or private page state are stored.
+`evidence_ref`. B5 uses server-owned random UUIDv4 values for each represented
+reference. They are unique within a run/result set and contain no route,
+project, conversation, message, account, prompt, response, seller, credential,
+cookie, token, or storage material. Evidence rows contain only the existing
+`rule_id`, `classification`, nullable hash, nullable bounded size, and creation
+timestamp. No evidence bytes or private page state are stored.
+
+B5 captures no bounded DOM fragment. C07 and C09 therefore have empty evidence
+arrays even when their observations pass; no synthetic `BOUNDED_FRAGMENT`
+reference is created. Metadata and state-transition references are emitted only
+when the observation kind matches a rule allowed by that contour.
 
 ## Standard and Work mapping
 
@@ -85,14 +120,12 @@ titles, and marker context are not read by the mapper and cannot reach the
 durable command. Standard and Work identity remains represented by the
 existing Health scope surface key and profile revision.
 
-## Idempotency, immutability, and retention
+## P8.2 completed-run semantics, immutability, and retention
 
-The repository accepts an optional bounded B5 retry key. When present, it
-derives a deterministic versioned UUID for `health_runs.id`, inserts with
-`ON CONFLICT DO NOTHING`, and verifies the existing immutable run and contour
-results before returning it. A same-key/different-input retry fails with a
-stable `HEALTH_RUN_IDEMPOTENCY_CONFLICT`; no in-memory deduplication is used.
-Callers without a key retain the pre-existing random run behavior.
+Each completed run receives a new server-random UUID and one atomic insert
+transaction. B5 contains no `idempotencyKey` API, `deterministicRunId()`, run
+reuse via `ON CONFLICT`, or `HEALTH_RUN_IDEMPOTENCY_CONFLICT`. Deduplication and
+orchestration remain reserved for P8.5.
 
 The existing unique `(run_id, contour_key)` constraint, evidence UUID primary
 key, evidence-to-contour foreign key/trigger, immutable-row triggers, and
@@ -121,18 +154,22 @@ marketplace, customer-session, or live ChatGPT call was made.
 Focused/local checks completed:
 
 - health-runner B5 mapper plus existing H2/B1/B2/B3/B4 unit coverage:
-  `85/85 PASS`;
-- fresh PostgreSQL zero-to-current migration: `PASS`;
-- existing P8.2 persistence plus durable idempotency regression: `21/21
-  PASS` on a fresh disposable database;
+  `91/91 PASS`;
+- health-runner and DB package typechecks: `PASS`;
+- DB package unit coverage: `11/11 PASS`;
+- fresh PostgreSQL zero-to-current migration and integration: pending final
+  exact-head CI result;
 - Standard/Work durable B5 persistence matrix, including PASS, post-Send FAIL,
-  pre-Send UNCERTAIN, privacy readback, and retry deduplication: `7/7 PASS`;
+  pre-Send UNCERTAIN, privacy readback, independent bridge outcomes, no fake
+  fragments, and random-run/no-dedup semantics: pending final exact-head CI
+  result;
 - `0015_p8_2_health_persistence.sql`: unchanged;
 - no Stream A, extension runtime, public contract, API/admin/portal, B6, B7,
   or P8.5 files changed.
 
-Full repository gates and exact remote Server CI are recorded in the terminal
-report after the final candidate is pushed. No live H3 acceptance is claimed.
+Full repository gates, exact corrected candidate SHA, exact-head Server CI, and
+remote readback are recorded in the terminal report after the final candidate
+is pushed. No live H3 acceptance is claimed.
 
 ## Boundary
 

@@ -1,6 +1,12 @@
 import {
   EnvironmentUncertaintyReasonSchema,
   type EnvironmentUncertaintyReason,
+  HealthAssertionOutcomeSchema,
+  HealthObservationOutcomeSchema,
+  HealthObservationStatusSchema,
+  BaselineContourKeySchema,
+  FallbackQualitySchema,
+  PackagedStrategyIdSchema,
 } from "@product/health";
 import {
   H3SurfaceProfileSchema,
@@ -21,12 +27,105 @@ export const H3StrategyStepOutcomeSchema = z.enum([
 ]);
 export type H3StrategyStepOutcome = z.infer<typeof H3StrategyStepOutcomeSchema>;
 
+/**
+ * Safe, bounded strategy provenance. This is deliberately smaller than a
+ * browser observation: it contains only Health-owned vocabulary and no page
+ * values, selectors, identifiers, or executable data.
+ */
+export const H3ContourObservationSchema = z
+  .object({
+    contourKey: BaselineContourKeySchema,
+    observationStatus: HealthObservationStatusSchema,
+    primaryStrategyOutcome: HealthObservationOutcomeSchema,
+    fallbackStrategyOutcomes: z
+      .array(
+        z
+          .object({
+            strategyId: PackagedStrategyIdSchema,
+            outcome: HealthObservationOutcomeSchema,
+          })
+          .strict(),
+      )
+      .max(8),
+    selectedStrategyId: PackagedStrategyIdSchema.nullable(),
+    structuralOutcome: HealthAssertionOutcomeSchema,
+    behavioralOutcome: HealthAssertionOutcomeSchema,
+    fallbackQuality: FallbackQualitySchema,
+    environmentStatus: z.enum(["VALID", "UNCERTAIN"]),
+    uncertaintyReason: EnvironmentUncertaintyReasonSchema.nullable(),
+    evidenceKind: z.enum(["NONE", "METADATA", "STATE_TRANSITION_TRACE"]),
+  })
+  .strict()
+  .superRefine((value, context) => {
+    if (
+      value.environmentStatus === "VALID" &&
+      value.uncertaintyReason !== null
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["uncertaintyReason"],
+        message: "valid observation cannot have an uncertainty reason",
+      });
+    }
+    if (
+      value.environmentStatus === "UNCERTAIN" &&
+      value.uncertaintyReason === null
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["uncertaintyReason"],
+        message: "uncertain observation requires a reason",
+      });
+    }
+    if (value.observationStatus !== "PRESENT") {
+      if (
+        value.primaryStrategyOutcome !== "NOT_ATTEMPTED" ||
+        value.fallbackStrategyOutcomes.length > 0 ||
+        value.selectedStrategyId !== null ||
+        value.structuralOutcome !== "NOT_RUN" ||
+        value.behavioralOutcome !== "NOT_RUN" ||
+        value.fallbackQuality !== "NOT_APPLICABLE" ||
+        value.evidenceKind !== "NONE"
+      ) {
+        context.addIssue({
+          code: "custom",
+          path: ["observationStatus"],
+          message: "non-present observation cannot contain execution results",
+        });
+      }
+    }
+    if (value.fallbackQuality !== "NOT_APPLICABLE") {
+      if (
+        value.selectedStrategyId === null ||
+        !value.fallbackStrategyOutcomes.some(
+          (attempt) => attempt.strategyId === value.selectedStrategyId,
+        )
+      ) {
+        context.addIssue({
+          code: "custom",
+          path: ["fallbackQuality"],
+          message: "fallback quality requires a selected fallback result",
+        });
+      }
+    }
+  });
+export type H3ContourObservation = Readonly<
+  z.infer<typeof H3ContourObservationSchema>
+>;
+
+export function createH3ContourObservation(
+  input: unknown,
+): H3ContourObservation {
+  return Object.freeze(H3ContourObservationSchema.parse(input));
+}
+
 export const H3StrategyStepResultSchema = z
   .object({
     outcome: H3StrategyStepOutcomeSchema,
     markerCount: z.number().int().min(0).max(64).nullable(),
     transitionObserved: z.boolean().nullable(),
     uncertaintyReason: EnvironmentUncertaintyReasonSchema.nullable(),
+    observations: z.array(H3ContourObservationSchema).max(13).default([]),
   })
   .strict()
   .superRefine((value, context) => {

@@ -230,6 +230,7 @@ function stepEvent(
     durationMs: clampDuration(durationMs),
     markerCount: result?.markerCount ?? null,
     transitionObserved: result?.transitionObserved ?? null,
+    observations: result?.observations ?? [],
   });
 }
 

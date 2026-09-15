@@ -72,13 +72,16 @@ export {
   H3StrategyError,
   H3StrategyErrorCodeSchema,
   H3StrategyStepOutcomeSchema,
+  H3ContourObservationSchema,
   H3StrategyStepResultSchema,
+  createH3ContourObservation,
   parseH3StrategyStepResult,
   validateH3SurfaceStrategy,
 } from "./h3-strategy.js";
 export type {
   H3StrategyErrorCode,
   H3StrategyStepOutcome,
+  H3ContourObservation,
   H3StrategyStepResult,
   H3SurfaceStrategy,
 } from "./h3-strategy.js";

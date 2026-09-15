@@ -575,44 +575,15 @@ describe("P8.2 health persistence", () => {
     );
   });
 
-  it("reuses a completed run for the same durable idempotency key", async () => {
-    const suite = suiteRevision(4);
-    const first = await repository.persistCompletedHealthRun(
-      input(suite, passedResults(suite), {
-        idempotencyKey: "b5-standard-pass-retry-4",
-      }),
+  it("creates a new random completed run for each caller retry", async () => {
+    const first = await repository.persistCompletedHealthRun(input());
+    const second = await repository.persistCompletedHealthRun(input());
+    expect(first.id).not.toBe(second.id);
+    expect(first.id).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
     );
-    const second = await repository.persistCompletedHealthRun(
-      input(suite, passedResults(suite), {
-        idempotencyKey: "b5-standard-pass-retry-4",
-      }),
+    expect(second.id).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
     );
-
-    expect(second).toEqual(first);
-    const rows = await runtime.query<{ runs: string; contours: string }>(
-      `SELECT
-         (SELECT count(*)::text FROM health_runs WHERE id=$1) AS runs,
-         (SELECT count(*)::text FROM health_contour_results WHERE run_id=$1) AS contours`,
-      [first.id],
-    );
-    expect(rows.rows[0]).toEqual({ runs: "1", contours: "13" });
-
-    const changed = passedResults(suite).map((result) =>
-      result.contourKey === "C05_SEND_CONTROL"
-        ? {
-            ...result,
-            primaryStrategyOutcome: "FAIL" as const,
-            structuralOutcome: "FAIL" as const,
-            behavioralOutcome: "FAIL" as const,
-          }
-        : result,
-    );
-    await expect(
-      repository.persistCompletedHealthRun(
-        input(suite, changed, {
-          idempotencyKey: "b5-standard-pass-retry-4",
-        }),
-      ),
-    ).rejects.toThrow("HEALTH_RUN_IDEMPOTENCY_CONFLICT");
   });
 });

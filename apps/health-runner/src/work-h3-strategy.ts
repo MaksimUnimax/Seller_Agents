@@ -11,7 +11,9 @@ import {
   type H3PromptId,
 } from "./h3-contracts.js";
 import {
+  createH3ContourObservation,
   H3StrategyStepResultSchema,
+  type H3ContourObservation,
   type H3StrategyStepResult,
   type H3SurfaceStrategy,
 } from "./h3-strategy.js";
@@ -52,31 +54,83 @@ const EXPECTED_CHECKS: readonly H3BridgeSurfaceCheck[] = Object.freeze([
 const pass = (
   markerCount: number,
   transitionObserved: boolean,
+  observations: readonly H3ContourObservation[] = [],
 ): H3StrategyStepResult =>
   H3StrategyStepResultSchema.parse({
     outcome: "PASS",
     markerCount: Math.min(64, Math.max(0, markerCount)),
     transitionObserved,
     uncertaintyReason: null,
+    observations,
   });
 
-const fail = (markerCount = 0): H3StrategyStepResult =>
+const fail = (
+  markerCount = 0,
+  observations: readonly H3ContourObservation[] = [],
+): H3StrategyStepResult =>
   H3StrategyStepResultSchema.parse({
     outcome: "FAIL",
     markerCount: Math.min(64, Math.max(0, markerCount)),
     transitionObserved: false,
     uncertaintyReason: null,
+    observations,
   });
 
 const uncertain = (
   reason: EnvironmentUncertaintyReason,
-): H3StrategyStepResult =>
-  H3StrategyStepResultSchema.parse({
+  observations: readonly H3ContourObservation[] = [],
+): H3StrategyStepResult => {
+  const safeObservations =
+    observations.length > 0
+      ? observations
+      : [
+          createH3ContourObservation({
+            contourKey: "C13_BLOCKING_STATE",
+            observationStatus: "PRESENT",
+            primaryStrategyOutcome: "UNCERTAIN",
+            fallbackStrategyOutcomes: [],
+            selectedStrategyId: null,
+            structuralOutcome: "UNCERTAIN",
+            behavioralOutcome: "UNCERTAIN",
+            fallbackQuality: "NOT_APPLICABLE",
+            environmentStatus: "UNCERTAIN",
+            uncertaintyReason: reason,
+            evidenceKind: "NONE",
+          }),
+        ];
+  return H3StrategyStepResultSchema.parse({
     outcome: "UNCERTAIN",
     markerCount: null,
     transitionObserved: null,
     uncertaintyReason: reason,
+    observations: safeObservations,
   });
+};
+
+function observation(
+  contourKey: H3ContourObservation["contourKey"],
+  primaryStrategyOutcome: H3ContourObservation["primaryStrategyOutcome"],
+  structuralOutcome: H3ContourObservation["structuralOutcome"],
+  behavioralOutcome: H3ContourObservation["behavioralOutcome"],
+  selectedStrategyId: H3ContourObservation["selectedStrategyId"],
+  fallbackStrategyOutcomes: H3ContourObservation["fallbackStrategyOutcomes"] = [],
+  fallbackQuality: H3ContourObservation["fallbackQuality"] = "NOT_APPLICABLE",
+  evidenceKind: H3ContourObservation["evidenceKind"] = "NONE",
+): H3ContourObservation {
+  return createH3ContourObservation({
+    contourKey,
+    observationStatus: "PRESENT",
+    primaryStrategyOutcome,
+    fallbackStrategyOutcomes,
+    selectedStrategyId,
+    structuralOutcome,
+    behavioralOutcome,
+    fallbackQuality,
+    environmentStatus: "VALID",
+    uncertaintyReason: null,
+    evidenceKind,
+  });
+}
 
 function boundedCount(count: number): number {
   return Math.min(64, Math.max(0, count));
@@ -146,6 +200,8 @@ class ChatGPTWorkH3Strategy implements H3SurfaceStrategy {
   #routeIdentity: WorkRouteIdentity | undefined;
   #promptInserted = false;
   #sendInvoked = false;
+  #sendStrategyId: "SEMANTIC_SEND_CONTROL" | "COMPOSER_ACTION_CONTROL" =
+    "SEMANTIC_SEND_CONTROL";
 
   public constructor(
     page: Page,
@@ -187,7 +243,28 @@ class ChatGPTWorkH3Strategy implements H3SurfaceStrategy {
       this.#routeIdentity = route.identity;
       this.#assistantMessages = messages;
       this.#baselineMessageCount = baselineCount;
-      return pass(2, false);
+      return pass(2, false, [
+        observation(
+          "C01_PAGE_IDENTITY",
+          "PASS",
+          "PASS",
+          "PASS",
+          "SURFACE_MARKER",
+          [],
+          "NOT_APPLICABLE",
+          "METADATA",
+        ),
+        observation(
+          "C13_BLOCKING_STATE",
+          "PASS",
+          "PASS",
+          "PASS",
+          "BLOCKING_MARKER",
+          [],
+          "NOT_APPLICABLE",
+          "METADATA",
+        ),
+      ]);
     });
   }
 
@@ -230,7 +307,18 @@ class ChatGPTWorkH3Strategy implements H3SurfaceStrategy {
       if ((await workPromptInputs(composer).count()) !== 1) return fail();
       this.#composer = composer;
       this.#input = valid[0]!;
-      return pass(1, false);
+      return pass(1, false, [
+        observation(
+          "C03_COMPOSER_ROOT",
+          "FAIL",
+          "PASS",
+          "PASS",
+          "ACTIVE_COMPOSER_REGION",
+          [{ strategyId: "ACTIVE_COMPOSER_REGION", outcome: "PASS" }],
+          "APPROVED_EQUIVALENT",
+          "METADATA",
+        ),
+      ]);
     });
   }
 
@@ -249,7 +337,20 @@ class ChatGPTWorkH3Strategy implements H3SurfaceStrategy {
       await input.fill(prompt);
       const inserted = (await this.#readInput(input)) === prompt;
       this.#promptInserted = inserted;
-      return inserted ? pass(1, true) : fail();
+      return inserted
+        ? pass(1, true, [
+            observation(
+              "C04_COMPOSER_INPUT",
+              "FAIL",
+              "PASS",
+              "PASS",
+              "ACCESSIBILITY_TEXTBOX",
+              [{ strategyId: "ACCESSIBILITY_TEXTBOX", outcome: "PASS" }],
+              "APPROVED_EQUIVALENT",
+              "METADATA",
+            ),
+          ])
+        : fail();
     });
   }
 
@@ -282,10 +383,27 @@ class ChatGPTWorkH3Strategy implements H3SurfaceStrategy {
         )
           return fail();
       }
+      this.#sendStrategyId =
+        exactCount === 1 ? "SEMANTIC_SEND_CONTROL" : "COMPOSER_ACTION_CONTROL";
       this.#sendInvoked = true;
       // Captured precedence: text-present Send wins over generation state.
       await send.click();
-      return pass(1, true);
+      return pass(1, true, [
+        observation(
+          "C05_SEND_CONTROL",
+          this.#sendStrategyId === "SEMANTIC_SEND_CONTROL" ? "PASS" : "FAIL",
+          "PASS",
+          "PASS",
+          this.#sendStrategyId,
+          this.#sendStrategyId === "SEMANTIC_SEND_CONTROL"
+            ? []
+            : [{ strategyId: "COMPOSER_ACTION_CONTROL", outcome: "PASS" }],
+          this.#sendStrategyId === "SEMANTIC_SEND_CONTROL"
+            ? "NOT_APPLICABLE"
+            : "APPROVED_EQUIVALENT",
+          "STATE_TRANSITION_TRACE",
+        ),
+      ]);
     });
   }
 
@@ -311,8 +429,27 @@ class ChatGPTWorkH3Strategy implements H3SurfaceStrategy {
           composerEmpty &&
           active &&
           (newMessage || (await this.#stopIsVisible()))
-        )
-          return pass(1, true);
+        ) {
+          const primaryBusy =
+            (await this.#stopIsVisible()) ||
+            (await this.#surface
+              .locator(CHATGPT_WORK_H3_PROFILE.selectors.busySignal)
+              .count()) > 0;
+          return pass(1, true, [
+            observation(
+              "C06_BUSY_STOP_STATE",
+              primaryBusy ? "PASS" : "FAIL",
+              "PASS",
+              "PASS",
+              primaryBusy ? "BUSY_INDICATOR" : "RESPONSE_STATE_MARKER",
+              primaryBusy
+                ? []
+                : [{ strategyId: "RESPONSE_STATE_MARKER", outcome: "PASS" }],
+              primaryBusy ? "NOT_APPLICABLE" : "MATERIALLY_DEGRADED",
+              "STATE_TRANSITION_TRACE",
+            ),
+          ]);
+        }
         await new Promise((resolve) => setTimeout(resolve, 25));
       }
       return fail();
@@ -339,7 +476,28 @@ class ChatGPTWorkH3Strategy implements H3SurfaceStrategy {
         if (!(await this.#belongsToBoundRoute(candidate))) continue;
         this.#associatedResponse = candidate;
         this.#associatedResponseId = id;
-        return pass(1, true);
+        return pass(1, true, [
+          observation(
+            "C02_CONVERSATION_ROOT",
+            "PASS",
+            "PASS",
+            "PASS",
+            "CONVERSATION_ANCHOR",
+            [],
+            "NOT_APPLICABLE",
+            "METADATA",
+          ),
+          observation(
+            "C07_ASSISTANT_MESSAGE",
+            "PASS",
+            "PASS",
+            "PASS",
+            "ASSISTANT_MESSAGE_REGION",
+            [],
+            "NOT_APPLICABLE",
+            "NONE",
+          ),
+        ]);
       }
       return fail(boundedCount(count));
     });
@@ -358,7 +516,18 @@ class ChatGPTWorkH3Strategy implements H3SurfaceStrategy {
           !(await this.#generationActive()) &&
           (await this.#responseHasContent(response))
         )
-          return pass(1, true);
+          return pass(1, true, [
+            observation(
+              "C08_MESSAGE_COMPLETION",
+              "FAIL",
+              "PASS",
+              "PASS",
+              "RESPONSE_IDLE_STATE",
+              [{ strategyId: "RESPONSE_IDLE_STATE", outcome: "PASS" }],
+              "MATERIALLY_DEGRADED",
+              "STATE_TRANSITION_TRACE",
+            ),
+          ]);
         await new Promise((resolve) => setTimeout(resolve, 25));
       }
       return fail();
@@ -379,33 +548,76 @@ class ChatGPTWorkH3Strategy implements H3SurfaceStrategy {
         !(await this.#belongsToBoundRoute(response))
       )
         return fail();
-      const codeSurface = await this.#findCodeSurfaceWithCopy(
+      const codeSurface = await this.#findCodeSurface(
         workCodeSurfaces(response),
       );
-      if (!codeSurface) return fail();
-      if (
-        (await codeSurface.getByText(HEALTH_TOKEN, { exact: true }).count()) !==
-        1
-      )
-        return fail();
-      const copy = workCopyControls(codeSurface);
-      if (
-        (await copy.count()) !== 1 ||
-        !(await copy.isVisible({ timeout: 1_000 })) ||
-        (await disabled(copy.first()))
-      )
-        return fail();
-      if (
+      const commandPass =
+        codeSurface !== null &&
+        (await codeSurface.getByText(HEALTH_TOKEN, { exact: true }).count()) ===
+          1;
+      const copy = codeSurface ? workCopyControls(codeSurface) : null;
+      const copyPresent =
+        copy !== null &&
+        (await copy.count()) === 1 &&
+        (await copy.isVisible({ timeout: 1_000 }).catch(() => false));
+      const copyPass = copyPresent && !(await disabled(copy!.first()));
+      const deliveryPass =
         !(await input.isEditable({ timeout: 1_000 })) ||
         !(await composer.isVisible({ timeout: 1_000 }))
-      )
-        return fail();
-      if (
-        (await workPromptInputs(composer).count()) !== 1 ||
-        (await workSendControls(composer).count()) !== 1
-      )
-        return fail();
-      return pass(4, true);
+          ? false
+          : (await workPromptInputs(composer).count()) === 1 &&
+            (await workSendControls(composer).count()) === 1;
+      const identityPass = await this.#belongsToBoundRoute(response);
+      const observations = [
+        observation(
+          "C09_COMMAND_CODE_BLOCK_SURFACE",
+          commandPass ? "PASS" : "FAIL",
+          commandPass ? "PASS" : "FAIL",
+          commandPass ? "PASS" : "FAIL",
+          commandPass ? "COMMAND_SURFACE" : null,
+          [],
+          "NOT_APPLICABLE",
+          "NONE",
+        ),
+        observation(
+          "C10_NATIVE_COPY_CONTROL",
+          copyPass ? "PASS" : "FAIL",
+          copyPresent ? "PASS" : "FAIL",
+          copyPass ? "PASS" : "FAIL",
+          copyPass ? "NATIVE_COPY_CONTROL" : null,
+          [],
+          "NOT_APPLICABLE",
+          copyPresent ? "METADATA" : "NONE",
+        ),
+        observation(
+          "C11_CONVERSATION_IDENTITY",
+          "FAIL",
+          identityPass ? "PASS" : "FAIL",
+          identityPass ? "PASS" : "FAIL",
+          identityPass ? "CONVERSATION_URL_IDENTITY" : null,
+          [
+            {
+              strategyId: "CONVERSATION_URL_IDENTITY",
+              outcome: identityPass ? "PASS" : "FAIL",
+            },
+          ],
+          "APPROVED_EQUIVALENT",
+          identityPass ? "METADATA" : "NONE",
+        ),
+        observation(
+          "C12_DELIVERY_INSERTION_PATH",
+          deliveryPass ? "PASS" : "FAIL",
+          deliveryPass ? "PASS" : "FAIL",
+          deliveryPass ? "PASS" : "FAIL",
+          deliveryPass ? "DELIVERY_TARGET" : null,
+          [],
+          "NOT_APPLICABLE",
+          deliveryPass ? "STATE_TRANSITION_TRACE" : "NONE",
+        ),
+      ];
+      return commandPass && copyPass && identityPass && deliveryPass
+        ? pass(4, true, observations)
+        : fail(4, observations);
     });
   }
 
@@ -425,6 +637,7 @@ class ChatGPTWorkH3Strategy implements H3SurfaceStrategy {
     this.#baselineMessageCount = 0;
     this.#promptInserted = false;
     this.#sendInvoked = false;
+    this.#sendStrategyId = "SEMANTIC_SEND_CONTROL";
     await close?.();
   }
 
@@ -566,45 +779,15 @@ class ChatGPTWorkH3Strategy implements H3SurfaceStrategy {
     }
   }
 
-  async #findCodeSurfaceWithCopy(surfaces: Locator): Promise<Locator | null> {
+  async #findCodeSurface(surfaces: Locator): Promise<Locator | null> {
     const response = this.#associatedResponse;
     if (!response) return null;
-    const copies = workCopyControls(response);
-    for (
-      let copyIndex = 0;
-      copyIndex < (await copies.count());
-      copyIndex += 1
-    ) {
-      // Stop at the associated assistant response boundary. This preserves
-      // mature local code/Copy ownership and prevents response-level actions
-      // from being attributed to a descendant code surface.
-      const ancestors = copies
-        .nth(copyIndex)
-        .locator(
-          'xpath=ancestor::*[not(self::section[@data-turn="assistant"] or @data-message-author-role="assistant") and not(.//*[self::section[@data-turn="assistant"] or @data-message-author-role="assistant"])]',
-        );
-      for (
-        let ancestorIndex = 0;
-        ancestorIndex < (await ancestors.count());
-        ancestorIndex += 1
-      ) {
-        const ancestor = ancestors.nth(ancestorIndex);
-        if (!(await ancestor.isVisible({ timeout: 1_000 }).catch(() => false)))
-          continue;
-        if (
-          (await workCopyControls(ancestor).count()) === 1 &&
-          (await workCodeSurfaces(ancestor).count()) >= 1
-        )
-          return ancestor;
-      }
-    }
     for (let index = 0; index < (await surfaces.count()); index += 1) {
       const surface = surfaces.nth(index);
       if (!(await surface.isVisible({ timeout: 1_000 }).catch(() => false)))
         continue;
       if (
-        (await workCopyControls(surface).count()) === 1 &&
-        (await surface.locator("code").count()) >= 1
+        (await surface.getByText(HEALTH_TOKEN, { exact: true }).count()) === 1
       )
         return surface;
     }

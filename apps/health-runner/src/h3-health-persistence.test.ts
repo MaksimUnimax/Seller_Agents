@@ -9,6 +9,11 @@ import {
   type H3HealthPersistenceContext,
 } from "./h3-health-persistence.js";
 import { H3ExecutionResultSchema } from "./h3-engine.js";
+import {
+  H3ContourObservationSchema,
+  type H3ContourObservation,
+} from "./h3-strategy.js";
+import type { H3SafeEvidenceEvent } from "./evidence-sanitizer.js";
 import type { H3BehaviorStep } from "./h3-contracts.js";
 
 const STARTED_AT = "2026-09-15T10:00:00.000Z";
@@ -35,13 +40,127 @@ function suiteFor(surface: "standard" | "work", profileRevision: 1 | 2) {
   });
 }
 
-function event(step: H3BehaviorStep, outcome: "PASS" | "FAIL" | "UNCERTAIN") {
+function event(
+  step: H3BehaviorStep,
+  outcome: "PASS" | "FAIL" | "UNCERTAIN",
+): H3SafeEvidenceEvent {
+  const result = outcome === "PASS" ? "PASS" : outcome;
+  const passObservation = (
+    contourKey: string,
+    strategyId: string,
+    evidenceKind: "NONE" | "METADATA" | "STATE_TRANSITION_TRACE" = "NONE",
+  ): H3ContourObservation =>
+    H3ContourObservationSchema.parse({
+      contourKey,
+      observationStatus: "PRESENT",
+      primaryStrategyOutcome: result,
+      fallbackStrategyOutcomes: [],
+      selectedStrategyId: result === "PASS" ? strategyId : null,
+      structuralOutcome: result,
+      behavioralOutcome: result,
+      fallbackQuality: "NOT_APPLICABLE",
+      environmentStatus: "VALID",
+      uncertaintyReason: null,
+      evidenceKind,
+    });
+  const observations =
+    outcome === "UNCERTAIN"
+      ? []
+      : step === "IDENTIFY_SURFACE"
+        ? [
+            passObservation(
+              "C01_PAGE_IDENTITY",
+              "PAGE_HOST_MARKER",
+              "METADATA",
+            ),
+            passObservation(
+              "C13_BLOCKING_STATE",
+              "BLOCKING_MARKER",
+              "METADATA",
+            ),
+          ]
+        : step === "IDENTIFY_COMPOSER"
+          ? [
+              passObservation(
+                "C03_COMPOSER_ROOT",
+                "COMPOSER_CONTAINER",
+                "METADATA",
+              ),
+            ]
+          : step === "INSERT_PROMPT"
+            ? [
+                passObservation(
+                  "C04_COMPOSER_INPUT",
+                  "EDITABLE_INPUT",
+                  "METADATA",
+                ),
+              ]
+            : step === "SEND_ONCE"
+              ? [
+                  passObservation(
+                    "C05_SEND_CONTROL",
+                    "SEMANTIC_SEND_CONTROL",
+                    "STATE_TRANSITION_TRACE",
+                  ),
+                ]
+              : step === "OBSERVE_BUSY"
+                ? [
+                    passObservation(
+                      "C06_BUSY_STOP_STATE",
+                      "BUSY_INDICATOR",
+                      "STATE_TRANSITION_TRACE",
+                    ),
+                  ]
+                : step === "OBSERVE_RESPONSE"
+                  ? [
+                      passObservation(
+                        "C02_CONVERSATION_ROOT",
+                        "CONVERSATION_ANCHOR",
+                        "METADATA",
+                      ),
+                      passObservation(
+                        "C07_ASSISTANT_MESSAGE",
+                        "ASSISTANT_MESSAGE_REGION",
+                      ),
+                    ]
+                  : step === "OBSERVE_COMPLETION"
+                    ? [
+                        passObservation(
+                          "C08_MESSAGE_COMPLETION",
+                          "COMPLETION_MARKER",
+                          "STATE_TRANSITION_TRACE",
+                        ),
+                      ]
+                    : step === "VALIDATE_BRIDGE_SURFACES"
+                      ? [
+                          passObservation(
+                            "C09_COMMAND_CODE_BLOCK_SURFACE",
+                            "COMMAND_SURFACE",
+                          ),
+                          passObservation(
+                            "C10_NATIVE_COPY_CONTROL",
+                            "NATIVE_COPY_CONTROL",
+                            "METADATA",
+                          ),
+                          passObservation(
+                            "C11_CONVERSATION_IDENTITY",
+                            "CONVERSATION_IDENTIFIER",
+                            "METADATA",
+                          ),
+                          passObservation(
+                            "C12_DELIVERY_INSERTION_PATH",
+                            "DELIVERY_TARGET",
+                            "STATE_TRANSITION_TRACE",
+                          ),
+                        ]
+                      : [];
   return {
     step,
     outcome,
     durationMs: 4,
     markerCount: null,
     transitionObserved: null,
+    observations,
   };
 }
 
@@ -88,11 +207,9 @@ function execution(
 function context(
   surface: "standard" | "work",
   profileRevision: 1 | 2,
-  idempotencyKey: string,
 ): H3HealthPersistenceContext {
   return {
     suite: suiteFor(surface, profileRevision),
-    idempotencyKey,
     startedAt: STARTED_AT,
     completedAt: COMPLETED_AT,
     browserRuntime: RUNTIME,
@@ -114,7 +231,225 @@ const PASS_EVENTS = [
   event("CLEANUP", "PASS"),
 ] as const;
 
+function contourObservation(
+  contourKey: string,
+  primaryStrategyId: string,
+  changes: Record<string, unknown> = {},
+): H3ContourObservation {
+  return H3ContourObservationSchema.parse({
+    contourKey,
+    observationStatus: "PRESENT",
+    primaryStrategyOutcome: "PASS",
+    fallbackStrategyOutcomes: [],
+    selectedStrategyId: primaryStrategyId,
+    structuralOutcome: "PASS",
+    behavioralOutcome: "PASS",
+    fallbackQuality: "NOT_APPLICABLE",
+    environmentStatus: "VALID",
+    uncertaintyReason: null,
+    evidenceKind: "NONE",
+    ...changes,
+  });
+}
+
+function withObservations(
+  observations: readonly H3ContourObservation[],
+  step: H3BehaviorStep = "VALIDATE_BRIDGE_SURFACES",
+): ReturnType<typeof execution> {
+  const bridge = PASS_EVENTS.find((item) => item.step === step);
+  const events = PASS_EVENTS.map((item) =>
+    item === bridge ? { ...item, observations: [...observations] } : item,
+  );
+  return execution("CHATGPT_STANDARD", "PASS", events, null, null, null);
+}
+
 describe("B5 H3 capture-boundary Health mapper", () => {
+  it("accepts only the strict bounded observation vocabulary", () => {
+    expect(
+      H3ContourObservationSchema.safeParse({
+        ...contourObservation("C10_NATIVE_COPY_CONTROL", "NATIVE_COPY_CONTROL"),
+        rawDom: "TOXIC_DOM_SENTINEL",
+      }).success,
+    ).toBe(false);
+  });
+
+  it("preserves a primary success as primary provenance", () => {
+    const command = createH3HealthPersistenceCommand(
+      withObservations([
+        contourObservation("C09_COMMAND_CODE_BLOCK_SURFACE", "COMMAND_SURFACE"),
+        contourObservation("C10_NATIVE_COPY_CONTROL", "NATIVE_COPY_CONTROL"),
+        contourObservation(
+          "C11_CONVERSATION_IDENTITY",
+          "CONVERSATION_IDENTIFIER",
+        ),
+        contourObservation("C12_DELIVERY_INSERTION_PATH", "DELIVERY_TARGET"),
+      ]),
+      context("standard", 2),
+    );
+    const result = command.results.find(
+      (item) => item.contourKey === "C10_NATIVE_COPY_CONTROL",
+    );
+    expect(result).toMatchObject({
+      primaryStrategyOutcome: "PASS",
+      selectedStrategyId: "NATIVE_COPY_CONTROL",
+      fallbackQuality: "NOT_APPLICABLE",
+    });
+  });
+
+  it("preserves a real packaged fallback and classifies it as DRIFT", () => {
+    const command = createH3HealthPersistenceCommand(
+      withObservations(
+        [
+          contourObservation("C05_SEND_CONTROL", "SEMANTIC_SEND_CONTROL", {
+            primaryStrategyOutcome: "FAIL",
+            fallbackStrategyOutcomes: [
+              { strategyId: "COMPOSER_ACTION_CONTROL", outcome: "PASS" },
+            ],
+            selectedStrategyId: "COMPOSER_ACTION_CONTROL",
+            fallbackQuality: "APPROVED_EQUIVALENT",
+            evidenceKind: "STATE_TRANSITION_TRACE",
+          }),
+        ],
+        "SEND_ONCE",
+      ),
+      context("standard", 2),
+    );
+    expect(
+      classifyHealth({
+        suite: command.suite,
+        results: command.results,
+        operatorMaintenance: false,
+      }),
+    ).toBe("DRIFT");
+    expect(
+      command.results.find((item) => item.contourKey === "C05_SEND_CONTROL"),
+    ).toMatchObject({
+      primaryStrategyOutcome: "FAIL",
+      selectedStrategyId: "COMPOSER_ACTION_CONTROL",
+      fallbackStrategyOutcomes: [
+        { strategyId: "COMPOSER_ACTION_CONTROL", outcome: "PASS" },
+      ],
+      fallbackQuality: "APPROVED_EQUIVALENT",
+    });
+  });
+
+  it("keeps a C10-only failure independent and classifies it as DEGRADED", () => {
+    const bridge = [
+      contourObservation("C09_COMMAND_CODE_BLOCK_SURFACE", "COMMAND_SURFACE"),
+      contourObservation("C10_NATIVE_COPY_CONTROL", "NATIVE_COPY_CONTROL", {
+        primaryStrategyOutcome: "FAIL",
+        selectedStrategyId: null,
+        structuralOutcome: "FAIL",
+        behavioralOutcome: "FAIL",
+      }),
+      contourObservation(
+        "C11_CONVERSATION_IDENTITY",
+        "CONVERSATION_IDENTIFIER",
+      ),
+      contourObservation("C12_DELIVERY_INSERTION_PATH", "DELIVERY_TARGET"),
+    ];
+    const command = createH3HealthPersistenceCommand(
+      withObservations(bridge),
+      context("standard", 2),
+    );
+    expect(
+      command.results
+        .filter(
+          (item) =>
+            item.contourKey.startsWith("C0") ||
+            item.contourKey.startsWith("C1"),
+        )
+        .filter((item) =>
+          [
+            "C09_COMMAND_CODE_BLOCK_SURFACE",
+            "C10_NATIVE_COPY_CONTROL",
+            "C11_CONVERSATION_IDENTITY",
+            "C12_DELIVERY_INSERTION_PATH",
+          ].includes(item.contourKey),
+        )
+        .map((item) => [item.contourKey, item.primaryStrategyOutcome]),
+    ).toEqual([
+      ["C09_COMMAND_CODE_BLOCK_SURFACE", "PASS"],
+      ["C10_NATIVE_COPY_CONTROL", "FAIL"],
+      ["C11_CONVERSATION_IDENTITY", "PASS"],
+      ["C12_DELIVERY_INSERTION_PATH", "PASS"],
+    ]);
+    expect(
+      classifyHealth({
+        suite: command.suite,
+        results: command.results,
+        operatorMaintenance: false,
+      }),
+    ).toBe("DEGRADED");
+  });
+
+  it("preserves structural/behavioral divergence and canonical classification", () => {
+    const observations = [
+      contourObservation("C09_COMMAND_CODE_BLOCK_SURFACE", "COMMAND_SURFACE"),
+      contourObservation("C10_NATIVE_COPY_CONTROL", "NATIVE_COPY_CONTROL", {
+        behavioralOutcome: "FAIL",
+      }),
+      contourObservation(
+        "C11_CONVERSATION_IDENTITY",
+        "CONVERSATION_IDENTIFIER",
+      ),
+      contourObservation("C12_DELIVERY_INSERTION_PATH", "DELIVERY_TARGET"),
+    ];
+    const command = createH3HealthPersistenceCommand(
+      withObservations(observations),
+      context("standard", 2),
+    );
+    expect(
+      command.results.find(
+        (item) => item.contourKey === "C10_NATIVE_COPY_CONTROL",
+      ),
+    ).toMatchObject({
+      structuralOutcome: "PASS",
+      behavioralOutcome: "FAIL",
+    });
+    expect(
+      classifyHealth({
+        suite: command.suite,
+        results: command.results,
+        operatorMaintenance: false,
+      }),
+    ).toBe("DEGRADED");
+  });
+
+  it("keeps required core failure BROKEN and completed H3 does not imply HEALTHY", () => {
+    const command = createH3HealthPersistenceCommand(
+      withObservations([
+        contourObservation(
+          "C09_COMMAND_CODE_BLOCK_SURFACE",
+          "COMMAND_SURFACE",
+          {
+            primaryStrategyOutcome: "FAIL",
+            selectedStrategyId: null,
+            structuralOutcome: "FAIL",
+            behavioralOutcome: "FAIL",
+          },
+        ),
+        contourObservation("C10_NATIVE_COPY_CONTROL", "NATIVE_COPY_CONTROL"),
+        contourObservation(
+          "C11_CONVERSATION_IDENTITY",
+          "CONVERSATION_IDENTIFIER",
+        ),
+        contourObservation("C12_DELIVERY_INSERTION_PATH", "DELIVERY_TARGET"),
+      ]),
+      context("standard", 2),
+    );
+    expect(
+      command.results.every((item) => item.observationStatus === "PRESENT"),
+    ).toBe(true);
+    expect(
+      classifyHealth({
+        suite: command.suite,
+        results: command.results,
+        operatorMaintenance: false,
+      }),
+    ).toBe("BROKEN");
+  });
+
   it.each([
     ["CHATGPT_STANDARD", "standard", 2],
     ["CHATGPT_WORK", "work", 1],
@@ -123,7 +458,7 @@ describe("B5 H3 capture-boundary Health mapper", () => {
     (surface, key, revision) => {
       const command = createH3HealthPersistenceCommand(
         execution(surface, "PASS", PASS_EVENTS, null, null, null),
-        context(key, revision, `${key}-pass-retry-1`),
+        context(key, revision),
       );
 
       expect(command.results).toHaveLength(13);
@@ -136,7 +471,16 @@ describe("B5 H3 capture-boundary Health mapper", () => {
         command.results.every((result) => result.environmentStatus === "VALID"),
       ).toBe(true);
       expect(
-        command.results.every((result) => result.evidence.length === 1),
+        command.results.filter((result) => result.evidence.length === 1),
+      ).toHaveLength(11);
+      expect(
+        command.results
+          .filter(
+            (result) =>
+              result.contourKey === "C07_ASSISTANT_MESSAGE" ||
+              result.contourKey === "C09_COMMAND_CODE_BLOCK_SURFACE",
+          )
+          .every((result) => result.evidence.length === 0),
       ).toBe(true);
       expect(
         classifyHealth({
@@ -171,7 +515,7 @@ describe("B5 H3 capture-boundary Health mapper", () => {
           "OBSERVE_RESPONSE",
           null,
         ),
-        context(key, revision, `${key}-fail-retry-1`),
+        context(key, revision),
       );
 
       expect(
@@ -216,7 +560,7 @@ describe("B5 H3 capture-boundary Health mapper", () => {
           "IDENTIFY_SURFACE",
           "LOGIN_EXPIRED",
         ),
-        context(key, revision, `${key}-uncertain-retry-1`),
+        context(key, revision),
       );
 
       expect(
@@ -254,27 +598,25 @@ describe("B5 H3 capture-boundary Health mapper", () => {
     };
 
     expect(() =>
-      createH3HealthPersistenceCommand(
-        toxic,
-        context("standard", 2, "standard-toxic-retry-1"),
-      ),
+      createH3HealthPersistenceCommand(toxic, context("standard", 2)),
     ).toThrow();
   });
 
   it("keeps evidence references opaque and bounded", () => {
     const command = createH3HealthPersistenceCommand(
       execution("CHATGPT_WORK", "PASS", PASS_EVENTS, null, null, null),
-      context("work", 1, "work-opaque-retry-1"),
+      context("work", 1),
     );
     const serialized = JSON.stringify(command.results);
-    for (const result of command.results) {
+    for (const result of command.results.filter(
+      (item) => item.evidence.length > 0,
+    )) {
       const reference = result.evidence[0];
       expect(reference?.evidenceId).toMatch(
-        /^[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
+        /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
       );
       expect(reference?.evidenceId.length).toBe(36);
     }
-    expect(serialized).not.toContain("work-opaque-retry-1");
     expect(serialized).not.toContain("Работа");
   });
 });

@@ -12,7 +12,9 @@ import {
 } from "./h3-contracts.js";
 import { getPackagedH3Target } from "./h3-engine.js";
 import {
+  createH3ContourObservation,
   H3StrategyStepResultSchema,
+  type H3ContourObservation,
   type H3StrategyStepResult,
   type H3SurfaceStrategy,
 } from "./h3-strategy.js";
@@ -55,31 +57,85 @@ const EXPECTED_CHECKS: readonly H3BridgeSurfaceCheck[] = Object.freeze([
 const pass = (
   markerCount: number,
   transitionObserved: boolean,
+  observations: readonly H3ContourObservation[] = [],
 ): H3StrategyStepResult =>
   H3StrategyStepResultSchema.parse({
     outcome: "PASS",
     markerCount: Math.min(64, Math.max(0, markerCount)),
     transitionObserved,
     uncertaintyReason: null,
+    observations,
   });
 
-const fail = (markerCount = 0): H3StrategyStepResult =>
+const fail = (
+  markerCount = 0,
+  observations: readonly H3ContourObservation[] = [],
+): H3StrategyStepResult =>
   H3StrategyStepResultSchema.parse({
     outcome: "FAIL",
     markerCount: Math.min(64, Math.max(0, markerCount)),
     transitionObserved: false,
     uncertaintyReason: null,
+    observations,
   });
 
 const uncertain = (
   reason: EnvironmentUncertaintyReason,
-): H3StrategyStepResult =>
-  H3StrategyStepResultSchema.parse({
+  observations: readonly H3ContourObservation[] = [],
+): H3StrategyStepResult => {
+  const safeObservations =
+    observations.length > 0
+      ? observations
+      : [
+          createH3ContourObservation({
+            contourKey: "C13_BLOCKING_STATE",
+            observationStatus: "PRESENT",
+            primaryStrategyOutcome: "UNCERTAIN",
+            fallbackStrategyOutcomes: [],
+            selectedStrategyId: null,
+            structuralOutcome: "UNCERTAIN",
+            behavioralOutcome: "UNCERTAIN",
+            fallbackQuality: "NOT_APPLICABLE",
+            environmentStatus: "UNCERTAIN",
+            uncertaintyReason: reason,
+            evidenceKind: "NONE",
+          }),
+        ];
+  return H3StrategyStepResultSchema.parse({
     outcome: "UNCERTAIN",
     markerCount: null,
     transitionObserved: null,
     uncertaintyReason: reason,
+    observations: safeObservations,
   });
+};
+
+function observation(
+  contourKey: H3ContourObservation["contourKey"],
+  primaryStrategyOutcome: H3ContourObservation["primaryStrategyOutcome"],
+  structuralOutcome: H3ContourObservation["structuralOutcome"],
+  behavioralOutcome: H3ContourObservation["behavioralOutcome"],
+  selectedStrategyId: H3ContourObservation["selectedStrategyId"],
+  fallbackStrategyOutcomes: H3ContourObservation["fallbackStrategyOutcomes"] = [],
+  fallbackQuality: H3ContourObservation["fallbackQuality"] = "NOT_APPLICABLE",
+  evidenceKind: H3ContourObservation["evidenceKind"] = "NONE",
+  environmentStatus: H3ContourObservation["environmentStatus"] = "VALID",
+  uncertaintyReason: H3ContourObservation["uncertaintyReason"] = null,
+): H3ContourObservation {
+  return createH3ContourObservation({
+    contourKey,
+    observationStatus: "PRESENT",
+    primaryStrategyOutcome,
+    fallbackStrategyOutcomes,
+    selectedStrategyId,
+    structuralOutcome,
+    behavioralOutcome,
+    fallbackQuality,
+    environmentStatus,
+    uncertaintyReason,
+    evidenceKind,
+  });
+}
 
 function boundedCount(count: number): number {
   return Math.min(64, Math.max(0, count));
@@ -155,6 +211,10 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
   #promptInserted = false;
   #sendInvoked = false;
   #associatedResponseId: string | null = null;
+  #inputStrategyId: "EDITABLE_INPUT" | "ACCESSIBILITY_TEXTBOX" =
+    "EDITABLE_INPUT";
+  #sendStrategyId: "SEMANTIC_SEND_CONTROL" | "COMPOSER_ACTION_CONTROL" =
+    "SEMANTIC_SEND_CONTROL";
 
   public constructor(
     page: Page,
@@ -207,7 +267,28 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
         if (!id) return fail(this.#baselineMessageCount);
         this.#baselineMessageIds.add(id);
       }
-      return pass(2, false);
+      return pass(2, false, [
+        observation(
+          "C01_PAGE_IDENTITY",
+          "PASS",
+          "PASS",
+          "PASS",
+          "PAGE_HOST_MARKER",
+          [],
+          "NOT_APPLICABLE",
+          "METADATA",
+        ),
+        observation(
+          "C13_BLOCKING_STATE",
+          "PASS",
+          "PASS",
+          "PASS",
+          "BLOCKING_MARKER",
+          [],
+          "NOT_APPLICABLE",
+          "METADATA",
+        ),
+      ]);
     });
   }
 
@@ -229,7 +310,24 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
       }
       this.#composer = composer;
       this.#input = input;
-      return pass(1, false);
+      const inputId = await input.getAttribute("id");
+      const testId = await input.getAttribute("data-testid");
+      this.#inputStrategyId =
+        inputId === "prompt-textarea" || testId === "prompt-textarea"
+          ? "EDITABLE_INPUT"
+          : "ACCESSIBILITY_TEXTBOX";
+      return pass(1, false, [
+        observation(
+          "C03_COMPOSER_ROOT",
+          "PASS",
+          "PASS",
+          "PASS",
+          "COMPOSER_CONTAINER",
+          [],
+          "NOT_APPLICABLE",
+          "METADATA",
+        ),
+      ]);
     });
   }
 
@@ -245,7 +343,23 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
       // Ephemeral boolean readback only; prompt content never enters a result.
       const inserted = (await this.#readInput(input)) === prompt;
       this.#promptInserted = inserted;
-      return inserted ? pass(1, true) : fail();
+      if (!inserted) return fail();
+      return pass(1, true, [
+        observation(
+          "C04_COMPOSER_INPUT",
+          this.#inputStrategyId === "EDITABLE_INPUT" ? "PASS" : "FAIL",
+          "PASS",
+          "PASS",
+          this.#inputStrategyId,
+          this.#inputStrategyId === "EDITABLE_INPUT"
+            ? []
+            : [{ strategyId: "ACCESSIBILITY_TEXTBOX", outcome: "PASS" }],
+          this.#inputStrategyId === "EDITABLE_INPUT"
+            ? "NOT_APPLICABLE"
+            : "APPROVED_EQUIVALENT",
+          "METADATA",
+        ),
+      ]);
     });
   }
 
@@ -272,10 +386,27 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
       ) {
         return fail();
       }
+      this.#sendStrategyId =
+        exactCount === 1 ? "SEMANTIC_SEND_CONTROL" : "COMPOSER_ACTION_CONTROL";
       this.#sendInvoked = true;
       // Sole irreversible activation. No Enter fallback, candidate retry, or resend.
       await send.click();
-      return pass(1, true);
+      return pass(1, true, [
+        observation(
+          "C05_SEND_CONTROL",
+          this.#sendStrategyId === "SEMANTIC_SEND_CONTROL" ? "PASS" : "FAIL",
+          "PASS",
+          "PASS",
+          this.#sendStrategyId,
+          this.#sendStrategyId === "SEMANTIC_SEND_CONTROL"
+            ? []
+            : [{ strategyId: "COMPOSER_ACTION_CONTROL", outcome: "PASS" }],
+          this.#sendStrategyId === "SEMANTIC_SEND_CONTROL"
+            ? "NOT_APPLICABLE"
+            : "APPROVED_EQUIVALENT",
+          "STATE_TRANSITION_TRACE",
+        ),
+      ]);
     });
   }
 
@@ -302,7 +433,21 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
             busyPresent ||
             (messages && (await messages.count()) > this.#baselineMessageCount))
         ) {
-          return pass(1, true);
+          const primaryBusy = stopVisible || busyPresent;
+          return pass(1, true, [
+            observation(
+              "C06_BUSY_STOP_STATE",
+              primaryBusy ? "PASS" : "FAIL",
+              "PASS",
+              "PASS",
+              primaryBusy ? "BUSY_INDICATOR" : "RESPONSE_STATE_MARKER",
+              primaryBusy
+                ? []
+                : [{ strategyId: "RESPONSE_STATE_MARKER", outcome: "PASS" }],
+              primaryBusy ? "NOT_APPLICABLE" : "MATERIALLY_DEGRADED",
+              "STATE_TRANSITION_TRACE",
+            ),
+          ]);
         }
         const responseObserved =
           messages && (await messages.count()) > this.#baselineMessageCount;
@@ -342,7 +487,28 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
           continue;
         this.#associatedResponse = candidate;
         this.#associatedResponseId = id;
-        return pass(1, true);
+        return pass(1, true, [
+          observation(
+            "C02_CONVERSATION_ROOT",
+            "PASS",
+            "PASS",
+            "PASS",
+            "CONVERSATION_ANCHOR",
+            [],
+            "NOT_APPLICABLE",
+            "METADATA",
+          ),
+          observation(
+            "C07_ASSISTANT_MESSAGE",
+            "PASS",
+            "PASS",
+            "PASS",
+            "ASSISTANT_MESSAGE_REGION",
+            [],
+            "NOT_APPLICABLE",
+            "NONE",
+          ),
+        ]);
       }
       return fail(boundedCount(count));
     });
@@ -361,7 +527,19 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
 
         const generationActive = await this.#standardGenerationActive(surface);
         const responseHasContent = await this.#responseHasContent(response);
-        if (!generationActive && responseHasContent) return pass(1, true);
+        if (!generationActive && responseHasContent)
+          return pass(1, true, [
+            observation(
+              "C08_MESSAGE_COMPLETION",
+              "FAIL",
+              "PASS",
+              "PASS",
+              "RESPONSE_IDLE_STATE",
+              [{ strategyId: "RESPONSE_IDLE_STATE", outcome: "PASS" }],
+              "MATERIALLY_DEGRADED",
+              "STATE_TRANSITION_TRACE",
+            ),
+          ]);
 
         // This is a bounded observation poll. Completion is established only
         // by the current response, generation signals, content, and identity.
@@ -390,38 +568,81 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
         !this.#isAllowedOrigin(page, target)
       )
         return fail();
-      const codeSurface = await this.#findCodeSurfaceWithCopy(
+      const codeSurface = await this.#findCodeSurface(
         standardCodeSurfaces(response),
       );
-      if (!codeSurface) return fail();
-      if (
-        (await codeSurface.getByText(HEALTH_TOKEN, { exact: true }).count()) !==
-        1
-      )
-        return fail();
-      const copy = standardCopyControls(codeSurface);
-      if (
-        (await copy.count()) !== 1 ||
-        !(await copy.isVisible({ timeout: 1_000 })) ||
-        (await isDisabled(copy.first()))
-      ) {
-        return fail();
-      }
-      if (!(await this.#belongsToConversation(response, conversationId)))
-        return fail();
+      const commandPass =
+        codeSurface !== null &&
+        (await codeSurface.getByText(HEALTH_TOKEN, { exact: true }).count()) ===
+          1;
+      const copy = codeSurface ? standardCopyControls(codeSurface) : null;
+      const copyPresent =
+        copy !== null &&
+        (await copy.count()) === 1 &&
+        (await copy.isVisible({ timeout: 1_000 }).catch(() => false));
+      const copyPass = copyPresent && !(await isDisabled(copy!.first()));
+      const identityPass = await this.#belongsToConversation(
+        response,
+        conversationId,
+      );
 
       // C12 is the same form-owned insertion path used by the accepted
       // adapter: the active editor and Send control share one live form.
       const input = this.#input;
       const send = standardSendControls(composer);
-      if (
+      const deliveryPass =
         !input ||
         (await send.count()) !== 1 ||
         !(await composer.isVisible({ timeout: 1_000 }))
-      )
-        return fail();
-      if (!(await input.isEditable({ timeout: 1_000 }))) return fail();
-      return pass(4, true);
+          ? false
+          : await input.isEditable({ timeout: 1_000 });
+      const observations = [
+        observation(
+          "C09_COMMAND_CODE_BLOCK_SURFACE",
+          commandPass ? "PASS" : "FAIL",
+          commandPass ? "PASS" : "FAIL",
+          commandPass ? "PASS" : "FAIL",
+          commandPass ? "COMMAND_SURFACE" : null,
+          [],
+          "NOT_APPLICABLE",
+          "NONE",
+        ),
+        observation(
+          "C10_NATIVE_COPY_CONTROL",
+          copyPass ? "PASS" : "FAIL",
+          copyPresent ? "PASS" : "FAIL",
+          copyPass ? "PASS" : "FAIL",
+          copyPass ? "NATIVE_COPY_CONTROL" : null,
+          [],
+          "NOT_APPLICABLE",
+          copyPresent ? "METADATA" : "NONE",
+        ),
+        observation(
+          "C11_CONVERSATION_IDENTITY",
+          "FAIL",
+          identityPass ? "PASS" : "FAIL",
+          identityPass ? "PASS" : "FAIL",
+          identityPass ? "CONVERSATION_URL_IDENTITY" : null,
+          identityPass
+            ? [{ strategyId: "CONVERSATION_URL_IDENTITY", outcome: "PASS" }]
+            : [{ strategyId: "CONVERSATION_URL_IDENTITY", outcome: "FAIL" }],
+          "APPROVED_EQUIVALENT",
+          identityPass ? "METADATA" : "NONE",
+        ),
+        observation(
+          "C12_DELIVERY_INSERTION_PATH",
+          deliveryPass ? "PASS" : "FAIL",
+          deliveryPass ? "PASS" : "FAIL",
+          deliveryPass ? "PASS" : "FAIL",
+          deliveryPass ? "DELIVERY_TARGET" : null,
+          [],
+          "NOT_APPLICABLE",
+          deliveryPass ? "STATE_TRANSITION_TRACE" : "NONE",
+        ),
+      ];
+      return commandPass && copyPass && identityPass && deliveryPass
+        ? pass(4, true, observations)
+        : fail(4, observations);
     });
   }
 
@@ -441,6 +662,8 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
     this.#promptInserted = false;
     this.#sendInvoked = false;
     this.#associatedResponseId = null;
+    this.#inputStrategyId = "EDITABLE_INPUT";
+    this.#sendStrategyId = "SEMANTIC_SEND_CONTROL";
     await closeSession?.();
   }
 
@@ -552,39 +775,15 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
     return candidates.length === 1 ? (candidates[0] ?? null) : null;
   }
 
-  async #findCodeSurfaceWithCopy(surfaces: Locator): Promise<Locator | null> {
+  async #findCodeSurface(surfaces: Locator): Promise<Locator | null> {
     const response = this.#associatedResponse;
     if (!response) return null;
-    const copies = standardCopyControls(response);
-    for (
-      let copyIndex = 0;
-      copyIndex < (await copies.count());
-      copyIndex += 1
-    ) {
-      const ancestors = copies.nth(copyIndex).locator("xpath=ancestor::*");
-      for (
-        let ancestorIndex = 0;
-        ancestorIndex < (await ancestors.count());
-        ancestorIndex += 1
-      ) {
-        const ancestor = ancestors.nth(ancestorIndex);
-        if (!(await ancestor.isVisible({ timeout: 1_000 }).catch(() => false)))
-          continue;
-        if (
-          (await standardCopyControls(ancestor).count()) === 1 &&
-          (await standardCodeSurfaces(ancestor).count()) >= 1
-        ) {
-          return ancestor;
-        }
-      }
-    }
     for (let index = 0; index < (await surfaces.count()); index += 1) {
       const surface = surfaces.nth(index);
       if (!(await surface.isVisible({ timeout: 1_000 }).catch(() => false)))
         continue;
       if (
-        (await standardCopyControls(surface).count()) === 1 &&
-        (await surface.locator("code").count()) >= 1
+        (await surface.getByText(HEALTH_TOKEN, { exact: true }).count()) === 1
       )
         return surface;
     }
