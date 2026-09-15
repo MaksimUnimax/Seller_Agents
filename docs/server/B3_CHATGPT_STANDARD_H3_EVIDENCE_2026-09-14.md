@@ -189,12 +189,6 @@ classification was incorrect for this negative case. The correction restores
 the strict `OBSERVE_COMPLETION`/`COMPLETION_OBSERVATION_FAILED` expectation
 and orders the event inside that observation boundary.
 
-The same full E2E run against the database populated by the repository's
-integration suite also reproduced a separate pre-B3 failure in
-`admin-ai.spec.ts` caused by its existing unscoped `getByText(/CANDIDATE/)`
-locator resolving four elements. That file is unchanged by B3 and is outside
-the allowed correction paths; the fresh-database control passes it.
-
 ### Verification boundary for this correction
 
 This lifecycle correction, its focused assertions, and this evidence are one
