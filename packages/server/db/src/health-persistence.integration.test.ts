@@ -15,11 +15,11 @@ const connectionString = process.env.DATABASE_URL;
 if (!connectionString) throw new Error("DATABASE_URL is required");
 
 const IDS = {
-  adapter: "00000000-0000-4000-8000-000000000001",
-  surface: "00000000-0000-4000-8000-000000000002",
-  profile: "00000000-0000-4000-8000-000000000003",
-  profileRevision: "00000000-0000-4000-8000-000000000004",
-  variant: "00000000-0000-4000-8000-000000000005",
+  adapter: "b5000000-0000-4000-8000-000000000001",
+  surface: "b5000000-0000-4000-8000-000000000002",
+  profile: "b5000000-0000-4000-8000-000000000003",
+  profileRevision: "b5000000-0000-4000-8000-000000000004",
+  variant: "b5000000-0000-4000-8000-000000000005",
 };
 
 const runtime = createDatabaseRuntime(connectionString);
@@ -31,20 +31,29 @@ const DUPLICATE_EVIDENCE_ID = "00000000-0000-4000-8000-000000000011";
 function suiteWithScope(
   changes: Partial<HealthSuiteDefinition["scope"]> = {},
 ): HealthSuiteDefinition {
+  const fixtureScope = {
+    ...BASELINE_HEALTH_SUITE.scope,
+    adapterFamilyId: IDS.adapter,
+    surfaceId: IDS.surface,
+    profile: { id: IDS.profile, revision: 1 },
+    healthSuite: { machineKey: "b5-health-fixture", revision: 1 },
+  };
   return validateHealthSuiteDefinition({
     ...BASELINE_HEALTH_SUITE,
-    scope: { ...BASELINE_HEALTH_SUITE.scope, ...changes },
+    machineKey: "b5-health-fixture",
+    scope: { ...fixtureScope, ...changes },
   });
 }
 
 function suiteRevision(revision: number): HealthSuiteDefinition {
+  const fixture = suiteWithScope();
   return validateHealthSuiteDefinition({
-    ...BASELINE_HEALTH_SUITE,
+    ...fixture,
     revision,
     scope: {
-      ...BASELINE_HEALTH_SUITE.scope,
+      ...fixture.scope,
       healthSuite: {
-        machineKey: BASELINE_HEALTH_SUITE.machineKey,
+        machineKey: fixture.machineKey,
         revision,
       },
     },
@@ -82,7 +91,7 @@ function resultWith(
 }
 
 function input(
-  suite: unknown = BASELINE_HEALTH_SUITE,
+  suite: unknown = suiteWithScope(),
   results: readonly unknown[] = passedResults(),
   changes: Record<string, unknown> = {},
 ) {
@@ -257,7 +266,7 @@ describe("P8.2 health persistence", () => {
     "persists classifier-derived %s state",
     async (expected, results, maintenance) => {
       const run = await repository.persistCompletedHealthRun(
-        input(BASELINE_HEALTH_SUITE, results, {
+        input(suiteWithScope(), results, {
           operatorMaintenance: maintenance,
           operatorMaintenanceAuthority: maintenance ? "health-operator" : null,
         }),
@@ -319,15 +328,11 @@ describe("P8.2 health persistence", () => {
     }
     if (errorCode === "UNKNOWN_CONTOUR_RESULT") {
       await expect(
-        repository.persistCompletedHealthRun(
-          input(BASELINE_HEALTH_SUITE, results),
-        ),
+        repository.persistCompletedHealthRun(input(suiteWithScope(), results)),
       ).rejects.toThrow();
     } else {
       await expect(
-        repository.persistCompletedHealthRun(
-          input(BASELINE_HEALTH_SUITE, results),
-        ),
+        repository.persistCompletedHealthRun(input(suiteWithScope(), results)),
       ).rejects.toThrow(errorCode);
     }
   });
@@ -364,11 +369,11 @@ describe("P8.2 health persistence", () => {
     await expect(
       repository.persistCompletedHealthRun(
         input({
-          ...BASELINE_HEALTH_SUITE,
+          ...suiteWithScope(),
           scope: {
-            ...BASELINE_HEALTH_SUITE.scope,
+            ...suiteWithScope().scope,
             healthSuite: {
-              machineKey: BASELINE_HEALTH_SUITE.machineKey,
+              machineKey: suiteWithScope().machineKey,
               revision: 2,
             },
           },
@@ -393,7 +398,7 @@ describe("P8.2 health persistence", () => {
       evidence: [firstEvidence],
     });
     const firstRun = await repository.persistCompletedHealthRun(
-      input(BASELINE_HEALTH_SUITE, [
+      input(suiteWithScope(), [
         ...passedResults().filter(
           (item) => item.contourKey !== firstResult.contourKey,
         ),
@@ -482,7 +487,7 @@ describe("P8.2 health persistence", () => {
       ],
     });
     const run = await repository.persistCompletedHealthRun(
-      input(BASELINE_HEALTH_SUITE, [
+      input(suiteWithScope(), [
         ...passedResults().filter(
           (item) => item.contourKey !== result.contourKey,
         ),
@@ -568,5 +573,46 @@ describe("P8.2 health persistence", () => {
         new Date("2026-09-12T10:00:02Z"),
       ],
     );
+  });
+
+  it("reuses a completed run for the same durable idempotency key", async () => {
+    const suite = suiteRevision(4);
+    const first = await repository.persistCompletedHealthRun(
+      input(suite, passedResults(suite), {
+        idempotencyKey: "b5-standard-pass-retry-4",
+      }),
+    );
+    const second = await repository.persistCompletedHealthRun(
+      input(suite, passedResults(suite), {
+        idempotencyKey: "b5-standard-pass-retry-4",
+      }),
+    );
+
+    expect(second).toEqual(first);
+    const rows = await runtime.query<{ runs: string; contours: string }>(
+      `SELECT
+         (SELECT count(*)::text FROM health_runs WHERE id=$1) AS runs,
+         (SELECT count(*)::text FROM health_contour_results WHERE run_id=$1) AS contours`,
+      [first.id],
+    );
+    expect(rows.rows[0]).toEqual({ runs: "1", contours: "13" });
+
+    const changed = passedResults(suite).map((result) =>
+      result.contourKey === "C05_SEND_CONTROL"
+        ? {
+            ...result,
+            primaryStrategyOutcome: "FAIL" as const,
+            structuralOutcome: "FAIL" as const,
+            behavioralOutcome: "FAIL" as const,
+          }
+        : result,
+    );
+    await expect(
+      repository.persistCompletedHealthRun(
+        input(suite, changed, {
+          idempotencyKey: "b5-standard-pass-retry-4",
+        }),
+      ),
+    ).rejects.toThrow("HEALTH_RUN_IDEMPOTENCY_CONFLICT");
   });
 });

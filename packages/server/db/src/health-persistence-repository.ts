@@ -55,6 +55,8 @@ export type PersistedHealthRun = {
 export type PersistCompletedHealthRunInput = {
   suite: unknown;
   results: readonly unknown[];
+  /** A bounded caller-owned retry key; only its server-derived UUID is stored. */
+  idempotencyKey?: string | null;
   operatorMaintenance: boolean;
   operatorMaintenanceAuthority?: string | null;
   healthLevel: unknown;
@@ -117,6 +119,18 @@ type EvidenceRow = {
 
 function scopeFingerprint(scope: HealthScope): string {
   return createHash("sha256").update(canonicalizeJson(scope)).digest("hex");
+}
+
+function deterministicRunId(idempotencyKey: string): string {
+  const bytes = createHash("sha256")
+    .update("p8-health-run-idempotency-v1\0")
+    .update(idempotencyKey)
+    .digest()
+    .subarray(0, 16);
+  bytes[6] = (bytes[6]! & 0x0f) | 0x50;
+  bytes[8] = (bytes[8]! & 0x3f) | 0x80;
+  const hex = bytes.toString("hex");
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
 }
 
 function mapSuite(row: SuiteRow): HealthSuiteRevision {
@@ -230,6 +244,7 @@ function parseCompletedInput(input: PersistCompletedHealthRunInput) {
   const allowed = new Set([
     "suite",
     "results",
+    "idempotencyKey",
     "operatorMaintenance",
     "operatorMaintenanceAuthority",
     "healthLevel",
@@ -257,6 +272,15 @@ function parseCompletedInput(input: PersistCompletedHealthRunInput) {
   }
   if (value.completedAt < value.startedAt)
     throw new Error("HEALTH_RUN_COMPLETION_BEFORE_START");
+  const idempotencyKey = value.idempotencyKey ?? null;
+  if (
+    idempotencyKey !== null &&
+    (typeof idempotencyKey !== "string" ||
+      idempotencyKey.length < 1 ||
+      idempotencyKey.length > 128)
+  ) {
+    throw new Error("INVALID_HEALTH_RUN_IDEMPOTENCY_KEY");
+  }
   const healthLevel = HealthLevelSchema.parse(value.healthLevel);
   if (
     typeof value.classifierVersion !== "string" ||
@@ -279,6 +303,7 @@ function parseCompletedInput(input: PersistCompletedHealthRunInput) {
     results: value.results.map((result) =>
       HealthContourResultSchema.parse(result),
     ),
+    idempotencyKey,
     operatorMaintenance: value.operatorMaintenance,
     operatorMaintenanceAuthority: authority,
     healthLevel,
@@ -318,9 +343,12 @@ export function createHealthPersistenceRepository(runtime: DatabaseRuntime) {
       return runtime.transaction(async (q) => {
         const profileRevisionId = await validateP7Scope(q, scope);
         const suiteRevision = await persistOrReuseSuite(q, input.suite);
-        const runId = randomUUID();
+        const runId =
+          input.idempotencyKey === null
+            ? randomUUID()
+            : deterministicRunId(input.idempotencyKey);
         const run = await q.query<RunRow>(
-          `INSERT INTO health_runs(id,suite_revision_id,adapter_id,surface_id,variant_id,profile_id,profile_revision_id,profile_revision,browser_family,browser_version,extension_version,adapter_engine_version,health_level,health_state,classifier_version,scope,scope_sha256,operator_maintenance,operator_maintenance_authority,started_at,completed_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16::jsonb,$17,$18,$19,$20,$21) RETURNING id,suite_revision_id AS "suiteRevisionId",adapter_id AS "adapterId",surface_id AS "surfaceId",variant_id AS "variantId",profile_id AS "profileId",profile_revision_id AS "profileRevisionId",profile_revision AS "profileRevision",browser_family AS "browserFamily",browser_version AS "browserVersion",extension_version AS "extensionVersion",adapter_engine_version AS "adapterEngineVersion",health_level AS "healthLevel",health_state AS "healthState",classifier_version AS "classifierVersion",scope,scope_sha256 AS "scopeSha256",operator_maintenance AS "operatorMaintenance",operator_maintenance_authority AS "operatorMaintenanceAuthority",started_at AS "startedAt",completed_at AS "completedAt",created_at AS "createdAt"`,
+          `INSERT INTO health_runs(id,suite_revision_id,adapter_id,surface_id,variant_id,profile_id,profile_revision_id,profile_revision,browser_family,browser_version,extension_version,adapter_engine_version,health_level,health_state,classifier_version,scope,scope_sha256,operator_maintenance,operator_maintenance_authority,started_at,completed_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16::jsonb,$17,$18,$19,$20,$21) ON CONFLICT (id) DO NOTHING RETURNING id,suite_revision_id AS "suiteRevisionId",adapter_id AS "adapterId",surface_id AS "surfaceId",variant_id AS "variantId",profile_id AS "profileId",profile_revision_id AS "profileRevisionId",profile_revision AS "profileRevision",browser_family AS "browserFamily",browser_version AS "browserVersion",extension_version AS "extensionVersion",adapter_engine_version AS "adapterEngineVersion",health_level AS "healthLevel",health_state AS "healthState",classifier_version AS "classifierVersion",scope,scope_sha256 AS "scopeSha256",operator_maintenance AS "operatorMaintenance",operator_maintenance_authority AS "operatorMaintenanceAuthority",started_at AS "startedAt",completed_at AS "completedAt",created_at AS "createdAt"`,
           [
             runId,
             suiteRevision.id,
@@ -346,7 +374,55 @@ export function createHealthPersistenceRepository(runtime: DatabaseRuntime) {
           ],
         );
         const runRow = run.rows[0];
-        if (!runRow) throw new Error("HEALTH_RUN_PERSIST_FAILED");
+        if (!runRow) {
+          if (input.idempotencyKey === null)
+            throw new Error("HEALTH_RUN_PERSIST_FAILED");
+          const existing = await q.query<RunRow>(
+            `${runProjection()} WHERE id=$1`,
+            [runId],
+          );
+          const existingRow = existing.rows[0];
+          if (!existingRow) throw new Error("HEALTH_RUN_PERSIST_FAILED");
+          const existingContours = await q.query<ContourRow>(
+            `SELECT run_id AS "runId",contour_key AS "contourKey",result FROM health_contour_results WHERE run_id=$1 ORDER BY contour_key`,
+            [runId],
+          );
+          const expectedContours = [...input.results].sort((a, b) =>
+            a.contourKey.localeCompare(b.contourKey),
+          );
+          const actualContours = existingContours.rows
+            .map((row) => HealthContourResultSchema.parse(row.result))
+            .sort((a, b) => a.contourKey.localeCompare(b.contourKey));
+          const sameRun =
+            existingRow.suiteRevisionId === suiteRevision.id &&
+            existingRow.adapterId === scope.adapterFamilyId &&
+            existingRow.surfaceId === scope.surfaceId &&
+            existingRow.variantId === (scope.variant?.id ?? null) &&
+            existingRow.profileId === scope.profile.id &&
+            existingRow.profileRevisionId === profileRevisionId &&
+            existingRow.profileRevision === scope.profile.revision &&
+            existingRow.browserFamily === scope.browserFamily &&
+            existingRow.browserVersion === scope.browserVersion &&
+            existingRow.extensionVersion === scope.extensionVersion &&
+            existingRow.adapterEngineVersion === scope.adapterEngineVersion &&
+            existingRow.healthLevel === input.healthLevel &&
+            existingRow.healthState === healthState &&
+            existingRow.classifierVersion === input.classifierVersion &&
+            existingRow.scopeSha256 === scopeSha256 &&
+            existingRow.operatorMaintenance === input.operatorMaintenance &&
+            existingRow.operatorMaintenanceAuthority ===
+              input.operatorMaintenanceAuthority &&
+            existingRow.startedAt.getTime() === input.startedAt.getTime() &&
+            existingRow.completedAt.getTime() === input.completedAt.getTime() &&
+            actualContours.length === expectedContours.length &&
+            actualContours.every((result, index) =>
+              canonicalizeJson(result).equals(
+                canonicalizeJson(expectedContours[index]),
+              ),
+            );
+          if (!sameRun) throw new Error("HEALTH_RUN_IDEMPOTENCY_CONFLICT");
+          return mapRun(existingRow);
+        }
         for (const result of input.results) {
           await q.query(
             `INSERT INTO health_contour_results(run_id,contour_key,result) VALUES($1,$2,$3::jsonb)`,

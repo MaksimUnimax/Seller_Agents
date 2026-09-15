@@ -114,6 +114,15 @@ export type {
   H3SafeEvidenceEvent,
   H3SafeEvidenceBundle,
 } from "./evidence-sanitizer.js";
+export {
+  H3HealthPersistenceContextSchema,
+  H3HealthPersistenceCommandSchema,
+  createH3HealthPersistenceCommand,
+} from "./h3-health-persistence.js";
+export type {
+  H3HealthPersistenceContext,
+  H3HealthPersistenceCommand,
+} from "./h3-health-persistence.js";
 export type {
   SafeStructuralMetadata,
   SafeStructuralObservation,
