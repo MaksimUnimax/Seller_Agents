@@ -1,6 +1,6 @@
 # I1-SRV.4 server-owned extension handoff
 
-Status: `I1-SRV.4 IMPLEMENTED CANDIDATE / OWNER_ARCHITECT_REVIEW_PENDING`
+Status: `I1-SRV.4 CORRECTED IMPLEMENTED CANDIDATE / OWNER_ARCHITECT_REVIEW_PENDING`
 
 This is a reference contract for the later browser client. It does not add a
 second protocol, browser storage implementation, marketplace execution, or
@@ -64,10 +64,24 @@ a bypass. True offline operation cannot discover a later server-side revoke;
 the last verified signed policy is the only authority until grace ends or a
 terminal result is observed.
 
-The effective client time must not regress below its persisted last accepted
-time observation or trusted server time. Signed deadlines are never rewritten.
-This prevents ordinary clock rollback in the reference policy, but browser
-storage and a machine owner's clock are not a hardware security boundary.
+The existing `lastObservedWallTimeHighWatermark` cache metadata is the
+persisted effective-time high-watermark. After a cached/offline authorization
+decision is eligible, the candidate effective time is persisted before
+returning `ALLOW`; persistence failure fails closed. Repeated accepted uses can
+only advance the floor. A process restart therefore reloads the later floor,
+and rolling the wall clock back cannot reclaim consumed grace. An observation at
+or beyond `offlineGraceUntil` is persisted as well, so restart remains expired.
+Signed deadlines and the signed envelope bytes are never rewritten.
+
+The same-runtime monotonic anchor detects rollback while that runtime exists;
+it is not durable across restart. The persisted effective-time floor provides
+the restart floor. Browser storage and a machine owner's clock remain outside
+the cryptographic guarantee; this is not hardware-level anti-rollback.
+
+Terminal online invalidation uses a required durable device/session marker. If
+marker persistence fails, durable cache removal is attempted; the reference
+tests prove the restarted client fails closed when the cache cannot be
+preserved.
 
 Ordinary marketplace commands remain local and require no server roundtrip.
 Server outage does not delete local marketplace data.

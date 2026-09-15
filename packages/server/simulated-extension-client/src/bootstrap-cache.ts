@@ -46,6 +46,8 @@ const BootstrapCacheRecordSchema = z
     requestContext: CacheRequestContextSchema,
     envelope: SignedBootstrapEnvelopeV1Schema,
     trustedServerTimeHighWatermark: IsoTimestampSchema,
+    // Legacy field name retained for the v1 reference record. It is the
+    // durable effective-time floor, not merely an observation of wall time.
     lastObservedWallTimeHighWatermark: IsoTimestampSchema,
   })
   .strict();
@@ -84,6 +86,7 @@ export type BootstrapCacheRecord = {
   requestContext: BootstrapRequestContext;
   envelope: SignedBootstrapEnvelopeV1;
   trustedServerTimeHighWatermark: string;
+  /** Durable local effective-time floor; the legacy field name is retained. */
   lastObservedWallTimeHighWatermark: string;
 };
 export type TerminalInvalidationRecord = {
@@ -105,12 +108,14 @@ export type BootstrapSnapshotStoreKey = {
 /** A deliberately narrow port; it is not a generic local-storage API. */
 export interface BootstrapSnapshotStore {
   load(key: BootstrapSnapshotStoreKey): Promise<unknown | undefined>;
+  /** A save must never lower the durable effective-time floor for the key. */
   save(
     key: BootstrapSnapshotStoreKey,
     record: BootstrapCacheRecord,
   ): Promise<void>;
   remove(key: BootstrapSnapshotStoreKey): Promise<void>;
-  markTerminallyInvalidated?(key: BootstrapSnapshotStoreKey): Promise<void>;
+  /** Must durably replace the scoped cache with a terminal marker. */
+  markTerminallyInvalidated(key: BootstrapSnapshotStoreKey): Promise<void>;
 }
 
 /** Deterministic reference storage. A Bridge adapter is deferred to P11. */
@@ -129,6 +134,19 @@ export class InMemoryBootstrapSnapshotStore implements BootstrapSnapshotStore {
     key: BootstrapSnapshotStoreKey,
     record: BootstrapCacheRecord,
   ): Promise<void> {
+    const existing = this.records.get(storeKey(key));
+    if (existing?.cacheVersion === "bootstrap_cache_terminal_v1") return;
+    if (existing?.cacheVersion === BOOTSTRAP_CACHE_VERSION) {
+      record = {
+        ...record,
+        lastObservedWallTimeHighWatermark: new Date(
+          Math.max(
+            Date.parse(existing.lastObservedWallTimeHighWatermark),
+            Date.parse(record.lastObservedWallTimeHighWatermark),
+          ),
+        ).toISOString(),
+      };
+    }
     this.records.set(storeKey(key), structuredClone(record));
   }
 
@@ -197,6 +215,7 @@ export type ValidatedBootstrapCache = {
   record: BootstrapCacheRecord;
   payload: BootstrapSnapshotPayloadV1;
   trustedServerTimeHighWatermarkMs: number;
+  persistedEffectiveTimeHighWatermarkMs: number;
   lastObservedWallTimeHighWatermarkMs: number;
 };
 
@@ -262,7 +281,8 @@ export function validateBootstrapCacheRecord(
       lastObservedWallTimeHighWatermarkMs,
       payloadServerTimeMs,
     ].every(Number.isFinite) ||
-    trustedServerTimeHighWatermarkMs < payloadServerTimeMs
+    trustedServerTimeHighWatermarkMs < payloadServerTimeMs ||
+    lastObservedWallTimeHighWatermarkMs < trustedServerTimeHighWatermarkMs
   )
     return { ok: false, error: "INCONSISTENT_TIME_METADATA" };
   return {
@@ -271,6 +291,8 @@ export function validateBootstrapCacheRecord(
       record,
       payload: verified.payload,
       trustedServerTimeHighWatermarkMs,
+      persistedEffectiveTimeHighWatermarkMs:
+        lastObservedWallTimeHighWatermarkMs,
       lastObservedWallTimeHighWatermarkMs,
     },
   };

@@ -80,7 +80,8 @@ export type BootstrapPolicyUnavailableReason =
   | "SECURITY_FAILURE"
   | "HTTP_ERROR"
   | "AUTHORIZATION_DENIED"
-  | "TERMINALLY_INVALIDATED";
+  | "TERMINALLY_INVALIDATED"
+  | "CACHE_STATE_PERSISTENCE_FAILED";
 export type BootstrapPolicyResult =
   | SignedOperationalResult
   | {
@@ -377,6 +378,7 @@ export class SimulatedExtensionClient {
           return { kind: "UNAVAILABLE", reason: "NETWORK_TRANSPORT" };
         return this.useOfflineCache(
           cacheState.matching,
+          key,
           cacheState.reason,
           context,
           cacheState.terminallyInvalidated,
@@ -413,6 +415,7 @@ export class SimulatedExtensionClient {
       if (live.status === 503 && cacheState.matching)
         return this.useOfflineCache(
           cacheState.matching,
+          key,
           cacheState.reason,
           context,
           cacheState.terminallyInvalidated,
@@ -558,6 +561,7 @@ export class SimulatedExtensionClient {
 
   private async useOfflineCache(
     cached: ValidatedBootstrapCache | undefined,
+    key: BootstrapSnapshotStoreKey,
     noCacheReason: "CACHE_INVALID" | "NO_MATCHING_CACHE",
     context: BootstrapRequestContext,
     terminallyInvalidated = false,
@@ -608,25 +612,36 @@ export class SimulatedExtensionClient {
       runtimeNowMs,
       this.effectiveNowHighWatermarkMs ?? -Infinity,
     );
-    this.effectiveNowHighWatermarkMs = effectiveNowMs;
-    if (this.runtimeAnchor)
-      this.runtimeAnchor = { effectiveNowMs, monotonicNowMs };
+    const observedEffectiveNowMs = Math.max(
+      cached.trustedServerTimeHighWatermarkMs,
+      cached.persistedEffectiveTimeHighWatermarkMs,
+      this.effectiveNowHighWatermarkMs ?? -Infinity,
+    );
     const decision = evaluateCachedBootstrapEligibility({
       verification: { ok: true, payload: cached.payload },
       cachedContext: cached.record.requestContext,
       currentContext: context,
       effectiveNowMs,
-      observedEffectiveNowMs: this.effectiveNowHighWatermarkMs,
+      observedEffectiveNowMs,
       fallbackTrigger,
       terminallyInvalidated,
     });
     if (decision.decision === "DENY") {
-      if (decision.reason === "CACHE_EXPIRED")
-        return { kind: "UNAVAILABLE", reason: "CACHE_EXPIRED" };
       if (decision.reason === "TERMINALLY_INVALIDATED")
         return { kind: "UNAVAILABLE", reason: "TERMINALLY_INVALIDATED" };
       if (decision.reason === "CLOCK_ROLLBACK")
         return { kind: "UNAVAILABLE", reason: "CLOCK_UNSAFE" };
+      if (decision.reason === "CACHE_EXPIRED") {
+        this.effectiveNowHighWatermarkMs = effectiveNowMs;
+        if (this.runtimeAnchor)
+          this.runtimeAnchor = { effectiveNowMs, monotonicNowMs };
+        if (!(await this.persistEffectiveTimeHighWatermark(cached, key)))
+          return {
+            kind: "UNAVAILABLE",
+            reason: "CACHE_STATE_PERSISTENCE_FAILED",
+          };
+        return { kind: "UNAVAILABLE", reason: "CACHE_EXPIRED" };
+      }
       return {
         kind: "UNAVAILABLE",
         reason:
@@ -636,6 +651,14 @@ export class SimulatedExtensionClient {
         error: decision.reason,
       };
     }
+    this.effectiveNowHighWatermarkMs = effectiveNowMs;
+    if (this.runtimeAnchor)
+      this.runtimeAnchor = { effectiveNowMs, monotonicNowMs };
+    if (!(await this.persistEffectiveTimeHighWatermark(cached, key)))
+      return {
+        kind: "UNAVAILABLE",
+        reason: "CACHE_STATE_PERSISTENCE_FAILED",
+      };
     return {
       kind: resolveClientCompatibility(
         decision.payload as BootstrapSnapshotPayloadV1,
@@ -658,14 +681,43 @@ export class SimulatedExtensionClient {
 
   private async markTerminallyInvalidated(
     key: BootstrapSnapshotStoreKey,
-  ): Promise<void> {
+  ): Promise<boolean> {
     try {
-      if (this.snapshotStore.markTerminallyInvalidated)
-        await this.snapshotStore.markTerminallyInvalidated(key);
-      else await this.snapshotStore.remove(key);
+      await this.snapshotStore.markTerminallyInvalidated(key);
+      return true;
     } catch {
-      // The in-memory marker prevents this client from reusing the cache. A
-      // persistent store should implement the marker for restart safety.
+      // Removal is a bounded fail-closed fallback for stores that cannot
+      // establish the terminal marker. A later restart then has no cache to
+      // bypass the observed terminal online result.
+      try {
+        await this.snapshotStore.remove(key);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+  }
+
+  private async persistEffectiveTimeHighWatermark(
+    cached: ValidatedBootstrapCache,
+    key: BootstrapSnapshotStoreKey,
+  ): Promise<boolean> {
+    const persistedFloorMs = cached.persistedEffectiveTimeHighWatermarkMs;
+    const effectiveNowMs = this.effectiveNowHighWatermarkMs!;
+    if (effectiveNowMs <= persistedFloorMs) return true;
+    try {
+      await this.snapshotStore.save(key, {
+        ...cached.record,
+        // This local metadata is the durable effective-time floor. The
+        // signed envelope and its signed deadlines remain byte-for-byte
+        // unchanged.
+        lastObservedWallTimeHighWatermark: new Date(
+          effectiveNowMs,
+        ).toISOString(),
+      });
+      return true;
+    } catch {
+      return false;
     }
   }
 

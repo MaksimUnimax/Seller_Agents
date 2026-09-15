@@ -122,6 +122,72 @@ describe("I1-SRV.4 offline policy primitive", () => {
     ).toEqual({ ok: false, error: "INVALID_SIGNATURE" });
   });
 
+  it("evaluates a real successful V2 verification result without changing signed identity", () => {
+    const v2Payload = {
+      ...payload(),
+      snapshotVersion: "bootstrap_snapshot_v2" as const,
+      contractVersion: "control_plane_v2" as const,
+      account: {
+        id: "123e4567-e89b-42d3-a456-426614174000",
+        status: "ACTIVE" as const,
+      },
+    };
+    const envelope = signBootstrapSnapshotV2(v2Payload, "k1", key.privateKey);
+    const verification = verifyBootstrapEnvelopeV2(
+      envelope,
+      new Map([["k1", key.publicKey]]),
+    );
+    expect(verification).toMatchObject({ ok: true });
+    if (!verification.ok) throw new Error("V2 fixture did not verify");
+    const v2Context = {
+      ...context,
+      contractVersion: "control_plane_v2" as const,
+    };
+    expect(
+      evaluateCachedBootstrapEligibility({
+        verification,
+        cachedContext: v2Context,
+        currentContext: v2Context,
+        effectiveNowMs: Date.parse("2026-01-01T00:01:00.000Z"),
+        observedEffectiveNowMs: Date.parse("2026-01-01T00:00:00.000Z"),
+        fallbackTrigger: "NETWORK_TRANSPORT",
+      }),
+    ).toMatchObject({
+      decision: "ALLOW",
+      payload: { account: { id: v2Payload.account.id } },
+    });
+
+    const tampered = {
+      ...envelope,
+      payload: Buffer.from(
+        JSON.stringify({
+          ...v2Payload,
+          account: {
+            ...v2Payload.account,
+            id: "123e4567-e89b-42d3-a456-426614174001",
+          },
+        }),
+      ).toString("base64url"),
+    };
+    const tamperedVerification = verifyBootstrapEnvelopeV2(
+      tampered,
+      new Map([["k1", key.publicKey]]),
+    );
+    expect(tamperedVerification).toEqual({
+      ok: false,
+      error: "INVALID_SIGNATURE",
+    });
+    expect(
+      evaluateCachedBootstrapEligibility({
+        verification: tamperedVerification,
+        cachedContext: v2Context,
+        currentContext: v2Context,
+        effectiveNowMs: Date.parse("2026-01-01T00:01:00.000Z"),
+        fallbackTrigger: "NETWORK_TRANSPORT",
+      }),
+    ).toEqual({ decision: "DENY", reason: "UNVERIFIED_SNAPSHOT" });
+  });
+
   it.each([
     ["before expiry", "2026-01-01T00:04:59.999Z", "FRESH"],
     [

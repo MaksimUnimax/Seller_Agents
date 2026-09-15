@@ -1,6 +1,6 @@
 # I1-SRV.4 Error / Revocation / Offline Semantics
 
-Status: `I1-SRV.4 IMPLEMENTED CANDIDATE / OWNER_ARCHITECT_REVIEW_PENDING`
+Status: `I1-SRV.4 CORRECTED IMPLEMENTED CANDIDATE / OWNER_ARCHITECT_REVIEW_PENDING`
 
 Repository: `MaksimUnimax/Seller_Agents`
 Base main SHA: `bc0cd0088ca50ba06021ea602a46bdd90de91378`
@@ -114,11 +114,21 @@ device/session-scoped terminal marker and records exact acquisition context.
 
 Both boundaries are half-open: `now == expiresAt` is no longer fresh and
 `now == offlineGraceUntil` is unusable. Signed timestamps are never mutated.
-Effective time is the maximum of trusted server time, persisted wall-time
-high-watermark, monotonic runtime anchor, and current wall time; it cannot
-regress below the last accepted observation. This is an honest client policy,
-not protection against a hostile machine owner tampering with browser storage
-or the system clock.
+The existing `lastObservedWallTimeHighWatermark` cache metadata is the
+persisted effective-time high-watermark (the legacy field name is retained for
+the v1 reference record). Effective time is the maximum of trusted server
+time, that durable floor, current wall time, and valid same-runtime monotonic
+progression. Every accepted cached/offline decision advances and persists the
+floor before returning `ALLOW`; an expiry observation is persisted too, so a
+restart cannot reclaim consumed grace. A cache-state persistence failure fails
+closed for cached authorization. A valid live verified response remains
+usable when its optional cache write fails.
+
+The same-runtime monotonic anchor detects monotonic rollback while it exists;
+it is not durable across process restart. The persisted effective-time floor is
+the restart protection. This is an honest client policy, not protection against
+a hostile machine owner tampering with browser storage or the system clock, and
+it does not claim hardware-level anti-rollback.
 
 ### Trust, context, and capability
 
@@ -187,6 +197,11 @@ claim failures, expiry/issuer/audience/algorithm verification, durable
 revocation/forbidden account/session behavior, atomic rotation/replay/reuse,
 bootstrap signer/config/compatibility/access-basis states, and commercial
 deadline precedence/clamping.
+
+The terminal invalidation store operation is required to durably write a
+device/session-scoped marker. If that marker write fails, the client attempts
+durable cache removal; if either succeeds, a restarted client has no stale
+cache authority. The in-memory reference marker is covered by restart tests.
 
 The following remain untouched: Health and `apps/health-runner/**`, extension
 runtime/UI/storage, marketplace execution and credentials, bridge-core,
