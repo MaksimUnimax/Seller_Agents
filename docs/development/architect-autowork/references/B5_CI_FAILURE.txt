@@ -1,0 +1,38 @@
+Repository: MaksimUnimax/Seller_Agents
+Head: a80cd3706a10d25079fedb9553fc7f5b2fc21683
+Run: 34955906130
+Job: 104337782297
+Source: authenticated GitHub workflow job log
+This excerpt identifies the failed suite/setup boundary; it is not a completed root-cause source audit.
+
+2026-09-15T10:09:31.0323412Z ⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+2026-09-15T10:09:31.0324026Z 
+2026-09-15T10:09:31.0324142Z 
+2026-09-15T10:09:31.0393004Z  FAIL  tests/integration/server/h3-health-persistence.integration.test.ts > B5 durable Standard/Work H3 evidence
+2026-09-15T10:09:31.0397569Z  Test Files  1 failed | 38 passed (39)
+2026-09-15T10:09:31.0399672Z error: duplicate key value violates unique constraint "ai_adapters_machine_key_unique"
+2026-09-15T10:09:31.0401220Z       Tests  1508 passed | 6 skipped (1514)
+2026-09-15T10:09:31.0403162Z  ❯ node_modules/.pnpm/pg-pool@3.14.0_pg@8.16.3/node_modules/pg-pool/index.js:45:11
+2026-09-15T10:09:31.0410683Z  ❯ tests/integration/server/h3-health-persistence.integration.test.ts:244:5
+2026-09-15T10:09:31.0412834Z     242|   beforeAll(async () => {
+2026-09-15T10:09:31.0413740Z    Start at  10:07:06
+2026-09-15T10:09:31.0416962Z     243|     await runtime.ready();
+2026-09-15T10:09:31.0418473Z    Duration  144.58s (transform 1.63s, setup 0ms, collect 34.83s, tests 100.23s, environment 7ms, prepare 2.71s)
+2026-09-15T10:09:31.0420269Z     244|     await runtime.query(
+2026-09-15T10:09:31.0420706Z 
+2026-09-15T10:09:31.0422260Z        |     ^
+2026-09-15T10:09:31.0422583Z 
+2026-09-15T10:09:31.0423527Z     245|       `INSERT INTO ai_adapters(id,machine_key,display_name) VALUES($1,…
+2026-09-15T10:09:31.0462856Z ##[error]error: duplicate key value violates unique constraint "ai_adapters_machine_key_unique"
+ ❯ node_modules/.pnpm/pg-pool@3.14.0_pg@8.16.3/node_modules/pg-pool/index.js:45:11
+ ❯ tests/integration/server/h3-health-persistence.integration.test.ts:244:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { length: 241, severity: 'ERROR', code: '23505', detail: 'Key (machine_key)=(chatgpt) already exists.', hint: undefined, position: undefined, internalPosition: undefined, internalQuery: undefined, where: undefined, schema: 'public', table: 'ai_adapters', dataType: undefined, constraint: 'ai_adapters_machine_key_unique', file: 'nbtinsert.c', routine: '_bt_check_unique' }
+
+2026-09-15T10:09:31.0487719Z     246|       [IDS.adapter],
+2026-09-15T10:09:31.0488701Z 
+2026-09-15T10:09:31.0490154Z ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+2026-09-15T10:09:31.0492609Z 
+2026-09-15T10:09:31.2183914Z  ELIFECYCLE  Command failed with exit code 1.
+2026-09-15T10:09:31.2493939Z ##[error]Process completed with exit code 1.
