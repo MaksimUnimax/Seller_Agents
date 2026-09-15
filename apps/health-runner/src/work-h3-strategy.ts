@@ -536,12 +536,8 @@ class ChatGPTWorkH3Strategy implements H3SurfaceStrategy {
         .count()) > 0
     )
       return true;
-    if (
-      (await visibleCount(
-        page.getByText(CHATGPT_WORK_H3_PROFILE.generatingText, { exact: true }),
-      )) > 0
-    )
-      return true;
+    // The captured string is retained in the profile as supporting evidence,
+    // but arbitrary response text must never be standalone busy truth.
     const input = this.#input;
     return (
       input !== undefined &&
@@ -579,7 +575,14 @@ class ChatGPTWorkH3Strategy implements H3SurfaceStrategy {
       copyIndex < (await copies.count());
       copyIndex += 1
     ) {
-      const ancestors = copies.nth(copyIndex).locator("xpath=ancestor::*");
+      // Stop at the associated assistant response boundary. This preserves
+      // mature local code/Copy ownership and prevents response-level actions
+      // from being attributed to a descendant code surface.
+      const ancestors = copies
+        .nth(copyIndex)
+        .locator(
+          'xpath=ancestor::*[not(self::section[@data-turn="assistant"] or @data-message-author-role="assistant") and not(.//*[self::section[@data-turn="assistant"] or @data-message-author-role="assistant"])]',
+        );
       for (
         let ancestorIndex = 0;
         ancestorIndex < (await ancestors.count());

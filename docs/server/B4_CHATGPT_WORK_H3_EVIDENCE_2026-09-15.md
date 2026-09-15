@@ -141,8 +141,9 @@ The accepted capture establishes:
 - supporting route shape
   `https://chatgpt.com/g/g-p-<PROJECT_ID>/c/<CONVERSATION_UUID>`;
 - route shape is not Work proof and real route components are never persisted;
-- the positive authenticated header/top-bar marker is the exact Russian
-  localized string `Работа`;
+- the positive authenticated conversation-header/top-bar marker is the exact
+  Russian localized string `Работа`; the capture establishes semantic marker
+  ownership, not an HTML `<header>` or ARIA `banner` contract;
 - `CHATGPT_WORK_H3_V1`, revision `1`, is explicitly bound to locale `ru-RU`;
 - State A is an idle empty textbox named `Чат с ChatGPT`, with placeholder
   `Работайте над чем угодно` and no Send activation;
@@ -153,29 +154,41 @@ The accepted capture establishes:
 - Stop is observation-only and never a Send or Send-counter event.
 
 The Work strategy positively gates controlled target policy, approved origin,
-bounded project/conversation route shape, and one unambiguous visible
-header-owned `Работа` marker. A marker in ordinary message/composer content,
-an ambiguous marker, route-only context, or a shared Send control cannot prove
-Work. Route/project and conversation ownership are held ephemerally and drift
+bounded project/conversation route shape, and exactly one eligible visible
+localized `Работа` marker. Eligibility is semantic: exact marker text must be
+outside ordinary assistant/user message content, the composer, and editor/code
+content. Zero eligible markers fail closed, as do two eligible surface markers;
+ordinary message occurrences do not count against a valid surface marker. A
+message/content-only marker, route-only context, or a shared Send control
+cannot prove Work. No guessed HTML `<header>` or `[role="banner"]` selector is
+used. Route/project and conversation ownership are held ephemerally and drift
 fails closed.
 
 The strategy reuses the accepted B2 engine in the fixed nine-step order and
 reuses mature common ChatGPT response mechanics only after Work gating:
 assistant message identity, attached/non-empty response, busy/completion
-signals, code surface, native Copy ownership, conversation identity, and
-delivery insertion ownership. The mature
+signals, code surface, code-local native Copy ownership, conversation identity,
+and delivery insertion ownership. `Выполняется` remains captured supporting
+generation evidence, but arbitrary page-wide response text cannot hold busy
+state by itself. Response-level `Копировать ответ` and table-level
+`Копировать таблицу` are not code-local Copy and cannot satisfy bridge
+validation. The mature
 `chatgptWorkSubmitButton()` contour is supporting Send authority only; it is
 not surface identity. There is one physical Send maximum, no Enter fallback,
 retry, or navigation repair. Completion remains fail closed. Dynamic strings
 such as `Выполнено за <duration>` and `Обработка заняла <duration>` remain
 supporting observations, not mandatory selectors.
 
-Standard received only the narrow B4 isolation correction: a positively
-identified header-owned Work marker causes Standard surface identification to
-fail before Send. Standard mechanics otherwise remain unchanged. Deterministic
-proof covers Standard+Standard PASS, Work+Work PASS, Standard+Work fail before
-Send, Work+Standard fail before Send, shared Send without Work marker, route
-without Work marker, and message-content-only marker.
+Standard received only the narrow B4 isolation correction: the same corrected
+eligible-marker gate causes Standard surface identification to fail before
+Send when Work is positively identified. Standard mechanics otherwise remain
+unchanged. A Standard page whose only `Работа` occurrence is ordinary
+conversation content remains valid. Deterministic proof covers
+Standard+Standard PASS, Work+Work PASS, Standard+Work fail before Send,
+Work+Standard fail before Send, shared Send without Work marker, route without
+Work marker, message-content-only marker, a valid marker plus duplicate message
+text, generation text in a completed response, and response/table Copy-only
+negatives.
 
 Implementation and deterministic acceptance are present in:
 
@@ -194,10 +207,25 @@ conversation UUID, project/account identity, raw authenticated DOM, node IDs,
 cookies, tokens, storage, prompt, response, conversation, screenshot, or
 clipboard content is persisted or exposed.
 
-Focused local gates recorded for this candidate are Work Chromium 34/34 PASS,
-normal/precedence/Stop Work cases 9/9 PASS across three repetitions, Standard
-B3 Chromium 36/36 PASS, health-runner unit coverage 77/77 PASS, and full
-server E2E 155/155 PASS. H2, B1, and B2 remain covered by the existing
-regression suite. Exact candidate SHA and terminal Server CI run/head are
-recorded in the final terminal report; this document makes no B7
-live-acceptance claim.
+Focused local gates for the corrective candidate are Work Chromium 41/41 PASS,
+the critical Work subset 27/27 PASS across three repetitions, Standard B3
+Chromium 36/36 PASS, health-runner unit coverage 77/77 PASS, real PostgreSQL
+integration 1507/1507 PASS, and full server E2E 162/162 PASS. Lint, format,
+typecheck, migration, OpenAPI, bridge guard, build, and Chromium provisioning
+also pass. H2, B1, and B2 remain covered by the full regression suite. The
+exact candidate SHA and terminal Server CI run/head are recorded in the final
+terminal report below; this document makes no B7 live-acceptance claim.
+
+## Corrective execution terminal record
+
+The correction removes the fixture-shaped header/banner dependency, makes
+message ownership explicit, prevents standalone page-wide `Выполняется` from
+holding generation active, and requires code-local `Копировать`/`Copy`.
+
+```text
+FINAL_CANDIDATE_SHA = recorded in the final terminal report
+REMOTE_HEAD = recorded in the final terminal report
+CI_RUN = recorded in the final terminal report
+CI_TESTED_SHA = recorded in the final terminal report
+CI_VERDICT = recorded in the final terminal report
+```

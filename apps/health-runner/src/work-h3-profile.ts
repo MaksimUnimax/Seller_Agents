@@ -2,8 +2,9 @@ import type { Locator, Page } from "playwright";
 
 /**
  * Versioned, code-owned authority for the authenticated ChatGPT Work surface.
- * The route is supporting context only; the header marker is the positive
- * Work identity. Exact Russian strings are intentionally locale-bound to v1.
+ * The route is supporting context only; the exact visible Work marker is the
+ * positive Work identity. Exact Russian strings are intentionally
+ * locale-bound to v1.
  */
 export const CHATGPT_WORK_H3_PROFILE = Object.freeze({
   surface: "CHATGPT_WORK" as const,
@@ -12,7 +13,6 @@ export const CHATGPT_WORK_H3_PROFILE = Object.freeze({
   approvedOrigin: "https://chatgpt.com",
   locale: "ru-RU",
   workMarker: "Работа",
-  headerSelector: 'header, [role="banner"]',
   routePattern:
     /^\/g\/g-p-([^/]+)\/c\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})(?:\/|$)/i,
   composerName: "Чат с ChatGPT",
@@ -30,6 +30,7 @@ export const CHATGPT_WORK_H3_PROFILE = Object.freeze({
     busySignal: '[aria-busy="true"]',
     assistantMessage:
       'section[data-turn="assistant"], [data-message-author-role="assistant"]',
+    userMessage: 'section[data-turn="user"], [data-message-author-role="user"]',
     messageId: Object.freeze({
       primary: "data-turn-id",
       directFallback: "data-message-id",
@@ -41,8 +42,9 @@ export const CHATGPT_WORK_H3_PROFILE = Object.freeze({
       "pre > code",
       "pre",
     ]),
-    nativeCopy:
-      'button[aria-label="Копировать ответ"], button[aria-label="Копировать"], button[aria-label="Copy"]',
+    // These are code-local controls from mature shared ChatGPT semantics.
+    // Response-level and table-level actions are deliberately excluded.
+    nativeCopy: 'button[aria-label="Копировать"], button[aria-label="Copy"]',
   }),
 });
 
@@ -62,39 +64,42 @@ export function workSurfaceRoot(page: Page): Locator {
   return page.locator(CHATGPT_WORK_H3_PROFILE.selectors.surfaceRoot);
 }
 
-/** Only header/banner-owned exact text is eligible Work identity. */
-export function workHeaderMarkers(page: Page): Locator {
-  return page
-    .locator(CHATGPT_WORK_H3_PROFILE.headerSelector)
-    .getByText(CHATGPT_WORK_H3_PROFILE.workMarker, { exact: true });
+/**
+ * Locate exact marker text leaves without assuming an unproven container.
+ * Ordinary conversation/editor content is excluded below by semantic
+ * ownership checks, not by global string uniqueness.
+ */
+export function workMarkerCandidates(page: Page): Locator {
+  return page.locator(
+    `xpath=//*[normalize-space(text())=${JSON.stringify(CHATGPT_WORK_H3_PROFILE.workMarker)}]`,
+  );
 }
 
 export async function hasPositiveWorkMarker(page: Page): Promise<boolean> {
-  const all = page.getByText(CHATGPT_WORK_H3_PROFILE.workMarker, {
-    exact: true,
-  });
-  const owned = workHeaderMarkers(page);
-  let visibleAll = 0;
-  for (let index = 0; index < (await all.count()); index += 1) {
-    if (
-      await all
-        .nth(index)
-        .isVisible({ timeout: 250 })
-        .catch(() => false)
-    )
-      visibleAll += 1;
+  const candidates = workMarkerCandidates(page);
+  const excludedAncestor =
+    "ancestor-or-self::*[" +
+    'self::section[@data-turn="assistant"] or ' +
+    'self::section[@data-turn="user"] or ' +
+    '@data-message-author-role="assistant" or ' +
+    '@data-message-author-role="user" or ' +
+    '@contenteditable="true" or ' +
+    "self::textarea or self::input or self::pre or " +
+    "@data-writing-block-fullscreen-editor-region or " +
+    'contains(concat(" ", normalize-space(@class), " "), " cm-content ") or ' +
+    '@id="code-block-viewer" or ' +
+    '(self::form and .//*[@id="prompt-textarea"])' +
+    "]";
+  let eligibleVisible = 0;
+  for (let index = 0; index < (await candidates.count()); index += 1) {
+    const candidate = candidates.nth(index);
+    if (!(await candidate.isVisible({ timeout: 250 }).catch(() => false)))
+      continue;
+    if ((await candidate.locator(`xpath=${excludedAncestor}`).count()) > 0)
+      continue;
+    eligibleVisible += 1;
   }
-  let visibleOwned = 0;
-  for (let index = 0; index < (await owned.count()); index += 1) {
-    if (
-      await owned
-        .nth(index)
-        .isVisible({ timeout: 250 })
-        .catch(() => false)
-    )
-      visibleOwned += 1;
-  }
-  return visibleAll === 1 && visibleOwned === 1;
+  return eligibleVisible === 1;
 }
 
 export function workPromptInputs(composer: Locator): Locator {

@@ -7,6 +7,9 @@ export type HealthWorkH3FixtureVariant =
   | "TEXT_PRESENT_GENERATING"
   | "MISSING_WORK_MARKER"
   | "WORK_MARKER_CONTENT_ONLY"
+  | "VALID_WORK_MARKER_PLUS_MESSAGE_TEXT_WORK"
+  | "SEMANTIC_MARKER_NO_HEADER"
+  | "VALID_CODE_LOCAL_COPY"
   | "AMBIGUOUS_WORK_MARKER"
   | "STANDARD_SURFACE"
   | "WRONG_ORIGIN_SURFACE"
@@ -33,9 +36,12 @@ export type HealthWorkH3FixtureVariant =
   | "STOP_CLEARS_BUT_OTHER_BUSY_REMAINS"
   | "BUSY_CLEARS_BUT_STOP_REMAINS"
   | "EMPTY_RESPONSE_AFTER_GENERATION"
+  | "GENERATION_TEXT_IN_COMPLETED_RESPONSE"
   | "CODE_BLOCK_MISSING"
   | "NATIVE_COPY_MISSING"
   | "NATIVE_COPY_MISMATCHED"
+  | "RESPONSE_COPY_ONLY_WITH_CODE"
+  | "TABLE_COPY_ONLY_WITH_CODE"
   | "DELIVERY_MISSING";
 
 export type HealthWorkH3Fixture = Readonly<{
@@ -57,6 +63,9 @@ const VARIANTS: readonly HealthWorkH3FixtureVariant[] = [
   "TEXT_PRESENT_GENERATING",
   "MISSING_WORK_MARKER",
   "WORK_MARKER_CONTENT_ONLY",
+  "VALID_WORK_MARKER_PLUS_MESSAGE_TEXT_WORK",
+  "SEMANTIC_MARKER_NO_HEADER",
+  "VALID_CODE_LOCAL_COPY",
   "AMBIGUOUS_WORK_MARKER",
   "STANDARD_SURFACE",
   "WRONG_ORIGIN_SURFACE",
@@ -83,9 +92,12 @@ const VARIANTS: readonly HealthWorkH3FixtureVariant[] = [
   "STOP_CLEARS_BUT_OTHER_BUSY_REMAINS",
   "BUSY_CLEARS_BUT_STOP_REMAINS",
   "EMPTY_RESPONSE_AFTER_GENERATION",
+  "GENERATION_TEXT_IN_COMPLETED_RESPONSE",
   "CODE_BLOCK_MISSING",
   "NATIVE_COPY_MISSING",
   "NATIVE_COPY_MISMATCHED",
+  "RESPONSE_COPY_ONLY_WITH_CODE",
+  "TABLE_COPY_ONLY_WITH_CODE",
   "DELIVERY_MISSING",
 ];
 
@@ -109,12 +121,21 @@ function responseMarkup(variant: HealthWorkH3FixtureVariant): string {
     "CODE_BLOCK_MISSING",
     "EMPTY_RESPONSE_AFTER_GENERATION",
   ].includes(variant);
-  const copyLabel =
-    variant === "NATIVE_COPY_MISSING"
-      ? ""
-      : variant === "NATIVE_COPY_MISMATCHED"
-        ? "Не копировать"
-        : "Копировать";
+  const copyLabel = [
+    "NATIVE_COPY_MISSING",
+    "RESPONSE_COPY_ONLY_WITH_CODE",
+    "TABLE_COPY_ONLY_WITH_CODE",
+  ].includes(variant)
+    ? ""
+    : variant === "NATIVE_COPY_MISMATCHED"
+      ? "Не копировать"
+      : "Копировать";
+  const responseCopy =
+    variant === "RESPONSE_COPY_ONLY_WITH_CODE"
+      ? '<button aria-label="Копировать ответ" type="button">Копировать ответ</button>'
+      : variant === "TABLE_COPY_ONLY_WITH_CODE"
+        ? '<button aria-label="Копировать таблицу" type="button">Копировать таблицу</button>'
+        : "";
   const code = missingCode
     ? ""
     : `<div data-writing-block-fullscreen-editor-region>${
@@ -130,7 +151,7 @@ function responseMarkup(variant: HealthWorkH3FixtureVariant): string {
     ["COMPLETION_MISSING", "RESPONSE_SELF_BUSY_STUCK"].includes(variant)
       ? ' aria-busy="true"'
       : ""
-  }><p>${empty ? "" : "Completed response"}</p>${code}</section>`;
+  }><p>${empty ? "" : variant === "GENERATION_TEXT_IN_COMPLETED_RESPONSE" ? PROFILE.generatingText : "Completed response"}</p>${responseCopy}${code}</section>`;
 }
 
 function fixtureHtml(
@@ -139,10 +160,14 @@ function fixtureHtml(
 ): string {
   const missingMarker = [
     "MISSING_WORK_MARKER",
+    "WORK_MARKER_CONTENT_ONLY",
     "STANDARD_SURFACE",
     "WRONG_ORIGIN_SURFACE",
   ].includes(variant);
-  const contentMarker = variant === "WORK_MARKER_CONTENT_ONLY";
+  const contentMarker = [
+    "WORK_MARKER_CONTENT_ONLY",
+    "VALID_WORK_MARKER_PLUS_MESSAGE_TEXT_WORK",
+  ].includes(variant);
   const ambiguousMarker = variant === "AMBIGUOUS_WORK_MARKER";
   const noRoute = variant === "NO_ROUTE_SHAPE";
   const canonical =
@@ -187,9 +212,9 @@ function fixtureHtml(
       : "";
   const marker = missingMarker
     ? ""
-    : `<header role="banner"><span>Test project</span><span>/</span><span>Test conversation</span><span>${PROFILE.workMarker}</span>${
+    : `<div><span>Test project</span><span>/</span><span>Test conversation</span><span>${PROFILE.workMarker}</span>${
         ambiguousMarker ? `<span>${PROFILE.workMarker}</span>` : ""
-      }</header>`;
+      }</div>`;
   const contentMarkerMarkup = contentMarker
     ? `<section data-turn="user" data-turn-id="turn-user"><p>${PROFILE.workMarker}</p></section>`
     : "";

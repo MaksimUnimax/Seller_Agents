@@ -17,12 +17,17 @@ describe("packaged ChatGPT Work H3 profile", () => {
     expect(CHATGPT_WORK_H3_PROFILE.approvedOrigin).toBe("https://chatgpt.com");
     expect(CHATGPT_WORK_H3_PROFILE.locale).toBe("ru-RU");
     expect(CHATGPT_WORK_H3_PROFILE.workMarker).toBe("Работа");
+    expect(CHATGPT_WORK_H3_PROFILE).not.toHaveProperty("headerSelector");
+    expect(CHATGPT_WORK_H3_PROFILE.selectors.nativeCopy).toBe(
+      'button[aria-label="Копировать"], button[aria-label="Copy"]',
+    );
     for (const name of ["work-h3-profile.ts", "work-h3-strategy.ts"]) {
       const contents = source(name);
       expect(contents).not.toMatch(/hf-/);
       expect(contents).not.toMatch(/data-hf-/);
       expect(contents).not.toMatch(/localhost|127\.0\.0\.1/);
       expect(contents).not.toMatch(/fixture-editor|fixture-send/);
+      expect(contents).not.toMatch(/headerSelector\s*:/);
     }
   });
 

@@ -118,6 +118,42 @@ test.describe("B4 packaged ChatGPT Work H3", () => {
     }
   });
 
+  test("accepts a semantic Work marker without header/banner markup", async () => {
+    const fixture = await startHealthWorkH3Fixture();
+    try {
+      const result = await runVariant(fixture, "SEMANTIC_MARKER_NO_HEADER");
+      expect(result.outcome).toBe("PASS");
+      await expectState(fixture, { promptMatches: 1, sendActivations: 1 });
+    } finally {
+      await fixture.close();
+    }
+  });
+
+  test("does not let message text make a valid Work marker ambiguous", async () => {
+    const fixture = await startHealthWorkH3Fixture();
+    try {
+      const result = await runVariant(
+        fixture,
+        "VALID_WORK_MARKER_PLUS_MESSAGE_TEXT_WORK",
+      );
+      expect(result.outcome).toBe("PASS");
+      await expectState(fixture, { promptMatches: 1, sendActivations: 1 });
+    } finally {
+      await fixture.close();
+    }
+  });
+
+  test("accepts a mature code-local Copy control", async () => {
+    const fixture = await startHealthWorkH3Fixture();
+    try {
+      const result = await runVariant(fixture, "VALID_CODE_LOCAL_COPY");
+      expect(result.outcome).toBe("PASS");
+      await expectState(fixture, { promptMatches: 1, sendActivations: 1 });
+    } finally {
+      await fixture.close();
+    }
+  });
+
   test("does not confuse the Stop state with Send", async () => {
     const fixture = await startHealthWorkH3Fixture();
     try {
@@ -167,6 +203,21 @@ test.describe("B4 packaged ChatGPT Work H3", () => {
     }
   });
 
+  test("Standard remains valid when Работа exists only in conversation content", async () => {
+    const fixture = await startHealthWorkH3Fixture();
+    try {
+      const result = await runVariant(
+        fixture,
+        "WORK_MARKER_CONTENT_ONLY",
+        "CHATGPT_STANDARD",
+      );
+      expect(result.outcome).toBe("PASS");
+      await expectState(fixture, { promptMatches: 1, sendActivations: 1 });
+    } finally {
+      await fixture.close();
+    }
+  });
+
   test.describe("bounded post-Send failures never retry", () => {
     for (const [variant, failureCode] of [
       ["BUSY_TIMEOUT", "BUSY_TIMEOUT"],
@@ -177,18 +228,25 @@ test.describe("B4 packaged ChatGPT Work H3", () => {
       ["STOP_CLEARS_BUT_OTHER_BUSY_REMAINS", "COMPLETION_TIMEOUT"],
       ["BUSY_CLEARS_BUT_STOP_REMAINS", "COMPLETION_TIMEOUT"],
       ["EMPTY_RESPONSE_AFTER_GENERATION", "COMPLETION_TIMEOUT"],
+      ["GENERATION_TEXT_IN_COMPLETED_RESPONSE", "__PASS__"],
       ["PROJECT_ROUTE_MUTATION", "BUSY_OBSERVATION_FAILED"],
       ["CONVERSATION_MUTATION", "BUSY_OBSERVATION_FAILED"],
       ["CODE_BLOCK_MISSING", "BRIDGE_SURFACE_VALIDATION_FAILED"],
       ["NATIVE_COPY_MISSING", "BRIDGE_SURFACE_VALIDATION_FAILED"],
       ["NATIVE_COPY_MISMATCHED", "BRIDGE_SURFACE_VALIDATION_FAILED"],
+      ["RESPONSE_COPY_ONLY_WITH_CODE", "BRIDGE_SURFACE_VALIDATION_FAILED"],
+      ["TABLE_COPY_ONLY_WITH_CODE", "BRIDGE_SURFACE_VALIDATION_FAILED"],
       ["DELIVERY_MISSING", "BRIDGE_SURFACE_VALIDATION_FAILED"],
     ] as const) {
       test(`${variant} has exactly one Send`, async () => {
         const fixture = await startHealthWorkH3Fixture();
         try {
           const result = await runVariant(fixture, variant);
-          expect(result.failureCode).toBe(failureCode);
+          if (variant === "GENERATION_TEXT_IN_COMPLETED_RESPONSE") {
+            expect(result.outcome).toBe("PASS");
+          } else {
+            expect(result.failureCode).toBe(failureCode);
+          }
           await expectState(fixture, { promptMatches: 1, sendActivations: 1 });
         } finally {
           await fixture.close();

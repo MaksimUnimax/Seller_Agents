@@ -186,7 +186,7 @@ class ChatGPTStandardH3Strategy implements H3SurfaceStrategy {
       ) {
         return fail(await surface.count());
       }
-      // B4 isolation correction: a positively identified Work header is not
+      // B4 isolation correction: a positively identified Work marker is not
       // allowed to satisfy the Standard strategy on shared ChatGPT DOM.
       if (await hasPositiveWorkMarker(page)) return fail();
       const identity = await this.#resolveConversationIdentity(page);
