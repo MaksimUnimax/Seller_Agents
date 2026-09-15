@@ -7,8 +7,9 @@ Outcome: `EXTERNAL_BLOCKER`
 
 ## Execution boundary
 
-The accepted B3 head remains `c3662cac0b88f46a5b01f5fbc488578e82983046` and
-is the current Stream B head. B4 implementation was not started because the
+The accepted B3 head remains `c3662cac0b88f46a5b01f5fbc488578e82983046` as the
+Stream B base; the current Stream B head is the docs-only blocker candidate
+recorded below. B4 implementation was not started because the
 repository does not contain sufficient authoritative, production-specific
 ChatGPT Work surface knowledge to construct the required strategy safely.
 
