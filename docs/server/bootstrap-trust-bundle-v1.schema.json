@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bootstrap-trust-bundle-v1.schema.json",
+  "title": "Seller Agents bootstrap public trust bundle v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "trustBundleVersion",
+    "algorithm",
+    "publicKeyFormat",
+    "publicKeyEncoding",
+    "fingerprintAlgorithm",
+    "fingerprintEncoding",
+    "keys"
+  ],
+  "properties": {
+    "trustBundleVersion": { "const": "bootstrap_trust_bundle_v1" },
+    "algorithm": { "const": "Ed25519" },
+    "publicKeyFormat": { "const": "spki_der" },
+    "publicKeyEncoding": { "const": "base64" },
+    "fingerprintAlgorithm": { "const": "sha256" },
+    "fingerprintEncoding": { "const": "lowercase_hex" },
+    "keys": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "keyId",
+          "publicKey",
+          "fingerprintSha256",
+          "lifecycle",
+          "trustEligibility"
+        ],
+        "properties": {
+          "keyId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$", "maxLength": 64 },
+          "publicKey": { "type": "string", "pattern": "^[A-Za-z0-9+/]+={0,2}$" },
+          "fingerprintSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "lifecycle": { "enum": ["ACTIVE", "RETIRED"] },
+          "trustEligibility": { "enum": ["SIGNING_AND_VERIFICATION", "VERIFICATION_OVERLAP"] }
+        }
+      }
+    }
+  }
+}

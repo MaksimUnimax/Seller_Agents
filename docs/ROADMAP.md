@@ -53,7 +53,7 @@ D2.2: очередь вынесена в bridge-core, контекст паке�
 
 Старый порядок «сначала весь P8–P10, затем реальное расширение на P11» заменён ранним I1.
 Сохраняются принятые домены и проверки. Codex получает задачи по новым требованиям, не переписывает принятый сервер целиком.
-S1.1 free beta eligibility и quota регистраций приняты. `I1-SRV.0` и `I1-SRV.1` приняты; `I1-SRV.2` — `IMPLEMENTED CANDIDATE / OWNER_ARCHITECT_REVIEW_PENDING` ([evidence](server/I1_SRV_2_DEVICE_AUTH_INTEGRATION_ACCEPTANCE_2026-09-15.md)). `I1-SRV.3`, `I1-SRV.4` и `I1-SRV.5` остаются не начатыми и выполняются последовательно только после принятия предыдущего шага.
+S1.1 free beta eligibility и quota регистраций приняты. `I1-SRV.0`, `I1-SRV.1` и `I1-SRV.2` приняты; `I1-SRV.3` — `IMPLEMENTED CANDIDATE / OWNER_ARCHITECT_REVIEW_PENDING` ([evidence](server/I1_SRV_3_BOOTSTRAP_TRUST_HANDOFF_ACCEPTANCE_2026-09-15.md)). `I1-SRV.4` и `I1-SRV.5` остаются не начатыми и выполняются последовательно только после принятия предыдущего шага.
 После принятия `I1-SRV.5` Stream A останавливается на synchronization boundary перед extension implementation / S1.2 / D3. Реальный OTP/email provider и preprod в текущую волну не входят: S1.2 отложен до этого I1-sync и нового явного решения владельца. P8.4 H3 остаётся отдельной authority Stream B и не входит в Stream A I1.
 Расширенное администрирование мониторинга и платежи не предшествуют первому общему сценарию.
 Минимальный сайт регистрации/установки/обратной связи обязателен до B1; продающие воронки развиваются позже.

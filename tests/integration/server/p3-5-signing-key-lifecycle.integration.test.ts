@@ -7,9 +7,13 @@ import {
 } from "../../../packages/server/db/src/index.js";
 import {
   RegisterSigningKeyCommandSchema,
+  createPublicTrustBundle,
   resolveP3BootstrapPolicy,
   resolveSigningKeyLifecycle,
   rolloutBucketV1,
+  serializePublicTrustBundle,
+  SigningKeyEventSchema,
+  SigningKeyMetadataSchema,
   verifyBootstrapEnvelope,
 } from "../../../packages/server/remote-config/src/index.js";
 import { BootstrapService } from "../../../packages/server/bootstrap/src/index.js";
@@ -590,5 +594,57 @@ describe.sequential("P3.5 real PostgreSQL signing-key lifecycle", () => {
     expect(verifyBootstrapEnvelope(second, trusted)).toMatchObject({
       ok: true,
     });
+  });
+
+  it("exports registry public material deterministically and excludes revoked keys", async () => {
+    const active = key("p35-export-active");
+    const retired = key("p35-export-retired");
+    const registered = key("p35-export-registered");
+    const revoked = key("p35-export-revoked");
+    const p = createP3PolicyPublicationRepository(db);
+    await seedKey(db, active);
+    await seedKey(db, retired);
+    await p.retireSigningKey(
+      { keyId: retired.keyId, reasonCode: "overlap" },
+      context,
+    );
+    await p.registerSigningKey(
+      { keyId: registered.keyId, publicKeySpkiDer: registered.der },
+      context,
+    );
+    await seedKey(db, revoked);
+    await p.revokeSigningKey(
+      { keyId: revoked.keyId, reasonCode: "incident" },
+      context,
+    );
+    const rows = await db.query(
+      'SELECT key_id AS "keyId",algorithm,public_key_spki_der AS "publicKeySpkiDer",public_key_sha256 AS "publicKeySha256",created_at AS "createdAt" FROM signing_keys ORDER BY key_id',
+    );
+    const entries = [];
+    for (const row of rows.rows) {
+      const metadata = SigningKeyMetadataSchema.parse(row);
+      const events = await db.query(
+        'SELECT id,key_id AS "keyId",event_type AS "eventType",occurred_at AS "occurredAt",reason_code AS "reasonCode",created_at AS "createdAt" FROM signing_key_events WHERE key_id=$1 ORDER BY occurred_at,id',
+        [metadata.keyId],
+      );
+      entries.push({
+        metadata,
+        lifecycle: resolveSigningKeyLifecycle(
+          events.rows.map((event) => SigningKeyEventSchema.parse(event)),
+        ),
+      });
+    }
+    const bundle = createPublicTrustBundle(entries);
+    expect(bundle.keys.map((entry) => entry.keyId)).toEqual([
+      active.keyId,
+      retired.keyId,
+    ]);
+    expect(bundle.keys[1]!.trustEligibility).toBe("VERIFICATION_OVERLAP");
+    expect(serializePublicTrustBundle(bundle)).toEqual(
+      serializePublicTrustBundle(
+        createPublicTrustBundle([...entries].reverse()),
+      ),
+    );
+    expect(JSON.stringify(bundle)).not.toMatch(/PRIVATE KEY|privateKey/i);
   });
 });

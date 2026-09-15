@@ -1,4 +1,4 @@
-import { generateKeyPairSync, sign } from "node:crypto";
+import { createHash, generateKeyPairSync, sign } from "node:crypto";
 import { describe, expect, it, vi } from "vitest";
 import {
   BootstrapRequestV1Schema,
@@ -8,6 +8,7 @@ import {
 import {
   BOOTSTRAP_SIGNATURE_DOMAIN,
   canonicalizeJson,
+  createPublicTrustBundle,
   configRolloutSelectionModeV1,
   configReleaseHashes,
   CreateRolloutCommandSchema,
@@ -15,6 +16,7 @@ import {
   selectRolloutCandidateV1,
   signBootstrapSnapshot,
   signBootstrapSnapshotV2,
+  serializePublicTrustBundle,
   verifyBootstrapEnvelope,
   verifyBootstrapEnvelopeV2,
   resolveSigningKeyLifecycle,
@@ -216,6 +218,114 @@ describe("canonicalizeJson", () => {
   });
 });
 
+describe("bootstrap public trust handoff", () => {
+  function metadata(
+    keyId: string,
+    pair: ReturnType<typeof generateKeyPairSync>,
+  ) {
+    const publicKeySpkiDer = pair.publicKey.export({
+      format: "der",
+      type: "spki",
+    });
+    return {
+      keyId,
+      algorithm: "Ed25519" as const,
+      publicKeySpkiDer,
+      publicKeySha256: createHash("sha256")
+        .update(publicKeySpkiDer)
+        .digest("hex"),
+      createdAt: new Date("2026-09-15T00:00:00.000Z"),
+    };
+  }
+
+  it("exports only active and retired public keys in deterministic order", () => {
+    const active = generateKeyPairSync("ed25519");
+    const retired = generateKeyPairSync("ed25519");
+    const registered = generateKeyPairSync("ed25519");
+    const revoked = generateKeyPairSync("ed25519");
+    const bundle = createPublicTrustBundle([
+      {
+        metadata: metadata("config-retired", retired),
+        lifecycle: { state: "RETIRED" },
+      },
+      {
+        metadata: metadata("config-registered", registered),
+        lifecycle: { state: "REGISTERED" },
+      },
+      {
+        metadata: metadata("config-revoked", revoked),
+        lifecycle: { state: "REVOKED" },
+      },
+      {
+        metadata: metadata("config-active", active),
+        lifecycle: { state: "ACTIVE" },
+      },
+    ]);
+    expect(bundle.keys.map((key) => key.keyId)).toEqual([
+      "config-active",
+      "config-retired",
+    ]);
+    expect(bundle.keys[0]).toMatchObject({
+      lifecycle: "ACTIVE",
+      trustEligibility: "SIGNING_AND_VERIFICATION",
+    });
+    expect(bundle.keys[1]).toMatchObject({
+      lifecycle: "RETIRED",
+      trustEligibility: "VERIFICATION_OVERLAP",
+    });
+    expect(JSON.stringify(bundle)).not.toMatch(/PRIVATE KEY|privateKey/i);
+    expect(serializePublicTrustBundle(bundle)).toEqual(
+      serializePublicTrustBundle(
+        createPublicTrustBundle([
+          {
+            metadata: metadata("config-active", active),
+            lifecycle: { state: "ACTIVE" },
+          },
+          {
+            metadata: metadata("config-retired", retired),
+            lifecycle: { state: "RETIRED" },
+          },
+        ]),
+      ),
+    );
+  });
+
+  it("fails closed for malformed fingerprints and key aliases", () => {
+    const first = generateKeyPairSync("ed25519");
+    const second = generateKeyPairSync("ed25519");
+    const firstMetadata = metadata("config-one", first);
+    expect(() =>
+      createPublicTrustBundle([
+        {
+          metadata: { ...firstMetadata, publicKeySha256: "0".repeat(64) },
+          lifecycle: { state: "ACTIVE" },
+        },
+      ]),
+    ).toThrow("P3_PUBLIC_TRUST_KEY_FINGERPRINT_MISMATCH");
+    expect(() =>
+      createPublicTrustBundle([
+        { metadata: firstMetadata, lifecycle: { state: "ACTIVE" } },
+        {
+          metadata: {
+            ...metadata("config-two", second),
+            publicKeySpkiDer: firstMetadata.publicKeySpkiDer,
+            publicKeySha256: firstMetadata.publicKeySha256,
+          },
+          lifecycle: { state: "RETIRED" },
+        },
+      ]),
+    ).toThrow("P3_PUBLIC_TRUST_KEY_ALIAS_CONFLICT");
+    expect(() =>
+      createPublicTrustBundle([
+        {
+          metadata: firstMetadata,
+          lifecycle: { state: "INVALID", error: "INVALID_LIFECYCLE" },
+        },
+      ]),
+    ).toThrow("P3_PUBLIC_TRUST_KEY_INVALID_LIFECYCLE");
+  });
+});
+
 describe("P3.5 signing-key lifecycle", () => {
   const id = "123e4567-e89b-42d3-a456-426614174000";
   const event = (
@@ -369,6 +479,83 @@ describe("signed bootstrap envelope", () => {
       ok: false,
       error: "INVALID_ENVELOPE",
     });
+    const v1Envelope = signBootstrapSnapshot(
+      payload,
+      "config-current",
+      config.privateKey,
+    );
+    expect(verifyBootstrapEnvelopeV2(v1Envelope, ring)).toEqual({
+      ok: false,
+      error: "INVALID_ENVELOPE",
+    });
+  });
+
+  it("rejects V2 payload, signature, key, algorithm, and encoding tampering", () => {
+    const { config, previous, ring } = keyMaterial();
+    const v2Payload = {
+      ...payload,
+      snapshotVersion: "bootstrap_snapshot_v2" as const,
+      contractVersion: "control_plane_v2" as const,
+      account: {
+        id: "11111111-1111-4111-8111-111111111111",
+        status: "ACTIVE" as const,
+      },
+    };
+    const envelope = signBootstrapSnapshotV2(
+      v2Payload,
+      "config-current",
+      config.privateKey,
+    );
+    expect(
+      verifyBootstrapEnvelopeV2(
+        { ...envelope, payload: flipBase64Url(envelope.payload) },
+        ring,
+      ),
+    ).toEqual({ ok: false, error: "INVALID_SIGNATURE" });
+    expect(
+      verifyBootstrapEnvelopeV2(
+        { ...envelope, signature: flipBase64Url(envelope.signature) },
+        ring,
+      ),
+    ).toEqual({ ok: false, error: "INVALID_SIGNATURE" });
+    expect(
+      verifyBootstrapEnvelopeV2({ ...envelope, keyId: "unknown-key" }, ring),
+    ).toEqual({ ok: false, error: "UNKNOWN_SIGNING_KEY" });
+    expect(
+      verifyBootstrapEnvelopeV2({ ...envelope, algorithm: "ES256" }, ring),
+    ).toEqual({ ok: false, error: "INVALID_ENVELOPE" });
+    expect(
+      verifyBootstrapEnvelopeV2(
+        { ...envelope, payload: "not+base64url" },
+        ring,
+      ),
+    ).toEqual({ ok: false, error: "INVALID_ENVELOPE" });
+    expect(
+      verifyBootstrapEnvelopeV2(
+        envelope,
+        new Map([["config-current", previous.publicKey]]),
+      ),
+    ).toEqual({ ok: false, error: "INVALID_SIGNATURE" });
+    const changedAccount = {
+      ...v2Payload,
+      account: {
+        id: "22222222-2222-4222-8222-222222222222",
+        status: "ACTIVE" as const,
+      },
+    };
+    expect(
+      verifyBootstrapEnvelopeV2(
+        {
+          ...envelope,
+          payload: signBootstrapSnapshotV2(
+            changedAccount,
+            "config-current",
+            config.privateKey,
+          ).payload,
+        },
+        ring,
+      ),
+    ).toEqual({ ok: false, error: "INVALID_SIGNATURE" });
   });
 
   it("canonicalizes semantic objects independently of insertion order", () => {
