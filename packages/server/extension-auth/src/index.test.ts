@@ -1,7 +1,10 @@
 import { generateKeyPairSync } from "node:crypto";
+import { SignJWT } from "jose";
 import { describe, expect, it, vi } from "vitest";
 import {
   ACCESS_TOKEN_TTL_SECONDS,
+  ACCESS_TOKEN_AUDIENCE,
+  ACCESS_TOKEN_ISSUER,
   ExtensionAuthService,
   createEphemeralAccessTokenSigningKey,
   REFRESH_REPLAY_WINDOW_MS,
@@ -94,6 +97,49 @@ describe("extension token core", () => {
         signingKey,
       ).authenticateAccess(token),
     ).toEqual({ ok: false, code: "EXTENSION_AUTH_UNAUTHORIZED" });
+  });
+
+  it("T1 rejects wrong issuer, audience, algorithm, and expired access tokens", async () => {
+    const payload = { did: identity.deviceId, aid: identity.accountId, ver: 1 };
+    const wrongIssuer = await new SignJWT(payload)
+      .setProtectedHeader({ alg: "EdDSA", typ: "JWT", kid: signingKey.keyId })
+      .setIssuer("wrong-issuer")
+      .setAudience(ACCESS_TOKEN_AUDIENCE)
+      .setSubject(identity.sessionId)
+      .setIssuedAt(Math.floor(now.getTime() / 1000))
+      .setExpirationTime(Math.floor(now.getTime() / 1000) + 900)
+      .sign(signingKey.privateKey);
+    const wrongAudience = await new SignJWT(payload)
+      .setProtectedHeader({ alg: "EdDSA", typ: "JWT", kid: signingKey.keyId })
+      .setIssuer(ACCESS_TOKEN_ISSUER)
+      .setAudience("wrong-audience")
+      .setSubject(identity.sessionId)
+      .setIssuedAt(Math.floor(now.getTime() / 1000))
+      .setExpirationTime(Math.floor(now.getTime() / 1000) + 900)
+      .sign(signingKey.privateKey);
+    const valid = await issueAccessToken(signingKey, identity, now);
+    const [header, body, signature] = valid.split(".");
+    const wrongAlgorithm = `${Buffer.from(
+      JSON.stringify({ alg: "HS256", typ: "JWT", kid: signingKey.keyId }),
+    ).toString("base64url")}.${body}.${signature}`;
+
+    expect(
+      await verifyAccessToken(signingKey, wrongIssuer, now),
+    ).toBeUndefined();
+    expect(
+      await verifyAccessToken(signingKey, wrongAudience, now),
+    ).toBeUndefined();
+    expect(
+      await verifyAccessToken(signingKey, wrongAlgorithm, now),
+    ).toBeUndefined();
+    expect(
+      await verifyAccessToken(
+        signingKey,
+        valid,
+        new Date(now.getTime() + (ACCESS_TOKEN_TTL_SECONDS + 31) * 1000),
+      ),
+    ).toBeUndefined();
+    expect(header).toBeTruthy();
   });
 
   it("T1 requires canonical opaque 32-byte refresh tokens and separated HMAC artifacts", () => {

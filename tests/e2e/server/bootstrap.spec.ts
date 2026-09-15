@@ -1,6 +1,10 @@
 import { createPublicKey } from "node:crypto";
 import { expect, test } from "@playwright/test";
-import { verifyBootstrapEnvelope } from "../../../packages/server/remote-config/src/index.js";
+import {
+  verifyBootstrapEnvelope,
+  verifyBootstrapEnvelopeV2,
+} from "../../../packages/server/remote-config/src/index.js";
+import { SignedBootstrapEnvelopeV2Schema } from "../../../packages/contracts/src/index.js";
 import type {
   BootstrapCacheRecord,
   BootstrapSnapshotStore,
@@ -9,6 +13,7 @@ import type {
 import {
   activateExtension,
   activateExtensionClient,
+  accountId,
   apiOrigin,
   reset,
   seedBootstrapConfig,
@@ -22,6 +27,10 @@ const request = (deviceId: string) => ({
   deviceId,
   lastConfigVersion: null,
   detectedAi: { family: "chat", surface: "page" },
+});
+const requestV2 = (deviceId: string) => ({
+  ...request(deviceId),
+  contractVersion: "control_plane_v2" as const,
 });
 const policyRequest = {
   contractVersion: "control_plane_v1" as const,
@@ -176,6 +185,53 @@ test("bootstrap returns a cryptographically verified strict snapshot", async ({
         reason: "UNSUPPORTED_DETECTED_AI",
       },
     });
+});
+
+test("a real device exchange obtains a signed V2 bootstrap bound to its account", async ({
+  page,
+}) => {
+  const credentials = await activateExtension(page);
+  await seedBootstrapConfig({ contractVersion: "control_plane_v2" });
+  const response = await bootstrap(
+    credentials.accessToken,
+    requestV2(credentials.deviceId),
+  );
+  expect(response.status).toBe(200);
+  const envelope = SignedBootstrapEnvelopeV2Schema.parse(await response.json());
+  const verified = verifyBootstrapEnvelopeV2(
+    envelope,
+    new Map([["e2e-config-k1", await verificationKey()]]),
+  );
+  expect(verified).toMatchObject({ ok: true });
+  if (verified.ok) {
+    expect(verified.payload.account).toEqual({
+      id: await accountId(),
+      status: "ACTIVE",
+    });
+    expect(verified.payload.contractVersion).toBe("control_plane_v2");
+    expect(verified.payload.snapshotVersion).toBe("bootstrap_snapshot_v2");
+  }
+  const injected = await bootstrap(credentials.accessToken, {
+    ...requestV2(credentials.deviceId),
+    accountId: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+  });
+  expect(injected.status).toBe(400);
+  const payload = JSON.parse(
+    Buffer.from(envelope.payload, "base64url").toString("utf8"),
+  ) as {
+    account: { id: string; status: string };
+  };
+  payload.account.id = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
+  const tampered = {
+    ...envelope,
+    payload: Buffer.from(JSON.stringify(payload)).toString("base64url"),
+  };
+  expect(
+    verifyBootstrapEnvelopeV2(
+      tampered,
+      new Map([["e2e-config-k1", await verificationKey()]]),
+    ),
+  ).toMatchObject({ ok: false });
 });
 
 test("UPDATE_REQUIRED remains a signed successful bootstrap response", async ({

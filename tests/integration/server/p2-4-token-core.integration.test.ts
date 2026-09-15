@@ -4,6 +4,7 @@ import {
   ExtensionAuthService,
   createEphemeralAccessTokenSigningKey,
   deriveExtensionAuthKeys,
+  issueAccessToken,
 } from "../../../packages/server/extension-auth/src/index.js";
 import {
   createDatabaseRuntime,
@@ -87,6 +88,119 @@ describe.sequential("P2.4 real PostgreSQL token-core matrix", () => {
       ok: false,
       code: "EXTENSION_AUTH_UNAUTHORIZED",
     });
+  });
+
+  it("T2-B fails closed when durable session, device, and account bindings disagree", async () => {
+    const state = await activeSession();
+    const otherAccountId = randomUUID();
+    await query("INSERT INTO accounts(id) VALUES($1)", [otherAccountId]);
+    await query("UPDATE sessions SET account_id=$2 WHERE id=$1", [
+      state.sessionId,
+      otherAccountId,
+    ]);
+
+    expect(await service().issue(state.sessionId)).toEqual({
+      ok: false,
+      code: "EXTENSION_AUTH_UNAUTHORIZED",
+    });
+  });
+
+  it("T2-B rejects signed claim mismatches and unknown sessions against live PostgreSQL authority", async () => {
+    const state = await activeSession();
+    const tokens = [
+      await issueAccessToken(
+        signingKey,
+        {
+          sessionId: state.sessionId,
+          deviceId: state.deviceId,
+          accountId: randomUUID(),
+        },
+        new Date(),
+      ),
+      await issueAccessToken(
+        signingKey,
+        {
+          sessionId: state.sessionId,
+          deviceId: randomUUID(),
+          accountId: state.accountId,
+        },
+        new Date(),
+      ),
+      await issueAccessToken(
+        signingKey,
+        {
+          sessionId: randomUUID(),
+          deviceId: state.deviceId,
+          accountId: state.accountId,
+        },
+        new Date(),
+      ),
+    ];
+    for (const token of tokens)
+      expect(await service().authenticateAccess(token)).toEqual({
+        ok: false,
+        code: "EXTENSION_AUTH_UNAUTHORIZED",
+      });
+  });
+
+  it("T2-A fails closed for forbidden account, user, and session state", async () => {
+    const accountState = await activeSession();
+    const accountToken = value(await service().issue(accountState.sessionId));
+    await query("UPDATE accounts SET status='SUSPENDED' WHERE id=$1", [
+      accountState.accountId,
+    ]);
+    expect(
+      await service().authenticateAccess(accountToken.accessToken),
+    ).toMatchObject({
+      ok: false,
+      code: "EXTENSION_AUTH_UNAUTHORIZED",
+    });
+    expect(
+      await service().refresh(
+        accountToken.refreshToken,
+        "A".repeat(16),
+        "account-forbidden",
+      ),
+    ).toEqual({ ok: false, code: "EXTENSION_AUTH_INVALID" });
+
+    const userState = await activeSession();
+    const userToken = value(await service().issue(userState.sessionId));
+    await query("UPDATE users SET status='SUSPENDED' WHERE id=$1", [
+      userState.userId,
+    ]);
+    expect(
+      await service().authenticateAccess(userToken.accessToken),
+    ).toMatchObject({
+      ok: false,
+      code: "EXTENSION_AUTH_UNAUTHORIZED",
+    });
+    expect(
+      await service().refresh(
+        userToken.refreshToken,
+        "B".repeat(16),
+        "user-forbidden",
+      ),
+    ).toEqual({ ok: false, code: "EXTENSION_AUTH_INVALID" });
+
+    const sessionState = await activeSession();
+    const sessionToken = value(await service().issue(sessionState.sessionId));
+    await query(
+      "UPDATE sessions SET status='REVOKED',revoked_at=now() WHERE id=$1",
+      [sessionState.sessionId],
+    );
+    expect(
+      await service().authenticateAccess(sessionToken.accessToken),
+    ).toMatchObject({
+      ok: false,
+      code: "EXTENSION_AUTH_UNAUTHORIZED",
+    });
+    expect(
+      await service().refresh(
+        sessionToken.refreshToken,
+        "C".repeat(16),
+        "session-forbidden",
+      ),
+    ).toEqual({ ok: false, code: "EXTENSION_AUTH_INVALID" });
   });
 
   it("T2-C/D atomically rotates once under real concurrent same-request retries and returns the deterministic replacement", async () => {
@@ -178,6 +292,28 @@ describe.sequential("P2.4 real PostgreSQL token-core matrix", () => {
       "SELECT column_name FROM information_schema.columns WHERE table_schema='public' AND column_name IN ('refresh_token','access_token')",
     );
     expect(columns.rows).toEqual([]);
+  });
+
+  it("T2-H refuses to rotate when durable device authority is revoked", async () => {
+    const state = await activeSession();
+    const original = value(await service().issue(state.sessionId));
+    await query(
+      "UPDATE devices SET status='REVOKED',revoked_at=now() WHERE id=$1",
+      [state.deviceId],
+    );
+
+    expect(
+      await service().refresh(
+        original.refreshToken,
+        "V".repeat(16),
+        "revoked-device",
+      ),
+    ).toEqual({ ok: false, code: "EXTENSION_AUTH_INVALID" });
+    const rows = await query<{ count: string }>(
+      "SELECT count(*)::text AS count FROM refresh_tokens WHERE session_id=$1",
+      [state.sessionId],
+    );
+    expect(rows.rows[0]?.count).toBe("1");
   });
 
   it("T2-I consumes invalid schema-valid refresh attempts in a committed pseudonymous IP bucket", async () => {

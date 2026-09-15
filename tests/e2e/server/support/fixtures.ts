@@ -296,6 +296,7 @@ export async function seedBootstrapConfig(
     minimumExtensionVersion?: string;
     signingKeyId?: string;
     unsupportedChrome?: boolean;
+    contractVersion?: "control_plane_v1" | "control_plane_v2";
   } = {},
 ) {
   const database = createDatabaseRuntime(process.env.DATABASE_URL!);
@@ -304,6 +305,15 @@ export async function seedBootstrapConfig(
     actorType: "SYSTEM" as const,
     correlationId: "e2e-bootstrap",
   };
+  const contractVersion = options.contractVersion ?? "control_plane_v1";
+  const snapshotVersion =
+    contractVersion === "control_plane_v1"
+      ? "bootstrap_snapshot_v1"
+      : "bootstrap_snapshot_v2";
+  const envelopeVersion =
+    contractVersion === "control_plane_v1"
+      ? "bootstrap_envelope_v1"
+      : "bootstrap_envelope_v2";
   const publishedAt = new Date("2026-09-04T00:00:00.000Z");
   try {
     await publication.publishExtensionRelease(
@@ -311,7 +321,7 @@ export async function seedBootstrapConfig(
         version: "1.2.3",
         releaseChannel: "stable",
         releasedAt: publishedAt,
-        supportedContracts: ["control_plane_v1"],
+        supportedContracts: [contractVersion],
         supportedBrowsers: options.unsupportedChrome
           ? ["yandex_chromium"]
           : ["chrome"],
@@ -321,7 +331,7 @@ export async function seedBootstrapConfig(
     const compatibility = await publication.publishCompatibilityPolicyRevision(
       {
         policyKey: "e2e-bootstrap-policy",
-        contractVersion: "control_plane_v1",
+        contractVersion,
         browserFamily: null,
         minimumExtensionVersion: options.minimumExtensionVersion ?? "1.0.0",
         recommendedExtensionVersion:
@@ -341,7 +351,7 @@ export async function seedBootstrapConfig(
     const feature = await publication.publishFeatureRuleRevision(
       {
         featureKey: "feature-e2e",
-        contractVersion: "control_plane_v1",
+        contractVersion,
         enabled: true,
         browserFamily: null,
         minimumExtensionVersion: "1.0.0",
@@ -351,9 +361,9 @@ export async function seedBootstrapConfig(
     );
     const config = await publication.publishConfigRelease(
       {
-        contractVersion: "control_plane_v1",
-        snapshotVersion: "bootstrap_snapshot_v1",
-        envelopeVersion: "bootstrap_envelope_v1",
+        contractVersion,
+        snapshotVersion,
+        envelopeVersion,
         signingKeyId: options.signingKeyId ?? "e2e-config-k1",
         compatibilityPolicyRevisionIds: [compatibility.id],
         featureRuleRevisionIds: [feature.id],
