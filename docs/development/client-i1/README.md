@@ -2,7 +2,7 @@
 
 Status: development candidate implementation complete in the assigned client branch. This is not a release, beta acceptance, full I1, D3 logout, or preprod evidence.
 
-Base: `bc0cd0088ca50ba06021ea602a46bdd90de91378` (fresh `origin/main` at start). Initial assigned head: `ba7ca3185dd3e3141af505697642e07b49d6e864`. The published head is recorded after the implementation commit.
+Base: `bc0cd0088ca50ba06021ea602a46bdd90de91378` (fresh `origin/main` at start). Initial assigned head: `ba7ca3185dd3e3141af505697642e07b49d6e864`. Implementation head before publication: `b00fc7c3cc2fe14f9833fa48947e95b5a8a755ca`.
 
 ## Implemented
 

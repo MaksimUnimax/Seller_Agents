@@ -3,6 +3,7 @@
   "environment": "LOCAL DEVELOPMENT",
   "base": "bc0cd0088ca50ba06021ea602a46bdd90de91378",
   "task_head": "ba7ca3185dd3e3141af505697642e07b49d6e864",
+  "implementation_head": "b00fc7c3cc2fe14f9833fa48947e95b5a8a755ca",
   "requirements": {
     "SA-AUTH-01": ["A13", "device activation, privileged token storage, stable polling/refresh generation"],
     "SA-SHOP-01": ["A20", "signed V2 account-scoped catalog"],
