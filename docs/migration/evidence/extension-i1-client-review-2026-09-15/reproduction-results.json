@@ -1,0 +1,64 @@
+{
+  "head": "2a98057646af52eee0f654997b3f60f6322dfb04",
+  "method": "Unmodified source modules, Node VM, controlled API responses, ephemeral Ed25519 keys; not live/installed acceptance",
+  "findings": [
+    {
+      "id": "F1_CANCELLED_START_RESURRECTS",
+      "reproduced": true,
+      "pendingAfterCancel": true,
+      "portalTabsOpenedAfterCancel": 1,
+      "exchangeStartedAfterCancel": true
+    },
+    {
+      "id": "F2_REJECTED_BOOTSTRAP_RETAINS_AUTHORITY",
+      "reproduced": true,
+      "responseCode": "UNAUTHORIZED",
+      "authenticatedAfterRejection": true,
+      "workAllowedAfterRejection": true,
+      "invalidationEvents": 0
+    },
+    {
+      "id": "F3_LATE_REFRESH_INVALID_LOGS_OUT_NEW_ACCOUNT",
+      "reproduced": true,
+      "newAccountWasAuthenticated": true,
+      "authenticatedAfterOldFailure": false,
+      "finalError": "AUTH_REFRESH_INVALID"
+    },
+    {
+      "id": "F4_UNBOUND_AI_POLICY_PERMITS_WORK",
+      "reproduced": true,
+      "requestedAi": "alice",
+      "grantedSnapshotAi": "chatgpt",
+      "accessBasis": "BETA",
+      "workAllowed": true,
+      "profileContentIsEmpty": true
+    },
+    {
+      "id": "F5_UNCHANGED_BOOTSTRAP_INVALIDATION_CALLBACK",
+      "reproduced": true,
+      "sameAccount": true,
+      "invalidationCallbacks": 2,
+      "runtimeConsumer": "saInvalidateAuthority finishes every active binding"
+    },
+    {
+      "id": "F6_OVERSIZE_SIGNED_ENVELOPE_ACCEPTED",
+      "reproduced": true,
+      "actualPayloadEncodedLength": 35882,
+      "acceptedSchemaMaximum": 32768
+    },
+    {
+      "id": "F7_RESTART_FIXTURE_REPLACES_TRUST_KEY",
+      "reproduced": true,
+      "sameBacking": true,
+      "authenticatedAfterRestart": false,
+      "error": "STORED_AUTHORITY_INVALID_SIGNATURE",
+      "scope": "original makeWorker with a minimal loader for the unmodified client modules"
+    },
+    {
+      "id": "F8_VALID_CONTRACT_IDENTIFIER_REJECTED",
+      "reproduced": true,
+      "validServerIdentifier": "1flag",
+      "clientError": "INVALID_PAYLOAD_SCHEMA"
+    }
+  ]
+}
