@@ -15,6 +15,18 @@ function canonical(value) {
 }
 const b64url = (value) => Buffer.from(value).toString("base64url");
 
+export async function signFixtureBootstrap(backing, payload, keyId = "fixture-key") {
+  const stored = backing.local.__seller_agents_fixture_signing_key;
+  assert.ok(stored, "fixture signing key is worker-local backing state");
+  const privateKey = await webcrypto.subtle.importKey("pkcs8", Buffer.from(stored.privateKey, "base64"), { name: "Ed25519" }, false, ["sign"]);
+  const payloadBytes = new TextEncoder().encode(canonical(payload));
+  const domain = new Uint8Array([...new TextEncoder().encode("product-control-plane/bootstrap-snapshot/v1"), 0, ...new TextEncoder().encode(keyId), 0]);
+  const signed = new Uint8Array(domain.length + payloadBytes.length);
+  signed.set(domain); signed.set(payloadBytes, domain.length);
+  const signature = await webcrypto.subtle.sign("Ed25519", privateKey, signed);
+  return { envelopeVersion: "bootstrap_envelope_v2", algorithm: "Ed25519", keyId, payload: b64url(payloadBytes), signature: b64url(Buffer.from(signature)) };
+}
+
 export async function until(fn, description) {
   const end = Date.now() + 3500;
   while (Date.now() < end) {
@@ -29,6 +41,7 @@ export async function makeWorker(directory, options = {}) {
     messages = [],
     listeners = [],
     connectListeners = [],
+    storageChangedListeners = [],
     timers = new Set();
   const backing = options.backing || { local: {}, session: {} };
   const accountId = options.accountId || "11111111-1111-4111-8111-111111111111";
@@ -143,7 +156,7 @@ export async function makeWorker(directory, options = {}) {
     storage: {
       local: area("local"),
       session: area("session"),
-      onChanged: { addListener() {} },
+      onChanged: { addListener(fn) { if (typeof fn === "function") storageChangedListeners.push(fn); } },
     },
     runtime: {
       lastError: null,
@@ -238,6 +251,7 @@ export async function makeWorker(directory, options = {}) {
     Headers,
     AbortController,
     Blob,
+    navigator: { userAgent: options.userAgent || "" },
     indexedDB: options.indexedDB,
     __SELLER_AGENTS_PACKAGED_CONFIG__: JSON.stringify(fixtureConfig),
     structuredClone,
@@ -300,7 +314,7 @@ export async function makeWorker(directory, options = {}) {
   // Default sender reflects the mature popup/content ownership of each message.
   let fixtureStoreId = null;
   const adaptFixtureMessage = (message) => {
-    if (message.type === "OZ_SAVE_GLOBAL_SETTINGS") return { type: "SA_STORE_SAVE", store: { id: fixtureStoreId, marketplace: "ozon", name: "Ozon fixture", personalDataEnabled: message.personal_data_enabled === true, credentials: { seller: { clientId: message.seller_client_id || "FIXTURE_CLIENT", apiKey: message.seller_api_key || "FIXTURE_KEY" }, performance: { clientId: message.performance_client_id || "", clientSecret: message.performance_client_secret || "" } } } };
+    if (message.type === "OZ_SAVE_GLOBAL_SETTINGS") return { type: "SA_STORE_SAVE", store: { id: fixtureStoreId, marketplace: "ozon", name: "Ozon fixture", personalDataEnabled: message.personal_data_enabled === true, credentials: { seller: { clientId: message.seller_client_id || "FIXTURE_CLIENT", apiKey: message.seller_api_key || "FIXTURE_KEY" }, performance: { clientId: message.performance_client_id || "FIXTURE_PERFORMANCE_CLIENT", clientSecret: message.performance_client_secret || "FIXTURE_PERFORMANCE_SECRET" } } } };
     if (message.type === "OZ_WORK_START") return { type: "SA_WORK_START", store_id: fixtureStoreId, tab_id: message.tab_id, confirm_change: true, start_intent_id: message.start_intent_id || crypto.randomUUID() };
     return message;
   };
@@ -345,9 +359,10 @@ export async function makeWorker(directory, options = {}) {
         for (const fn of handlers) fn(clone({ ...message, request_id: "fixture-port", live_owner: identity }));
       });
     },
+    listenerCounts() { return { attachmentPorts: connectListeners.length, storageWake: storageChangedListeners.length, runtime: listeners.length }; },
     call,
     async settings() {
-      const response = await request({ type: "SA_STORE_SAVE", store: { id: fixtureStoreId, marketplace: "ozon", name: "Ozon fixture", personalDataEnabled: true, credentials: { seller: { clientId: "FIXTURE_CLIENT", apiKey: "FIXTURE_KEY" }, performance: {} } } }, { url: chrome.runtime.getURL("popup.html") });
+      const response = await request({ type: "SA_STORE_SAVE", store: { id: fixtureStoreId, marketplace: "ozon", name: "Ozon fixture", personalDataEnabled: true, credentials: { seller: { clientId: "FIXTURE_CLIENT", apiKey: "FIXTURE_KEY" }, performance: { clientId: "FIXTURE_PERFORMANCE_CLIENT", clientSecret: "FIXTURE_PERFORMANCE_SECRET" } } } }, { url: chrome.runtime.getURL("popup.html") });
       if (response?.ok) fixtureStoreId = response.store.id;
       assert.equal(response.ok, true, JSON.stringify(response));
     },

@@ -41,6 +41,10 @@
     if (context.rotationKey && state.rotation?.idempotencyKey !== context.rotationKey) return false;
     return true;
   }
+  function validContext(context) {
+    if (!context || typeof context !== "object" || !Number.isSafeInteger(context.generation) || context.generation < 0) return false;
+    return ["attemptId", "deviceId", "sessionId", "rotationKey"].every(key => context[key] === undefined || context[key] === null || typeof context[key] === "string");
+  }
   function contextForState(extra = {}) { return { generation: state.generation, attemptId: state.pending?.attemptId || null, deviceId: state.credentials?.deviceId || null, sessionId: state.credentials?.sessionId || null, ...extra }; }
   function commitIfCurrent(context, updater, reason = "state_changed") { return queueMutation(async () => { if (!isCurrent(context)) return false; const next = await updater(clone(state)); if (!next || !isCurrent(context)) return false; await commit(next, state.authority, reason); return true; }); }
   function validCredentials(value) { return value && UUID.test(value.deviceId) && UUID.test(value.sessionId) && value.tokenType === "Bearer" && TOKEN.test(value.accessToken) && OPAQUE_TOKEN.test(value.refreshToken) && Number.isFinite(Date.parse(value.accessTokenExpiresAt)) && Number.isFinite(Date.parse(value.refreshTokenExpiresAt)); }
@@ -48,7 +52,11 @@
   function pendingLive(value) { return value?.phase !== "starting" && validPending(value) && Date.parse(value.expiresAt) > now(); }
   function publicPending(value) { if (!value) return null; return { authorizationId: value.authorizationId, userCode: value.userCode, expiresAt: value.expiresAt, verificationUri: url(`/activate?authorizationId=${encodeURIComponent(value.authorizationId)}`, config.portalOrigin) }; }
   function publicStatus() { const authority = state.authority, accountId = authority?.payload?.account?.id || null, snapshot = authority?.payload || null; return Object.freeze({ authenticated: Boolean(state.credentials && authority && accountId), accountId, account: accountId ? { kind: "control_account", label: `Аккаунт · ${accountId.slice(0, 8)}` } : null, pending: pendingLive(state.pending) ? publicPending(state.pending) : null, lastError: state.lastError, generation: state.generation, workAllowed: Boolean(accountId && state.authority?.workAllowed && canWork(snapshot)), authority: authority ? { configVersion: snapshot.configVersion, expiresAt: snapshot.expiresAt, aiStatus: snapshot.ai.status } : null }); }
-  function canWork(snapshot) { return Boolean(snapshot && snapshot.account?.status === "ACTIVE" && snapshot.devicePolicy?.status === "ACTIVE" && ["SUPPORTED", "UPDATE_RECOMMENDED"].includes(snapshot.compatibility?.extension?.status) && snapshot.compatibility?.browser?.status === "SUPPORTED" && snapshot.ai?.status === "RESOLVED" && Date.parse(snapshot.expiresAt) > now() && ["chatgpt", "alice"].includes(snapshot.ai.detected?.family)); }
+  function authorityBaseValid(snapshot) {
+    const extension = snapshot?.compatibility?.extension;
+    return Boolean(snapshot && snapshot.account?.status === "ACTIVE" && snapshot.devicePolicy?.status === "ACTIVE" && ["SUPPORTED", "UPDATE_RECOMMENDED"].includes(extension?.status) && snapshot.compatibility?.browser?.status === "SUPPORTED" && Date.parse(snapshot.expiresAt) > now() && (extension.minimumVersion === null || (parseSemver(extension.minimumVersion) && versionAtLeast(config.extensionVersion, extension.minimumVersion))));
+  }
+  function canWork(snapshot) { return Boolean(authorityBaseValid(snapshot) && snapshot.ai?.status === "RESOLVED" && ["chatgpt", "alice"].includes(snapshot.ai.detected?.family)); }
   function browserFamily() { const ua = typeof navigator === "object" ? String(navigator.userAgent || "").toLowerCase() : ""; return ua.includes("yabrowser") ? "yandex_chromium" : "chrome"; }
   function browserVersion() { const ua = typeof navigator === "object" ? String(navigator.userAgent || "") : ""; const match = ua.match(/(?:Chrome|YaBrowser)\/(\d+(?:\.\d+){0,3})/i); return match ? match[1] : "0.0.0"; }
   function parseRetryAfter(response) { const value = response.headers?.get("Retry-After"); if (!value) return 1000; const seconds = Number(value); if (Number.isFinite(seconds)) return Math.max(250, Math.min(60000, seconds * 1000)); const date = Date.parse(value); return Number.isFinite(date) ? Math.max(250, Math.min(60000, date - now())) : 1000; }
@@ -71,7 +79,7 @@
     for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
     return decoder.decode(bytes);
   }
-  async function request(path, options = {}) { const headers = new Headers(options.headers || {}); headers.set("Accept", "application/json"); if (options.body !== undefined) { headers.set("Content-Type", "application/json"); options.body = JSON.stringify(options.body); } const response = await fetch(url(path), { ...options, headers }); let body = null; try { const text = await readLimitedBody(response); body = text ? JSON.parse(text) : null; } catch (failure) { if (failure?.code === "CONTROL_RESPONSE_TOO_LARGE") throw failure; } if (!response.ok) { const failure = error(body?.error?.code || `CONTROL_HTTP_${response.status}`); failure.status = response.status; failure.retryAfterMs = parseRetryAfter(response); failure.body = body; throw failure; } return { body, response }; }
+  async function request(path, options = {}) { const headers = new Headers(options.headers || {}); headers.set("Accept", "application/json"); if (options.body !== undefined) { headers.set("Content-Type", "application/json"); options.body = JSON.stringify(options.body); } const response = await fetch(url(path), { ...options, headers }); let body = null; try { const text = await readLimitedBody(response); body = text ? JSON.parse(text) : null; } catch (failure) { if (failure?.code === "CONTROL_RESPONSE_TOO_LARGE") { failure.status = response.status; failure.responseOk = response.ok; failure.retryAfterMs = parseRetryAfter(response); failure.body = null; } else { failure = null; } if (failure) throw failure; } if (!response.ok) { const failure = error(body?.error?.code || `CONTROL_HTTP_${response.status}`); failure.status = response.status; failure.retryAfterMs = parseRetryAfter(response); failure.body = body; throw failure; } return { body, response }; }
   function assertStart(body) { if (!body || body.status !== "pending" || !UUID.test(body.authorizationId) || !OPAQUE_TOKEN.test(body.deviceCode) || !/^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{4}-[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{4}$/.test(body.userCode) || !Number.isFinite(Date.parse(body.expiresAt))) throw error("INVALID_DEVICE_AUTH_RESPONSE"); return body; }
   function assertTokens(body) { if (!body || body.status !== "activated" || !validCredentials(body)) throw error("INVALID_TOKEN_RESPONSE"); return { deviceId: body.deviceId, sessionId: body.sessionId, tokenType: body.tokenType, accessToken: body.accessToken, accessTokenExpiresAt: body.accessTokenExpiresAt, refreshToken: body.refreshToken, refreshTokenExpiresAt: body.refreshTokenExpiresAt }; }
   function assertRefreshTokens(body, previous) { if (!body || body.tokenType !== "Bearer" || typeof body.accessToken !== "string" || !body.accessToken || !OPAQUE_TOKEN.test(body.refreshToken || "") || !Number.isFinite(Date.parse(body.accessTokenExpiresAt)) || !Number.isFinite(Date.parse(body.refreshTokenExpiresAt))) throw error("INVALID_REFRESH_RESPONSE"); return { deviceId: previous.deviceId, sessionId: previous.sessionId, tokenType: body.tokenType, accessToken: body.accessToken, accessTokenExpiresAt: body.accessTokenExpiresAt, refreshToken: body.refreshToken, refreshTokenExpiresAt: body.refreshTokenExpiresAt }; }
@@ -122,7 +130,7 @@
   }
   async function startActivation() {
     await init(); if (state.credentials && state.authority) return { ...publicStatus(), portalUrl: null };
-    if (state.credentials && !state.authority) { try { await bootstrap(); } catch (failure) { await queueMutation(async () => { await commit({ ...state, lastError: safeError(failure) }, state.authority, "bootstrap_failed"); }); } return { ...publicStatus(), portalUrl: null }; }
+    if (state.credentials && !state.authority) { const context = contextForState(); try { await bootstrap({ context }); } catch (failure) { await commitIfCurrent(context, current => ({ ...current, lastError: safeError(failure) }), "bootstrap_failed"); } return { ...publicStatus(), portalUrl: null }; }
     if (pendingLive(state.pending)) { const context = contextForState(); const portalUrl = await openPortal(state.pending.authorizationId); if (isCurrent(context)) void ensurePolling(); return { ...publicStatus(), portalUrl: isCurrent(context) ? portalUrl : null }; }
     if (ownerCurrent(activationFlight)) return activationFlight.promise;
     activationFlight = null;
@@ -139,20 +147,25 @@
     activationFlight = owner; return owner.promise;
   }
   async function refresh(options = {}) {
+    if (!options || typeof options !== "object" || Array.isArray(options) || options.context !== undefined && !validContext(options.context)) throw error("AUTH_CONTEXT_INVALID");
     await init();
+    const entryContext = options.context ? clone(options.context) : contextForState();
+    if (!isCurrent(entryContext)) throw error("AUTH_GENERATION_CHANGED");
     const forced = options.force === true, rejectedAccessToken = options.rejectedAccessToken;
     if (!state.credentials) throw error("AUTH_REQUIRED");
-    if (forced && rejectedAccessToken && state.credentials.accessToken !== rejectedAccessToken) return clone(state.credentials);
-    if (!forced && accessFresh() && !state.rotation) return clone(state.credentials);
-    const expected = options.context;
-    if (expected && !isCurrent(expected)) throw error("AUTH_GENERATION_CHANGED");
-    if (ownerCurrent(refreshFlight)) return refreshFlight.promise;
+    if (forced && rejectedAccessToken && state.credentials.accessToken !== rejectedAccessToken) { if (!isCurrent(entryContext)) throw error("AUTH_GENERATION_CHANGED"); return clone(state.credentials); }
+    if (!forced && accessFresh() && !state.rotation) { if (!isCurrent(entryContext)) throw error("AUTH_GENERATION_CHANGED"); return clone(state.credentials); }
+    if (ownerCurrent(refreshFlight) && refreshFlight.context && isCurrent(refreshFlight.context) && refreshFlight.context.generation === entryContext.generation && refreshFlight.context.deviceId === entryContext.deviceId && refreshFlight.context.sessionId === entryContext.sessionId) return refreshFlight.promise;
     refreshFlight = null;
-    const owner = { context: null, promise: null };
+    const owner = { context: entryContext, promise: null };
     owner.promise = (async () => {
-      const prepared = await queueMutation(async () => { if (!state.credentials) throw error("AUTH_REQUIRED"); const context = contextForState(); let rotation = state.rotation; if (!rotation || rotation.generation !== context.generation || rotation.refreshToken !== state.credentials.refreshToken) { rotation = { generation: context.generation, refreshToken: state.credentials.refreshToken, idempotencyKey: key() }; await commit({ ...state, rotation }, state.authority, "refresh_prepared"); } return { context: { ...context, rotationKey: rotation.idempotencyKey }, rotation, credentials: clone(state.credentials) }; });
+      const prepared = await queueMutation(async () => { if (!isCurrent(entryContext)) throw error("AUTH_GENERATION_CHANGED"); if (!state.credentials) throw error("AUTH_REQUIRED"); const context = contextForState(); let rotation = state.rotation; if (!rotation || rotation.generation !== context.generation || rotation.refreshToken !== state.credentials.refreshToken) { rotation = { generation: context.generation, refreshToken: state.credentials.refreshToken, idempotencyKey: key() }; await commit({ ...state, rotation }, state.authority, "refresh_prepared"); } const preparedContext = { ...context, rotationKey: rotation.idempotencyKey }; owner.context = preparedContext; return { context: preparedContext, rotation, credentials: clone(state.credentials) }; });
+      if (!isCurrent(prepared.context)) throw error("AUTH_GENERATION_CHANGED");
       owner.context = prepared.context;
-      const result = await request("/v1/auth/refresh", { method: "POST", headers: { "Idempotency-Key": prepared.rotation.idempotencyKey }, body: { refreshToken: prepared.rotation.refreshToken } }); const credentials = assertRefreshTokens(result.body, prepared.credentials); if (!await commitIfCurrent(prepared.context, current => ({ ...current, credentials, rotation: null, lastError: null }), "refresh_rotated")) throw error("AUTH_GENERATION_CHANGED"); return clone(credentials);
+      let result;
+      try { result = await request("/v1/auth/refresh", { method: "POST", headers: { "Idempotency-Key": prepared.rotation.idempotencyKey }, body: { refreshToken: prepared.rotation.refreshToken } }); }
+      catch (failure) { if (failure?.status || !isCurrent(prepared.context)) throw failure; result = await request("/v1/auth/refresh", { method: "POST", headers: { "Idempotency-Key": prepared.rotation.idempotencyKey }, body: { refreshToken: prepared.rotation.refreshToken } }); }
+      const credentials = assertRefreshTokens(result.body, prepared.credentials); if (!await commitIfCurrent(prepared.context, current => ({ ...current, credentials, rotation: null, lastError: null }), "refresh_rotated")) throw error("AUTH_GENERATION_CHANGED"); return clone(credentials);
     })().catch(async failure => { if (failure.code === "AUTH_REFRESH_INVALID" && owner.context) await invalidateKnown(owner.context, failure, true); throw failure; }).finally(() => { if (refreshFlight === owner) refreshFlight = null; });
     refreshFlight = owner; return owner.promise;
   }
@@ -202,7 +215,14 @@
     const browserMin = compatibility.minimumBrowserVersions.find(x => x.browserFamily === browserFamily()); return !browserMin || versionAtLeast(browserVersion(), browserMin.minimumVersion, true);
   }
   async function profileFingerprint(profile) { const bytes = new TextEncoder().encode(verifier.canonicalJson({ content: profile.content, compatibility: profile.compatibility })); return [...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes))].map(x => x.toString(16).padStart(2, "0")).join(""); }
-  async function validateOperationalAuthority(payload, requestedAi = null) { if (!canWork(payload) || !validProfileShape(payload.ai.profile)) return false; const topMinimum = payload.compatibility?.extension?.minimumVersion; if (topMinimum !== null && !versionAtLeast(config.extensionVersion, topMinimum)) return false; const expected = requestedAi ? LOCAL_AI[requestedAi] : LOCAL_AI[payload.ai.detected.family], detected = payload.ai.detected; if (!expected || detected.family !== (requestedAi || detected.family) || detected.surface !== expected.surface || detected.variant !== null || payload.ai.profile.scopeVariant !== null) return false; return (await profileFingerprint(payload.ai.profile)) === payload.ai.profile.contentSha256; }
+  async function validateOperationalAuthority(payload, requestedAi = null) { if (!authorityBaseValid(payload) || !canWork(payload) || !validProfileShape(payload.ai.profile)) return false; const expected = requestedAi ? LOCAL_AI[requestedAi] : LOCAL_AI[payload.ai.detected.family], detected = payload.ai.detected; if (!expected || detected.family !== (requestedAi || detected.family) || detected.surface !== expected.surface || detected.variant !== null || payload.ai.profile.scopeVariant !== null) return false; return (await profileFingerprint(payload.ai.profile)) === payload.ai.profile.contentSha256; }
+  async function validateBootstrapAuthority(payload, requestedAi = null) {
+    if (!authorityBaseValid(payload) || requestedAi && !LOCAL_AI[requestedAi]) return null;
+    if (payload.ai.status === "UNCONFIGURED") return requestedAi === null ? { workAllowed: false, requestedAi: null } : null;
+    if (payload.ai.status !== "RESOLVED") return null;
+    if (!await validateOperationalAuthority(payload, requestedAi)) return null;
+    return { workAllowed: true, requestedAi: requestedAi || payload.ai.detected.family };
+  }
   async function requestBootstrap(credentials, authority, detectedAi) { return request("/v1/bootstrap", { method: "POST", headers: { Authorization: `Bearer ${credentials.accessToken}` }, body: bootstrapRequest(detectedAi, credentials, authority) }); }
   function terminalAuthFailure(failure) { return failure?.code === "AUTH_REFRESH_INVALID" || failure?.status === 401 || ["AUTH_INVALID", "DEVICE_REVOKED"].includes(failure?.code); }
   async function invalidateKnown(context, failure, terminal = terminalAuthFailure(failure)) {
@@ -230,7 +250,8 @@
   }
   async function invalidateUnauthorized(context, failure) { return invalidateKnown(context, failure, true); }
   async function bootstrap(options = {}) {
-    await init(); if (!state.credentials) throw error("AUTH_REQUIRED"); const requestedAi = options.detectedAi?.family || null; if (!accessFresh()) await refresh(); let context = options.context || contextForState(), credentials = clone(state.credentials), authority = clone(state.authority), retried = false;
+    if (!options || typeof options !== "object" || Array.isArray(options) || options.context !== undefined && !validContext(options.context)) throw error("AUTH_CONTEXT_INVALID");
+    await init(); if (!state.credentials) throw error("AUTH_REQUIRED"); const context = options.context ? clone(options.context) : contextForState(); if (!isCurrent(context)) throw error("AUTH_GENERATION_CHANGED"); const requestedAi = options.detectedAi?.family || null; if (options.detectedAi && (!LOCAL_AI[requestedAi] || options.detectedAi.surface !== LOCAL_AI[requestedAi].surface || options.detectedAi.variant !== null)) { const failure = error("BOOTSTRAP_PROFILE_INCOMPATIBLE"); await invalidateKnown(context, failure, false); throw failure; } if (!accessFresh()) { await refresh({ context }); if (!isCurrent(context)) throw error("AUTH_GENERATION_CHANGED"); } let credentials = clone(state.credentials), authority = clone(state.authority), retried = false;
     while (true) {
       if (!isCurrent(context)) throw error("AUTH_GENERATION_CHANGED");
       let result;
@@ -243,7 +264,7 @@
           credentials = clone(state.credentials); authority = clone(state.authority); continue;
         }
         if (failure.status === 401) await invalidateUnauthorized(context, failure);
-        else if (failure.status === 403) await invalidateKnown(context, failure, false);
+        else if (failure.status === 403 || (failure.code === "CONTROL_RESPONSE_TOO_LARGE" && failure.status === 200)) await invalidateKnown(context, failure, false);
         throw failure;
       }
       let verified;
@@ -251,19 +272,16 @@
       catch (verificationFailure) { const failure = error(`BOOTSTRAP_${verificationFailure?.code || "VERIFICATION_FAILED"}`); await invalidateKnown(context, failure, false); throw failure; }
       if (!isCurrent(context)) throw error("AUTH_GENERATION_CHANGED");
       if (!verified.ok) { const failure = error(`BOOTSTRAP_${verified.error}`); await invalidateKnown(context, failure, false); throw failure; }
-      if (verified.payload.account.status !== "ACTIVE" || verified.payload.devicePolicy.status !== "ACTIVE" || verified.payload.compatibility.browser.status !== "SUPPORTED" || Date.parse(verified.payload.expiresAt) <= now()) { const failure = error("BOOTSTRAP_EXPIRED_OR_INCOMPATIBLE"); await invalidateKnown(context, failure, false); throw failure; }
-      let workAllowed = false;
-      try { workAllowed = await validateOperationalAuthority(verified.payload, requestedAi); }
-      catch (_) { workAllowed = false; }
-      if (!workAllowed) { const failure = error("BOOTSTRAP_PROFILE_INCOMPATIBLE"); await invalidateKnown(context, failure, false); throw failure; }
-      const nextAuthority = { verified: true, workAllowed: true, payload: verified.payload, envelope: verified.envelope, deviceId: credentials.deviceId, sessionId: credentials.sessionId, generation: context.generation, requestedAi: requestedAi || verified.payload.ai.detected?.family || null };
+      const validation = await validateBootstrapAuthority(verified.payload, requestedAi).catch(() => null);
+      if (!validation) { const failure = error("BOOTSTRAP_PROFILE_INCOMPATIBLE"); await invalidateKnown(context, failure, false); throw failure; }
+      const nextAuthority = { verified: true, workAllowed: validation.workAllowed, payload: verified.payload, envelope: verified.envelope, deviceId: credentials.deviceId, sessionId: credentials.sessionId, generation: context.generation, requestedAi: validation.requestedAi };
       if (!await commitIfCurrent(context, current => { const authorityContextChanged = current.authority && current.authority.requestedAi !== nextAuthority.requestedAi; const generation = authorityContextChanged ? current.generation + 1 : current.generation; return { ...current, generation, authority: { ...nextAuthority, generation }, lastError: null }; }, "bootstrap_verified")) throw error("AUTH_GENERATION_CHANGED"); return clone(verified.payload);
     }
   }
   async function ensureForIdentity(identity) { await init(); if (!state.credentials) throw error("AUTH_REQUIRED"); const requested = LOCAL_AI[identity?.ai_id] ? identity.ai_id : null; if (!requested) throw error("WORK_UNSUPPORTED_AI"); const current = state.authority; if (current && current.generation === state.generation && current.requestedAi === requested && current.payload?.ai?.detected?.family === requested && current.workAllowed && canWork(current.payload)) return clone(current.payload); return bootstrap({ detectedAi: { family: requested, surface: LOCAL_AI[requested].surface, variant: null } }); }
   async function restoreOnce() {
     await chrome.storage.local.setAccessLevel?.({ accessLevel: "TRUSTED_CONTEXTS" }); const result = await chrome.storage.local.get(STORAGE_KEY); const saved = result[STORAGE_KEY]; if (saved && typeof saved === "object") state = { ...state, ...clone(saved) }; if (!validCredentials(state.credentials)) state = { ...state, credentials: null, authority: null, rotation: null };
-    if (state.authority && state.credentials) { try { if (state.authority.deviceId !== state.credentials.deviceId || state.authority.sessionId !== state.credentials.sessionId || state.authority.generation !== state.generation) throw error("AUTHORITY_CREDENTIAL_MISMATCH"); const verified = await verifier.verifyV2(state.authority.envelope, config.trustBundle); if (!verified.ok) throw error(`STORED_AUTHORITY_${verified.error}`); if (verifier.canonicalJson(verified.payload) !== verifier.canonicalJson(state.authority.payload)) throw error("STORED_AUTHORITY_PAYLOAD_MISMATCH"); if (Date.parse(verified.payload.expiresAt) <= now()) throw error("BOOTSTRAP_EXPIRED"); const allowed = await validateOperationalAuthority(verified.payload, state.authority.requestedAi); if (allowed !== state.authority.workAllowed) throw error("STORED_AUTHORITY_POLICY_MISMATCH"); } catch (failure) { const previous = state.authority, next = { ...state, authority: null, lastError: safeError(failure), generation: state.generation + 1 }; await persist(next); state = next; if (previous && typeof authorityChanged === "function") { try { await authorityChanged(null, "authority_invalid", state.generation); } catch (_) {} } } }
+    if (state.authority && state.credentials) { try { if (state.authority.deviceId !== state.credentials.deviceId || state.authority.sessionId !== state.credentials.sessionId || state.authority.generation !== state.generation) throw error("AUTHORITY_CREDENTIAL_MISMATCH"); const verified = await verifier.verifyV2(state.authority.envelope, config.trustBundle); if (!verified.ok) throw error(`STORED_AUTHORITY_${verified.error}`); if (verifier.canonicalJson(verified.payload) !== verifier.canonicalJson(state.authority.payload)) throw error("STORED_AUTHORITY_PAYLOAD_MISMATCH"); const allowed = await validateBootstrapAuthority(verified.payload, state.authority.requestedAi).catch(() => null); if (!allowed || allowed.workAllowed !== state.authority.workAllowed || allowed.requestedAi !== (state.authority.requestedAi ?? null)) throw error("STORED_AUTHORITY_POLICY_MISMATCH"); } catch (failure) { const previous = state.authority, next = { ...state, authority: null, lastError: safeError(failure), generation: state.generation + 1 }; await persist(next); state = next; if (previous && typeof authorityChanged === "function") { try { await authorityChanged(null, "authority_invalid", state.generation); } catch (_) {} } } }
     initialized = true; if (pendingLive(state.pending)) void ensurePolling(); return publicStatus();
   }
   function init() { if (initialized) return Promise.resolve(publicStatus()); if (!initFlight) initFlight = restoreOnce().finally(() => { initFlight = null; }); return initFlight; }

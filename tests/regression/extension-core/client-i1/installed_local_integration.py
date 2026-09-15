@@ -69,34 +69,60 @@ def run(runtime, output):
                 else:
                     options["channel"] = "chromium"
                 context = playwright.chromium.launch_persistent_context(profile, **options)
+                stage = "browser_start"
                 try:
                     context.route("https://**/*", lambda route: route.fulfill(body=fixture, content_type="text/html") if route.request.url.startswith("https://chatgpt.com/c/") else route.abort())
+                    control_responses = []
+                    context.on("response", lambda response: control_responses.append((response.url, response.status)) if f"127.0.0.1:{api_port}/v1/" in response.url else None)
                     worker = context.service_workers[0] if context.service_workers else context.wait_for_event("serviceworker")
+                    worker_sentinel = worker.evaluate("""() => { if (!globalThis.__saI1WorkerSentinel) globalThis.__saI1WorkerSentinel = crypto.randomUUID(); return globalThis.__saI1WorkerSentinel; }""")
                     chat = context.new_page()
                     chat.goto("https://chatgpt.com/c/11111111-1111-4111-8111-111111111111")
                     popup = context.new_page()
                     popup.goto(worker.url.rsplit("/", 1)[0] + "/popup.html")
 
                     def activate(email):
+                        nonlocal worker_sentinel, stage
+                        stage = "auth_start"
                         with context.expect_page() as page_info:
                             popup.click("#auth-start")
                         portal_page = page_info.value
+                        stage = "portal_login_redirect"
                         portal_page.wait_for_load_state()
-                        if "/login" in portal_page.url:
-                            portal_page.locator('input[type="email"]').fill(email)
-                            portal_page.get_by_role("button", name="Send code").click()
-                            portal_page.locator('input[inputmode="numeric"]').fill("424242")
-                            portal_page.get_by_role("button", name="Verify").click()
-                            portal_page.wait_for_url("**/activate?authorizationId=*")
-                        code = re.search(r"[A-Z0-9]{4}-[A-Z0-9]{4}", popup.locator("#auth-code").inner_text()).group(0)
+                        portal_page.wait_for_url("**/login?returnTo=*")
+                        portal_page.locator('input[type="email"]').wait_for(state="visible")
+                        portal_page.locator('input[type="email"]').fill(email)
+                        portal_page.get_by_role("button", name="Send code").click()
+                        portal_page.locator('input[inputmode="numeric"]').wait_for(state="visible")
+                        portal_page.locator('input[inputmode="numeric"]').fill("424242")
+                        portal_page.get_by_role("button", name="Verify").click()
+                        stage = "activation_redirect"
+                        portal_page.wait_for_url("**/activate?authorizationId=*")
+                        stage = "activation_preview"
+                        portal_page.locator("dl dd").first.wait_for(state="visible")
+                        portal_page.locator('select option:not([value=""])').first.wait_for(state="attached")
+                        popup.locator("#auth-code").wait_for(state="visible")
+                        stage = "activation_approval"
+                        popup.wait_for_function("""() => { const text = document.querySelector('#auth-code')?.textContent || ''; return /[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{4}-[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{4}$/.test(text.trim()); }""")
+                        code_text = popup.locator("#auth-code").inner_text().strip()
+                        code_match = re.search(r"([ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{4}-[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{4})$", code_text)
+                        if code_match is None:
+                            raise RuntimeError("auth code UI did not reach a valid bounded state")
+                        code = code_match.group(1)
                         portal_page.locator("select").select_option(index=1)
                         portal_page.get_by_label("User code").fill(code)
                         portal_page.get_by_role("button", name="Approve").click()
-                        portal_page.get_by_role("status").wait_for()
+                        portal_page.get_by_role("status").wait_for(state="visible")
+                        if portal_page.get_by_role("status").inner_text() != "Device approved. Return to the extension to finish activation.":
+                            raise RuntimeError("device approval did not reach the successful status")
                         portal_page.close()
                         popup.wait_for_function("document.querySelector('#account').innerText.includes('Аккаунт ·')")
+                        stage = "bootstrap_observed"
+                        return worker.evaluate("""async () => { const authority = await SellerAgentsControlClient.getAuthority(); const status = await SellerAgentsControlClient.status(); return { account: authority?.payload?.account?.id || null, device: authority?.deviceId || null, session: authority?.sessionId || null, authenticated: status.authenticated, workAllowed: status.workAllowed }; }""")
 
-                    activate("i1-client-one@example.test")
+                    first_identity = activate("i1-client-one@example.test")
+                    assert first_identity["authenticated"] is True and first_identity["workAllowed"] is False
+                    assert popup.locator("#catalog").is_visible()
                     first_account = popup.locator("#account").inner_text()
                     popup.click("#wildberries")
                     popup.click("#add")
@@ -107,20 +133,29 @@ def run(runtime, output):
                     # Portal logout only clears the portal cookie; extension D3 logout is not tested here.
                     portal_page = context.new_page()
                     portal_page.goto(f"http://127.0.0.1:{portal_port}/")
-                    portal_page.evaluate("""async () => { const csrf = document.cookie.split(';').map(x => x.trim()).find(x => x.startsWith('pcp_csrf=')); await fetch('/api/control-plane/v1/auth/logout', {method:'POST', headers: csrf ? {'x-csrf-token': csrf.slice(9)} : {}}); }""")
+                    logout_status = portal_page.evaluate("""async () => { const csrf = document.cookie.split(';').map(x => x.trim()).find(x => x.startsWith('pcp_csrf=')); const response = await fetch('/api/control-plane/v1/auth/logout', {method:'POST', headers: csrf ? {'x-csrf-token': csrf.slice(9)} : {}}); return response.status; }""")
+                    assert logout_status == 200
                     portal_page.close()
                     popup.click("#auth-reset")
                     popup.locator("#confirmation").wait_for()
                     popup.locator("#confirmation #confirm").click()
                     popup.wait_for_function("document.querySelector('#auth-start').offsetParent !== null && document.querySelector('#account').innerText.includes('Вход не выполнен')")
-                    activate("i1-client-two@example.test")
+                    second_identity = activate("i1-client-two@example.test")
                     assert popup.locator("#account").inner_text() != first_account
                     assert "Аккаунт A WB" not in popup.locator("#stores").inner_text()
-                    result.update(status="PASS", installed_acceptance=True, browser=context.browser.version, checks=["real API device start", "portal OTP/approve", "device exchange", "browser V2 bootstrap", "account-scoped WB catalog", "account reset and second account isolation"], same_worker=True, distinct_accounts=True, distinct_exchange_completions=True)
+                    worker_sentinel_after = worker.evaluate("globalThis.__saI1WorkerSentinel")
+                    same_worker = worker_sentinel == worker_sentinel_after
+                    distinct_accounts = first_identity["account"] != second_identity["account"]
+                    distinct_device_sessions = (first_identity["device"], first_identity["session"]) != (second_identity["device"], second_identity["session"])
+                    authorization_ids = {url.rsplit("/", 1)[-1] for url, status in control_responses if re.fullmatch(rf"http://127\.0\.0\.1:{api_port}/v1/device-authorizations/[0-9a-f-]+", url) and status == 200}
+                    assert same_worker and distinct_accounts and distinct_device_sessions and len(authorization_ids) >= 2
+                    control_counts = {"device_start": sum(1 for url, status in control_responses if url.endswith("/v1/device-authorizations") and status == 200), "exchange": sum(1 for url, status in control_responses if url.endswith("/v1/device-authorizations/token") and status == 200), "bootstrap": sum(1 for url, status in control_responses if url.endswith("/v1/bootstrap") and status == 200)}
+                    assert control_counts["device_start"] >= 2 and control_counts["exchange"] >= 2 and control_counts["bootstrap"] >= 2
+                    result.update(status="PASS", installed_acceptance=True, browser=context.browser.version, checks=["real API device start", "portal OTP/approve", "device exchange", "browser V2 bootstrap", "account-scoped WB catalog", "account reset and second account isolation"], same_worker=same_worker, distinct_accounts=distinct_accounts, distinct_device_sessions=distinct_device_sessions, distinct_authorizations=len(authorization_ids) >= 2, control_counts=control_counts, portal_logout_http_ok=True)
                 finally:
                     context.close()
         except Exception as error:
-            result.update(status="FAIL", error=str(error))
+            result.update(status="FAIL", stage=locals().get("stage", "unknown"), error=type(error).__name__, safe_counts={"control_responses": len(locals().get("control_responses", []))})
             raise
         finally:
             for process in reversed(processes):

@@ -166,21 +166,24 @@ def ozon_route(runner, work, runtime, label, source_route, expected_version="0.1
                 "adapted_sha256": baseline.sha256(adapted_source.encode()),
                 "marker_mapping": marker_mapping, "behavior_assertions_changed": False,
             })
-        if expected_version in ("0.2.3", "0.2.4") and kind == "full-worker":
-            original_source = green_script.read_text()
-            old_sender = 'listener(message, sender, (response) => {'
-            new_sender = 'listener(message, /^OZ_(?:SAVE_|BIND_CONVERSATION|WORK_RESUME|SET_MANUAL_MODE|GET_DIAGNOSTICS)/.test(message.type) ? { url: chrome.runtime.getURL("popup.html") } : sender, (response) => {'
-            assert original_source.count(old_sender) == 1
-            adapted_source = original_source.replace(old_sender, new_sender)
-            green_script = repaired / "run_composed_full_worker_gate.mjs"
-            green_script.write_text(adapted_source)
-            baseline.write_json(runner.output / (label + "-popup-sender-adaptation.json"), {
-                "source_sha256": baseline.sha256(original_source.encode()),
-                "adapted_sha256": baseline.sha256(adapted_source.encode()),
-                "change": "settings/bind/resume/manual-mode fixture messages originate from the real privileged popup",
+        green_args = [green_script, ozon]
+        if expected_version == "0.2.4" and kind == "full-worker":
+            # v0.2.4 uses the composed application runtime and its real SA_
+            # fixture handshake. The frozen donor remains the RED/old-version
+            # route and is never rewritten or accepted through legacy setup.
+            green_script = ROOT / "tests/regression/extension-core/full-worker-composed.mjs"
+            green_args = [green_script, prod]
+            baseline.write_json(runner.output / (label + "-full-worker-adaptation.json"), {
+                "donor": str(repaired / filename),
+                "candidate": str(green_script),
+                "setup": ["makeWorker", "SA_STORE_SAVE", "SA_WORK_START", "start_ack_identity"],
+                "legacy_setup_used": False,
+                "assertion_inventory": {"report_aliases": 9, "seller_operation": 1, "performance_auth_per_fresh_worker": 1,
+                                         "planning": 1, "provider_request": 1, "result": 1, "semantic_fingerprint": "cd4bce38",
+                                         "attachment_port_loaded": True, "storage_wake_loaded": True},
                 "behavior_assertions_changed": False,
             })
-        steps.append((kind + "-green", [green_script, ozon]))
+        steps.append((kind + "-green", green_args))
     for name, args in steps:
         runner.run(label + "-" + name, ["node", *args], cwd=repo)
     baseline.write_json(runner.output / (label + "-authority.json"),
