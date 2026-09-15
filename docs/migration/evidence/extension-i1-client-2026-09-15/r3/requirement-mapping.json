@@ -3,8 +3,6 @@
   "stage": "Seller Agents / D2-I1 / I1-C1",
   "start_head": "0b2a1776ff484d2410b3a43d338ec5548e73f019",
   "start_tree": "3a83601109f7cb643e06d923b1da36691f9b0014",
-  "local_final_head": "20091e9131bb7cb9c0893cbf0f0fa6205de6546d",
-  "local_final_tree": "cd70d52d48bda6b3f061669f3e565bf8338c456a",
   "status": "IMPLEMENTATION_CANDIDATE_FOR_REVIEW",
   "criteria": {
     "G1": {"criterion": "Client authority classification and account-only authority", "function": "client.js request/readLimitedBody/bootstrap/restore", "test": "client-r3.mjs account-only sessions, restore, oversized 2xx/401/403 and transient 503", "result": "PASS; starting-head RED reproduced for oversized 2xx and UNCONFIGURED account-only"},
