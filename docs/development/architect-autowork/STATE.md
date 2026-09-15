@@ -1,8 +1,8 @@
 # Seller Agents — единый cursor
 
-Дата: 2026-09-15. Статус: I1_C1_R4_REWORK_REQUIRED / I1_C1_R5_PREPARED / BRIDGE_ACK_PENDING.
+Дата: 2026-09-15. Статус: I1_C1_R5_REVIEW_COMPLETE / WAITING_REQUIRED_WB_CI.
 
-Владелец передал Stream A и Stream B основному архитектору и разрешил авторежим командой «поехали». R4 terminal report получен и независимо проверен: REWORK_REQUIRED. Получен terminal результат; прямое состояние процесса не наблюдалось. Подготовлена одна задача R5; сохранение не доказывает захват Bridge или запуск CLI. Исторические принятые серверные факты и очередь сохранены.
+Владелец передал Stream A и Stream B основному архитектору и разрешил авторежим командой «поехали». R5 terminal report получен и независимо проверен. Ревью реализации и installed-local evidence завершено; итоговый verdict WAITING до завершения обязательных WB browser jobs. Новая задача исполнителю не подготовлена и не выдана. R5 завершён по terminal report; прямое состояние серверного процесса не наблюдалось. Исторические принятые серверные факты и очередь сохранены.
 
 ## Роли
 
@@ -10,18 +10,19 @@ Astra / очень высокая глубина рассуждения — гл
 
 ## Текущая задача
 
-- Обработана SA-I1-C1-R4-20260915-01. Verdict REWORK_REQUIRED; I1-C1 открыт.
+- Обработана SA-I1-C1-R5-20260915-01. Verdict WAITING_REQUIRED_WB_CI; I1-C1 пока открыт.
 - Branch feature/extension-i1-client-2026-09-15; PR7 draft/unmerged.
-- R4 start/base e26fcc7dd60617838cb9a49d7c6560018cb45ec3.
-- Current published head / R5 base60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3; tree243d944b3834f4c88c694f4c3f668ddc80bb7bbf. Remote independently matches.
-- Main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c unchanged; PR merge111598ce78535a3922ca427665aff3cd24805e06 has verified parents main5d7c8853 and60c3a34.
-- Review references/I1_C1_R4_REVIEW.md; targeted source probe, results and CI snapshot рядом.
-- Confirmed: oversized200/201/206 denial, valid prerelease+build; same-worker owner barriers and held-provider Ozon/WB tail denial; restored common-core assertions and native fixture within stated scope.
-- Blockers: SA_POPUP_STATE requires AI identity before auth read, so own-tab popup cannot render pending code. Installed push104403007844/run34975780030 and PR104403022717/run34975784338 FAILURE. OTP/preview prerequisites passed. Missing delivering-owner/file/recovery denial assertions and two exact SemVer relations.
-- Client/core/native/Ozon/WB nodes/doc CI green; WB browsers104403008932 and104403023146 still IN_PROGRESS at readback. No all-green claim.
-- R4 ZIP receipt:1,801,658 bytes; SHA25657028388aab922f2d5deb955dda9202a7f58e09cc2cfae2fe89d1abdd1bd59c7. Executor parity/byte-readback claims; no architect ZIP download.
-- Next SA-I1-C1-R5-20260915-01; tasks/I1_C1_R5_2026-09-15.md. R5 PREPARED / BRIDGE_ACK_PENDING for one final prompt.
-- R4 terminal processed once. No direct Bridge/process instrument or active R5 job ID; R5 launch not asserted. After final prompt await acknowledgement/terminal report; do not automatically repeat prepared task after interruption.
+- R5 base60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3.
+- Current published head56c81a3521c02502b65fd713aec890e5a30f038d; tree5c14497e239922c3712d0c3be12af7ee59e665f5. Remote matches; sole parent is base.
+- Main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c unchanged. Verified PR merge542a334c39dd9cda52c72f07c98a676a207f84d1 has parents main and current candidate.
+- Review references/I1_C1_R5_REVIEW.md; CI snapshot, independent attachment-authority probe and package readback nearby.
+- Confirmed: popup neutral identity correction; source/extracted R5 matrix; native own-tab popup; real local API/portal/PostgreSQL A/B installed acceptance on push and PR merge; same worker, catalog isolation,2 starts/exchanges/bootstrap, beta unchanged, no live providers.
+- Independent probe of downloaded candidate package confirms denial using real saved binary artifact after positive byte read, exact WORK_POLICY_BLOCKED, no attach/click/insert grant, no IDB reads; auth/status remain callable.
+- Sole current acceptance blocker: push WB browsers104420205685/run34980773590 and PR WB browsers104420225471/run34980778417 IN_PROGRESS. Other Extension jobs, both I1 jobs on push/PR, Documentation34980778452 SUCCESS.
+- CI artifact10400594363 independently downloaded; digest aca25771b72c9b6c3062318dcbf875a29c7ee5dc237553a130572c6d8ec4afc6. CI ZIP2f364316986187db50251dc4708317ca612ce51dd7106138106f64239605ba43,1,801,114 bytes;39/39 receipt byte matches and current runtime Git input verified.
+- Executor browser-package b98b87a176c8bed2a1550e4838ba1c563aae28a938a9d284436fe35e72e62e6e,1,801,899 bytes remains a separately reported archive; no architect byte-download claim for it.
+- R5 terminal processed once; no active implementation task reported, no direct process observation. CI still executing. No R6/task prompt issued.
+- Next: read pending WB conclusions/logs. If green and head unchanged, accept bounded R5/C1 using completed review, then prepare I1-SRV.5. Do not duplicate R5 or repeat unchanged green suites/full audit.
 
 ## Результат R1
 
@@ -66,7 +67,7 @@ Reported ZIP SHA-256 2580015cdf174c909e6733197d3b609ba10c3fe35008090df13ebc17a83
 4. Согласовать объединение принятых клиентской и серверной веток с новым main; не терять ни одну линию и не применять ours/theirs вслепую.
 5. Далее актуальный продуктовый roadmap; не требовать весь P8–P10 раньше раннего I1 и не объявлять внешние этапы закрытыми без их приёмки.
 
-Исторически R1 был проверен и выдан R2. Затем выдан R3. R3 был проверен и выдан R4. Теперь R4 terminal проверен; подготовлен только R5, более поздних задач нет.
+Исторически R1 был проверен и выдан R2. Затем выдан R3. R3 был проверен и выдан R4. Затем выдан R5. Теперь R5 terminal проверен; ревью завершено, ожидаются обязательные WB CI. Новая задача не выдана.
 
 ## Протокол Bridge и переноса
 
@@ -102,3 +103,7 @@ REWORK_REQUIRED на e26fcc7dd60617838cb9a49d7c6560018cb45ec3. Exact-head instal
 ## Приёмка R4 — 2026-09-15
 
 REWORK_REQUIRED на60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3. Oversized/SemVer/core corrections подтверждены; source G3 доказан только для held-provider tail, не для готовой доставки/файлов/recovery. Exact-head installed CI FAIL после успешных OTP/activation-preview предусловий: пустой auth-code. Причина самостоятельно установлена в saPopupState: требование AI identity блокирует чтение auth-state у popup во вкладке. R5 разрешает только нейтральный identity fallback для чтения popup; все Work guards остаются строгими. Ревью/CI/probe и полное точное R5 сохранены; очереди server I1/Health без изменений. Предыдущие preparation notes — история, не команды повторного запуска.
+
+## Приёмка R5 — 2026-09-15
+
+WAITING_REQUIRED_WB_CI на56c81a3521c02502b65fd713aec890e5a30f038d. Ревью реализации/исходников, native и installed-local gates завершено успешно в указанном объёме. Собственный probe закрыл неопределённость отрицательных attachment-тестов реальным artifact key и отказом после успешного чтения.39 файлов CI ZIP независимо сверены; отдельный локальный browser-package не скачивался. Два WB browser jobs ещё выполняются; C1 не закрыт, новой задачи нет. Продолжить с их результата без повторного полного ревью. Server I1/Health очередь сохранена.

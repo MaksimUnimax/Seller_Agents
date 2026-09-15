@@ -1,0 +1,12 @@
+{
+  "candidate": "56c81a3521c02502b65fd713aec890e5a30f038d",
+  "status": "PASS",
+  "scope": "CI packaged runtime, independent strengthened fixture; no live/installed claim",
+  "same_worker_positive_binary_then_denial": true,
+  "actual_artifact_key": true,
+  "exact_code": "WORK_POLICY_BLOCKED",
+  "no_permission_grants": true,
+  "no_denied_idb_reads": true,
+  "auth_status_available": true,
+  "retained_denied_fixtures": 6
+}

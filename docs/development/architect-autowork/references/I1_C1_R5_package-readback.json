@@ -1,0 +1,15 @@
+{
+  "artifact_id": 10400594363,
+  "artifact_digest": "aca25771b72c9b6c3062318dcbf875a29c7ee5dc237553a130572c6d8ec4afc6",
+  "package": {
+    "name": "SELLER_AGENTS_I1_C1_v0.2.4_LOCAL_DEVELOPMENT.zip",
+    "bytes": 1801114,
+    "sha256": "2f364316986187db50251dc4708317ca612ce51dd7106138106f64239605ba43",
+    "repeat_archive_match": true,
+    "source_extracted_bytes_match": true
+  },
+  "entries_verified": 39,
+  "changed_runtime_git_input_match": true,
+  "runtime_in_package": true,
+  "scope": "CI package independently downloaded; executor browser-package b98b87a not downloaded"
+}

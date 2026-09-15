@@ -1,0 +1,156 @@
+{
+  "base": "60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3",
+  "candidate": "56c81a3521c02502b65fd713aec890e5a30f038d",
+  "installedLogs": [
+    {
+      "excerpt": [
+        "2026-09-15T14:19:13.0007834Z 56c81a3521c02502b65fd713aec890e5a30f038d",
+        "2026-09-15T14:20:22.7512930Z {\"status\": \"PASS\", \"installed_acceptance\": true, \"otp\": \"development fixed OTP; not email evidence\", \"live_provider_calls\": 0, \"browser\": \"151.0.7922.34\", \"checks\": [\"real API device start\", \"portal OTP/approve\", \"device exchange\", \"browser V2 bootstrap\", \"account-scoped WB catalog\", \"account reset and second account isolation\"], \"same_worker\": true, \"distinct_accounts\": true, \"distinct_device_sessions\": true, \"distinct_authorizations\": true, \"control_counts\": {\"device_start\": 2, \"exchange\": 2, \"bootstrap\": 2}, \"bff_counts\": {\"otp_request_202\": 2, \"otp_verify_200\": 2, \"logout_204\": 1}, \"logout_cleared\": true, \"fixture_accounts_prepared\": 2, \"beta_unchanged\": true}",
+        "2026-09-15T14:20:22.8357912Z   name: extension-installed-local-56c81a3521c02502b65fd713aec890e5a30f038d"
+      ],
+      "job": 104420205399
+    },
+    {
+      "excerpt": [
+        "2026-09-15T14:19:19.3277585Z HEAD is now at 542a334 Merge 56c81a3521c02502b65fd713aec890e5a30f038d into 5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+        "2026-09-15T14:19:19.3330125Z 542a334c39dd9cda52c72f07c98a676a207f84d1",
+        "2026-09-15T14:20:34.2979816Z {\"status\": \"PASS\", \"installed_acceptance\": true, \"otp\": \"development fixed OTP; not email evidence\", \"live_provider_calls\": 0, \"browser\": \"151.0.7922.34\", \"checks\": [\"real API device start\", \"portal OTP/approve\", \"device exchange\", \"browser V2 bootstrap\", \"account-scoped WB catalog\", \"account reset and second account isolation\"], \"same_worker\": true, \"distinct_accounts\": true, \"distinct_device_sessions\": true, \"distinct_authorizations\": true, \"control_counts\": {\"device_start\": 2, \"exchange\": 2, \"bootstrap\": 2}, \"bff_counts\": {\"otp_request_202\": 2, \"otp_verify_200\": 2, \"logout_204\": 1}, \"logout_cleared\": true, \"fixture_accounts_prepared\": 2, \"beta_unchanged\": true}",
+        "2026-09-15T14:20:34.3778346Z   name: extension-installed-local-542a334c39dd9cda52c72f07c98a676a207f84d1"
+      ],
+      "job": 104420225438
+    }
+  ],
+  "main": "5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+  "observedAt": "2026-09-15T14:25:27.363Z",
+  "prMerge": "542a334c39dd9cda52c72f07c98a676a207f84d1",
+  "runs": [
+    {
+      "conclusion": "success",
+      "event": "pull_request",
+      "id": 34980778452,
+      "name": "Documentation CI",
+      "status": "completed"
+    },
+    {
+      "conclusion": null,
+      "event": "pull_request",
+      "id": 34980778417,
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 104420225185,
+          "name": "Common application / native Chromium fixture",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 104420225414,
+          "name": "Baseline / wb-nodes",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 104420225419,
+          "name": "Common core / source and package",
+          "status": "completed"
+        },
+        {
+          "conclusion": null,
+          "id": 104420225471,
+          "name": "Baseline / wb-browsers",
+          "status": "in_progress"
+        },
+        {
+          "conclusion": "success",
+          "id": 104420225558,
+          "name": "Baseline / ozon",
+          "status": "completed"
+        }
+      ],
+      "name": "Extension CI",
+      "status": "in_progress"
+    },
+    {
+      "conclusion": "success",
+      "event": "pull_request",
+      "id": 34980778468,
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 104420224976,
+          "name": "client-i1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 104420225438,
+          "name": "Installed local API / portal / PostgreSQL acceptance",
+          "status": "completed"
+        }
+      ],
+      "name": "Extension I1-C1 client",
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "event": "push",
+      "id": 34980773436,
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 104420205030,
+          "name": "client-i1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 104420205399,
+          "name": "Installed local API / portal / PostgreSQL acceptance",
+          "status": "completed"
+        }
+      ],
+      "name": "Extension I1-C1 client",
+      "status": "completed"
+    },
+    {
+      "conclusion": null,
+      "event": "push",
+      "id": 34980773590,
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 104420205173,
+          "name": "Common application / native Chromium fixture",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 104420205623,
+          "name": "Baseline / wb-nodes",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 104420205656,
+          "name": "Common core / source and package",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 104420205673,
+          "name": "Baseline / ozon",
+          "status": "completed"
+        },
+        {
+          "conclusion": null,
+          "id": 104420205685,
+          "name": "Baseline / wb-browsers",
+          "status": "in_progress"
+        }
+      ],
+      "name": "Extension CI",
+      "status": "in_progress"
+    }
+  ],
+  "tree": "5c14497e239922c3712d0c3be12af7ee59e665f5"
+}

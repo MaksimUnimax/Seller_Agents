@@ -1,0 +1,3 @@
+# R5 independent attachment check
+
+Run client-i1/probe.mjs with the extracted runtime from CI artifact10400594363/run34980773436. Place tests/regression/extension-core/worker-harness.mjs from exact candidate56c81a3521c02502b65fd713aec890e5a30f038d at worker-harness.mjs beside client-i1. The probe derives from the candidate's client-r5.mjs and strengthens the specific reviewed ambiguity: use a real artifact key, require WORK_POLICY_BLOCKED and no grants, and deny in the same worker after successful binary META/CHUNK read. This is an architect fixture probe on actual CI packaged code, not live/installed acceptance. Successful runtime results are in results.json. No product files changed.
