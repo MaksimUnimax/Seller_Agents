@@ -2,7 +2,7 @@
 
 Status: implementation candidate prepared for architect review. This work does not accept or close I1, C2, I1-SRV.4, I1-SRV.5, D3, Health/P8, S1.2, release or deployment.
 
-Base: `bc0cd0088ca50ba06021ea602a46bdd90de91378`. Assigned starting head: `2a98057646af52eee0f654997b3f60f6322dfb04`. Final published head is recorded in the evidence mapping after publication.
+Base: `bc0cd0088ca50ba06021ea602a46bdd90de91378`. Assigned starting head: `2a98057646af52eee0f654997b3f60f6322dfb04`. Implementation published head: `7deed6a8a68d1689e978fb55bfbea6fec0db74e0`.
 
 The client now has one worker-lifetime auth owner and serialized state persistence with generation/attempt/session fences. Device start, polling, refresh and bootstrap keep logical idempotency keys and discard late success/error/finally continuations. Refresh is singleflight; one bounded refresh/bootstrap retry handles bootstrap 401; current-session refresh invalidation cannot clear a newer session. Pending transport/status/rate-limit failures remain retryable until the attempt deadline, while terminal denial is not restored as authority after restart.
 

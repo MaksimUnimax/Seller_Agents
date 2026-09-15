@@ -4,7 +4,7 @@
   "environment": "LOCAL DEVELOPMENT",
   "base": "bc0cd0088ca50ba06021ea602a46bdd90de91378",
   "assigned_start_head": "2a98057646af52eee0f654997b3f60f6322dfb04",
-  "published_head": "FILLED_AFTER_PUBLICATION",
+  "published_head": "7deed6a8a68d1689e978fb55bfbea6fec0db74e0",
   "review_commit": "b4045fa9353cd2fee7f49f0bd3fea280e808679",
   "server_contract_head": "5d7c8853cc69dd95bc6e713cac3fb2aa0a63383",
   "F1_cancelled_start_late_response": {
@@ -57,7 +57,7 @@
     "extension_core": {"status": "PASS", "gate_processes": 111, "installed_acceptance": false},
     "native_chromium_source_and_extracted": {"status": "PASS", "browser": "Chromium 151.0.7922.34", "provider_calls": 0},
     "installed_local_integration": {"status": "CI_JOB_WIRED", "otp": "development fixed OTP; not email evidence"},
-    "docs_bridge_openapi": {"status": "PENDING_FINAL_RUN"}
+    "docs_bridge_openapi": {"status": "PASS", "docs": "Documentation check PASS", "bridge": "Bridge boundary guard passed", "openapi": "openapi:check PASS"}
   },
   "not_claimed": ["full I1", "C2", "I1-SRV.4", "I1-SRV.5", "S1.2", "D3", "Health/P8", "real email delivery", "preprod/production", "release/deployment"]
 }
