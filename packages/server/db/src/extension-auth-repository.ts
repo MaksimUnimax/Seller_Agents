@@ -14,6 +14,7 @@ const identitySql = `SELECT s.id AS session_id,d.id AS device_id,a.id AS account
   FROM sessions s JOIN devices d ON d.id=s.device_id JOIN accounts a ON a.id=s.account_id
   JOIN users u ON u.id=d.created_by_user_id
   WHERE s.id=$1 AND s.status='ACTIVE' AND s.revoked_at IS NULL
+    AND d.account_id=s.account_id
     AND d.status='ACTIVE' AND d.revoked_at IS NULL AND a.status='ACTIVE' AND u.status='ACTIVE'`;
 function identity(
   row: IdentityRow | undefined,
@@ -74,6 +75,7 @@ export function createExtensionAuthRepository(
          JOIN sessions s ON s.id=r.session_id JOIN devices d ON d.id=s.device_id JOIN accounts a ON a.id=s.account_id
          JOIN users u ON u.id=d.created_by_user_id
          WHERE r.token_hash=$1 AND s.status='ACTIVE' AND s.revoked_at IS NULL
+           AND d.account_id=s.account_id
            AND d.status='ACTIVE' AND d.revoked_at IS NULL AND a.status='ACTIVE' AND u.status='ACTIVE'`,
         [tokenHash],
       );
@@ -110,7 +112,15 @@ export function createExtensionAuthRepository(
           revoked_at: Date | null;
         }>(
           `SELECT r.id,r.session_id,r.generation,r.consumed_at,r.expires_at,s.status,s.revoked_at
-           FROM refresh_tokens r JOIN sessions s ON s.id=r.session_id WHERE r.token_hash=$1 FOR UPDATE`,
+           FROM refresh_tokens r
+           JOIN sessions s ON s.id=r.session_id
+           JOIN devices d ON d.id=s.device_id AND d.account_id=s.account_id
+           JOIN accounts a ON a.id=s.account_id
+           JOIN users u ON u.id=d.created_by_user_id
+           WHERE r.token_hash=$1
+             AND d.status='ACTIVE' AND d.revoked_at IS NULL
+             AND a.status='ACTIVE' AND u.status='ACTIVE'
+           FOR UPDATE`,
           [input.tokenHash],
         );
         const token = found.rows[0],
