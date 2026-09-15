@@ -1,0 +1,48 @@
+{
+  "head": "60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3",
+  "scope": "exact client modules and extracted popup-state functions; mocked tab transport; no installed acceptance",
+  "rows": [
+    {
+      "mode": "unsupported-popup-tab",
+      "code": "IDENTITY_UNAVAILABLE",
+      "authStateReads": 0,
+      "ok": false
+    },
+    {
+      "mode": "missing-tab",
+      "code": "INVALID_TAB_ID",
+      "authStateReads": 0,
+      "ok": false
+    },
+    {
+      "mode": "supported-ai-tab",
+      "code": null,
+      "authStateReads": 1,
+      "ok": true
+    },
+    {
+      "mode": "oversized-200",
+      "code": "CONTROL_RESPONSE_TOO_LARGE",
+      "authenticated": false,
+      "workAllowed": false
+    },
+    {
+      "mode": "oversized-201",
+      "code": "CONTROL_RESPONSE_TOO_LARGE",
+      "authenticated": false,
+      "workAllowed": false
+    },
+    {
+      "mode": "oversized-206",
+      "code": "CONTROL_RESPONSE_TOO_LARGE",
+      "authenticated": false,
+      "workAllowed": false
+    },
+    {
+      "mode": "top-semver-prerelease-build",
+      "code": null,
+      "authenticated": true,
+      "workAllowed": true
+    }
+  ]
+}

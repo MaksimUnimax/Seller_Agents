@@ -1,8 +1,8 @@
 # Seller Agents — единый cursor
 
-Дата: 2026-09-15. Статус: I1_C1_R3_REWORK_REQUIRED / I1_C1_R4_PREPARED / BRIDGE_ACK_PENDING.
+Дата: 2026-09-15. Статус: I1_C1_R4_REWORK_REQUIRED / I1_C1_R5_PREPARED / BRIDGE_ACK_PENDING.
 
-Владелец передал Stream A и Stream B основному архитектору и разрешил авторежим командой «поехали». R3 terminal report получен и независимо проверен: REWORK_REQUIRED. Получен terminal результат; прямое состояние процесса не наблюдалось. Подготовлена одна задача R4; сохранение не доказывает захват Bridge или запуск CLI. Исторические принятые серверные факты и очередь сохранены.
+Владелец передал Stream A и Stream B основному архитектору и разрешил авторежим командой «поехали». R4 terminal report получен и независимо проверен: REWORK_REQUIRED. Получен terminal результат; прямое состояние процесса не наблюдалось. Подготовлена одна задача R5; сохранение не доказывает захват Bridge или запуск CLI. Исторические принятые серверные факты и очередь сохранены.
 
 ## Роли
 
@@ -10,17 +10,18 @@ Astra / очень высокая глубина рассуждения — гл
 
 ## Текущая задача
 
-- Обработанная задача: SA-I1-C1-R3-20260915-01. Verdict REWORK_REQUIRED; I1-C1 открыт.
-- Branch feature/extension-i1-client-2026-09-15; draft PR7 открыт/не слит.
-- R3 start/base0b2a1776ff484d2410b3a43d338ec5548e73f019.
-- Current published head / R4 start e26fcc7dd60617838cb9a49d7c6560018cb45ec3; tree c1beb4927fee66c4065e133c960929e800fabe5e.
-- Main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c. Virtual mergef14fa4eb5d9a0214932c65c30c7c92e507ef84fe имеет parents5d7c8853 иe26fcc7.
-- Review references/I1_C1_R3_REVIEW.md; probes/results/CI рядом.
-- Blockers: oversized201/206 сохраняют Work; verifier отвергает допустимый prerelease+build SemVer; неполное заданное same-worker/active-denial покрытие; утраченные common-core assertions/fixture scope; installed OTP/navigation FAIL и ошибки предусловий/HTTP-кодов/наблюдения.
-- Подтверждены исправления account-only login/restore и oversized200; G6 native fixture зелёный. C1/installed real-auth/live не приняты.
-- Next SA-I1-C1-R4-20260915-01; tasks/I1_C1_R4_2026-09-15.md.
-- R4 PREPARED / BRIDGE_ACK_PENDING для однократного финального prompt. R3 terminal обработан; прямого Bridge/process инструмента или run/job ID нет, запуск R4 не утверждается.
-- После финального prompt ждать уведомления/terminal report; при обрыве сверить последний ответ/current job и не повторять prepared task автоматически.
+- Обработана SA-I1-C1-R4-20260915-01. Verdict REWORK_REQUIRED; I1-C1 открыт.
+- Branch feature/extension-i1-client-2026-09-15; PR7 draft/unmerged.
+- R4 start/base e26fcc7dd60617838cb9a49d7c6560018cb45ec3.
+- Current published head / R5 base60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3; tree243d944b3834f4c88c694f4c3f668ddc80bb7bbf. Remote independently matches.
+- Main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c unchanged; PR merge111598ce78535a3922ca427665aff3cd24805e06 has verified parents main5d7c8853 and60c3a34.
+- Review references/I1_C1_R4_REVIEW.md; targeted source probe, results and CI snapshot рядом.
+- Confirmed: oversized200/201/206 denial, valid prerelease+build; same-worker owner barriers and held-provider Ozon/WB tail denial; restored common-core assertions and native fixture within stated scope.
+- Blockers: SA_POPUP_STATE requires AI identity before auth read, so own-tab popup cannot render pending code. Installed push104403007844/run34975780030 and PR104403022717/run34975784338 FAILURE. OTP/preview prerequisites passed. Missing delivering-owner/file/recovery denial assertions and two exact SemVer relations.
+- Client/core/native/Ozon/WB nodes/doc CI green; WB browsers104403008932 and104403023146 still IN_PROGRESS at readback. No all-green claim.
+- R4 ZIP receipt:1,801,658 bytes; SHA25657028388aab922f2d5deb955dda9202a7f58e09cc2cfae2fe89d1abdd1bd59c7. Executor parity/byte-readback claims; no architect ZIP download.
+- Next SA-I1-C1-R5-20260915-01; tasks/I1_C1_R5_2026-09-15.md. R5 PREPARED / BRIDGE_ACK_PENDING for one final prompt.
+- R4 terminal processed once. No direct Bridge/process instrument or active R5 job ID; R5 launch not asserted. After final prompt await acknowledgement/terminal report; do not automatically repeat prepared task after interruption.
 
 ## Результат R1
 
@@ -65,7 +66,7 @@ Reported ZIP SHA-256 2580015cdf174c909e6733197d3b609ba10c3fe35008090df13ebc17a83
 4. Согласовать объединение принятых клиентской и серверной веток с новым main; не терять ни одну линию и не применять ours/theirs вслепую.
 5. Далее актуальный продуктовый roadmap; не требовать весь P8–P10 раньше раннего I1 и не объявлять внешние этапы закрытыми без их приёмки.
 
-Исторически R1 был проверен и выдан R2. Затем выдан R3. Теперь R3 terminal проверен; подготовлен только R4, более поздних задач нет.
+Исторически R1 был проверен и выдан R2. Затем выдан R3. R3 был проверен и выдан R4. Теперь R4 terminal проверен; подготовлен только R5, более поздних задач нет.
 
 ## Протокол Bridge и переноса
 
@@ -97,3 +98,7 @@ REWORK_REQUIRED на 0b2a1776ff484d2410b3a43d338ec5548e73f019. Exact-head push C
 ## Приёмка R3 — 2026-09-15
 
 REWORK_REQUIRED на e26fcc7dd60617838cb9a49d7c6560018cb45ec3. Exact-head installed104382641739/run34969687336 FAIL: ожидание activation URL после OTP Verify; PostgreSQL healthy. Source diagnosis: новые identities при CLOSED beta; тестовой БД нужны два существующих fixture аккаунта, приём новых аккаунтов остаётся закрытым. Далее исправить logout204, start201 и BFF/direct observer. Независимые client probes выявили oversized201/206 и SemVer prerelease+build; account-only и oversized200 теперь корректны. Common-core/native CI SUCCESS, но часть обязательных assertions не сохранена. WB browsers оставались IN_PROGRESS; полного PASS нет. Полная приёмка и узкое R4 решение сохранены. Server I1/Health очередь без изменений. Записи R2/R3 preparation выше — история, не команды повторного запуска.
+
+## Приёмка R4 — 2026-09-15
+
+REWORK_REQUIRED на60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3. Oversized/SemVer/core corrections подтверждены; source G3 доказан только для held-provider tail, не для готовой доставки/файлов/recovery. Exact-head installed CI FAIL после успешных OTP/activation-preview предусловий: пустой auth-code. Причина самостоятельно установлена в saPopupState: требование AI identity блокирует чтение auth-state у popup во вкладке. R5 разрешает только нейтральный identity fallback для чтения popup; все Work guards остаются строгими. Ревью/CI/probe и полное точное R5 сохранены; очереди server I1/Health без изменений. Предыдущие preparation notes — история, не команды повторного запуска.

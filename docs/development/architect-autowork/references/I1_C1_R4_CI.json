@@ -1,0 +1,137 @@
+{
+  "candidate": "60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3",
+  "documentation": {
+    "conclusion": "success",
+    "id": 34975784243,
+    "status": "completed"
+  },
+  "extensionPr": [
+    {
+      "conclusion": "success",
+      "head_sha": "60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3",
+      "id": 104403022476,
+      "name": "Common application / native Chromium fixture",
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "head_sha": "60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3",
+      "id": 104403022801,
+      "name": "Common core / source and package",
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "head_sha": "60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3",
+      "id": 104403022827,
+      "name": "Baseline / wb-nodes",
+      "status": "completed"
+    },
+    {
+      "conclusion": null,
+      "head_sha": "60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3",
+      "id": 104403023146,
+      "name": "Baseline / wb-browsers",
+      "status": "in_progress"
+    },
+    {
+      "conclusion": "success",
+      "head_sha": "60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3",
+      "id": 104403023185,
+      "name": "Baseline / ozon",
+      "status": "completed"
+    }
+  ],
+  "extensionPush": [
+    {
+      "conclusion": "success",
+      "head_sha": "60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3",
+      "id": 104403008687,
+      "name": "Common application / native Chromium fixture",
+      "status": "completed"
+    },
+    {
+      "conclusion": null,
+      "head_sha": "60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3",
+      "id": 104403008932,
+      "name": "Baseline / wb-browsers",
+      "status": "in_progress"
+    },
+    {
+      "conclusion": "success",
+      "head_sha": "60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3",
+      "id": 104403009006,
+      "name": "Common core / source and package",
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "head_sha": "60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3",
+      "id": 104403009077,
+      "name": "Baseline / ozon",
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "head_sha": "60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3",
+      "id": 104403009091,
+      "name": "Baseline / wb-nodes",
+      "status": "completed"
+    }
+  ],
+  "i1Pr": [
+    {
+      "conclusion": "failure",
+      "head_sha": "60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3",
+      "id": 104403022717,
+      "name": "Installed local API / portal / PostgreSQL acceptance",
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "head_sha": "60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3",
+      "id": 104403023119,
+      "name": "client-i1",
+      "status": "completed"
+    }
+  ],
+  "i1Push": [
+    {
+      "conclusion": "failure",
+      "head_sha": "60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3",
+      "id": 104403007844,
+      "name": "Installed local API / portal / PostgreSQL acceptance",
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "head_sha": "60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3",
+      "id": 104403007878,
+      "name": "client-i1",
+      "status": "completed"
+    }
+  ],
+  "installedLogExcerpt": [
+    "2026-09-15T13:34:23.6489495Z 60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3",
+    "2026-09-15T13:36:16.0437021Z     popup.locator(\"#auth-code\").wait_for(state=\"visible\")",
+    "2026-09-15T13:36:16.0461209Z playwright._impl._errors.TimeoutError: Locator.wait_for: Timeout 30000ms exceeded.",
+    "2026-09-15T13:36:16.0463185Z     64 × locator resolved to hidden <p class=\"hint\" id=\"auth-code\"></p>",
+    "2026-09-15T13:36:16.1122545Z   name: extension-installed-local-60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3"
+  ],
+  "merge": {
+    "parents": [
+      "5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+      "60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3"
+    ],
+    "sha": "111598ce78535a3922ca427665aff3cd24805e06"
+  },
+  "observedAt": "2026-09-15T13:48:45.699Z",
+  "prInstalledLogExcerpt": [
+    "2026-09-15T13:34:07.4833619Z HEAD is now at 111598c Merge 60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3 into 5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+    "2026-09-15T13:34:07.4933548Z 111598ce78535a3922ca427665aff3cd24805e06",
+    "2026-09-15T13:35:47.1645745Z     popup.locator(\"#auth-code\").wait_for(state=\"visible\")",
+    "2026-09-15T13:35:47.2135732Z playwright._impl._errors.TimeoutError: Locator.wait_for: Timeout 30000ms exceeded.",
+    "2026-09-15T13:35:47.2225775Z     64 × locator resolved to hidden <p class=\"hint\" id=\"auth-code\"></p>",
+    "2026-09-15T13:35:47.2472596Z   name: extension-installed-local-111598ce78535a3922ca427665aff3cd24805e06"
+  ]
+}
