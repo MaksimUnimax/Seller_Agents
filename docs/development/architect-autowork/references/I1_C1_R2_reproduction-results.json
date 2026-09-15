@@ -1,0 +1,18 @@
+{
+  "head": "0b2a1776ff484d2410b3a43d338ec5548e73f019",
+  "scope": "exact-source client modules in VM; no installed/live acceptance",
+  "rows": [
+    {
+      "mode": "oversized-success",
+      "error": "CONTROL_RESPONSE_TOO_LARGE",
+      "authenticated": true,
+      "workAllowed": true
+    },
+    {
+      "mode": "unconfigured-account",
+      "error": "BOOTSTRAP_PROFILE_INCOMPATIBLE",
+      "authenticated": false,
+      "workAllowed": false
+    }
+  ]
+}

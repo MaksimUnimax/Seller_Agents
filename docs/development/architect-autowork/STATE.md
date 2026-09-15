@@ -1,8 +1,8 @@
 # Seller Agents — единый cursor
 
-Дата: 2026-09-15. Статус: I1_C1_R2_PREPARED / OWNER_START_RECEIVED / BRIDGE_ACK_PENDING.
+Дата: 2026-09-15. Статус: I1_C1_R2_REWORK_REQUIRED / I1_C1_R3_PREPARED / BRIDGE_ACK_PENDING.
 
-Владелец остановил прежние Stream A и Stream B и передал оба основному архитектору. В новом диалоге восстановление завершено; владелец дал явную команду «поехали». R1 остаётся REWORK_REQUIRED. Подготовлена одна следующая задача R2; сохранение документа не доказывает её захват Bridge или запуск CLI.
+Владелец передал Stream A и Stream B основному архитектору и разрешил авторежим командой «поехали». R2 terminal report получен и независимо проверен: REWORK_REQUIRED. Исполнитель по отчёту остановился. Подготовлена одна задача R3; сохранение не доказывает захват Bridge или запуск CLI. Исторические принятые серверные факты и очередь сохранены.
 
 ## Роли
 
@@ -10,15 +10,19 @@ Astra / очень высокая глубина рассуждения — гл
 
 ## Текущая задача
 
-- Завершённая задача: I1-C1-R1; terminal report получен и обработан 2026-09-15.
+- Завершённая задача: SA-I1-C1-R2-20260915-01; terminal report получен, REWORK_REQUIRED.
+- Этап: I1-C1; не закрыт.
 - Branch: feature/extension-i1-client-2026-09-15.
-- Проверенный published head: 9e80e8ad531f079b38bf03b9e29f171c87c477c0.
-- Base линии: bc0cd0088ca50ba06021ea602a46bdd90de91378.
-- Draft PR: https://github.com/MaksimUnimax/Seller_Agents/pull/7 — открыт, не принят и не слит.
-- Verdict: REWORK_REQUIRED. C1 остаётся открытым.
-- Следующая задача: SA-I1-C1-R2-20260915-01, I1-C1 / R2 / G1–G6. Полный подготовленный prompt: tasks/I1_C1_R2_2026-09-15.md. Статус транспорта: BRIDGE_ACK_PENDING; предназначен для однократной публикации в финальном кодовом блоке после сохранения/readback.
-- Bridge run/job ID не предоставлены. По terminal report текущий исполнитель закончил; транспортный ID и факт остановки процесса самостоятельно не выдумывать.
-- Следующее действие: один раз опубликовать подготовленный R2 prompt; затем ждать подтверждения/terminal report. После возможного обрыва сначала сверить последний assistant turn и существующий job, не повторять prepared prompt автоматически. Старое R1 не отправлять повторно.
+- Start/base R2: 9e80e8ad531f079b38bf03b9e29f171c87c477c0; base линии bc0cd0088ca50ba06021ea602a46bdd90de91378.
+- Проверенный published head / R3 start: 0b2a1776ff484d2410b3a43d338ec5548e73f019; tree 3a83601109f7cb643e06d923b1da36691f9b0014.
+- Main: 5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c.
+- Draft PR: https://github.com/MaksimUnimax/Seller_Agents/pull/7 — открыт, не слит.
+- Review: references/I1_C1_R2_REVIEW.md; независимые probes/results и CI evidence рядом.
+- Blockers: oversized200 сохраняет Work; signed initial UNCONFIGURED не аутентифицирует аккаунт; неполное fencing/критерийное покрытие; common-core legacy fixture; installed auth UI/redirect synchronization и отсутствие успешной local API/browser приёмки.
+- G6 native fixture restart принят только как synthetic fixture correction; это не installed real-auth/live acceptance.
+- Next: SA-I1-C1-R3-20260915-01, tasks/I1_C1_R3_2026-09-15.md.
+- Статус R3: PREPARED / BRIDGE_ACK_PENDING; один prompt предназначен для финального ответа. Доставка/запуск не утверждаются. По отчёту R2 остановлен; прямого Bridge-инструмента и run/job ID нет.
+- После публикации prompt ждать terminal report/уведомления. При обрыве сверить последний ответ/current job и не пересылать prepared prompt автоматически.
 
 ## Результат R1
 
@@ -63,7 +67,7 @@ Reported ZIP SHA-256 2580015cdf174c909e6733197d3b609ba10c3fe35008090df13ebc17a83
 4. Согласовать объединение принятых клиентской и серверной веток с новым main; не терять ни одну линию и не применять ours/theirs вслепую.
 5. Далее актуальный продуктовый roadmap; не требовать весь P8–P10 раньше раннего I1 и не объявлять внешние этапы закрытыми без их приёмки.
 
-R1 terminal report уже проверен. В новом чате получена команда запуска; подготовлен только R2, последующие задачи не выдавались.
+Исторически R1 был проверен и выдан R2. Теперь terminal R2 проверен; подготовлен только R3, более поздних задач нет.
 
 ## Протокол Bridge и переноса
 
@@ -87,3 +91,7 @@ Business Bridge ZIP 2.0.0.23 независимо сверён: cfd62cbcfb05abc2
 - native harness: закончить пустой restore, записать fixture authority, закрыть Chromium context, открыть тот же временный persistent profile с тем же runtime/trust и дождаться штатного restore нового worker. В реальном local API auth gate перезапуска между аккаунтами и storage injection нет.
 
 Это source-based проектирование следующего исправления, не новые runtime PASS. Старые R1/Health verdict и очередь сохранены. Передача prompt в Bridge и начало CLI должны подтверждаться фактическим уведомлением.
+
+## Приёмка R2 — 2026-09-15
+
+REWORK_REQUIRED на 0b2a1776ff484d2410b3a43d338ec5548e73f019. Exact-head push CI: I1 34965374842 FAILURE (installed104368454586, code regex NoneType, PostgreSQL healthy); common-core104368455663 FAILURE в34965374971 (legacy settings denied); native104368455416 SUCCESS. PR docs34965379091 SUCCESS. WB browser jobs оставались IN_PROGRESS при readback; полного CI PASS нет. Оба source-дефекта подтверждены независимыми VM probes на совпадающих Git blobs. Package hash/size приведены как reported; собственного ZIP byte readback нет. Полное ревью, границы и решения — references/I1_C1_R2_REVIEW.md. Сохранены R1/серверные исторические записи. Последующие old R2 preparation notes выше — история, не текущая команда.

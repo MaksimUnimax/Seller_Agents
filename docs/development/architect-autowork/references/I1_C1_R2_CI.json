@@ -1,0 +1,51 @@
+{
+  "head": "0b2a1776ff484d2410b3a43d338ec5548e73f019",
+  "runs": [
+    {
+      "id": 34965379091,
+      "name": "Documentation CI",
+      "status": "completed",
+      "conclusion": "success",
+      "event": "pull_request",
+      "head_sha": "0b2a1776ff484d2410b3a43d338ec5548e73f019",
+      "html_url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34965379091"
+    },
+    {
+      "id": 34965379044,
+      "name": "Extension CI",
+      "status": "in_progress",
+      "conclusion": null,
+      "event": "pull_request",
+      "head_sha": "0b2a1776ff484d2410b3a43d338ec5548e73f019",
+      "html_url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34965379044"
+    },
+    {
+      "id": 34965379075,
+      "name": "Extension I1-C1 client",
+      "status": "completed",
+      "conclusion": "failure",
+      "event": "pull_request",
+      "head_sha": "0b2a1776ff484d2410b3a43d338ec5548e73f019",
+      "html_url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34965379075"
+    },
+    {
+      "id": 34965374971,
+      "name": "Extension CI",
+      "status": "in_progress",
+      "conclusion": null,
+      "event": "push",
+      "head_sha": "0b2a1776ff484d2410b3a43d338ec5548e73f019",
+      "html_url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34965374971"
+    },
+    {
+      "id": 34965374842,
+      "name": "Extension I1-C1 client",
+      "status": "completed",
+      "conclusion": "failure",
+      "event": "push",
+      "head_sha": "0b2a1776ff484d2410b3a43d338ec5548e73f019",
+      "html_url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34965374842"
+    }
+  ],
+  "scope": "readback before R3 preparation; remaining WB browsers not needed to decide proven REWORK_REQUIRED"
+}
