@@ -3,7 +3,7 @@
 Дата проверки: 2026-09-15.
 Этап: D1 COMPLETED — D1.S1/D1.E0/D1.E1 приняты. D1.E1 IMPORT_ACCEPTED: 232 файла, remote CI и readback PASS. D0 COMPLETED; D2 IN_PROGRESS, D2.1 ACCEPTED; D2.2 ACCEPTED — SOURCE/PACKAGE/REMOTE CI/READBACK PASS; D2.3 INTERNAL_ADAPTER_ACCEPTED — SOURCE/PACKAGE/REMOTE CI/READBACK PASS; D2.4 DEVELOPMENT_APPLICATION_VERIFIED — SOURCE/PACKAGE/NATIVE_FIXTURE/REMOTE_CI/READBACK PASS; S1.1 DONE / REMOTE ACCEPTED.
 Product implementation: SERVER_IMPORTED_AND_VERIFIED; EXTENSION_BASELINES_IMPORTED_AND_VERIFIED; COMMON_CORE_COMPOSED_OZON_VERIFIED; BATCH_CONTEXT_VERIFIED; WB_INTERNAL_ADAPTER_VERIFIED; WB_APPLICATION_ROUTE_CONNECTED; COMBINED_OZON_WB_DEVELOPMENT_VERIFIED; REAL_ACCOUNT_AUTH_NOT_CONNECTED.
-I1-SRV.2 ACCEPTED; I1-SRV.3 IMPLEMENTED CANDIDATE / OWNER_ARCHITECT_REVIEW_PENDING; I1-SRV.4/I1-SRV.5 NOT_STARTED; S1.2 NOT_STARTED. I1-SRV.0 and I1-SRV.1 remain accepted. Evidence: [I1-SRV.2 acceptance](server/I1_SRV_2_DEVICE_AUTH_INTEGRATION_ACCEPTANCE_2026-09-15.md), [I1-SRV.3 acceptance](server/I1_SRV_3_BOOTSTRAP_TRUST_HANDOFF_ACCEPTANCE_2026-09-15.md).
+I1-SRV.2 ACCEPTED; I1-SRV.3 ACCEPTED; I1-SRV.4 IMPLEMENTED CANDIDATE / OWNER_ARCHITECT_REVIEW_PENDING; I1-SRV.5 NOT_STARTED; S1.2 NOT_STARTED. I1-SRV.0 and I1-SRV.1 remain accepted. Evidence: [I1-SRV.2 acceptance](server/I1_SRV_2_DEVICE_AUTH_INTEGRATION_ACCEPTANCE_2026-09-15.md), [I1-SRV.3 acceptance](server/I1_SRV_3_BOOTSTRAP_TRUST_HANDOFF_ACCEPTANCE_2026-09-15.md), [I1-SRV.4 acceptance](server/I1_SRV_4_ERROR_REVOCATION_OFFLINE_ACCEPTANCE_2026-09-15.md).
 Deployment: NOT_STARTED.
 Browser releases: NOT_CREATED.
 Live provider tests in this stage: NOT_RUN.
@@ -41,7 +41,7 @@ D1.E0: [карта расширений](migration/EXTENSION_IMPORT_MAP.md), [к
 
 S1.1: free beta access and atomic admission приняты в canonical `main` merge-коммитом `d0b54aa5e659932d3fa2d996b572e06aadfffe62`; точная post-merge authority и exact-head CI записаны в [S1.1 remote acceptance](server/S1_1_REMOTE_ACCEPTANCE_2026-09-14.md). В принятую область входят beta access basis/admission, атомарная регистрация, OTP/admin/API/bootstrap и соответствующие PostgreSQL проверки; реальная account auth расширения по-прежнему не подключена.
 
-I1-SRV.0 ACCEPTED; I1-SRV.1 ACCEPTED; I1-SRV.2 ACCEPTED. I1-SRV.3 is an implemented candidate pending owner/architect review: it preserves the existing V1/V2 signed bootstrap paths and adds a deterministic public-only trust-bundle schema/export for separately authenticated extension packaging. Runtime key download, TOFU, extension consumption, and database migrations remain out of scope. D2.4 remains `DEVELOPMENT_APPLICATION_VERIFIED`, and `REAL_ACCOUNT_AUTH_NOT_CONNECTED` remains true.
+I1-SRV.0 ACCEPTED; I1-SRV.1 ACCEPTED; I1-SRV.2 ACCEPTED; I1-SRV.3 ACCEPTED. I1-SRV.4 is an implemented candidate pending owner/architect review; it defines stable server errors, durable revocation outcomes, and executable verified-cache policy without changing HTTP codes or the database. Runtime key download, TOFU, extension consumption, and database migrations remain out of scope. D2.4 remains `DEVELOPMENT_APPLICATION_VERIFIED`, and `REAL_ACCOUNT_AUTH_NOT_CONNECTED` remains true.
 
 ## Следующий этап
 

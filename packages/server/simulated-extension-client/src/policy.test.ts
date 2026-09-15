@@ -405,7 +405,7 @@ describe("P3.6 cache and policy", () => {
     });
   });
 
-  it("does not turn an HTTP response into same-attempt cache success", async () => {
+  it("uses a previously verified cache for an audited transient bootstrap 503", async () => {
     const store = new TestStore();
     const first = activated({ store });
     await first.client.bootstrapWithPolicy(REQUEST);
@@ -423,11 +423,22 @@ describe("P3.6 cache and policy", () => {
           { status: 503 },
         ),
     });
-    expect(await second.client.bootstrapWithPolicy(REQUEST)).toEqual({
+    expect(await second.client.bootstrapWithPolicy(REQUEST)).toMatchObject({
+      kind: "READY",
+      source: "CACHE",
+      freshness: "FRESH",
+    });
+  });
+
+  it("keeps a transport failure distinct when no cache exists", async () => {
+    const client = activated({
+      fetch: async () => {
+        throw new TypeError("DNS failure");
+      },
+    }).client;
+    expect(await client.bootstrapWithPolicy(REQUEST)).toEqual({
       kind: "UNAVAILABLE",
-      reason: "HTTP_ERROR",
-      status: 503,
-      error: "BOOTSTRAP_UNAVAILABLE",
+      reason: "NETWORK_TRANSPORT",
     });
   });
 
@@ -451,6 +462,73 @@ describe("P3.6 cache and policy", () => {
       expect(store.value).toBeUndefined();
     },
   );
+
+  it("persists terminal online invalidation for the same device/session scope", async () => {
+    const store = new InMemoryBootstrapSnapshotStore();
+    const first = activated({ store });
+    await first.client.bootstrapWithPolicy(REQUEST);
+    const denied = activated({
+      store,
+      fetch: async () =>
+        new Response(
+          JSON.stringify({
+            error: {
+              code: "UNAUTHORIZED",
+              message: "Unauthorized",
+              correlationId: "corr",
+            },
+          }),
+          { status: 401 },
+        ),
+    });
+    expect(await denied.client.bootstrapWithPolicy(REQUEST)).toMatchObject({
+      kind: "UNAVAILABLE",
+      reason: "AUTHORIZATION_DENIED",
+    });
+    const offline = activated({
+      store,
+      fetch: async () => {
+        throw new TypeError("offline");
+      },
+    });
+    expect(await offline.client.bootstrapWithPolicy(REQUEST)).toEqual({
+      kind: "UNAVAILABLE",
+      reason: "TERMINALLY_INVALIDATED",
+    });
+    const unrelated = activated({
+      store,
+      fetch: async () => {
+        throw new TypeError("offline");
+      },
+    });
+    (
+      unrelated.client as unknown as { credentials: { sessionId: string } }
+    ).credentials.sessionId = "123e4567-e89b-42d3-a456-426614174099";
+    expect(await unrelated.client.bootstrapWithPolicy(REQUEST)).toEqual({
+      kind: "UNAVAILABLE",
+      reason: "NETWORK_TRANSPORT",
+    });
+  });
+
+  it("clears credentials after an explicit invalid refresh response", async () => {
+    const client = activated({
+      fetch: async () =>
+        new Response(
+          JSON.stringify({
+            error: {
+              code: "AUTH_REFRESH_INVALID",
+              message: "Authentication failed",
+              correlationId: "corr",
+            },
+          }),
+          { status: 401 },
+        ),
+    }).client;
+    await expect(client.refresh()).resolves.toBe(false);
+    expect(
+      (client as unknown as { credentials?: unknown }).credentials,
+    ).toBeUndefined();
+  });
 
   it("does not fall back after a 200 verification failure", async () => {
     const store = new TestStore();
@@ -510,7 +588,12 @@ describe("P3.6 cache and policy", () => {
       extensionVersion: "2.0.0",
       detectedAi: { family: "chat", surface: "work", variant: null },
     });
-    expect(result).toMatchObject({ kind: "UNAVAILABLE", reason: "HTTP_ERROR" });
+    expect(result).toMatchObject({
+      kind: "UNAVAILABLE",
+      reason: "HTTP_ERROR",
+      status: 503,
+      error: "BOOTSTRAP_UNAVAILABLE",
+    });
     expect(requestBody?.lastConfigVersion).toBeNull();
   });
 
