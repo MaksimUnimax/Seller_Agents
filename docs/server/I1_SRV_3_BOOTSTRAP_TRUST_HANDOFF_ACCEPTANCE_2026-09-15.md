@@ -1,6 +1,6 @@
 # I1-SRV.3 Bootstrap Trust / Public Signing-Key Handoff / Safe Rotation
 
-Date: 2026-09-15  
+Date: 2026-09-15
 Status: `I1-SRV.3 CORRECTIVE CANDIDATE / OWNER_ARCHITECT_REVERIFY_PENDING`
 
 ## Scope and exact base
