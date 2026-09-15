@@ -48,6 +48,7 @@ def main():
                 ("application", ROOT / "tests/regression/extension-core/application.mjs"),
                 ("i1-lifecycle", ROOT / "tests/regression/extension-core/client-i1/client-lifecycle.mjs"),
                 ("i1-races", ROOT / "tests/regression/extension-core/client-i1/client-races.mjs"),
+                ("i1-r2", ROOT / "tests/regression/extension-core/client-i1/client-r2.mjs"),
             ]
             for test_name, test in tests:
                 runner.run(label + "-" + test_name, [node, test, runtime])

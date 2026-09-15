@@ -126,6 +126,7 @@ export async function makeWorker(directory, options = {}) {
         Object.assign(backing[kind], structuredClone(values));
       },
       async remove(keys) {
+        await options.onStorageRemove?.(kind, keys);
         for (const key of Array.isArray(keys) ? keys : [keys])
           delete backing[kind][key];
       },

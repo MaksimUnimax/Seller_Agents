@@ -1,10 +1,10 @@
 # I1-C1 client candidate
 
-Status: implementation candidate prepared for architect review. This work does not accept or close I1, C2, I1-SRV.4, I1-SRV.5, D3, Health/P8, S1.2, release or deployment.
+Status: R2 implementation candidate prepared for architect review. This work does not accept or close I1, C2, I1-SRV.4, I1-SRV.5, D3, Health/P8, S1.2, release or deployment.
 
-Base: `bc0cd0088ca50ba06021ea602a46bdd90de91378`. Assigned starting head: `2a98057646af52eee0f654997b3f60f6322dfb04`. Implementation published head: `7deed6a8a68d1689e978fb55bfbea6fec0db74e0`.
+Base: `bc0cd0088ca50ba06021ea602a46bdd90de91378`. R2 assigned starting head: `9e80e8ad531f079b38bf03b9e29f171c87c477c0`. Final head is recorded in the R2 evidence after publication.
 
-The client now has one worker-lifetime auth owner and serialized state persistence with generation/attempt/session fences. Device start, polling, refresh and bootstrap keep logical idempotency keys and discard late success/error/finally continuations. Refresh is singleflight; one bounded refresh/bootstrap retry handles bootstrap 401; current-session refresh invalidation cannot clear a newer session. Pending transport/status/rate-limit failures remain retryable until the attempt deadline, while terminal denial is not restored as authority after restart.
+R2 closes the reviewed flight-owner, forced-bootstrap-refresh, fail-closed authority, composed signed-out routing, and contractual version-comparison defects. Polling, activation and refresh owners carry generation and logical identity; restrictive denial replaces in-memory authority before persistence/cleanup and uses removal as a durable fallback. Work permission is checked separately from composed application readiness. Pending transport/status/rate-limit failures remain retryable until the attempt deadline, while terminal denial is not restored as authority after restart.
 
 Bootstrap V2 remains WebCrypto Ed25519 with packaged trust, exact signed bytes and strict envelope/payload checks. Work requires a current account/device/session generation, compatible browser/extension, supported local AI mapping, signed policy and a validated profile fingerprint; unsupported AI/profile fallback is denied. The browser verifier is included in the extracted package and is tested against source/package fixtures, including payload and identifier boundaries.
 

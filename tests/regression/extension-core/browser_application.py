@@ -80,9 +80,21 @@ def run(runtime,output,private_key):
         page=popup=worker=None
         errors=[]
         try:
-            context.route('https://**/*',lambda route:route.fulfill(body=fixture,content_type='text/html') if route.request.url.startswith('https://chatgpt.com/c/') else route.abort())
             worker=context.service_workers[0] if context.service_workers else context.wait_for_event('serviceworker')
+            empty_status=worker.evaluate("async()=>SellerAgentsControlClient.status()")
+            assert empty_status['authenticated'] is False
             seed_authority(worker, private_key)
+            worker.evaluate("()=>{globalThis.__seller_agents_native_fixture_sentinel='first-worker-only'}")
+            extension_url=worker.url
+            context.close()
+            context=None
+            context=p.chromium.launch_persistent_context(profile,**opts)
+            worker=context.service_workers[0] if context.service_workers else context.wait_for_event('serviceworker')
+            assert worker.url == extension_url
+            assert worker.evaluate("()=>globalThis.__seller_agents_native_fixture_sentinel") is None
+            restored=worker.evaluate("async()=>SellerAgentsControlClient.status()")
+            assert restored['authenticated'] is True and restored['workAllowed'] is True
+            context.route('https://**/*',lambda route:route.fulfill(body=fixture,content_type='text/html') if route.request.url.startswith('https://chatgpt.com/c/') else route.abort())
             page=context.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
             page.goto('https://chatgpt.com/c/11111111-1111-4111-8111-111111111111')
             tab_id=until(lambda:worker.evaluate("async()=>{const tabs=await chrome.tabs.query({url:'https://chatgpt.com/c/*'});return tabs[0]?.id}"))
@@ -156,7 +168,9 @@ def run(runtime,output,private_key):
                 try:(output/'failure-worker.json').write_text(json.dumps(worker.evaluate('async()=>chrome.storage.local.get(["ozmb_diagnostics","ozmb_work_sessions_v1","ozmb_manual_operations","ozmb_pending_work_starts_v1"])'),ensure_ascii=False,indent=2))
                 except Exception:pass
         finally:
-            context.close();(output/'result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2))
+            if context:
+                context.close()
+            (output/'result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2))
     print(json.dumps(result,ensure_ascii=False));assert result['status']=='PASS',result.get('error')
 
 if __name__=='__main__':

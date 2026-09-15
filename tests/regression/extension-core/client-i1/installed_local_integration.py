@@ -8,7 +8,7 @@ from pathlib import Path
 import argparse, json, os, re, subprocess, tempfile, time, urllib.request
 from playwright.sync_api import sync_playwright
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[4]
 NODE = os.environ.get("SA_NODE_BIN", "node")
 PNPM = os.environ.get("SA_PNPM_BIN", "pnpm")
 
@@ -30,6 +30,13 @@ def run(runtime, output):
     if not os.environ.get("DATABASE_URL"):
         raise RuntimeError("DATABASE_URL is required")
     output.mkdir(parents=True, exist_ok=False)
+    required = [ROOT / "package.json", ROOT / "tooling/build/extension_composed.py",
+                ROOT / "tests/regression/extension-core/client-i1/api-harness.ts",
+                ROOT / "tests/regression/extension-core/client-i1/make-browser-config.mjs",
+                ROOT / "tests/regression/extension-core/fixtures/application-chat.html"]
+    missing = [str(path) for path in required if not path.is_file()]
+    if missing:
+        raise RuntimeError("required installed-local inputs missing: " + ", ".join(missing))
     api_port, portal_port = "43100", "43101"
     env = {**os.environ, "SA_I1_API_PORT": api_port}
     processes = []
@@ -68,7 +75,6 @@ def run(runtime, output):
                     chat = context.new_page()
                     chat.goto("https://chatgpt.com/c/11111111-1111-4111-8111-111111111111")
                     popup = context.new_page()
-                    popup.on("dialog", lambda dialog: dialog.accept())
                     popup.goto(worker.url.rsplit("/", 1)[0] + "/popup.html")
 
                     def activate(email):
@@ -104,11 +110,13 @@ def run(runtime, output):
                     portal_page.evaluate("""async () => { const csrf = document.cookie.split(';').map(x => x.trim()).find(x => x.startsWith('pcp_csrf=')); await fetch('/api/control-plane/v1/auth/logout', {method:'POST', headers: csrf ? {'x-csrf-token': csrf.slice(9)} : {}}); }""")
                     portal_page.close()
                     popup.click("#auth-reset")
-                    popup.wait_for_function("!document.querySelector('#auth-reset').hidden && document.querySelector('#auth-start').offsetParent !== null")
+                    popup.locator("#confirmation").wait_for()
+                    popup.locator("#confirmation #confirm").click()
+                    popup.wait_for_function("document.querySelector('#auth-start').offsetParent !== null && document.querySelector('#account').innerText.includes('Вход не выполнен')")
                     activate("i1-client-two@example.test")
                     assert popup.locator("#account").inner_text() != first_account
                     assert "Аккаунт A WB" not in popup.locator("#stores").inner_text()
-                    result.update(status="PASS", installed_acceptance=True, browser=context.browser.version, checks=["real API device start", "portal OTP/approve", "device exchange", "browser V2 bootstrap", "account-scoped WB catalog", "account reset and second account isolation"])
+                    result.update(status="PASS", installed_acceptance=True, browser=context.browser.version, checks=["real API device start", "portal OTP/approve", "device exchange", "browser V2 bootstrap", "account-scoped WB catalog", "account reset and second account isolation"], same_worker=True, distinct_accounts=True, distinct_exchange_completions=True)
                 finally:
                     context.close()
         except Exception as error:
