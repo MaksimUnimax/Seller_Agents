@@ -154,6 +154,9 @@
   ],
   "application_patches": "apps/extension/application-patches.json",
   "application_files": {
+    "shared/bootstrap_verifier.js": [
+      "packages/control-client/src/crypto.js"
+    ],
     "shared/application.js": [
       "packages/bridge-core/src/stores/catalog.js",
       "apps/extension/src/application/runtime.js",

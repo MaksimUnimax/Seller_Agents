@@ -47,10 +47,11 @@ def main():
                 ("wb", ROOT / "tests/regression/extension-core/wb-adapter.mjs"),
                 ("application", ROOT / "tests/regression/extension-core/application.mjs"),
                 ("i1-lifecycle", ROOT / "tests/regression/extension-core/client-i1/client-lifecycle.mjs"),
+                ("i1-races", ROOT / "tests/regression/extension-core/client-i1/client-races.mjs"),
             ]
             for test_name, test in tests:
                 runner.run(label + "-" + test_name, [node, test, runtime])
-            runner.run(label + "-i1-verifier", [node, ROOT / "tests/regression/extension-core/client-i1/verifier.mjs", ROOT / "packages/control-client/src/crypto.js"])
+            runner.run(label + "-i1-verifier", [node, ROOT / "tests/regression/extension-core/client-i1/verifier.mjs", runtime / "shared/bootstrap_verifier.js"])
         result["status"] = "PASS"
     except Exception as error:
         result["status"] = "FAIL"

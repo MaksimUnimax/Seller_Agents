@@ -4,7 +4,7 @@ fixture AI tab, because Playwright does not operate the browser action toolbar.
 No live AI/provider or installed target-browser certification is claimed.
 """
 from pathlib import Path
-import argparse,json,tempfile,time,os,traceback
+import argparse,base64,json,tempfile,time,os,traceback
 from playwright.sync_api import sync_playwright
 ROOT=Path(__file__).resolve().parents[3]
 
@@ -16,7 +16,60 @@ def until(fn, timeout=30):
         time.sleep(.1)
     raise AssertionError('Timed out waiting for browser state')
 
-def run(runtime,output):
+def seed_authority(worker, private_key):
+    encoded = base64.b64encode(private_key.read_bytes()).decode('ascii')
+    worker.evaluate("""async (pkcs8) => {
+      const v = SellerAgentsBootstrapVerifier;
+      const fromB64 = value => Uint8Array.from(atob(value), char => char.charCodeAt(0));
+      const b64 = bytes => btoa(String.fromCharCode(...bytes));
+      const hex = bytes => [...bytes].map(value => value.toString(16).padStart(2, '0')).join('');
+      const deviceId = '22222222-2222-4222-8222-222222222222';
+      const sessionId = '33333333-3333-4333-8333-333333333333';
+      const content = {
+        schemaVersion: 'adapter_profile_v1',
+        page: {identityStrategy: 'page_identity', conversationStrategy: 'conversation_root', composerStrategy: 'composer_root'},
+        selectors: {
+          conversation: {strategy: 'conversation_root', primary: {kind: 'packaged_selector_reference', reference: 'conversation-root'}, fallbacks: [], timeoutMs: 1000, observationMode: 'polling'},
+          composer: {strategy: 'composer_root', primary: {kind: 'packaged_selector_reference', reference: 'composer-root'}, fallbacks: [], timeoutMs: 1000, observationMode: 'polling'},
+          send: {strategy: 'send_control', primary: {kind: 'packaged_selector_reference', reference: 'send-control'}, fallbacks: [], timeoutMs: 1000, observationMode: 'polling'},
+          assistantResponse: {strategy: 'assistant_response', primary: {kind: 'packaged_selector_reference', reference: 'assistant-response'}, fallbacks: [], timeoutMs: 1000, observationMode: 'polling'}
+        },
+        observation: {mode: 'polling', intervalMs: 500},
+        contours: [
+          {key: 'page_identity', required: true, expectedState: 'PRESENT', strategy: 'page_identity'},
+          {key: 'conversation_root', required: true, expectedState: 'PRESENT', strategy: 'conversation_root'},
+          {key: 'composer_root', required: true, expectedState: 'INTERACTIVE', strategy: 'composer_root'},
+          {key: 'send_control', required: true, expectedState: 'INTERACTIVE', strategy: 'send_control'}
+        ]
+      };
+      const compatibility = {
+        schemaVersion: 'profile_compatibility_v1', contractVersion: 'control_plane_v1', browserFamilies: ['chrome'],
+        minimumBrowserVersions: [], minimumExtensionVersion: null
+      };
+      const profileBytes = new TextEncoder().encode(v.canonicalJson({content, compatibility}));
+      const contentSha256 = hex(new Uint8Array(await crypto.subtle.digest('SHA-256', profileBytes)));
+      const payload = {
+        snapshotVersion: 'bootstrap_snapshot_v2', contractVersion: 'control_plane_v2', configVersion: 1,
+        issuedAt: '2026-09-15T00:00:00Z', expiresAt: '2099-09-16T00:00:00Z', offlineGraceUntil: '2099-09-17T00:00:00Z',
+        serverTime: '2026-09-15T00:00:00Z', account: {id: '11111111-1111-4111-8111-111111111111', status: 'ACTIVE'},
+        subscription: {state: 'NONE', planRevision: null}, devicePolicy: {status: 'ACTIVE'},
+        compatibility: {extension: {status: 'SUPPORTED', minimumVersion: null}, browser: {status: 'SUPPORTED'}},
+        entitlements: {}, features: {},
+        ai: {status: 'RESOLVED', detected: {family: 'chatgpt', surface: 'web', variant: null},
+          profile: {profileKey: 'browser-fixture-profile', revision: 1, scopeVariant: null, schemaVersion: 'adapter_profile_v1', contentSha256, content, compatibility}}
+      };
+      const payloadBytes = new TextEncoder().encode(v.canonicalJson(payload));
+      const key = await crypto.subtle.importKey('pkcs8', fromB64(pkcs8), {name: 'Ed25519'}, false, ['sign']);
+      const keyId = 'browser-fixture-key';
+      const prefix = new Uint8Array([...new TextEncoder().encode('product-control-plane/bootstrap-snapshot/v1'), 0, ...new TextEncoder().encode(keyId), 0]);
+      const signed = new Uint8Array(prefix.length + payloadBytes.length); signed.set(prefix); signed.set(payloadBytes, prefix.length);
+      const signature = new Uint8Array(await crypto.subtle.sign('Ed25519', key, signed));
+      const envelope = {envelopeVersion: 'bootstrap_envelope_v2', algorithm: 'Ed25519', keyId, payload: v.base64urlEncode(payloadBytes), signature: v.base64urlEncode(signature)};
+      const credentials = {deviceId, sessionId, tokenType: 'Bearer', accessToken: 'fixture_access_token', accessTokenExpiresAt: '2099-09-16T00:00:00Z', refreshToken: 'A'.repeat(43), refreshTokenExpiresAt: '2099-09-17T00:00:00Z'};
+      await chrome.storage.local.set({seller_agents_control_auth_v2: {generation: 1, credentials, pending: null, rotation: null, authority: {verified: true, workAllowed: true, payload, envelope, deviceId, sessionId, generation: 1, requestedAi: 'chatgpt'}, lastError: null}});
+    }""", encoded)
+
+def run(runtime,output,private_key):
     output.mkdir(parents=True,exist_ok=True)
     fixture=(ROOT/'tests/regression/extension-core/fixtures/application-chat.html').read_text()
     result={'status':'RUNNING','live_provider_calls':0,'installed_acceptance':False,'scope':'native Chromium fixture; popup active-tab port controlled; synthetic AI/fetch'}
@@ -29,6 +82,7 @@ def run(runtime,output):
         try:
             context.route('https://**/*',lambda route:route.fulfill(body=fixture,content_type='text/html') if route.request.url.startswith('https://chatgpt.com/c/') else route.abort())
             worker=context.service_workers[0] if context.service_workers else context.wait_for_event('serviceworker')
+            seed_authority(worker, private_key)
             page=context.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
             page.goto('https://chatgpt.com/c/11111111-1111-4111-8111-111111111111')
             tab_id=until(lambda:worker.evaluate("async()=>{const tabs=await chrome.tabs.query({url:'https://chatgpt.com/c/*'});return tabs[0]?.id}"))
@@ -40,7 +94,7 @@ def run(runtime,output):
             popup=context.new_page();popup.on('pageerror',lambda e:errors.append(str(e)))
             popup.add_init_script(f"const originalQuery=chrome.tabs.query.bind(chrome.tabs);chrome.tabs.query=(query)=>query.active?Promise.resolve([{{id:{tab_id}}}]):originalQuery(query);")
             popup.goto(worker.url.rsplit('/',1)[0]+'/popup.html')
-            until(lambda: 'I1' in popup.locator('#account').inner_text())
+            until(lambda: 'Аккаунт · 11111111' in popup.locator('#account').inner_text())
             popup.click('#wildberries');popup.click('#add');popup.fill('#token','FIXTURE_BROWSER_PERSONAL_TOKEN');popup.fill('#name','Тестовый WB');popup.click('#save')
             until(lambda: 'Тестовый WB' in popup.locator('#stores').inner_text())
             assert page.evaluate('sent.length')==0
@@ -106,4 +160,4 @@ def run(runtime,output):
     print(json.dumps(result,ensure_ascii=False));assert result['status']=='PASS',result.get('error')
 
 if __name__=='__main__':
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--runtime',type=Path,required=True);parser.add_argument('--output',type=Path,required=True);args=parser.parse_args();run(args.runtime.resolve(),args.output.resolve())
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--runtime',type=Path,required=True);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--fixture-private-key',type=Path,required=True);args=parser.parse_args();run(args.runtime.resolve(),args.output.resolve(),args.fixture_private_key.resolve())

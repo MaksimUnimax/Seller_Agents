@@ -31,7 +31,7 @@ function saPopupSender(sender) {
   // The same privileged page may be hosted by the browser action or its own tab.
   return sender?.url === chrome.runtime.getURL("popup.html");
 }
-async function saEnabled() { await saReady; return saCatalogEnabled; }
+async function saEnabled() { await saReady; return saCatalogEnabled && Boolean(await SellerAgentsControlClient.currentAccount()); }
 let saInitializeFlight = null;
 async function saInitialize() {
   if (await saEnabled()) return;
@@ -48,12 +48,15 @@ function saStoreContext(store) {
   return { accountId: store.accountId, storeId: store.id, marketplace: store.marketplace,
     credentialRevision: store.credentialRevision, policyRevision: store.personalDataEnabled ? "personal-enabled" : "personal-disabled" };
 }
+async function saAuthorityStoreContext(store) {
+  return { ...saStoreContext(store), authGeneration: await SellerAgentsControlClient.generation() };
+}
 async function saAssertStore(pinned) {
   const accountId = await SellerAgentsControlClient.currentAccount();
   if (!accountId || !pinned || pinned.accountId !== accountId) throw SellerAgentsExecutionContext.error();
   let store;
   try { store = await saCatalog.get(pinned.storeId); } catch (_) { throw SellerAgentsExecutionContext.error(); }
-  const live = saStoreContext(store);
+  const live = { ...saStoreContext(store), ...(pinned.authGeneration === undefined ? {} : { authGeneration: await SellerAgentsControlClient.generation() }) };
   if (Object.keys(live).some(key => live[key] !== pinned[key])) throw SellerAgentsExecutionContext.error();
   return store;
 }
@@ -77,7 +80,7 @@ async function saReadContext(key, immutable, ownerIdentity) {
   const current = manualContextOwners.get(key);
   const ownerActive = !ownerIdentity || current?.operation_id === ownerIdentity.operation_id && manualOperationActive(current) &&
     SellerAgentsExecutionContext.fields.every(field => current.execution_context?.[field] === ownerIdentity.execution_context[field]);
-  return { ...immutable, ...(store ? saStoreContext(store) : p), accountId: store?.accountId || "unavailable",
+  return { ...immutable, ...(store ? await saAuthorityStoreContext(store) : p), accountId: store?.accountId || "unavailable",
     conversationKey: key, bindingId: binding?.binding_id || "unbound", bindingRevision: binding?.revision || 0,
     workSessionId: work.start_intent_id || "inactive", active: Boolean(store && ownerActive &&
       [OzonWorkSessionModel.STATES.ACTIVE_VISIBLE, OzonWorkSessionModel.STATES.ACTIVE_HIDDEN, OzonWorkSessionModel.STATES.RECOVERING].includes(work.state)) };
@@ -164,7 +167,7 @@ async function saWorkStart(message, sender) {
       if (["active_visible", "active_hidden", "error"].includes(work?.state))
         await saLegacyMessage({ type: "OZ_WORK_FINISH", tab_id: message.tab_id, conversation_key: key }, sender);
     }
-    saStarts.set(Number(message.tab_id), saStoreContext(store));
+    saStarts.set(Number(message.tab_id), await saAuthorityStoreContext(store));
     try { return await saLegacyMessage({ type: "OZ_WORK_START", tab_id: message.tab_id, start_intent_id: message.start_intent_id }, sender); }
     finally { saStarts.delete(Number(message.tab_id)); }
   });

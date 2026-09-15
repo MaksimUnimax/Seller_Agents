@@ -1,0 +1,16 @@
+{
+  "stage": "I1-C1",
+  "package": "SELLER_AGENTS_I1_C1_v0.2.4_LOCAL_DEVELOPMENT.zip",
+  "bytes": 1790601,
+  "sha256": "2580015cdf174c909e6733197d3b609ba10c3fe35008090df13ebc17a838d00f",
+  "repeat_archive_match": true,
+  "source_extracted_bytes_match": true,
+  "extracted_verifier": "shared/bootstrap_verifier.js",
+  "trust_input": "checked-in LOCAL DEVELOPMENT public bundle; no private signing key",
+  "source_package_readback": "PASS",
+  "recorded_commands": [
+    "PATH=/root/.nvm/versions/node/v24.20.0/bin:$PATH python3 tooling/build/extension_composed.py --output <fresh-output>",
+    "SA_NODE_BIN=/root/.nvm/versions/node/v24.20.0/bin/node python3 tooling/checks/extension_i1.py --output <fresh-output>",
+    "PATH=/root/.nvm/versions/node/v24.20.0/bin:$PATH python3 tooling/checks/extension_core.py --output <fresh-output>"
+  ]
+}

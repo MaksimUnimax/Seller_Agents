@@ -1,29 +1,63 @@
 {
   "stage": "I1-C1",
+  "status": "IMPLEMENTATION_CANDIDATE_FOR_REVIEW",
   "environment": "LOCAL DEVELOPMENT",
   "base": "bc0cd0088ca50ba06021ea602a46bdd90de91378",
-  "task_head": "ba7ca3185dd3e3141af505697642e07b49d6e864",
-  "implementation_head": "b00fc7c3cc2fe14f9833fa48947e95b5a8a755ca",
-  "publication_head": "eb665f504659db29b73219472875a1cfd3f72c17",
-  "requirements": {
-    "SA-AUTH-01": ["A13", "device activation, privileged token storage, stable polling/refresh generation"],
-    "SA-SHOP-01": ["A20", "signed V2 account-scoped catalog"],
-    "SA-SHOP-04": ["A30", "account/store async guards and legacy isolation"],
-    "SA-WORK-01": ["A31", "verified local authority gates Work"],
-    "SA-WORK-02": ["A31", "authority generation invalidates late work"],
-    "SA-WORK-03": ["A31", "existing Finish/no-replay/context assertions retained"],
-    "SA-SYNC-01": ["A32", "one installation refresh flight"],
-    "SA-SYNC-02": ["A32", "stable idempotency through rotation commit"],
-    "SA-QUOTA-01": ["A31", "existing local quota guards retained"],
-    "SA-DATA-02": ["A30", "catalog data remains account scoped"]
+  "assigned_start_head": "2a98057646af52eee0f654997b3f60f6322dfb04",
+  "published_head": "FILLED_AFTER_PUBLICATION",
+  "review_commit": "b4045fa9353cd2fee7f49f0bd3fea280e808679",
+  "server_contract_head": "5d7c8853cc69dd95bc6e713cac3fb2aa0a63383",
+  "F1_cancelled_start_late_response": {
+    "fix": "worker-lifetime auth owner, generation/attempt fencing, serialized persistence, fenced portal/polling/finally",
+    "test": "tests/regression/extension-core/client-i1/client-races.mjs; extension_i1 source/package races",
+    "result": "PASS"
   },
-  "server_smoke": {
-    "api_origin": "http://127.0.0.1:43100",
-    "portal_origin": "http://127.0.0.1:43101",
-    "postgres": "disposable tmpfs PostgreSQL 18",
-    "otp": "fixed local test delivery; not email evidence",
-    "outcome": "activation approve, exchange activated, bootstrap_envelope_v2"
+  "F2_bootstrap_401_authority": {
+    "fix": "one bounded refresh and one bootstrap retry; final 401 invalidates captured current authority",
+    "test": "client lifecycle/bootstrap harness and source/package worker regression",
+    "result": "PASS"
   },
-  "native_browser": {"status": "OPEN_CI_GATE", "reason": "local headless extension startup did not complete with filesystem at 100%"},
-  "not_claimed": ["full I1", "I1-SRV.4", "I1-SRV.5", "D3", "preprod", "email delivery", "browser-store release", "all browsers"]
+  "F3_old_refresh_clears_new_session": {
+    "fix": "refresh operation context and AUTH_REFRESH_INVALID generation fence",
+    "test": "client-races old-refresh/new-session regression",
+    "result": "PASS"
+  },
+  "F4_ai_profile_binding": {
+    "fix": "exact supported AI mapping, strict profile/compatibility shape, canonical content fingerprint, no arbitrary fallback",
+    "test": "verifier and worker harness policy/profile regressions",
+    "result": "PASS"
+  },
+  "F5_compatible_bootstrap_work": {
+    "fix": "authority identity/policy comparison separates compatible refresh from authority invalidation; auth generation is carried by Work context",
+    "test": "context regression and full composed extension-core route",
+    "result": "PASS"
+  },
+  "F6_verifier_payload_limit": {
+    "fix": "strict encoded payload limit and bounded network body reader; source and extracted verifier are checked",
+    "test": "client-i1/verifier.mjs differential positive/negative fixtures",
+    "result": "PASS"
+  },
+  "F7_restart_trusted_key": {
+    "fix": "worker harness persists and reuses one test signing key across backing-storage restarts",
+    "test": "client lifecycle restart/recovery and package worker gates",
+    "result": "PASS"
+  },
+  "F8_identifier_1flag": {
+    "fix": "browser machine identifier accepts the server-contract lowercase identifier grammar",
+    "test": "verifier positive fixture using keyId 1flag and negative boundary fixtures",
+    "result": "PASS"
+  },
+  "additional_ui_ci": {
+    "popup": "account reset remains visible when authenticated and pending; pending cancellation is exposed",
+    "ci": "pnpm bootstrap precedes setup-node cache; Python Playwright is installed; version/import expectations use 0.2.4; native fixture seeds only ephemeral signed authority",
+    "result": "PASS_LOCAL_AND_WIRED_FOR_EXACT_HEAD_CI"
+  },
+  "checks": {
+    "extension_i1": {"status": "PASS", "gate_processes": 88, "installed_acceptance": false},
+    "extension_core": {"status": "PASS", "gate_processes": 111, "installed_acceptance": false},
+    "native_chromium_source_and_extracted": {"status": "PASS", "browser": "Chromium 151.0.7922.34", "provider_calls": 0},
+    "installed_local_integration": {"status": "CI_JOB_WIRED", "otp": "development fixed OTP; not email evidence"},
+    "docs_bridge_openapi": {"status": "PENDING_FINAL_RUN"}
+  },
+  "not_claimed": ["full I1", "C2", "I1-SRV.4", "I1-SRV.5", "S1.2", "D3", "Health/P8", "real email delivery", "preprod/production", "release/deployment"]
 }

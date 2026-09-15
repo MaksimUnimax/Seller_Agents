@@ -77,19 +77,22 @@ def ozon_route(runner, work, runtime, label, source_route, expected_version="0.1
     prod = ozon / "dist-step7-candidate"
     manifest = baseline.read_json(prod / "manifest.json")
     permission = baseline.read_json(ROOT / "tests/fixtures/imported/ozon-permissions-0aa8f535/manifest.json")
-    assert expected_version in ("0.1.22", "0.2.0", "0.2.1", "0.2.2", "0.2.3")
+    assert expected_version in ("0.1.22", "0.2.0", "0.2.1", "0.2.2", "0.2.3", "0.2.4")
     assert manifest["manifest_version"] == 3 and manifest["version"] == expected_version
     for key in ("permissions", "host_permissions"):
         expected_permissions = permission[key]
-        if expected_version == "0.2.3" and key == "host_permissions":
+        if expected_version in ("0.2.3", "0.2.4") and key == "host_permissions":
             expected_permissions += baseline.read_json(ROOT / "apps/extension/composition.json")["marketplace_hosts"]
+        if expected_version == "0.2.4" and key == "host_permissions":
+            expected_permissions += ["http://127.0.0.1:43100/*", "http://127.0.0.1:43101/*"]
         assert manifest[key] == expected_permissions, key
     texts = {p.relative_to(prod).as_posix(): p.read_text(encoding="utf-8")
              for p in prod.rglob("*") if p.is_file()}
     old_lines = [(p, line) for p, text in texts.items() for line in text.splitlines() if "0.1.21" in line]
     assert len(old_lines) == 1 and old_lines[0][0] == "service_worker_entry.js"
     assert "Repair live v0.1.21 defects before downstream output/delivery wrappers capture contract/provider globals." in old_lines[0][1]
-    assert sum(expected_version in text for text in texts.values()) == (9 if expected_version == "0.2.3" else 10)
+    expected_version_files = 8 if expected_version == "0.2.4" else (9 if expected_version == "0.2.3" else 10)
+    assert sum(expected_version in text for text in texts.values()) == expected_version_files
     if expected_version != "0.1.22":
         assert not any("0.1.22" in text for text in texts.values())
     assert not any(re.search(r"0\.1\.(19|20)", text) for text in texts.values())
@@ -100,7 +103,7 @@ def ozon_route(runner, work, runtime, label, source_route, expected_version="0.1
     swagger = v / "swagger-read-surface-patch-2026-09-13"
     repaired = v / "swagger-read-surface-live-repair-2026-09-13"
     effect = v / "read-effect-repair-v1"
-    if expected_version in ("0.2.1", "0.2.2", "0.2.3"):
+    if expected_version in ("0.2.1", "0.2.2", "0.2.3", "0.2.4"):
         corrective = effect / "run_live_gate_corrective_regression.mjs"
         original_corrective = corrective.read_text()
         old_guard = r"if \(!commandRequiresPersonalDataPolicy\(entry\.command\) \|\| personalDataEnabled\) return entry;"
@@ -144,7 +147,7 @@ def ozon_route(runner, work, runtime, label, source_route, expected_version="0.1
             "prepareProviderQuotaForCommand(physicalCommandForQuota)": "prepareQuota(physicalCommandForQuota)",
             "executeOzonCore(liveEntry.command_text": "execute(liveEntry.command_text",
         }
-        if expected_version in ("0.2.1", "0.2.2", "0.2.3") and kind == "predispatch":
+        if expected_version in ("0.2.1", "0.2.2", "0.2.3", "0.2.4") and kind == "predispatch":
             # Only the four renamed ports in the structural order assertion change.
             # The original test and RED route remain untouched; all behavior assertions stay intact.
             original_source = green_script.read_text()
@@ -163,7 +166,7 @@ def ozon_route(runner, work, runtime, label, source_route, expected_version="0.1
                 "adapted_sha256": baseline.sha256(adapted_source.encode()),
                 "marker_mapping": marker_mapping, "behavior_assertions_changed": False,
             })
-        if expected_version == "0.2.3" and kind == "full-worker":
+        if expected_version in ("0.2.3", "0.2.4") and kind == "full-worker":
             original_source = green_script.read_text()
             old_sender = 'listener(message, sender, (response) => {'
             new_sender = 'listener(message, /^OZ_(?:SAVE_|BIND_CONVERSATION|WORK_RESUME|SET_MANUAL_MODE|GET_DIAGNOSTICS)/.test(message.type) ? { url: chrome.runtime.getURL("popup.html") } : sender, (response) => {'

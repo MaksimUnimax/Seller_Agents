@@ -25,6 +25,7 @@ function render() {
   $("auth-open").hidden = !state.auth?.pending;
   $("auth-start").textContent = state.auth?.pending ? "Открыть портал ещё раз" : "Войти через портал";
   $("auth-reset").hidden = !authenticated && !state.auth?.pending;
+  $("auth-cancel").hidden = !state.auth?.pending;
   if (!authenticated) return;
   for (const id of ["ozon", "wildberries"]) $(id).setAttribute("aria-pressed", String(id === marketplace));
   const choices = state.stores.filter(s => s.marketplace === marketplace);
@@ -78,6 +79,7 @@ $("finish").onclick = () => action(() => request("OZ_WORK_FINISH", { conversatio
 $("resume").onclick = () => action(() => request("SA_RESUME_QUOTA"));
 $("auth-start").onclick = () => action(() => request("SA_AUTH_START"));
 $("auth-open").onclick = () => action(() => request("SA_AUTH_OPEN_PORTAL"));
+$("auth-cancel").onclick = () => action(() => request("SA_AUTH_CANCEL"));
 $("auth-reset").onclick = () => confirm("Локально завершить текущую сессию и выбрать аккаунт заново? Сохранённые магазины останутся изолированными по аккаунту.", () => request("SA_AUTH_RESET"));
 for (const part of ["seller", "performance", "token"]) $("check-" + part).onclick = () => action(() => request("SA_STORE_CHECK", { store_id: selectedId, part }));
 chrome.tabs.query({ active: true, currentWindow: true }).then(tabs => { tabId = tabs[0]?.id; return refresh(true); }).catch(e => { $("status").textContent = e.message; });

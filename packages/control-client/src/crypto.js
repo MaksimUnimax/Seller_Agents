@@ -3,7 +3,8 @@
   "use strict";
   const textEncoder = new TextEncoder();
   const DOMAIN = textEncoder.encode("product-control-plane/bootstrap-snapshot/v1\0");
-  const MACHINE = /^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$/;
+  /* Must remain byte-for-byte compatible with StableMachineIdentifierV1. */
+  const MACHINE = /^[a-z0-9][a-z0-9._-]*$/;
   const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
   const SEMVER = /^[0-9]+\.[0-9]+\.[0-9]+(?:[-+][A-Za-z0-9.-]+)?$/;
   const B64URL = /^[A-Za-z0-9_-]+$/;
@@ -100,7 +101,7 @@
     const result = value(); ws(); if (i !== source.length) throw new Error("INVALID_JSON"); return result;
   }
   function iso(value) { return typeof value === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?(?:Z|[+-]\d{2}:\d{2})$/.test(value) && !Number.isNaN(Date.parse(value)); }
-  function machine(value) { return typeof value === "string" && value.length <= 128 && MACHINE.test(value); }
+  function machine(value) { return typeof value === "string" && value.length <= 64 && MACHINE.test(value); }
   function detected(value) { return exact(value, ["family", "surface", "variant"]) && machine(value.family) && machine(value.surface) && (value.variant === null || machine(value.variant)); }
   function jsonObject(value) { return record(value) && Object.keys(value).length <= 128; }
   function ai(value) {
@@ -144,7 +145,7 @@
   }
   async function verifyBootstrapV2(input, bundle) {
     let envelope;
-    if (!exact(input, ["envelopeVersion", "algorithm", "keyId", "payload", "signature"]) || input.envelopeVersion !== "bootstrap_envelope_v2" || input.algorithm !== "Ed25519" || !machine(input.keyId)) return fail("INVALID_ENVELOPE");
+    if (!exact(input, ["envelopeVersion", "algorithm", "keyId", "payload", "signature"]) || input.envelopeVersion !== "bootstrap_envelope_v2" || input.algorithm !== "Ed25519" || !machine(input.keyId) || typeof input.payload !== "string" || input.payload.length > 32768 || typeof input.signature !== "string" || input.signature.length > 256) return fail("INVALID_ENVELOPE");
     const keyRing = await makeKeyRing(bundle), key = keyRing.get(input.keyId); if (!key) return fail("UNKNOWN_SIGNING_KEY");
     const payloadBytes = b64url(input.payload), signature = b64url(input.signature); if (!payloadBytes || !signature) return fail("INVALID_PAYLOAD_ENCODING");
     let valid = false; try { const data = new Uint8Array(DOMAIN.length + input.keyId.length + 1 + payloadBytes.length); data.set(DOMAIN); data.set(textEncoder.encode(input.keyId), DOMAIN.length); data[DOMAIN.length + input.keyId.length] = 0; data.set(payloadBytes, DOMAIN.length + input.keyId.length + 1); valid = await crypto.subtle.verify("Ed25519", key, signature, data); } catch (_) { return fail("INVALID_SIGNATURE"); }

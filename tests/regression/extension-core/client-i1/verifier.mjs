@@ -16,7 +16,7 @@ const canonical = (value) => {
 };
 const fromContext = (value) => vm.runInContext(`JSON.parse(${JSON.stringify(JSON.stringify(value))})`, context);
 const uuid = "11111111-1111-4111-8111-111111111111";
-const keyId = "i1-regression-key";
+const keyId = "1flag";
 const keys = await webcrypto.subtle.generateKey({ name: "Ed25519" }, true, ["sign", "verify"]);
 const spki = new Uint8Array(await webcrypto.subtle.exportKey("spki", keys.publicKey));
 const publicKey = Buffer.from(spki).toString("base64");
@@ -39,6 +39,19 @@ const tampered = fromContext({ ...envelope, payload: Buffer.from(JSON.stringify(
 assert.equal((await verify(tampered)).ok, false);
 assert.equal((await verify(fromContext({ ...envelope, envelopeVersion: "bootstrap_envelope_v1" }))).error, "INVALID_ENVELOPE");
 assert.equal((await verify(envelope, fromContext({ ...bundle, keys: [] }))).error, "UNKNOWN_SIGNING_KEY");
+const oversized = structuredClone(payload);
+for (let i = 0; i < 128; i += 1) {
+  const suffix = String(i).padStart(3, "0");
+  oversized.entitlements["entitlement-" + suffix + "-" + "x".repeat(54)] = "value-" + "y".repeat(56);
+  oversized.features["feature-" + suffix + "-" + "z".repeat(54)] = true;
+}
+const oversizedBytes = new TextEncoder().encode(canonical(oversized));
+const oversizedSigned = new Uint8Array(prefix.length + oversizedBytes.length);
+oversizedSigned.set(prefix); oversizedSigned.set(oversizedBytes, prefix.length);
+const oversizedSignature = await webcrypto.subtle.sign("Ed25519", keys.privateKey, oversizedSigned);
+const oversizedEnvelope = fromContext({ ...envelope, payload: Buffer.from(oversizedBytes).toString("base64url"), signature: Buffer.from(oversizedSignature).toString("base64url") });
+assert.ok(oversizedEnvelope.payload.length > 32768);
+assert.equal((await verify(oversizedEnvelope)).ok, false);
 const duplicateBytes = new TextEncoder().encode('{"account":{"id":"' + uuid + '","status":"ACTIVE"},"account":{},"snapshotVersion":"bootstrap_snapshot_v2"}');
 const duplicateSigned = new Uint8Array(prefix.length + duplicateBytes.length); duplicateSigned.set(prefix); duplicateSigned.set(duplicateBytes, prefix.length);
 const duplicateSignature = await webcrypto.subtle.sign("Ed25519", keys.privateKey, duplicateSigned);
