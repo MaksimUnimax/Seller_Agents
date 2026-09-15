@@ -1,0 +1,44 @@
+{
+  "head": "e26fcc7dd60617838cb9a49d7c6560018cb45ec3",
+  "scope": "exact-source VM and repository function probes; no installed/live acceptance",
+  "rows": [
+    {
+      "mode": "oversized-200",
+      "error": "CONTROL_RESPONSE_TOO_LARGE",
+      "authenticated": false,
+      "workAllowed": false
+    },
+    {
+      "mode": "oversized-201",
+      "error": "CONTROL_RESPONSE_TOO_LARGE",
+      "authenticated": true,
+      "workAllowed": true
+    },
+    {
+      "mode": "oversized-206",
+      "error": "CONTROL_RESPONSE_TOO_LARGE",
+      "authenticated": true,
+      "workAllowed": true
+    },
+    {
+      "mode": "top-semver-prerelease-build",
+      "error": "BOOTSTRAP_INVALID_PAYLOAD_SCHEMA",
+      "authenticated": false,
+      "workAllowed": false
+    },
+    {
+      "mode": "unconfigured-account",
+      "error": null,
+      "authenticated": true,
+      "workAllowed": false
+    },
+    {
+      "mode": "repository-new-identity-default-closed",
+      "result": {
+        "ok": false,
+        "code": "BETA_CLOSED"
+      },
+      "scope": "exact repository function, controlled SQL replies matching migration defaults; not real PostgreSQL"
+    }
+  ]
+}

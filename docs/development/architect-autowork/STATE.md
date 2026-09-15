@@ -1,8 +1,8 @@
 # Seller Agents — единый cursor
 
-Дата: 2026-09-15. Статус: I1_C1_R2_REWORK_REQUIRED / I1_C1_R3_PREPARED / BRIDGE_ACK_PENDING.
+Дата: 2026-09-15. Статус: I1_C1_R3_REWORK_REQUIRED / I1_C1_R4_PREPARED / BRIDGE_ACK_PENDING.
 
-Владелец передал Stream A и Stream B основному архитектору и разрешил авторежим командой «поехали». R2 terminal report получен и независимо проверен: REWORK_REQUIRED. Исполнитель по отчёту остановился. Подготовлена одна задача R3; сохранение не доказывает захват Bridge или запуск CLI. Исторические принятые серверные факты и очередь сохранены.
+Владелец передал Stream A и Stream B основному архитектору и разрешил авторежим командой «поехали». R3 terminal report получен и независимо проверен: REWORK_REQUIRED. Получен terminal результат; прямое состояние процесса не наблюдалось. Подготовлена одна задача R4; сохранение не доказывает захват Bridge или запуск CLI. Исторические принятые серверные факты и очередь сохранены.
 
 ## Роли
 
@@ -10,19 +10,17 @@ Astra / очень высокая глубина рассуждения — гл
 
 ## Текущая задача
 
-- Завершённая задача: SA-I1-C1-R2-20260915-01; terminal report получен, REWORK_REQUIRED.
-- Этап: I1-C1; не закрыт.
-- Branch: feature/extension-i1-client-2026-09-15.
-- Start/base R2: 9e80e8ad531f079b38bf03b9e29f171c87c477c0; base линии bc0cd0088ca50ba06021ea602a46bdd90de91378.
-- Проверенный published head / R3 start: 0b2a1776ff484d2410b3a43d338ec5548e73f019; tree 3a83601109f7cb643e06d923b1da36691f9b0014.
-- Main: 5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c.
-- Draft PR: https://github.com/MaksimUnimax/Seller_Agents/pull/7 — открыт, не слит.
-- Review: references/I1_C1_R2_REVIEW.md; независимые probes/results и CI evidence рядом.
-- Blockers: oversized200 сохраняет Work; signed initial UNCONFIGURED не аутентифицирует аккаунт; неполное fencing/критерийное покрытие; common-core legacy fixture; installed auth UI/redirect synchronization и отсутствие успешной local API/browser приёмки.
-- G6 native fixture restart принят только как synthetic fixture correction; это не installed real-auth/live acceptance.
-- Next: SA-I1-C1-R3-20260915-01, tasks/I1_C1_R3_2026-09-15.md.
-- Статус R3: PREPARED / BRIDGE_ACK_PENDING; один prompt предназначен для финального ответа. Доставка/запуск не утверждаются. По отчёту R2 остановлен; прямого Bridge-инструмента и run/job ID нет.
-- После публикации prompt ждать terminal report/уведомления. При обрыве сверить последний ответ/current job и не пересылать prepared prompt автоматически.
+- Обработанная задача: SA-I1-C1-R3-20260915-01. Verdict REWORK_REQUIRED; I1-C1 открыт.
+- Branch feature/extension-i1-client-2026-09-15; draft PR7 открыт/не слит.
+- R3 start/base0b2a1776ff484d2410b3a43d338ec5548e73f019.
+- Current published head / R4 start e26fcc7dd60617838cb9a49d7c6560018cb45ec3; tree c1beb4927fee66c4065e133c960929e800fabe5e.
+- Main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c. Virtual mergef14fa4eb5d9a0214932c65c30c7c92e507ef84fe имеет parents5d7c8853 иe26fcc7.
+- Review references/I1_C1_R3_REVIEW.md; probes/results/CI рядом.
+- Blockers: oversized201/206 сохраняют Work; verifier отвергает допустимый prerelease+build SemVer; неполное заданное same-worker/active-denial покрытие; утраченные common-core assertions/fixture scope; installed OTP/navigation FAIL и ошибки предусловий/HTTP-кодов/наблюдения.
+- Подтверждены исправления account-only login/restore и oversized200; G6 native fixture зелёный. C1/installed real-auth/live не приняты.
+- Next SA-I1-C1-R4-20260915-01; tasks/I1_C1_R4_2026-09-15.md.
+- R4 PREPARED / BRIDGE_ACK_PENDING для однократного финального prompt. R3 terminal обработан; прямого Bridge/process инструмента или run/job ID нет, запуск R4 не утверждается.
+- После финального prompt ждать уведомления/terminal report; при обрыве сверить последний ответ/current job и не повторять prepared task автоматически.
 
 ## Результат R1
 
@@ -67,7 +65,7 @@ Reported ZIP SHA-256 2580015cdf174c909e6733197d3b609ba10c3fe35008090df13ebc17a83
 4. Согласовать объединение принятых клиентской и серверной веток с новым main; не терять ни одну линию и не применять ours/theirs вслепую.
 5. Далее актуальный продуктовый roadmap; не требовать весь P8–P10 раньше раннего I1 и не объявлять внешние этапы закрытыми без их приёмки.
 
-Исторически R1 был проверен и выдан R2. Теперь terminal R2 проверен; подготовлен только R3, более поздних задач нет.
+Исторически R1 был проверен и выдан R2. Затем выдан R3. Теперь R3 terminal проверен; подготовлен только R4, более поздних задач нет.
 
 ## Протокол Bridge и переноса
 
@@ -95,3 +93,7 @@ Business Bridge ZIP 2.0.0.23 независимо сверён: cfd62cbcfb05abc2
 ## Приёмка R2 — 2026-09-15
 
 REWORK_REQUIRED на 0b2a1776ff484d2410b3a43d338ec5548e73f019. Exact-head push CI: I1 34965374842 FAILURE (installed104368454586, code regex NoneType, PostgreSQL healthy); common-core104368455663 FAILURE в34965374971 (legacy settings denied); native104368455416 SUCCESS. PR docs34965379091 SUCCESS. WB browser jobs оставались IN_PROGRESS при readback; полного CI PASS нет. Оба source-дефекта подтверждены независимыми VM probes на совпадающих Git blobs. Package hash/size приведены как reported; собственного ZIP byte readback нет. Полное ревью, границы и решения — references/I1_C1_R2_REVIEW.md. Сохранены R1/серверные исторические записи. Последующие old R2 preparation notes выше — история, не текущая команда.
+
+## Приёмка R3 — 2026-09-15
+
+REWORK_REQUIRED на e26fcc7dd60617838cb9a49d7c6560018cb45ec3. Exact-head installed104382641739/run34969687336 FAIL: ожидание activation URL после OTP Verify; PostgreSQL healthy. Source diagnosis: новые identities при CLOSED beta; тестовой БД нужны два существующих fixture аккаунта, приём новых аккаунтов остаётся закрытым. Далее исправить logout204, start201 и BFF/direct observer. Независимые client probes выявили oversized201/206 и SemVer prerelease+build; account-only и oversized200 теперь корректны. Common-core/native CI SUCCESS, но часть обязательных assertions не сохранена. WB browsers оставались IN_PROGRESS; полного PASS нет. Полная приёмка и узкое R4 решение сохранены. Server I1/Health очередь без изменений. Записи R2/R3 preparation выше — история, не команды повторного запуска.

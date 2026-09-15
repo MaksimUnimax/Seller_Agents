@@ -1,0 +1,166 @@
+{
+  "head": "e26fcc7dd60617838cb9a49d7c6560018cb45ec3",
+  "tree": "c1beb4927fee66c4065e133c960929e800fabe5e",
+  "merge": "f14fa4eb5d9a0214932c65c30c7c92e507ef84fe",
+  "mergeParents": [
+    "5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+    "e26fcc7dd60617838cb9a49d7c6560018cb45ec3"
+  ],
+  "runs": [
+    {
+      "id": 34969692570,
+      "name": "Documentation CI",
+      "status": "completed",
+      "conclusion": "success",
+      "event": "pull_request",
+      "head_sha": "e26fcc7dd60617838cb9a49d7c6560018cb45ec3"
+    },
+    {
+      "id": 34969692552,
+      "name": "Extension CI",
+      "status": "in_progress",
+      "conclusion": null,
+      "event": "pull_request",
+      "head_sha": "e26fcc7dd60617838cb9a49d7c6560018cb45ec3"
+    },
+    {
+      "id": 34969692534,
+      "name": "Extension I1-C1 client",
+      "status": "completed",
+      "conclusion": "failure",
+      "event": "pull_request",
+      "head_sha": "e26fcc7dd60617838cb9a49d7c6560018cb45ec3"
+    },
+    {
+      "id": 34969687206,
+      "name": "Extension CI",
+      "status": "in_progress",
+      "conclusion": null,
+      "event": "push",
+      "head_sha": "e26fcc7dd60617838cb9a49d7c6560018cb45ec3"
+    },
+    {
+      "id": 34969687336,
+      "name": "Extension I1-C1 client",
+      "status": "completed",
+      "conclusion": "failure",
+      "event": "push",
+      "head_sha": "e26fcc7dd60617838cb9a49d7c6560018cb45ec3"
+    }
+  ],
+  "jobs": [
+    {
+      "id": 104382641209,
+      "run_id": 34969687206,
+      "name": "Common core / source and package",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34969687206/job/104382641209"
+    },
+    {
+      "id": 104382641422,
+      "run_id": 34969687206,
+      "name": "Baseline / ozon",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34969687206/job/104382641422"
+    },
+    {
+      "id": 104382641477,
+      "run_id": 34969687206,
+      "name": "Baseline / wb-browsers",
+      "status": "in_progress",
+      "conclusion": null,
+      "html_url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34969687206/job/104382641477"
+    },
+    {
+      "id": 104382641530,
+      "run_id": 34969687206,
+      "name": "Baseline / wb-nodes",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34969687206/job/104382641530"
+    },
+    {
+      "id": 104382641557,
+      "run_id": 34969687206,
+      "name": "Common application / native Chromium fixture",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34969687206/job/104382641557"
+    },
+    {
+      "id": 104382641521,
+      "run_id": 34969687336,
+      "name": "client-i1",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34969687336/job/104382641521"
+    },
+    {
+      "id": 104382641739,
+      "run_id": 34969687336,
+      "name": "Installed local API / portal / PostgreSQL acceptance",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34969687336/job/104382641739"
+    },
+    {
+      "id": 104382657956,
+      "run_id": 34969692534,
+      "name": "client-i1",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34969692534/job/104382657956"
+    },
+    {
+      "id": 104382658392,
+      "run_id": 34969692534,
+      "name": "Installed local API / portal / PostgreSQL acceptance",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34969692534/job/104382658392"
+    },
+    {
+      "id": 104382658287,
+      "run_id": 34969692552,
+      "name": "Common core / source and package",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34969692552/job/104382658287"
+    },
+    {
+      "id": 104382658603,
+      "run_id": 34969692552,
+      "name": "Baseline / ozon",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34969692552/job/104382658603"
+    },
+    {
+      "id": 104382658622,
+      "run_id": 34969692552,
+      "name": "Common application / native Chromium fixture",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34969692552/job/104382658622"
+    },
+    {
+      "id": 104382658762,
+      "run_id": 34969692552,
+      "name": "Baseline / wb-browsers",
+      "status": "in_progress",
+      "conclusion": null,
+      "html_url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34969692552/job/104382658762"
+    },
+    {
+      "id": 104382658800,
+      "run_id": 34969692552,
+      "name": "Baseline / wb-nodes",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34969692552/job/104382658800"
+    }
+  ],
+  "scope": "Readback before R4 preparation; pending WB browser runs not needed for proven REWORK_REQUIRED; no full-CI PASS."
+}
