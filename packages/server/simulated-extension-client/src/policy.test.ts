@@ -294,6 +294,14 @@ describe("P3.6 cache and policy", () => {
     expect(store.value?.lastObservedWallTimeHighWatermark).toBe(
       "2026-01-01T00:07:00.000Z",
     );
+    time.set(Date.parse("2026-01-01T00:03:00.000Z"), 8);
+    expect(await offline.client.bootstrapWithPolicy(REQUEST)).toMatchObject({
+      kind: "READY",
+      source: "CACHE",
+    });
+    expect(store.value?.lastObservedWallTimeHighWatermark).toBe(
+      "2026-01-01T00:07:00.000Z",
+    );
     expect(store.value?.envelope).toEqual(envelope);
     expect(store.value?.envelope.payload).toBe(envelope.payload);
     expect(store.value?.envelope.signature).toBe(envelope.signature);
