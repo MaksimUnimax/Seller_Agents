@@ -104,7 +104,7 @@
   },
   "gates": {
     "extension_i1": {"status":"PASS","processes":100,"node":"v22.22.2","source_extracted_policy":"PASS"},
-    "docs_check": {"status":"PASS","files":472,"markdown_files":247,"relative_links":364},
+    "docs_check": {"status":"PASS","files":476,"markdown_files":248,"relative_links":364},
     "bridge_guard": "PASS",
     "openapi_check": "PASS",
     "native_source_extracted": "UNKNOWN",

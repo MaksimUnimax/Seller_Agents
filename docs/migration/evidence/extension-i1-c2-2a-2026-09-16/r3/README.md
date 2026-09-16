@@ -41,7 +41,7 @@ No case was missing, skipped, or failed. The Q3 scratch negative control is the 
 | Check | Result | Provenance |
 |---|---|---|
 | `extension_i1.py --output <new-task-owned-output>` | PASS | Node `v22.22.2`, 100 gate processes, source and extracted policy PASS, zero live provider calls |
-| `pnpm docs:check` | PASS | pinned Corepack/pnpm tooling; 472 files, 247 Markdown files, 364 relative links |
+| `pnpm docs:check` | PASS | pinned Corepack/pnpm tooling; 476 files, 248 Markdown files, 364 relative links |
 | `pnpm bridge:guard` | PASS | pinned Corepack/pnpm tooling |
 | `pnpm openapi:check` | PASS | pinned Corepack/pnpm tooling with nested pnpm shim in temporary PATH |
 | Native/source-extracted suites | UNKNOWN | unchanged historical provenance retained; not rerun per task scope |
