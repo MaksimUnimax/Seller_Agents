@@ -475,7 +475,7 @@
         else if (state.credentials) await discardRestoredAuthority(authorityFailure);
       }
     }
-    if (state.pending && !validRestoredPending(state.pending)) await queueMutation(async () => { await commit({ ...state, generation: state.generation + 1, pending: null, lastError: safeError(error("ACTIVATION_CONTEXT_MISMATCH")) }, state.authority, "activation_context_invalid"); });
+    if (state.pending && !validRestoredPending(state.pending)) await invalidateKnown(contextForState(), error("ACTIVATION_CONTEXT_MISMATCH"), true);
     const restoredDecision = state.authority && state.credentials ? await cacheAuthorizationCheckpoint() : { allowed: false };
     initialized = true; if (pendingLive(state.pending)) void ensurePolling(); return publicStatus(restoredDecision);
   }

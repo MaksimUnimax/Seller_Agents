@@ -150,6 +150,64 @@ async function signedBootstrap(backing, payload, clock, accountId = "11111111-11
   const normalClock = { wall: baseWall, mono: 1000 }, normal = await signedOutTemplate(normalClock); const normalWorker = await makeWorker(runtime, { backing: normal.backing, seedAuthority: false, wallClock: () => normalClock.wall, monotonicClock: () => normalClock.mono }); try { const status = await normalWorker.call("SellerAgentsControlClient.status"); assert.equal(status.lastError, null); assert.equal(status.pending, null); } finally { normalWorker.close(); }
 }
 
+// R3-A: an expired real pending attempt is terminally discarded in memory
+// before its failed AUTH write; a successful removal protects restart and a
+// later start gets fresh idempotency material without the old device code.
+{
+  const clock = { wall: baseWall, mono: 1000 }, { backing } = await signedOutTemplate(clock);
+  const oldExchange = new Promise(() => {}), oldWorker = await makeWorker(runtime, { backing, seedAuthority: false, wallClock: () => clock.wall, monotonicClock: () => clock.mono, fetch: async (url) => {
+    if (url.endsWith("/v1/device-authorizations")) return json(activationResponse(clock, { deviceCode: "D".repeat(43) }), 201);
+    if (url.endsWith("/v1/device-authorizations/token")) return oldExchange;
+    throw new Error("unexpected R3-A old request " + url);
+  } });
+  await oldWorker.call("SellerAgentsControlClient.startActivation"); await until(() => backing.local[AUTH]?.pending?.phase === "pending", "R3-A real pending");
+  const oldPending = clone(backing.local[AUTH].pending); oldWorker.close(); backing.local.r3_catalog_marker = { keep: true };
+  clock.wall = Date.parse(oldPending.expiresAt); clock.mono += 1;
+  let setAttempts = 0, removeAttempts = 0;
+  const reopened = await makeWorker(runtime, { backing, seedAuthority: false, wallClock: () => clock.wall, monotonicClock: () => clock.mono, onStorageWrite: async (kind, values) => { if (kind === "local" && Object.hasOwn(values, AUTH)) { setAttempts++; throw new Error("R3-A AUTH set failure"); } }, onStorageRemove: async (kind, key) => { if (kind === "local" && key === AUTH) removeAttempts++; }, fetch: async () => { throw new Error("R3-A restore issued a request"); } });
+  try {
+    const status = await reopened.call("SellerAgentsControlClient.status");
+    assert.equal(status.authenticated, false); assert.equal(status.pending, null); assert.equal(status.workAllowed, false); assert.equal(setAttempts, 1); assert.equal(removeAttempts, 1); assert.equal(backing.local[AUTH], undefined); assert.equal(backing.local.r3_catalog_marker.keep, true); assert.equal(reopened.network.length, 0); assert.equal(reopened.portalTabs.length, 0);
+  } finally { reopened.close(); }
+  clock.wall = baseWall - 1000; clock.mono += 1000;
+  const freshRequests = [], fresh = await makeWorker(runtime, { backing, seedAuthority: false, wallClock: () => clock.wall, monotonicClock: () => clock.mono, fetch: async (url, init) => {
+    freshRequests.push({ url, key: init.headers?.get?.("Idempotency-Key") || init.headers?.["Idempotency-Key"] || null, body: init.body || "" });
+    if (url.endsWith("/v1/device-authorizations")) return json(activationResponse(clock, { authorizationId: "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee", deviceCode: "F".repeat(43) }), 201);
+    if (url.endsWith("/v1/device-authorizations/token")) return new Promise(() => {});
+    throw new Error("unexpected R3-A fresh request " + url);
+  } });
+  try {
+    await fresh.call("SellerAgentsControlClient.startActivation"); const start = await until(() => freshRequests.find(row => row.url.endsWith("/v1/device-authorizations")), "R3-A fresh start");
+    assert.ok(start); assert.notEqual(start.key, oldPending.startIdempotencyKey); assert.equal(freshRequests.some(row => String(row.body).includes(oldPending.deviceCode)), false); assert.equal(backing.local.r3_catalog_marker.keep, true); assert.equal(backing.local[AUTH].pending.deviceCode, "F".repeat(43));
+  } finally { fresh.close(); }
+}
+
+// R3-B: invalid-origin and malformed-starting records use the same terminal
+// cleanup branch. When both persistence operations fail, initialization still
+// resolves denied and leaves the old disk record explicitly unprotected until
+// storage recovers; the same initialized worker can then start fresh.
+for (const [label, makeInvalid] of [["invalid-origin", pending => { pending.authContext.controlApiOrigin = "http://127.0.0.1:43199"; }], ["malformed-starting", pending => ({ phase: "starting", attemptId: pending.attemptId, startIdempotencyKey: "bad", authContext: pending.authContext })]]) {
+  const clock = { wall: baseWall, mono: 1000 }, { backing } = await signedOutTemplate(clock);
+  const source = await makeWorker(runtime, { backing, seedAuthority: false, wallClock: () => clock.wall, monotonicClock: () => clock.mono, fetch: async (url) => {
+    if (url.endsWith("/v1/device-authorizations")) return label === "malformed-starting" ? new Promise(() => {}) : json(activationResponse(clock, { deviceCode: "D".repeat(43) }), 201);
+    if (url.endsWith("/v1/device-authorizations/token")) return new Promise(() => {});
+    throw new Error("unexpected R3-B seed request " + url);
+  } });
+  const oldStart = source.call("SellerAgentsControlClient.startActivation");
+  if (label === "malformed-starting") await until(() => backing.local[AUTH]?.pending?.phase === "starting", `${label} starting`);
+  else { await until(() => backing.local[AUTH]?.pending?.phase === "pending", `${label} pending`); const pending = clone(backing.local[AUTH].pending); const changed = makeInvalid(pending); backing.local[AUTH].pending = changed || pending; }
+  if (label === "malformed-starting") { const pending = clone(backing.local[AUTH].pending); backing.local[AUTH].pending = makeInvalid(pending); }
+  const oldPending = clone(backing.local[AUTH].pending); source.close(); oldStart.catch(() => {}); backing.local.r3_catalog_marker = { keep: true };
+  let failPersistence = true, setAttempts = 0, removeAttempts = 0;
+  const brokenRequests = [], freshRequests = [], broken = await makeWorker(runtime, { backing, seedAuthority: false, wallClock: () => clock.wall, monotonicClock: () => clock.mono, onStorageWrite: async (kind, values) => { if (failPersistence && kind === "local" && Object.hasOwn(values, AUTH)) { setAttempts++; throw new Error(`R3-B ${label} AUTH set failure`); } }, onStorageRemove: async (kind, key) => { if (failPersistence && kind === "local" && key === AUTH) { removeAttempts++; throw new Error(`R3-B ${label} AUTH remove failure`); } }, fetch: async (url, init) => { if (failPersistence) { brokenRequests.push({ url, body: init?.body || "" }); throw new Error(`R3-B ${label} restore request`); } freshRequests.push({ url, key: init.headers?.get?.("Idempotency-Key") || init.headers?.["Idempotency-Key"] || null, body: init.body || "" }); if (url.endsWith("/v1/device-authorizations")) return json(activationResponse(clock, { authorizationId: "ffffffff-ffff-4fff-8fff-ffffffffffff", deviceCode: "F".repeat(43) }), 201); if (url.endsWith("/v1/device-authorizations/token")) return new Promise(() => {}); throw new Error(`R3-B ${label} unexpected fresh request`); } });
+  try {
+    const status = await broken.call("SellerAgentsControlClient.status"); assert.equal(status.authenticated, false, label); assert.equal(status.pending, null, label); assert.equal(status.workAllowed, false, label); assert.equal(status.lastError.code, "AUTH_DENIAL_PERSISTENCE_FAILED", label); assert.equal(setAttempts, 1, `${label} one failed denied write`); assert.equal(removeAttempts, 1, `${label} one failed removal`); assert.ok(backing.local[AUTH], `${label} no durable-protection claim`); assert.equal(brokenRequests.length, 0, `${label} no old request`);
+    failPersistence = false; const started = await broken.call("SellerAgentsControlClient.startActivation");
+    await until(() => freshRequests.some(row => row.url.endsWith("/v1/device-authorizations")), `${label} fresh request`);
+    assert.ok(started.pending); assert.notEqual(freshRequests.find(row => row.url.endsWith("/v1/device-authorizations")).key, oldPending.startIdempotencyKey, `${label} fresh idempotency key`); assert.equal(freshRequests.some(row => String(row.body).includes(oldPending.deviceCode)), false, `${label} old device code`); assert.equal(backing.local.r3_catalog_marker.keep, true);
+  } finally { broken.close(); }
+}
+
 // C2.1-R1: exact base behavior was the known regression. The candidate's
 // seeded record has the new metadata; the explicit legacy branch records the
 // pre-change behavior when this suite is run against the exact base runtime.
@@ -372,6 +430,71 @@ async function signedBootstrap(backing, payload, clock, accountId = "11111111-11
   } finally { fresh.close(); }
 }
 
+// R3-C/T6-queued-reset-before-B: the real checkpoint write owns the queue;
+// reset and B cannot publish through its latch. After release, B completes and
+// the old checkpoint result remains pre-reset, with B retaining ownership.
+{
+  const clock = { wall: baseWall, mono: 1000 }, backing = { local: {}, session: {} }, events = [];
+  let releaseCheckpoint, basePayload;
+  const owned = await fixture({ backing, clock, onStorageWrite: async (kind, values) => {
+    if (kind !== "local" || !Object.hasOwn(values, AUTH)) return;
+    const record = values[AUTH]; events.push({ generation: record.generation, pending: record.pending?.phase || null, deviceId: record.credentials?.deviceId || null, accountId: record.authority?.payload?.account?.id || null });
+    if (releaseCheckpoint === undefined && record.generation === 1 && record.cacheClock.effectiveTimeMs > baseWall) await new Promise(resolve => { releaseCheckpoint = resolve; });
+  }, fetch: async (url) => {
+    if (url.endsWith("/v1/device-authorizations")) return json(activationResponse(clock, { authorizationId: "66666666-6666-4666-8666-666666666666", deviceCode: "B".repeat(43) }), 201);
+    if (url.endsWith("/v1/device-authorizations/token")) return json(activatedResponse(clock, { deviceId: "77777777-7777-4777-8777-777777777777", sessionId: "88888888-8888-4888-8888-888888888888" }));
+    if (url.endsWith("/v1/bootstrap")) return signedBootstrap(backing, basePayload, clock, "99999999-9999-4999-8999-999999999999");
+    throw new Error("unexpected R3-C queued request " + url);
+  } });
+  basePayload = clone(backing.local[AUTH].authority.payload); const oldRecord = clone(backing.local[AUTH]);
+  let resetSettled = false, startSettled = false;
+  try {
+    await owned.worker.call("SellerAgentsControlClient.canWork"); clock.wall += 100; clock.mono += 100;
+    const oldCheckpoint = owned.worker.call("SellerAgentsControlClient.canWork"); await until(() => releaseCheckpoint, "R3-C held checkpoint");
+    const reset = owned.worker.call("SellerAgentsControlClient.localReset").then(value => { resetSettled = true; return value; });
+    const start = reset.then(() => owned.worker.call("SellerAgentsControlClient.startActivation")).then(value => { startSettled = true; return value; });
+    await new Promise(resolve => setImmediate(resolve)); assert.equal(resetSettled, false, "R3-C reset is queued"); assert.equal(startSettled, false, "R3-C B activation is queued"); assert.deepEqual(backing.local[AUTH], oldRecord, "R3-C held checkpoint blocks reset publication");
+    releaseCheckpoint(); const oldDecision = await oldCheckpoint; await reset; await start; await until(async () => (await owned.worker.call("SellerAgentsControlClient.status")).authenticated, "R3-C B signed bootstrap");
+    const bRecord = clone(backing.local[AUTH]), bAuthority = clone(bRecord.authority), bClock = clone(bRecord.cacheClock);
+    assert.equal(oldDecision, true, "R3-C old checkpoint belongs to pre-reset ordering"); assert.equal(bRecord.credentials.deviceId, "77777777-7777-4777-8777-777777777777"); assert.equal(bRecord.credentials.sessionId, "88888888-8888-4888-8888-888888888888"); assert.equal(bAuthority.payload.account.id, "99999999-9999-4999-8999-999999999999"); assert.equal(bRecord.generation, 4); assert.ok(bClock.owner.sessionId === bRecord.credentials.sessionId);
+    const resetIndex = events.findIndex(row => row.generation === 2 && row.pending === null && row.deviceId === null), bStartIndex = events.findIndex(row => row.generation === 3 && row.pending === "starting"), bPendingIndex = events.findIndex(row => row.generation === 3 && row.pending === "pending"), bActivatedIndex = events.findIndex(row => row.generation === 4 && row.deviceId === bRecord.credentials.deviceId && row.accountId === null), bBootstrapIndex = events.findIndex(row => row.generation === 4 && row.accountId === bAuthority.payload.account.id);
+    assert.ok(resetIndex >= 0 && bStartIndex > resetIndex && bPendingIndex > bStartIndex && bActivatedIndex > bPendingIndex && bBootstrapIndex > bActivatedIndex, `R3-C ordering ${JSON.stringify(events)}`);
+    await new Promise(resolve => setImmediate(resolve)); assert.deepEqual(backing.local[AUTH], bRecord, "R3-C late A work cannot alter B"); assert.equal(same(await owned.worker.call("SellerAgentsControlClient.getAuthority"), bAuthority), true, "R3-C getAuthority remains B"); assert.equal(await owned.worker.call("SellerAgentsControlClient.canWork"), true);
+  } finally { releaseCheckpoint?.(); owned.worker.close(); }
+}
+
+// R3-C/T6-same-session-envelope-replacement: a differently signed envelope
+// with the same device/session/requested-AI/account identity is verified and
+// committed while the old checkpoint is in flight. Its decision is either
+// denied as stale or recorded only before replacement; it is never reused for
+// the replacement authority.
+{
+  const clock = { wall: baseWall, mono: 1000 }, backing = { local: {}, session: {} }, events = [];
+  let releaseCheckpoint, replacementFetchStarted = false, replacementCall, oldPublicSettled = false;
+  const { worker } = await fixture({ backing, clock, onStorageWrite: async (kind, values) => {
+    if (kind !== "local" || !Object.hasOwn(values, AUTH)) return;
+    const record = values[AUTH];
+    if (releaseCheckpoint === undefined && record.generation === 1 && record.cacheClock.effectiveTimeMs > baseWall) {
+      events.push("old-checkpoint");
+      replacementCall = worker.call("SellerAgentsControlClient.bootstrap"); await until(() => replacementFetchStarted, "R3-C replacement request");
+      await new Promise(resolve => setImmediate(resolve)); await new Promise(resolve => { releaseCheckpoint = resolve; });
+    } else {
+      events.push(record.authority?.payload?.configVersion === 2 ? "replacement-commit" : "other-auth-write");
+    }
+  }, fetch: async (url) => {
+    if (url.endsWith("/v1/bootstrap")) { replacementFetchStarted = true; const payload = clone(backing.local[AUTH].authority.payload); return signed(backing, { ...payload, configVersion: 2, serverTime: new Date(clock.wall + 100).toISOString(), expiresAt: new Date(clock.wall + 3600000).toISOString(), offlineGraceUntil: new Date(clock.wall + 7200000).toISOString() }); }
+    throw new Error("unexpected R3-C replacement request " + url);
+  } });
+  const oldEnvelope = clone(backing.local[AUTH].authority.envelope), oldAuthority = clone(backing.local[AUTH].authority);
+  try {
+    await worker.call("SellerAgentsControlClient.canWork"); clock.wall += 100; clock.mono += 100;
+    const oldPublic = worker.call("SellerAgentsControlClient.canWork").then(value => { oldPublicSettled = true; return value; }); await until(() => releaseCheckpoint, "R3-C replacement checkpoint"); releaseCheckpoint();
+    await replacementCall; const replacementCommittedBeforeOldPublic = !oldPublicSettled; const oldDecision = await oldPublic;
+    const current = await worker.call("SellerAgentsControlClient.getAuthority"), status = await worker.call("SellerAgentsControlClient.status");
+    assert.ok(oldDecision === false || !replacementCommittedBeforeOldPublic, `R3-C stale decision ${oldDecision}`); assert.notDeepEqual(current.envelope, oldEnvelope, "R3-C replacement has a different signed envelope"); assert.notEqual(current.envelope.signature, undefined); assert.equal(current.payload.configVersion, 2); assert.equal(status.authenticated, true); assert.equal(status.workAllowed, true); assert.equal(current.deviceId, oldAuthority.deviceId); assert.equal(current.sessionId, oldAuthority.sessionId); assert.equal(current.payload.account.id, oldAuthority.payload.account.id); assert.equal(current.requestedAi, oldAuthority.requestedAi); assert.deepEqual(events.slice(0, 2), ["old-checkpoint", "replacement-commit"]);
+  } finally { releaseCheckpoint?.(); replacementCall?.catch(() => {}); worker.close(); }
+}
+
 // T4/C2.1-R1-A: the rolling anchor rejects a decrease after a larger reading,
 // while equal readings remain legal. The held-write assertion crosses exact
 // expiry before releasing the write, so the same public call must deny.
@@ -543,6 +666,8 @@ for (const marketplace of ["ozon", "wildberries"]) {
     const expiry = Date.parse(worker.backing.local[AUTH].authority.payload.expiresAt); clock.wall = expiry; clock.mono += 1; expired = true;
     const deniedInsert = await worker.request({ type: "OZ_BATCH_DELIVERY_INSERT_COMMIT", ...fields }, t7IdentitySender(worker)); assert.notEqual(deniedInsert.insert_allowed, true);
     await until(() => cleanupAttempts.length > 0, "T7 explicit cleanup-attempt latch"); await cleanupAttempt;
+    const deniedCommand = await worker.request({ type: "OZ_EXECUTE_COMMAND", conversation_key: started.key, command_text: marketplace === "ozon" ? 'OZON_API_V1 {"operation":"seller_info","params":{}}' : await t7BinaryCommand(worker), manual_request_id: `t7-expired-${marketplace}`, work_session_id: started.session.start_intent_id }, t7IdentitySender(worker));
+    assert.notEqual(deniedCommand.accepted, true, "T7 fresh expired command denied");
     const readsBefore = idb.stats.reads;
     assert.notEqual((await worker.request({ type: "OZ_WORK_DELIVERY_ASSERT", ...fields }, t7IdentitySender(worker))).ok, true);
     assert.notEqual((await worker.request({ type: "OZ_WORK_SEND_COMMIT", ...fields }, t7IdentitySender(worker))).click_allowed, true);
@@ -554,10 +679,10 @@ for (const marketplace of ["ozon", "wildberries"]) {
       assert.deepEqual(originalBytes, Buffer.from(bytes));
     }
     assert.equal(idb.stats.reads, readsBefore, "T7 guard precedes artifact reads");
-    for (const type of ["OZ_CONTENT_READY", "OZ_CONTENT_SYNC"]) { const recovery = await worker.request({ type, identity: worker.identity }, t7IdentitySender(worker)); assert.equal(recovery.outgoing_text, undefined); assert.equal(recovery.recovery, undefined); }
+    for (const type of ["OZ_CONTENT_READY", "OZ_CONTENT_SYNC"]) { const recovery = await worker.request({ type, identity: worker.identity }, t7IdentitySender(worker)); assert.equal(recovery.outgoing_text, undefined); assert.equal(recovery.recovery, undefined); assert.equal(recovery.manual_recovery, undefined); }
     assert.equal(worker.messages.filter(message => message.type === "OZ_BATCH_DELIVERY_AVAILABLE").length, advertisements);
     assert.equal(providerCalls, 1); assert.equal(controlRequests, controlsBeforeExpiry, "T7 local guards add no control-plane HTTP");
   } finally { cleanupResolve(); worker.close(); }
 }
 
-console.log(JSON.stringify({ status: "PASS", focused: "client-cache-time", t1_valid_pending_restart: true, t2_valid_starting_restart: true, t3_pending_controls: 7, t4_completion_veto: true, t5_storage_failures: true, t6_ownership_renewal: true, t7_composed_expiry: { marketplaces: ["ozon", "wildberries"], provider_replay: false, control_guard_http: 0 }, fresh_boundary: true, effective_floor: true, restart_floor: true, context_matrix: 11, legacy_closed: true, ownership_reset_race: true, no_live_provider_calls: true, r1_cases: { "A-rolling-monotonic-and-completion-veto": 2, "B-origin-and-same-origin-replacement": 2, "C-legacy-and-pending-provenance": 2, "D-wall-rollback-and-restart-floor": "included_in_A", "prior-focused-matrix": 11 } }));
+console.log(JSON.stringify({ status: "PASS", focused: "client-cache-time", t1_valid_pending_restart: true, t2_valid_starting_restart: true, t3_pending_controls: 7, t4_completion_veto: true, t5_storage_failures: true, t6_ownership_renewal: true, t7_composed_expiry: { marketplaces: ["ozon", "wildberries"], provider_replay: false, control_guard_http: 0 }, fresh_boundary: true, effective_floor: true, restart_floor: true, context_matrix: 11, legacy_closed: true, ownership_reset_race: true, no_live_provider_calls: true, r3_cases: { "A-expired-pending-failed-set-removal-fallback": true, "B-both-fail-invalid-origin-and-malformed-starting": true, "C-queued-reset-B-ordering": true, "C-same-session-signed-replacement": true, "D-expired-fresh-command-and-recovery-absence": ["ozon", "wildberries"] }, r1_cases: { "A-rolling-monotonic-and-completion-veto": 2, "B-origin-and-same-origin-replacement": 2, "C-legacy-and-pending-provenance": 2, "D-wall-rollback-and-restart-floor": "included_in_A", "prior-focused-matrix": 11 } }));
