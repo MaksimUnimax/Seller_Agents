@@ -1,7 +1,17 @@
-# SEO roadmap Октопорта
+# SEO roadmap Октопорта — historical coarse roadmap
 
-Статус: **SEO-S0 IN PROGRESS**.
-Дата: 2026-09-16.
+Status: **SUPERSEDED AS EXECUTION AUTHORITY**.
+Дата supersession: 2026-09-16.
+
+Текущая execution authority:
+
+`SEO_MASTER_ROADMAP_2026-09-16.md`
+
+Этот файл сохранён как исторический coarse roadmap первого SEO-прохода. Его общие принципы остаются полезными, но текущий cursor, порядок evidence collection и финальные acceptance gates определяются только master roadmap.
+
+---
+
+## Historical roadmap
 
 SEO развивается независимо от server/extension implementation, но не может публиковать обещания, которые опережают product truth или deployment state.
 
@@ -19,7 +29,7 @@ SEO развивается независимо от server/extension implementa
 | SEO-S9 | Post-deploy verification | production evidence | Проверены live status, robots, sitemap, canonical, status codes, rendered content |
 | SEO-S10 | Measurement loop | periodic evidence | Индексация/queries/impressions/clicks используются для приоритетных корректировок |
 
-## SEO-S0 — текущая работа
+## Historical SEO-S0
 
 Входит:
 
@@ -42,7 +52,7 @@ SEO развивается независимо от server/extension implementa
 - изменение server/extension contracts;
 - платная семантика Яндекс Директа.
 
-## SEO-S1 — broad discovery
+## Historical SEO-S1 — broad discovery
 
 ### Цель
 
@@ -62,7 +72,7 @@ SEO развивается независимо от server/extension implementa
 
 Discovery нельзя остановить по числу строк. Он заканчивается, когда дополнительные релевантные seed expansions перестают открывать новые значимые интенты/лексические семьи.
 
-## SEO-S2 — очистка
+## Historical SEO-S2 — очистка
 
 Особенно контролировать смешения:
 
@@ -76,7 +86,7 @@ Discovery нельзя остановить по числу строк. Он з�
 - сервисы аналитики, которые пользователь может искать как отдельную категорию;
 - consumer ChatGPT shopping use cases.
 
-## SEO-S3/S4 — решение о страницах
+## Historical SEO-S3/S4 — решение о страницах
 
 До этих этапов следующие страницы являются лишь вероятными ролями, не принятой архитектурой:
 
@@ -108,7 +118,7 @@ SEO не редактирует `apps/site` одновременно с отде
 
 ## Взаимодействие с продуктовым roadmap
 
-SEO может идти параллельно D2/I1/S1, потому что research не изменяет runtime contracts. Но публичный copy должен отличать:
+SEO может идти параллельно server/extension work, потому что research не изменяет runtime contracts. Но публичный copy должен отличать:
 
 - `планируется/готовится`;
 - `реализовано в source`;
