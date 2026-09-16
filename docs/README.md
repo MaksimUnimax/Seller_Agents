@@ -34,6 +34,7 @@
 - [Initial seed universe](seo/SEED_UNIVERSE.md): гипотезы первого discovery-прохода без выдуманных частотностей.
 - [SEO worklog](seo/WORKLOG.md): append-only ход работы, факты, решения, ошибки и blockers.
 - [Wordstat Batch 01](seo/wordstat/BATCH_01_BROAD_DISCOVERY.md): первый bounded provider batch, подготовлен к исполнению.
+- [Current site SEO baseline](seo/technical/CURRENT_SITE_BASELINE_2026-09-16.md): source-аудит текущей статической страницы без утверждения о production crawl.
 
 ## Разработка и выпуск
 
