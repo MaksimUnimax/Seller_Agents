@@ -1,14 +1,26 @@
 # Seller Agents — единый cursor
 
-Дата: 2026-09-16. Статус: I1_C1_ACCEPTED / I1_SRV5_ACCEPTED / I1_SYNC_ACCEPTED / C2_1_PREPARED_FOR_SINGLE_FINAL_SUBMISSION.
+Дата: 2026-09-16. Статус: I1_C1_ACCEPTED / I1_SRV5_ACCEPTED / I1_SYNC_ACCEPTED / C2_1_REWORK_REQUIRED / C2_1_R1_PREPARED_FOR_SINGLE_FINAL_SUBMISSION.
 
-Владелец разрешил непрерывный авторежим; один архитектор и один последовательный Codex. SYNC terminal проверен; все обязательные CI завершились SUCCESS в активном цикле, bounded SYNC принят. C2.1 готов к единственной финальной передаче. Сохранение задачи не означает её доставку или запуск Codex.
+Владелец разрешил непрерывный авторежим; один архитектор и один последовательный Codex. C2.1 terminal проверен; найденные независимо дефекты требуют R1. Предыдущие bounded C1/SRV5/SYNC acceptance сохранены. Подготовлен один R1 prompt; сохранение задачи не означает её доставку или запуск Codex.
 
 ## Роли
 
 Astra / очень высокая глубина рассуждения — главный разработчик, senior engineer, единственный архитектор. Вся архитектура, исследования, поиск причин, планирование, проектирование, управление разработкой и независимая приёмка на ней. Один серверный Codex / Luna Max реализует заданный код и тесты и выполняет назначенные проверки. Исследования, поиск решения и архитектуру ему не делегировать. Новые пользовательские ограничения сильнее исторической формулировки AGENTS о самостоятельных технических решениях исполнителя.
 
-## Текущая задача
+## Текущая задача — C2.1 review / R1
+
+- Current reviewed task SA-I1-C2-1-20260916-01, terminal получен; исполнитель остановлен на ревью по отчёту. Прямой видимости процессов/Bridge нет; нового подтверждённого running task нет.
+- Branch integration/i1-c1-srv5-2026-09-16; exact head981d7e422d45234674aeda84c762245be55ff493; tree4711cea969329f5552fe07e7f99af122fda60dc9; parent38471d667936f6f80a3f4aa682057309745ac080. Start1ff322b3dd2b68c4f02e5390850cd2f1b9548186. Main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c unchanged.
+- PR9 draft/unmerged head verified. Merge13cf170bd3f0d6cd884e48f1133ef161f6b5361a has candidate-identical tree and verified main+candidate parents.
+- Verdict REWORK_REQUIRED: authority=null restore forwards old bearer after origin change; pending activation forwards deviceCode after origin change; monotonic1000→2000→1500 permits Work; wall-jump rollback loses subsequent monotonic elapsed; held checkpoint returns true after expiry. Source VM real Ed25519/actual client blob2fdb51545a4e64822be4e68efbc7d4393fefba3a. No installed/live claim from probes.
+- Evidence references/I1_C2_1_REVIEW.md, references/I1_C2_1_REVIEW_PROBE/probe.mjs + result.json, references/I1_C2_1_CI.json.
+- CI authenticated review: I1run35055691061 installed104665287264/client104665287453 SUCCESS with completed logs; native104665346251 SUCCESS source/extracted; docs35055691054/job104665287448 SUCCESS458files/0errors. Local installed SKIPPED remains history. Server35055691050 and WB-browser jobs remained in progress at readback; no all-green claim. Their eventual outcome cannot accept source defects; correction can proceed without reruns or canceling those jobs.
+- Package1814944bytes/SHA25695456cc3a34eec92ce487c75da17d38ec63b63927bc19cb4b47a632d12d9807d reported; this candidate ZIP was not independently downloaded. Previous SYNC ZIP readback is separate history.
+- Next exact task SA-I1-C2-1-R1-20260916-01 at tasks/I1_C2_1_R1_2026-09-16.md: ownership preflight without authority and pending provenance, rolling monotonic clock, bounded completion-time veto, missing behavioral regressions. Prepared for ONE final submission. Saved prompt is not delivered/running. After final submission, await actual terminal, do not resend on unknown delivery.
+- C2.1 remains open; C2.2 offline/profile/joint offline not started. C1/SRV5/SYNC bounded accepted scopes preserved. Health P8.4/B5 not accepted, B6–8 queued; S1.2/D3/full I1/beta/deploy/release open. Owner manual tests after joint C2 installed acceptance then Q1.
+
+## История предыдущей точки — SYNC accepted / C2.1 preparation (не команда повторного запуска)
 
 - SA-I1-SYNC-20260916-01 terminal получен и проверен. Head1ff322b3dd2b68c4f02e5390850cd2f1b9548186, treef944feef7fb5cf7631df51d20fc70b2692ee907f; parentb8cd19ccfe9b7a1b92b9fa3376f94dccceb2c3ed. Branch integration/i1-c1-srv5-2026-09-16.
 - Merge9d3407bc248e935860c5d7d3a50536c6a08d92f4; treee834d3af55bb102e0378218dff731dd15b124d02; parents server086ae20c2858849ec13b1ab67c2f7661259022c3, client56c81a3521c02502b65fd713aec890e5a30f038d.

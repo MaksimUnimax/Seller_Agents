@@ -1,0 +1,156 @@
+{
+  "head": "981d7e422d45234674aeda84c762245be55ff493",
+  "tree": "4711cea969329f5552fe07e7f99af122fda60dc9",
+  "pr": 9,
+  "merge": "13cf170bd3f0d6cd884e48f1133ef161f6b5361a",
+  "mergeTreeEqualsHead": true,
+  "runs": [
+    {
+      "conclusion": null,
+      "event": "pull_request",
+      "head_sha": "981d7e422d45234674aeda84c762245be55ff493",
+      "id": 35055691050,
+      "name": "Server CI",
+      "status": "in_progress",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/35055691050"
+    },
+    {
+      "conclusion": null,
+      "event": "pull_request",
+      "head_sha": "981d7e422d45234674aeda84c762245be55ff493",
+      "id": 35055691094,
+      "name": "Extension CI",
+      "status": "in_progress",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/35055691094"
+    },
+    {
+      "conclusion": "success",
+      "event": "pull_request",
+      "head_sha": "981d7e422d45234674aeda84c762245be55ff493",
+      "id": 35055691054,
+      "name": "Documentation CI",
+      "status": "completed",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/35055691054"
+    },
+    {
+      "conclusion": "success",
+      "event": "pull_request",
+      "head_sha": "981d7e422d45234674aeda84c762245be55ff493",
+      "id": 35055691061,
+      "name": "Extension I1-C1 client",
+      "status": "completed",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/35055691061"
+    },
+    {
+      "conclusion": null,
+      "event": "push",
+      "head_sha": "981d7e422d45234674aeda84c762245be55ff493",
+      "id": 35055688867,
+      "name": "Extension CI",
+      "status": "in_progress",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/35055688867"
+    }
+  ],
+  "jobs": [
+    {
+      "id": 104665287264,
+      "run_id": 35055691061,
+      "name": "Installed local API / portal / PostgreSQL acceptance",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 104665287453,
+      "run_id": 35055691061,
+      "name": "client-i1",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 104665343907,
+      "run_id": 35055691050,
+      "name": "server",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 104665346251,
+      "run_id": 35055691094,
+      "name": "Common application / native Chromium fixture",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 104665346273,
+      "run_id": 35055691094,
+      "name": "Common core / source and package",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 104665346335,
+      "run_id": 35055691094,
+      "name": "Baseline / wb-nodes",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 104665346336,
+      "run_id": 35055691094,
+      "name": "Baseline / wb-browsers",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 104665346343,
+      "run_id": 35055691094,
+      "name": "Baseline / ozon",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 104665287448,
+      "run_id": 35055691054,
+      "name": "documentation",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 104665345193,
+      "run_id": 35055688867,
+      "name": "Common application / native Chromium fixture",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 104665345342,
+      "run_id": 35055688867,
+      "name": "Baseline / wb-nodes",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 104665345380,
+      "run_id": 35055688867,
+      "name": "Common core / source and package",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 104665345437,
+      "run_id": 35055688867,
+      "name": "Baseline / ozon",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 104665345506,
+      "run_id": 35055688867,
+      "name": "Baseline / wb-browsers",
+      "status": "in_progress",
+      "conclusion": null
+    }
+  ],
+  "verdict": "REWORK_REQUIRED",
+  "note": "Statuses are observed snapshots, not a claim of final all-green. Completed installed/native/client/docs decisive logs read independently."
+}

@@ -1,0 +1,40 @@
+{
+  "scope": "independent source VM; actual candidate bytes and Ed25519; synthetic clocks/storage/network; no live or installed claim",
+  "monotonic_decrease_above_anchor": {
+    "observations": [
+      1000,
+      2000,
+      1500
+    ],
+    "workAllowed": true
+  },
+  "elapsed_after_wall_jump": {
+    "elapsedMonotonic": 1000,
+    "effectiveAdvance": 0
+  },
+  "authority_null_origin_restart": {
+    "discarded": true,
+    "credentialsRetained": true,
+    "requests": [
+      {
+        "url": "http://127.0.0.1:43199/v1/bootstrap",
+        "hasBearer": true,
+        "hasDeviceCode": false
+      }
+    ]
+  },
+  "held_write_crosses_expiry": {
+    "returnedWorkAllowed": true,
+    "nextWorkAllowed": false
+  },
+  "pending_origin_restart": {
+    "requests": [
+      {
+        "url": "http://127.0.0.1:43199/v1/device-authorizations/token",
+        "hasBearer": false,
+        "hasDeviceCode": true
+      }
+    ]
+  },
+  "clientGitBlob": "2fdb51545a4e64822be4e68efbc7d4393fefba3a"
+}
