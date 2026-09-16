@@ -6,71 +6,53 @@
 
 Этот каталог — постоянная authority для органического поиска, семантики, поисковой архитектуры, Алисы AI и технического SEO публичного продукта **Октопорт / Octoport**.
 
-## Текущие обязательные authority
+## Обязательные authority
 
-### Roadmap
+- [SEO_MASTER_ROADMAP_2026-09-16](SEO_MASTER_ROADMAP_2026-09-16.md) — путь до готового production SEO-продукта;
+- [EXECUTION_RULES](EXECUTION_RULES.md) — сбор/evidence/provider/QA/anti-regression rules;
+- [WORK_HANDOFF_RULE](WORK_HANDOFF_RULE.md) — обязательный large-data contract с ChatGPT Work;
+- [STAGE_GATES_M0_M7](STAGE_GATES_M0_M7.md) — адаптированные KW-002 Step00–06 gates до Collection Freeze;
+- [PRODUCT_TRUTH](PRODUCT_TRUTH.md) — реальные продуктовые границы;
+- [METHODOLOGY](METHODOLOGY.md) — базовый evidence-first pipeline;
+- [EXTERNAL_METHOD_RESEARCH_2026-09-16](EXTERNAL_METHOD_RESEARCH_2026-09-16.md) — внешняя методическая база;
+- [KW002_METHOD_AUDIT_2026-09-16](KW002_METHOD_AUDIT_2026-09-16.md) — перенос методики живого KW-002.
 
-- [SEO_MASTER_ROADMAP_2026-09-16](SEO_MASTER_ROADMAP_2026-09-16.md) — текущий исполняемый путь до готового production SEO-продукта.
-
-### Execution/process rules
-
-- [EXECUTION_RULES](EXECUTION_RULES.md) — обязательные правила сбора, evidence, provider lifecycle, QA, ambiguity, anti-regression и stage closure;
-- [WORK_HANDOFF_RULE](WORK_HANDOFF_RULE.md) — обязательный large-data contract: когда и как полный массив отдаётся ChatGPT Work;
-- [STAGE_GATES_M0_M7](STAGE_GATES_M0_M7.md) — перенесённые и адаптированные KW-002 Step00–06 gates для текущей стадии сбора.
-
-### Method/product authorities
-
-- [PRODUCT_TRUTH](PRODUCT_TRUTH.md) — что продукт реально представляет собой и что допустимо обещать;
-- [METHODOLOGY](METHODOLOGY.md) — базовый evidence-first SEO/semantic pipeline;
-- [EXTERNAL_METHOD_RESEARCH_2026-09-16](EXTERNAL_METHOD_RESEARCH_2026-09-16.md) — свежая внешняя методическая база Yandex/Google + industry corroboration;
-- [KW002_METHOD_AUDIT_2026-09-16](KW002_METHOD_AUDIT_2026-09-16.md) — что именно перенесено из живого KW-002 и что сознательно не копируется.
-
-Старый `SEO_ROADMAP.md` сохранён как исторический coarse roadmap и не является текущей execution authority.
+Старый `SEO_ROADMAP.md` — исторический coarse roadmap, не execution authority.
 
 ## Operating model
 
-Прямое решение владельца:
-
 ```text
 ЭТОТ ДИАЛОГ
+= архитектор/контролёр
 = собирает evidence
-= управляет bridge/provider действиями
-= сохраняет/проверяет результаты
-= формирует точный Work prompt
+= управляет bridge/provider
+= сохраняет + readback-проверяет результаты
+= пишет точный Work prompt
 = принимает/отклоняет Work return
 
 CHATGPT WORK
-= анализирует, систематизирует и преобразует большие данные
-= работает с полным разрешённым массивом
-= создаёт большие таблицы/артефакты
+= работает с полным большим массивом
+= анализирует
+= систематизирует
+= делает join/dedup/reconciliation/clustering и большие артефакты
+= не меняет методику самовольно
 ```
 
-Если полный анализ большого массива небезопасен в обычном чате, **sampling запрещён**. Срабатывает `WORK_HANDOFF_RULE.md`.
+Если полный анализ большого массива небезопасен в обычном чате, sampling/first-N/truncation запрещены: срабатывает `WORK_HANDOFF_RULE.md`.
 
 ## Цель
 
-Построить не «SEO-тексты» и не просто список ключей, а доказуемый поисковый продукт:
+`product truth → Wordstat → Yandex SERP → search competitors → Alice AI → M7 Collection Freeze → Work semantic master → clustering → page ownership → page specs → technical SEO → implementation → live/indexing → Yandex/Google/Alice measurement`.
 
-`product truth → demand evidence → Yandex SERP → search competitors → Alice AI evidence → M7 Collection Freeze → Work semantic master → SERP/task clustering → page ownership → page specs → technical SEO → implementation → live/indexing → Yandex/Google/Alice measurement`.
-
-Финальная структура сайта заблокирована до `M7 Collection Freeze`.
+Финальная структура сайта заблокирована до M7.
 
 ## Evidence classes
 
-- `PRODUCT_TRUTH`;
-- `SEARCH_HYPOTHESIS`;
-- `WORDSTAT_OBSERVED`;
-- `SERP_OBSERVED`;
-- `COMPETITOR_OBSERVED`;
-- `ALICE_OBSERVED`;
-- `SEO_DECISION`;
-- `IMPLEMENTED`;
-- `MEASURED`;
-- `UNKNOWN/HOLD`.
+`PRODUCT_TRUTH`, `SEARCH_HYPOTHESIS`, `WORDSTAT_OBSERVED`, `SERP_OBSERVED`, `COMPETITOR_OBSERVED`, `ALICE_OBSERVED`, `SEO_DECISION`, `IMPLEMENTED`, `MEASURED`, `UNKNOWN/HOLD`.
 
-Эти классы не подменяют друг друга.
+Классы не подменяют друг друга.
 
-## Неподвижный provider/evidence порядок
+## Provider/evidence hard order
 
 ```text
 FULL RESPONSE / EXPORT
@@ -80,104 +62,89 @@ FULL RESPONSE / EXPORT
 -> NEXT PROVIDER ACTION
 ```
 
-Дополнительно:
-
-- no blind retry;
-- pending/waiting/unknown не превращаются в отрицательное search evidence;
-- operation/job identity сохраняется;
-- chat не является единственным raw-хранилищем;
-- large evidence не урезается из-за контекста;
-- Work output не является truth до Main Chat return QA.
+No blind retry. Pending/waiting/unknown не являются отрицательным evidence. Chat не является единственным raw-хранилищем. Большие данные не урезаются ради контекста. Work output не является текущей truth до return QA.
 
 ## Текущий cursor
 
-### M0
+### M0 — Product truth/governance
 
-`PASS` — product truth/governance frozen.
+`PASS`.
 
-### M1
+### M1 — Current-site + measurement baseline
 
-`OPEN / SOURCE BASELINE PARTIAL PASS` — source audit есть, live/indexing/measurement surface ещё должен быть закрыт.
+`OPEN / SOURCE BASELINE PARTIAL PASS`.
 
-### M2
+### M2 — Wordstat demand acquisition
 
-`B01+B02 EXECUTED / RETROSPECTIVE KW002 GATE AUDIT OPEN`.
+`PASS WITH EXPLICIT HISTORICAL PERSISTENCE LIMITATION`.
 
-Фактический Wordstat сбор завершён, но после переноса более строгих KW-002 rules обязателен ретро-аудит:
+- B01 + B02 provider acquisition выполнены;
+- строгий ретро-аудит по перенесённым KW-002 gates завершён: `wordstat/M2_WORDSTAT_RETRO_GATE_AUDIT_2026-09-16.md`;
+- B01-01..14 содержат durable factual result body + provenance, но не должны называться exact full top-level envelopes;
+- B01-15 — exact full envelope;
+- B02-01..15 — strict full-envelope process;
+- provider replay ради wrapper-формата не нужен;
+- новые Wordstat calls только по конкретному information gap с новым depth/persistence gate.
 
-- seed/probe quality;
-- depth/coverage;
-- B01 raw persistence;
-- B02 exact-envelope verification;
-- evidence limitation register.
-
-Исторические запросы не переигрываются автоматически только ради оформления.
-
-### M3
+### M3 — Ordinary Yandex SERP collection
 
 `IN PROGRESS`.
 
-S01 `ии агенты для маркетплейсов` закрыт: 20 нормализованных результатов, source export hash-pinned, normalized authority сохранена. S02 `ии агент для озон` подготовлен к bounded execution после завершения текущих durability/rule migration checks.
+S01 `ии агенты для маркетплейсов` закрыт: 20 нормализованных результатов, source export hash-pinned, normalized authority сохранена. S02 `ии агент для озон` — следующий released bounded query.
 
-Основные M3 authority:
+Authorities:
 
 - `serp/M3_QUERY_MATRIX_2026-09-16.md`;
 - `serp/M3_PRE_STEP_RESEARCH_AND_EXECUTION_GATE_2026-09-16.md`;
 - `serp/SERP_PROGRESS.md`.
 
-### M4
+### M4 — Search competitor + landing corpus
 
-`OPEN` — search-competitor/landing corpus будет строиться из recurring live SERP evidence.
+`OPEN` — строится из recurring live SERP evidence.
 
-### M5
+### M5 — Alice AI
 
-`OPEN / NOT STARTED` — Alice AI collection.
+`OPEN / NOT STARTED`.
 
 ### M6–M7
 
-Blocked until M3–M5 evidence and retro gates are sufficient.
+Blocked until M3–M5 collection/gaps are sufficient.
 
 ### M8+
 
-Blocked until Collection Freeze; затем full cross-source semantic pass идёт через Work W1 при large-data trigger.
+Blocked until Collection Freeze. Полный cross-source semantic pass после M7 идёт через Work W1 при large-data trigger.
 
-## Каталоги
+## Evidence/artifact directories
 
-- `wordstat/` — Wordstat raw/analysis/progress/synthesis;
+- `wordstat/` — Wordstat raw/analysis/progress/synthesis/retro QA;
 - `serp/raw/` — Search lifecycle evidence;
-- `serp/exports/` — normalized Search exports + exact archive/provenance where available;
+- `serp/exports/` — normalized Search exports + source hashes/provenance;
 - `serp/analysis/` — query/lifecycle/intent notes;
-- `serp/competitors/` — recurring competitor registry/page corpus;
+- `serp/competitors/` — recurring competitors/page corpus;
 - `alice/` — Alice/AI-search evidence;
 - `semantic/` — post-freeze semantic master;
 - `clusters/` — post-freeze SERP/task clusters;
 - `pages/` — final page specs;
 - `technical/` — technical SEO baseline/spec/QA;
-- `evidence/` — acceptance/closure/QA artifacts;
+- `evidence/` — acceptance/closure/QA;
 - `WORKLOG.md` — append-only execution log.
 
-## Полнота
+## Collection completeness gate
 
-Готовность к финальной семантике определяется не числом фраз, а закрытием нужных решений:
+Before M7 closes:
 
-- Wordstat baseline + retro gates;
-- representative ordinary Yandex SERP matrix;
-- stable-enough recurring search competitor set;
-- relevant competitor page corpus;
-- representative Alice cases;
-- zero unresolved high-value acquisition gaps;
-- no unknown provider outcomes;
-- durable/read-back evidence required for downstream work.
+- Wordstat baseline and retro gates accepted;
+- representative Yandex SERP matrix complete for decisions;
+- recurring search competitor set stable enough;
+- relevant competitor page corpus collected;
+- representative Alice cases collected;
+- high-value evidence gaps closed/HOLD with reason;
+- unknown provider outcomes = 0;
+- downstream-required evidence durably read back;
+- W1 pre-handoff manifest ready.
 
-Только затем M7 закрывается и разрешается Work/full semantic analysis.
+Only then final semantic analysis, clusters and landing architecture are released.
 
 ## Isolation
 
-До отдельного implementation handoff этот поток изменяет только `docs/seo/**`.
-
-Не трогать отсюда:
-
-- server/runtime contracts;
-- extension implementation;
-- site implementation;
-- moving `main`.
+До отдельного implementation handoff SEO stream изменяет только `docs/seo/**`. Server/runtime/extension/site implementation и moving `main` не трогаются.
