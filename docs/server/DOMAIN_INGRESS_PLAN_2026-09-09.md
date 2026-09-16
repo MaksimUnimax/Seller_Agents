@@ -1,6 +1,8 @@
 # SellerAgents production domain and public ingress plan — 2026-09-09
 
-Status: approved infrastructure input; implementation/public exposure is not yet accepted production launch.
+Status: HISTORICAL / superseded for future production domain authority by [Octoport production domain and public ingress plan — 2026-09-16](DOMAIN_INGRESS_PLAN_2026-09-16.md).
+
+This document is preserved as historical evidence of the earlier accepted `selleragents.ru` topology. It must not be used as the current future-production domain authority after the owner's 2026-09-16 Octoport decision.
 
 ## 1. Domain authority
 

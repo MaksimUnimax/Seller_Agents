@@ -10,6 +10,8 @@ commit 3f16bbf6387cc62303e292fcfe61449c8f243b92.
 Новые общепродуктовые решения имеют приоритет над старым порядком «Bridge только P11», платным первым выпуском и коммерческим лимитом установок.
 S1.1 free beta eligibility и quota регистрации приняты в canonical `main`; точная приёмка записана в [S1.1 remote acceptance](S1_1_REMOTE_ACCEPTANCE_2026-09-14.md). Реальная авторизация единого расширения и email/preprod остаются будущими участками I1 и S1.2.
 
+Текущая будущая production-доменная authority: [Octoport ingress plan 2026-09-16](DOMAIN_INGRESS_PLAN_2026-09-16.md). Исторический план `selleragents.ru` от 2026-09-09 сохранён как evidence и больше не является authority для будущего production deploy. Работающий `docs.selleragents.ru` сохраняется до отдельной миграции.
+
 Команды и окружение: [LOCAL_DEVELOPMENT](LOCAL_DEVELOPMENT.md).
 
 ## Размещение
