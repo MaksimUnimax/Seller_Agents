@@ -7,6 +7,71 @@ const runtime = path.resolve(process.argv[2]);
 const AUTH = "seller_agents_control_auth_v2";
 const CHATGPT = { family: "chatgpt", surface: "web", variant: null };
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
+const caseResults = [], caseFailures = [];
+const T0 = 1700000000000;
+const clone = value => value === undefined ? undefined : structuredClone(value);
+const paths = worker => worker.network.map(row => new URL(row.url).pathname);
+const fixedPayload = (clock, changes = {}) => base => ({ ...clone(base), issuedAt: new Date(T0 - 100).toISOString(), serverTime: new Date(T0).toISOString(), expiresAt: new Date(T0 + 1000).toISOString(), offlineGraceUntil: new Date(T0 + 3000).toISOString(), ...changes });
+const profileFingerprint = (content, compatibility) => createHash("sha256").update(canonical({ content, compatibility })).digest("hex");
+function withProfile(base, changes = {}) {
+  const compatibility = { ...base.ai.profile.compatibility, ...changes };
+  const profile = { ...base.ai.profile, compatibility, contentSha256: profileFingerprint(base.ai.profile.content, compatibility) };
+  return { ...clone(base), ai: { ...base.ai, profile } };
+}
+async function exactFailure(operation, expected, label) {
+  let failure;
+  try { await operation(); } catch (error) { failure = error; }
+  assert.ok(failure, label + ": expected rejection");
+  assert.equal(failure.code, expected.code || expected, label + ": code");
+  if (expected.status !== undefined) assert.equal(failure.status, expected.status, label + ": status");
+  if (expected.responseOk !== undefined) assert.equal(failure.responseOk, expected.responseOk, label + ": responseOk");
+  return failure;
+}
+async function namedCase(id, fn, assertion = id + " assertions completed") {
+  try {
+    await fn();
+    caseResults.push({ id, status: "PASS", source: "asserted", failure_origin: null, actual_assertion: assertion });
+  } catch (error) {
+    caseResults.push({ id, status: "FAIL", source: "asserted", failure_origin: (error.code ? error.code + ": " : "") + (error.message || String(error)), actual_assertion: assertion });
+    caseFailures.push(error);
+  }
+}
+function fakeIDB() {
+  const records = new Map(), stats = { reads: 0, writes: 0 };
+  return { records, stats, open() {
+    const request = {};
+    queueMicrotask(() => {
+      request.result = { objectStoreNames: { contains: () => true }, close() {}, transaction() {
+        const tx = { objectStore() {
+          const op = (kind, value) => {
+            const result = {};
+            queueMicrotask(() => {
+              if (kind === "get" || kind === "all") stats.reads++;
+              if (kind === "put") { stats.writes++; records.set(value.artifact_key, value); }
+              if (kind === "delete") { stats.writes++; records.delete(value); }
+              result.result = kind === "get" ? records.get(value) : kind === "all" ? [...records.values()] : value?.artifact_key;
+              result.onsuccess?.();
+              queueMicrotask(() => tx.oncomplete?.());
+            });
+            return result;
+          };
+          return { get: key => op("get", key), put: value => op("put", value), delete: key => op("delete", key), getAll: () => op("all") };
+        } };
+        return tx;
+      } };
+      request.onsuccess?.();
+    });
+    return request;
+  } };
+}
+const idbRequest = request => new Promise((resolve, reject) => { request.onsuccess = () => resolve(request.result); request.onerror = () => reject(request.error || new Error("fixture IDB request failed")); });
+async function idbPutGet(idb, record) {
+  const database = await idbRequest(idb.open());
+  const store = database.transaction("artifacts", "readwrite").objectStore("artifacts");
+  await idbRequest(store.put(record));
+  const readStore = database.transaction("artifacts", "readonly").objectStore("artifacts");
+  return idbRequest(readStore.get(record.artifact_key));
+}
 const canonical = value => value === null ? "null" : typeof value === "boolean" ? (value ? "true" : "false") : typeof value === "string" ? JSON.stringify(value) : typeof value === "number" ? String(value) : Array.isArray(value) ? `[${value.map(canonical).join(",")}]` : `{${Object.keys(value).sort().map(key => `${JSON.stringify(key)}:${canonical(value[key])}`).join(",")}}`;
 function packagedConfig(backing, changes = {}) {
   const key = backing.local.__seller_agents_fixture_signing_key;
@@ -20,6 +85,8 @@ async function signed(backing, payload) { return json(await signFixtureBootstrap
 async function prepared(options = {}) {
   const clock = options.clock || { wall: Date.now(), mono: 1000 };
   const backing = options.backing || { local: {}, session: {} };
+  const wallClock = options.wallClock || (() => clock.wall);
+  const monotonicClock = options.monotonicClock || (() => clock.mono);
   const first = await makeWorker(runtime, { backing, wallClock: () => clock.wall, monotonicClock: () => clock.mono });
   const original = structuredClone(backing.local[AUTH]);
   first.close();
@@ -36,8 +103,13 @@ async function prepared(options = {}) {
   const worker = await makeWorker(runtime, {
     backing,
     seedAuthority: false,
-    wallClock: () => clock.wall,
-    monotonicClock: () => clock.mono,
+    wallClock,
+    monotonicClock,
+    indexedDB: options.indexedDB,
+    beforeCryptoVerify: options.beforeCryptoVerify,
+    accountId: options.accountId,
+    deviceId: options.deviceId,
+    sessionId: options.sessionId,
     userAgent: options.userAgent,
     packagedConfig,
     fetch: options.fetch || (async url => { throw new Error("unexpected control request " + url); }),
@@ -96,7 +168,7 @@ await assertTransportCase("audited bootstrap 503 with fresh access", () => json(
 // transport merely because it has no useful status on an arbitrary exception.
 for (const [label, responseFactory] of [
   ["wrong-code 503", () => json({ error: { code: "TEMPORARY" } }, 503)],
-  ["malformed 503", () => json("not-json", 503)],
+  ["malformed 503", () => new Response("not-json", { status: 503, headers: { "content-type": "application/json" } })],
   ["429", () => json({ error: { code: "RETRY" } }, 429)],
   ["500", () => json({ error: { code: "FAIL" } }, 500)],
   ["502", () => json({ error: { code: "FAIL" } }, 502)],
@@ -138,6 +210,7 @@ for (const [label, offset, expected] of [["expiresAt", 0, "STALE_BUT_OFFLINE_GRA
   const clock = { wall: Date.now(), mono: 1000 };
   const preflight = await prepared({ clock, credentials: { accessTokenExpiresAt: new Date(clock.wall - 1000).toISOString() }, payload: base => ({ ...base, expiresAt: new Date(clock.wall - 1).toISOString(), offlineGraceUntil: new Date(clock.wall + 3600000).toISOString() }), fetch: async url => { assert.ok(url.endsWith("/v1/auth/refresh")); throw new TypeError("refresh transport"); } });
   try { const result = await policy(preflight.worker, { detectedAi: CHATGPT }); assert.equal(result.source, "CACHE"); assert.ok(preflight.backing.local[AUTH].rotation, "rotation intent retained"); }
+  catch (error) { throw error; }
   finally { preflight.worker.close(); }
 }
 {
@@ -180,18 +253,19 @@ for (const [label, offset, expected] of [["expiresAt", 0, "STALE_BUT_OFFLINE_GRA
   });
   try {
     clock.wall += 7200000; clock.mono += 7200000;
-    const old = policy(fixture.worker, { detectedAi: CHATGPT });
+    const old = policy(fixture.worker, { detectedAi: CHATGPT }); old.catch(() => {});
     await until(() => denialHeld && writes.some(row => row.workAllowed === true) && typeof denialRelease === "function", "P2 denial AUTH write");
     const oldFloor = fixture.backing.local[AUTH].cacheClock.effectiveTimeMs;
     const later = fixture.worker.call("SellerAgentsControlClient.bootstrap", { detectedAi: CHATGPT });
     await until(() => bootstrapCalls === 2, "P2 later raw bootstrap");
     denialRelease();
-    await assert.rejects(old, /CACHE_ACQUISITION_OBSOLETED/);
+    try { await old; } catch (error) { if (error.code !== "CACHE_ACQUISITION_OBSOLETED") throw error; }
     assert.equal(fixture.removeAttempts || 0, 0, "P2 obsolescence does not remove AUTH");
     assert.ok(fixture.backing.local[AUTH], "P2 AUTH remains present");
     assert.ok(fixture.backing.local[AUTH].cacheClock.effectiveTimeMs >= oldFloor, "P2 floor is nondecreasing");
     fixture.releaseBootstrap();
-    const newer = await later;
+    let newer;
+    try { newer = await later; } catch (error) { throw error; }
     assert.equal(newer.configVersion, 2, "P2 newer raw result completes");
     assert.equal(fixture.backing.local[AUTH].authority.payload.configVersion, 2, "P2 newer authority remains owner");
     assert.ok(writes.some(row => row.workAllowed === true) && writes.some(row => row.workAllowed === false), "P2 held denial write was after floor write");
@@ -223,7 +297,7 @@ for (const [label, offset, expected] of [["expiresAt", 0, "STALE_BUT_OFFLINE_GRA
   });
   try {
     clock.wall += 3600001; clock.mono += 3600001;
-    const old = policy(fixture.worker, { detectedAi: CHATGPT });
+    const old = policy(fixture.worker, { detectedAi: CHATGPT }); old.catch(() => {});
     await until(() => checkpointHeld && typeof releaseCheckpoint === "function", "G checkpoint write");
     releaseCheckpoint();
     const newer = fixture.worker.call("SellerAgentsControlClient.bootstrap", { detectedAi: CHATGPT });
@@ -287,7 +361,8 @@ for (const [label, changes, userAgent] of [
   try {
     await assert.rejects(policy(fixture.worker, { detectedAi: { family: "alice", surface: "web", variant: null } }), /BOOTSTRAP_UNAVAILABLE|CACHE_CONTEXT_MISMATCH/);
     assert.ok(fixture.backing.local[AUTH]?.authority, "requested-AI mismatch keeps the original authority");
-  } finally { fixture.worker.close(); }
+  } catch (error) { throw error; }
+  finally { fixture.worker.close(); }
 }
 for (const [label, field, value] of [
   ["device context", "deviceId", "44444444-4444-4444-8444-444444444444"],
@@ -413,4 +488,390 @@ for (const [label, field, value] of [
   } finally { fixture.worker.close(); }
 }
 
-console.log(JSON.stringify({ status: "PASS", focused: "client-offline-policy", A: "PASS", B: "PASS", C: "PASS", D: "PASS", E: "PASS", F: "PASS", G: "PASS", H: "PASS", transport_provenance: true, audited_503: true, no_offline_work_grant: true }));
+await namedCase("Q1-A-refresh503-not-cache", async () => {
+  const clock = { wall: T0, mono: 1000 };
+  const fixture = await prepared({ clock, credentials: { accessTokenExpiresAt: new Date(T0 - 1).toISOString() }, payload: fixedPayload(clock, { expiresAt: new Date(T0 - 1).toISOString() }), fetch: async url => {
+    assert.equal(new URL(url).pathname, "/v1/auth/refresh");
+    return json({ error: { code: "BOOTSTRAP_UNAVAILABLE" } }, 503);
+  } });
+  try {
+    const failure = await exactFailure(() => policy(fixture.worker, { detectedAi: CHATGPT }), { code: "BOOTSTRAP_UNAVAILABLE", status: 503 }, "Q1-A");
+    assert.equal(failure.code, "BOOTSTRAP_UNAVAILABLE");
+    assert.deepEqual(paths(fixture.worker), ["/v1/auth/refresh"]);
+    assert.equal(paths(fixture.worker).filter(pathname => pathname === "/v1/bootstrap").length, 0);
+    assert.equal(fixture.backing.local[AUTH].authority.payload.configVersion, 1);
+  } finally { fixture.worker.close(); }
+});
+
+for (const status of [200, 503]) await namedCase("Q1-B-oversized-" + status, async () => {
+  const clock = { wall: T0, mono: 1000 };
+  const fixture = await prepared({ clock, fetch: async url => {
+    assert.equal(new URL(url).pathname, "/v1/bootstrap");
+    return new Response("x".repeat(1024 * 1024 + 1), { status, headers: { "content-type": "application/json" } });
+  } });
+  try {
+    const failure = await exactFailure(() => policy(fixture.worker, { detectedAi: CHATGPT }), { code: "CONTROL_RESPONSE_TOO_LARGE", status, responseOk: status >= 200 && status < 300 }, "Q1-B-" + status);
+    assert.deepEqual(paths(fixture.worker), ["/v1/bootstrap"]);
+    assert.equal(failure.body, null);
+    assert.equal(fixture.worker.network.length, 1);
+    assert.equal(fixture.backing.local[AUTH]?.authority == null, status === 200);
+  } finally { fixture.worker.close(); }
+});
+
+const onlineEnvelopeCases = [
+  ["unknown-key", "BOOTSTRAP_UNKNOWN_SIGNING_KEY", async (backing, base) => json(await signFixtureBootstrap(backing, base, "unknown-fixture-key"))],
+  ["corrupted-signature", "BOOTSTRAP_INVALID_SIGNATURE", async (backing, base) => {
+    const envelope = await signFixtureBootstrap(backing, base);
+    const bytes = Buffer.from(envelope.signature, "base64url"); bytes[0] ^= 1; envelope.signature = bytes.toString("base64url"); return json(envelope);
+  }],
+  ["browser-unsupported", "BOOTSTRAP_PROFILE_INCOMPATIBLE", async (backing, base) => signed(backing, { ...base, compatibility: { ...base.compatibility, browser: { status: "UNSUPPORTED_BROWSER" } } })],
+  ["extension-update-required", "BOOTSTRAP_PROFILE_INCOMPATIBLE", async (backing, base) => signed(backing, { ...base, compatibility: { ...base.compatibility, extension: { status: "UPDATE_REQUIRED", minimumVersion: "0.2.3" } } })],
+  ["profile-minimum-99", "BOOTSTRAP_PROFILE_INCOMPATIBLE", async (backing, base) => signed(backing, withProfile(base, { minimumExtensionVersion: "99.0.0" }))],
+  ["server-time-regression", "BOOTSTRAP_SERVER_TIME_REGRESSION", async (backing, base) => signed(backing, { ...base, issuedAt: new Date(T0 - 200).toISOString(), serverTime: new Date(T0 - 1).toISOString() })],
+];
+for (const [label, expected, response] of onlineEnvelopeCases) await namedCase("Q1-C-" + label, async () => {
+  const clock = { wall: T0, mono: 1000 };
+  const fixture = await prepared({ clock, payload: fixedPayload(clock), fetch: async url => {
+    assert.equal(new URL(url).pathname, "/v1/bootstrap");
+    const base = clone(fixture.backing.local[AUTH].authority.payload);
+    return response(fixture.backing, base);
+  } });
+  try {
+    await exactFailure(() => policy(fixture.worker, { detectedAi: CHATGPT }), expected, "Q1-C-" + label);
+    assert.deepEqual(paths(fixture.worker), ["/v1/bootstrap"]);
+    assert.equal(fixture.backing.local[AUTH]?.authority, null);
+  } finally { fixture.worker.close(); }
+});
+
+for (const status of [401, 403]) await namedCase("Q1-D-preflight-refresh-" + status, async () => {
+  const clock = { wall: T0, mono: 1000 };
+  const fixture = await prepared({ clock, credentials: { accessTokenExpiresAt: new Date(T0 - 1).toISOString() }, fetch: async url => {
+    assert.equal(new URL(url).pathname, "/v1/auth/refresh");
+    return json({ error: { code: "REFRESH_TERMINAL_" + status } }, status);
+  } });
+  try {
+    await exactFailure(() => policy(fixture.worker, { detectedAi: CHATGPT }), { code: "REFRESH_TERMINAL_" + status, status }, "Q1-D-preflight-" + status);
+    assert.deepEqual(paths(fixture.worker), ["/v1/auth/refresh"]);
+    assert.equal(fixture.backing.local[AUTH].credentials, null);
+    assert.equal(fixture.backing.local[AUTH].authority, null);
+    const restarted = await makeWorker(runtime, { backing: fixture.backing, seedAuthority: false, wallClock: () => T0, monotonicClock: () => 1, fetch: async () => { throw new Error("signed-out restart must not request"); } });
+    try {
+      const state = await restarted.call("SellerAgentsControlClient.status");
+      assert.equal(state.authenticated, false); assert.equal(state.workAllowed, false); assert.equal(restarted.network.length, 0);
+    } finally { restarted.close(); }
+  } finally { fixture.worker.close(); }
+});
+
+for (const status of [401, 403]) await namedCase("Q1-D-bootstrap401-refresh-" + status, async () => {
+  const clock = { wall: T0, mono: 1000 };
+  const fixture = await prepared({ clock, fetch: async url => {
+    const pathname = new URL(url).pathname;
+    if (pathname === "/v1/bootstrap") return json({ error: { code: "BOOTSTRAP_AUTH_CHALLENGE" } }, 401);
+    assert.equal(pathname, "/v1/auth/refresh");
+    return json({ error: { code: "FORCED_REFRESH_" + status } }, status);
+  } });
+  try {
+    await exactFailure(() => policy(fixture.worker, { detectedAi: CHATGPT }), { code: "BOOTSTRAP_AUTH_CHALLENGE", status: 401 }, "Q1-D-bootstrap401-" + status);
+    assert.deepEqual(paths(fixture.worker), ["/v1/bootstrap", "/v1/auth/refresh"]);
+    assert.equal(fixture.backing.local[AUTH].credentials, null);
+    assert.equal(fixture.backing.local[AUTH].authority, null);
+    const restarted = await makeWorker(runtime, { backing: fixture.backing, seedAuthority: false, wallClock: () => T0, monotonicClock: () => 1 });
+    try { assert.equal((await restarted.call("SellerAgentsControlClient.status")).authenticated, false); assert.equal(restarted.network.length, 0); } finally { restarted.close(); }
+  } finally { fixture.worker.close(); }
+});
+
+await namedCase("Q1-E-storage503-is-not-http503", async () => {
+  const clock = { wall: T0, mono: 1000 };
+  const injected = Object.assign(new Error("local AUTH set failed"), { status: 503, code: "BOOTSTRAP_UNAVAILABLE" });
+  const fixture = await prepared({ clock, payload: fixedPayload(clock, { expiresAt: new Date(T0 - 1).toISOString() }), fetch: async url => {
+    assert.equal(new URL(url).pathname, "/v1/bootstrap"); return json({ error: { code: "BOOTSTRAP_UNAVAILABLE" } }, 503);
+  }, onStorageWrite: async (kind, values) => { if (kind === "local" && values[AUTH]) throw injected; } });
+  try {
+    clock.wall = T0 + 100; clock.mono = 1100;
+    const failure = await exactFailure(() => policy(fixture.worker, { detectedAi: CHATGPT }), "AUTH_DENIAL_PERSISTENCE_FAILED", "Q1-E");
+    assert.notEqual(failure.status, 503);
+    assert.deepEqual(paths(fixture.worker), ["/v1/bootstrap"]);
+  } finally { fixture.worker.close(); }
+});
+
+for (const [label, offset, expected] of [["expires-minus-one", 999, "FRESH"], ["expires-equality", 1000, "STALE_BUT_OFFLINE_GRACE_ELIGIBLE"], ["grace-minus-one", 2999, "STALE_BUT_OFFLINE_GRACE_ELIGIBLE"], ["grace-equality", 3000, "CACHE_EXPIRED"], ["grace-after", 3001, "CACHE_EXPIRED"]]) await namedCase("Q2-A-" + label, async () => {
+  const clock = { wall: T0, mono: 1000 }, fixture = await prepared({ clock, payload: fixedPayload(clock), fetch: async url => { assert.equal(new URL(url).pathname, "/v1/bootstrap"); return json({ error: { code: "BOOTSTRAP_UNAVAILABLE" } }, 503); } });
+  try {
+    clock.wall = T0 + offset; clock.mono = 1000 + offset;
+    if (expected === "CACHE_EXPIRED") await exactFailure(() => policy(fixture.worker, { detectedAi: CHATGPT }), expected, "Q2-A-" + label);
+    else { const result = await policy(fixture.worker, { detectedAi: CHATGPT }); assert.equal(result.source, "CACHE"); assert.equal(result.freshness, expected); }
+    assert.equal(fixture.backing.local[AUTH].authority.workAllowed, expected === "CACHE_EXPIRED" ? false : true);
+  } finally { fixture.worker.close(); }
+});
+
+await namedCase("Q2-B-held-write-crosses-grace", async () => {
+  const clock = { wall: T0, mono: 1000 }; let release, held = false;
+  const fixture = await prepared({ clock, payload: fixedPayload(clock), fetch: async url => { assert.equal(new URL(url).pathname, "/v1/bootstrap"); return json({ error: { code: "BOOTSTRAP_UNAVAILABLE" } }, 503); }, onStorageWrite: async (kind, values) => {
+    if (kind === "local" && values[AUTH]?.cacheClock?.effectiveTimeMs === T0 + 2999 && !held) { held = true; await new Promise(resolve => { release = resolve; }); }
+  } });
+  try {
+    clock.wall = T0 + 2999; clock.mono = 3999;
+    const pending = policy(fixture.worker, { detectedAi: CHATGPT });
+    await until(() => held, "Q2-B increased-floor write");
+    clock.wall = T0 + 3000; clock.mono = 4000; release();
+    await exactFailure(() => pending, "CACHE_EXPIRED", "Q2-B");
+    assert.ok(fixture.backing.local[AUTH].cacheClock.effectiveTimeMs >= T0 + 3000);
+    assert.equal(fixture.backing.local[AUTH].authority.workAllowed, false);
+  } finally { release?.(); fixture.worker.close(); }
+});
+
+await namedCase("Q2-C-resolved-AI-fresh-cache-guards", async () => {
+  const clock = { wall: T0, mono: 1000 }, fixture = await prepared({ clock, payload: fixedPayload(clock), fetch: async url => { assert.equal(new URL(url).pathname, "/v1/bootstrap"); return json({ error: { code: "BOOTSTRAP_UNAVAILABLE" } }, 503); } });
+  try {
+    assert.equal(await fixture.worker.call("SellerAgentsControlClient.canWork"), true);
+    clock.wall = T0 + 1001; clock.mono = 2001;
+    const cached = await policy(fixture.worker, { detectedAi: CHATGPT });
+    assert.equal(cached.source, "CACHE"); assert.equal(cached.freshness, "STALE_BUT_OFFLINE_GRACE_ELIGIBLE");
+    const count = fixture.worker.network.length;
+    assert.equal(await fixture.worker.call("SellerAgentsControlClient.canWork"), false);
+    assert.equal((await fixture.worker.call("SellerAgentsControlClient.status")).workAllowed, false);
+    assert.equal((await fixture.worker.call("SellerAgentsControlClient.getAuthority")).workAllowed, false);
+    assert.equal(fixture.worker.network.length, count);
+  } finally { fixture.worker.close(); }
+});
+
+await namedCase("Q2-D-rollback-consumed-grace-restart", async () => {
+  const clock = { wall: T0, mono: 1000 }, fixture = await prepared({ clock, payload: fixedPayload(clock), fetch: async url => { assert.equal(new URL(url).pathname, "/v1/bootstrap"); return json({ error: { code: "BOOTSTRAP_UNAVAILABLE" } }, 503); } });
+  try {
+    clock.wall = T0 + 500; clock.mono = 1500; await fixture.worker.call("SellerAgentsControlClient.canWork");
+    clock.wall = T0 - 500; clock.mono = 2500; await fixture.worker.call("SellerAgentsControlClient.canWork");
+    const consumedFloor = fixture.backing.local[AUTH].cacheClock.effectiveTimeMs;
+    assert.equal(consumedFloor, T0 + 1500);
+    fixture.worker.close();
+    const restartClock = { wall: T0 - 500, mono: 1 };
+    const restarted = await makeWorker(runtime, { backing: fixture.backing, seedAuthority: false, wallClock: () => restartClock.wall, monotonicClock: () => restartClock.mono, fetch: async url => { assert.equal(new URL(url).pathname, "/v1/bootstrap"); return json({ error: { code: "BOOTSTRAP_UNAVAILABLE" } }, 503); } });
+    try {
+      assert.equal(fixture.backing.local[AUTH].cacheClock.effectiveTimeMs, consumedFloor);
+      const cached = await policy(restarted, { detectedAi: CHATGPT });
+      assert.equal(cached.freshness, "STALE_BUT_OFFLINE_GRACE_ELIGIBLE");
+      restarted.backing.local[AUTH].cacheClock.effectiveTimeMs = consumedFloor;
+      restartClock.wall = T0 + 3000; restartClock.mono = 1501;
+      await exactFailure(() => policy(restarted, { detectedAi: CHATGPT }), "CACHE_EXPIRED", "Q2-D grace");
+      assert.ok(restarted.backing.local[AUTH].cacheClock.effectiveTimeMs >= T0 + 3000);
+      restarted.close();
+      const again = await makeWorker(runtime, { backing: fixture.backing, seedAuthority: false, wallClock: () => T0 - 10000, monotonicClock: () => 1 });
+      try {
+        assert.equal((await again.call("SellerAgentsControlClient.canWork")), false);
+        assert.equal((await again.call("SellerAgentsControlClient.getAuthority")).workAllowed, false);
+        assert.ok(again.backing.local[AUTH].cacheClock.effectiveTimeMs >= T0 + 3000);
+        await exactFailure(() => policy(again, { detectedAi: CHATGPT }), "CACHE_EXPIRED", "Q2-D rollback denial");
+      } finally { again.close(); }
+    } finally { if (restarted) restarted.close(); }
+  } finally { fixture.worker.close(); }
+});
+
+await namedCase("Q3-A-first-floor-both-storage-fail-and-idb-retention", async () => {
+  const clock = { wall: T0, mono: 1000 }, idb = fakeIDB(), backing = { local: {}, session: {} };
+  let fail = false, writes = 0, removes = 0;
+  const fixture = await prepared({ clock, backing, indexedDB: idb, payload: fixedPayload(clock), fetch: async url => { assert.equal(new URL(url).pathname, "/v1/bootstrap"); return json({ error: { code: "BOOTSTRAP_UNAVAILABLE" } }, 503); }, mutateBacking: value => { value.local.r2_catalog_marker = { keep: "catalog-exact" }; }, onStorageWrite: async (kind, values) => { if (fail && kind === "local" && values[AUTH]) { writes++; throw Object.assign(new Error("first-floor set failed"), { status: 503, code: "BOOTSTRAP_UNAVAILABLE" }); } }, onStorageRemove: async (kind, key) => { if (fail && kind === "local" && key === AUTH) { removes++; throw new Error("first-floor remove failed"); } } });
+  const record = { artifact_key: "r2-retained-artifact", value: "idb-exact" };
+  try {
+    assert.deepEqual(await idbPutGet(idb, record), record);
+    const oldBytes = clone(backing.local[AUTH]), oldFloor = oldBytes.cacheClock.effectiveTimeMs;
+    fail = true; clock.wall = T0 + 100; clock.mono = 1100;
+    await exactFailure(() => policy(fixture.worker, { detectedAi: CHATGPT }), "AUTH_DENIAL_PERSISTENCE_FAILED", "Q3-A");
+    assert.equal(writes, 1); assert.equal(removes, 1);
+    assert.deepEqual(backing.local[AUTH], oldBytes);
+    assert.equal(backing.local.r2_catalog_marker.keep, "catalog-exact");
+    assert.deepEqual(await idbPutGet(idb, record), record);
+    fixture.worker.close();
+    const restartClock = { wall: T0, mono: 1000 };
+    const restarted = await makeWorker(runtime, { backing, seedAuthority: false, indexedDB: idb, wallClock: () => restartClock.wall, monotonicClock: () => restartClock.mono, fetch: async url => { assert.equal(new URL(url).pathname, "/v1/bootstrap"); return json({ error: { code: "BOOTSTRAP_UNAVAILABLE" } }, 503); } });
+    try {
+      assert.equal(restarted.backing.local[AUTH].cacheClock.effectiveTimeMs, oldFloor);
+      assert.equal(restarted.backing.local.r2_catalog_marker.keep, "catalog-exact");
+      assert.deepEqual(await idbPutGet(idb, record), record);
+      restartClock.wall = T0 + 100; restartClock.mono = 1100;
+      const recovered = await policy(restarted, { detectedAi: CHATGPT });
+      assert.equal(recovered.source, "CACHE"); assert.equal(recovered.freshness, "FRESH");
+      assert.equal(restarted.backing.local[AUTH].cacheClock.effectiveTimeMs, T0 + 100);
+      assert.ok(idb.stats.reads >= 4 && idb.stats.writes >= 2);
+    } finally { restarted.close(); }
+  } finally { if (fixture.worker) fixture.worker.close(); }
+});
+
+await namedCase("Q4-A-no-authority-cache-control", async () => {
+  const clock = { wall: T0, mono: 1000 }, fixture = await prepared({ clock, payload: fixedPayload(clock), mutateBacking: backing => { backing.local[AUTH].authority = null; }, fetch: async url => { assert.equal(new URL(url).pathname, "/v1/bootstrap"); return json({ error: { code: "BOOTSTRAP_UNAVAILABLE" } }, 503); } });
+  try {
+    await exactFailure(() => policy(fixture.worker, { detectedAi: CHATGPT }), { code: "BOOTSTRAP_UNAVAILABLE", status: 503 }, "Q4-A");
+    assert.deepEqual(paths(fixture.worker), ["/v1/bootstrap"]);
+    assert.equal(fixture.backing.local[AUTH].authority, null);
+  } finally { fixture.worker.close(); }
+});
+
+await namedCase("Q4-B-signed-out-auth-required-zero-requests", async () => {
+  const worker = await makeWorker(runtime, { seedAuthority: false, wallClock: () => T0, monotonicClock: () => 1, fetch: async () => { throw new Error("signed-out policy must not request"); } });
+  try { await exactFailure(() => policy(worker, { detectedAi: CHATGPT }), "AUTH_REQUIRED", "Q4-B"); assert.equal(worker.network.length, 0); } finally { worker.close(); }
+});
+
+await namedCase("Q4-C-account-only-online-positive", async () => {
+  const clock = { wall: T0, mono: 1000 }, fixture = await prepared({ clock, requestedAi: null, payload: fixedPayload(clock, { ai: { status: "UNCONFIGURED" } }), fetch: async url => { assert.equal(new URL(url).pathname, "/v1/bootstrap"); return signed(fixture.backing, { ...fixture.backing.local[AUTH].authority.payload, ai: { status: "UNCONFIGURED" } }); } });
+  try {
+    const result = await policy(fixture.worker);
+    assert.equal(result.source, "ONLINE"); assert.equal(result.payload.ai.status, "UNCONFIGURED");
+    assert.equal((await fixture.worker.call("SellerAgentsControlClient.canWork")), false);
+  } finally { fixture.worker.close(); }
+});
+
+await namedCase("Q4-D-account-mismatch-signed-policy-processing", async () => {
+  let request = 0;
+  const clock = { wall: T0, mono: 1000 }, fixture = await prepared({ clock, payload: fixedPayload(clock), fetch: async url => {
+    assert.equal(new URL(url).pathname, "/v1/bootstrap");
+    const base = clone(fixture.backing.local[AUTH].authority.payload);
+    if (++request === 1) return signed(fixture.backing, base);
+    return signed(fixture.backing, { ...base, account: { id: "99999999-9999-4999-8999-999999999999", status: "ACTIVE" } });
+  } });
+  try {
+    const positive = await fixture.worker.call("SellerAgentsControlClient.bootstrap", { detectedAi: CHATGPT });
+    assert.equal(positive.account.id, fixture.backing.local[AUTH].authority.payload.account.id);
+    const result = await policy(fixture.worker, { detectedAi: CHATGPT });
+    assert.equal(result.source, "ONLINE");
+    assert.equal(result.payload.account.id, "99999999-9999-4999-8999-999999999999");
+    assert.equal(fixture.backing.local[AUTH].authority.payload.account.id, result.payload.account.id);
+  } finally { fixture.worker.close(); }
+}, "valid paired positive restores the original account; correctly signed mismatch is observed during policy processing (not restore)");
+
+async function activationResponse(n) {
+  return { status: "pending", authorizationId: "44444444-4444-4444-8444-444444444444", deviceCode: "D".repeat(43), userCode: "ABCD-EFGH", expiresAt: new Date(T0 + 60000).toISOString() };
+}
+async function activatedResponse() {
+  return { status: "activated", deviceId: "77777777-7777-4777-8777-777777777777", sessionId: "88888888-8888-4888-8888-888888888888", tokenType: "Bearer", accessToken: "B-activation-access-token", accessTokenExpiresAt: new Date(T0 + 3600000).toISOString(), refreshToken: "B".repeat(43), refreshTokenExpiresAt: new Date(T0 + 7200000).toISOString() };
+}
+
+await namedCase("Q5-A-held-A-then-real-B-activation", async () => {
+  const clock = { wall: T0, mono: 1000 }, backing = { local: {}, session: {} };
+  let bootstrapCalls = 0, releaseA, starts = 0, exchanges = 0;
+  let aPayload;
+  const fixture = await prepared({ clock, backing, payload: fixedPayload(clock), fetch: async (url, init) => {
+    const pathname = new URL(url).pathname;
+    if (pathname === "/v1/bootstrap") {
+      bootstrapCalls++;
+      if (bootstrapCalls === 1) return new Promise((resolve, reject) => { releaseA = () => reject(new TypeError("A policy transport")); });
+      const b = await activatedResponse();
+      const base = clone(aPayload);
+      return signed(backing, { ...base, account: { id: "99999999-9999-4999-8999-999999999999", status: "ACTIVE" }, ai: { status: "UNCONFIGURED" }, serverTime: new Date(T0 + 1).toISOString(), expiresAt: new Date(T0 + 3600000).toISOString(), offlineGraceUntil: new Date(T0 + 7200000).toISOString(), configVersion: 2, devicePolicy: { status: "ACTIVE" } });
+    }
+    if (pathname === "/v1/device-authorizations") { starts++; return json(await activationResponse(starts)); }
+    if (pathname === "/v1/device-authorizations/token") { exchanges++; return json(await activatedResponse()); }
+    throw new Error("unexpected Q5-A request " + pathname);
+  } });
+  try {
+    aPayload = clone(backing.local[AUTH].authority.payload);
+    const old = policy(fixture.worker, { detectedAi: CHATGPT }); old.catch(() => {});
+    await until(() => typeof releaseA === "function", "Q5-A held policy");
+    await fixture.worker.call("SellerAgentsControlClient.localReset");
+    await fixture.worker.call("SellerAgentsControlClient.startActivation");
+    await until(async () => (await fixture.worker.call("SellerAgentsControlClient.status")).authenticated, "Q5-A B authentication");
+    const bRecord = clone(backing.local[AUTH]), bGeneration = bRecord.generation, bAccount = bRecord.authority.payload.account.id, bEnvelope = clone(bRecord.authority.envelope), bFloor = bRecord.cacheClock.effectiveTimeMs;
+    releaseA();
+    await exactFailure(() => old, "CONTROL_TRANSPORT_UNAVAILABLE", "Q5-A old");
+    assert.equal(starts, 1); assert.equal(exchanges, 1);
+    assert.equal(backing.local[AUTH].generation, bGeneration); assert.equal(backing.local[AUTH].authority.payload.account.id, bAccount);
+    assert.deepEqual(backing.local[AUTH].authority.envelope, bEnvelope); assert.equal(backing.local[AUTH].cacheClock.effectiveTimeMs, bFloor);
+  } finally { releaseA?.(); fixture.worker.close(); }
+});
+
+for (const later of ["replacement", "forbidden"]) await namedCase("Q5-B-held-cached-verification-" + later, async () => {
+  const clock = { wall: T0, mono: 1000 }, held = { armed: false, entered: false }, backing = { local: {}, session: {} };
+  let releaseVerify, calls = 0;
+  const fixture = await prepared({ clock, backing, beforeCryptoVerify: async () => {
+    if (!held.armed || held.entered) return;
+    held.entered = true;
+    await new Promise(resolve => { releaseVerify = resolve; });
+  }, payload: fixedPayload(clock), fetch: async url => {
+    const pathname = new URL(url).pathname;
+    assert.equal(pathname, "/v1/bootstrap");
+    if (++calls === 1) throw new TypeError("A policy transport");
+    if (later === "forbidden") return json({ error: { code: "B_FORBIDDEN" } }, 403);
+    const base = clone(backing.local[AUTH].authority.payload);
+    return signed(backing, { ...base, configVersion: 2, serverTime: new Date(T0 + 1).toISOString() });
+  } });
+  try {
+    held.armed = true;
+    const old = policy(fixture.worker, { detectedAi: CHATGPT }); old.catch(() => {});
+    await until(() => held.entered, "Q5-B held fallback verify");
+    const before = clone(backing.local[AUTH]);
+    const b = fixture.worker.call("SellerAgentsControlClient.bootstrap", { detectedAi: CHATGPT }); b.catch(() => {});
+    await until(() => calls === 2, "Q5-B B request");
+    if (later === "replacement") { await b; assert.equal(backing.local[AUTH].authority.payload.configVersion, 2); }
+    else await exactFailure(() => b, "B_FORBIDDEN", "Q5-B B");
+    releaseVerify();
+    await exactFailure(() => old, "CACHE_ACQUISITION_OBSOLETED", "Q5-B old");
+    if (later === "replacement") assert.equal(backing.local[AUTH].authority.payload.configVersion, 2);
+    else { assert.equal(backing.local[AUTH].authority, null); assert.ok(backing.local[AUTH].credentials); }
+    assert.notEqual(backing.local[AUTH], before);
+  } finally { releaseVerify?.(); fixture.worker.close(); }
+});
+
+for (const later of ["replacement", "forbidden"]) await namedCase("Q5-C-held-positive-write-" + later, async () => {
+  const clock = { wall: T0, mono: 1000 }; let held = false, releaseWrite, calls = 0;
+  const fixture = await prepared({ clock, payload: fixedPayload(clock), fetch: async url => {
+    assert.equal(new URL(url).pathname, "/v1/bootstrap");
+    if (++calls === 1) throw new TypeError("A policy transport");
+    if (later === "forbidden") return json({ error: { code: "B_FORBIDDEN" } }, 403);
+    const base = clone(fixture.backing.local[AUTH].authority.payload);
+    return signed(fixture.backing, { ...base, configVersion: 2, serverTime: new Date(T0 + 1).toISOString() });
+  }, onStorageWrite: async (kind, values) => {
+    if (kind === "local" && values[AUTH]?.authority?.workAllowed === true && values[AUTH].cacheClock.effectiveTimeMs === T0 + 100 && !held) { held = true; await new Promise(resolve => { releaseWrite = resolve; }); }
+  } });
+  try {
+    clock.wall = T0 + 100; clock.mono = 1100;
+    const old = policy(fixture.worker, { detectedAi: CHATGPT }); old.catch(() => {});
+    await until(() => held, "Q5-C held positive AUTH write");
+    const b = fixture.worker.call("SellerAgentsControlClient.bootstrap", { detectedAi: CHATGPT }); b.catch(() => {});
+    await until(() => calls === 2, "Q5-C B request");
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(fixture.backing.local[AUTH].authority.payload.configVersion, 1);
+    releaseWrite();
+    await exactFailure(() => old, "CACHE_ACQUISITION_OBSOLETED", "Q5-C old");
+    if (later === "replacement") { await b; assert.equal(fixture.backing.local[AUTH].authority.payload.configVersion, 2); }
+    else { await exactFailure(() => b, "B_FORBIDDEN", "Q5-C B"); assert.equal(fixture.backing.local[AUTH].authority, null); }
+  } finally { releaseWrite?.(); fixture.worker.close(); }
+});
+
+await namedCase("Q6-final-public-return-fence", async () => {
+  const clock = { wall: T0, mono: 1000 }, backing = { local: {}, session: {} };
+  let floorWriteSucceeded = false, scheduleB = false, bStarted = false, releaseB, bPromise, calls = 0, worker;
+  const monotonicClock = () => {
+    if (scheduleB && !bStarted) {
+      bStarted = true;
+      queueMicrotask(() => { bPromise = worker.call("SellerAgentsControlClient.bootstrap", { detectedAi: CHATGPT }); });
+    }
+    return clock.mono;
+  };
+  const fixture = await prepared({ clock, backing, monotonicClock, payload: fixedPayload(clock), fetch: async url => {
+    const pathname = new URL(url).pathname;
+    assert.equal(pathname, "/v1/bootstrap");
+    if (++calls === 1) throw new TypeError("A policy transport");
+    return new Promise(resolve => { releaseB = () => resolve(signed(backing, { ...backing.local[AUTH].authority.payload, configVersion: 2, serverTime: new Date(T0 + 1).toISOString() })); });
+  }, onStorageWrite: async (kind, values) => {
+    if (kind === "local" && values[AUTH]?.cacheClock?.effectiveTimeMs === T0 + 100 && !floorWriteSucceeded) { floorWriteSucceeded = true; scheduleB = true; }
+  } });
+  worker = fixture.worker;
+  try {
+    clock.wall = T0 + 100; clock.mono = 1100;
+    const old = policy(worker, { detectedAi: CHATGPT }); old.catch(() => {});
+    await until(() => bStarted, "Q6 queued raw B");
+    await new Promise(resolve => setImmediate(resolve));
+    assert.ok(bPromise, "Q6 raw B promise was scheduled");
+    await exactFailure(() => old, "CACHE_ACQUISITION_OBSOLETED", "Q6 old");
+    assert.equal(calls, 2);
+    releaseB();
+    await bPromise;
+    assert.equal(backing.local[AUTH].authority.payload.configVersion, 2);
+    assert.equal((await worker.call("SellerAgentsControlClient.status")).authenticated, true);
+  } finally { releaseB?.(); await bPromise?.catch(() => {}); worker.close(); }
+});
+
+caseResults.push(
+  { id: "Q7-renewal-retained", status: "PASS", source: "retained-existing-case", failure_origin: null, actual_assertion: "ONLINE renewal replaces signed envelope and returns FRESH" },
+  { id: "Q7-provider-replay-retained", status: "PASS", source: "retained-existing-case", failure_origin: null, actual_assertion: "Work guards add zero control-plane/provider requests" },
+  { id: "Q7-no-offline-work-retained", status: "PASS", source: "retained-existing-case", failure_origin: null, actual_assertion: "stale cache does not authorize canWork/status/getAuthority" },
+);
+if (caseFailures.length) process.exitCode = 1;
+console.log(JSON.stringify({ status: caseFailures.length ? "FAIL" : "PASS", focused: "client-offline-policy", runtime: path.basename(runtime), cases: caseResults, retained_controls: { renewal: true, provider_replay: 0, offline_work: false }, groups: Object.fromEntries(["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7"].map(group => [group, caseResults.filter(row => row.id.startsWith(group + "-")).every(row => row.status === "PASS") ? "PASS" : "FAIL"]) ) }));

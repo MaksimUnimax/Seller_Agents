@@ -246,7 +246,18 @@ export async function makeWorker(directory, options = {}) {
   const sandbox = {
     console,
     chrome,
-    crypto: webcrypto,
+    crypto: options.beforeCryptoVerify ? {
+      ...webcrypto,
+      randomUUID: webcrypto.randomUUID.bind(webcrypto),
+      getRandomValues: webcrypto.getRandomValues.bind(webcrypto),
+      subtle: new Proxy(webcrypto.subtle, {
+        get(target, property) {
+          const method = Reflect.get(target, property, target);
+          if (property === "verify") return (...args) => Promise.resolve(options.beforeCryptoVerify(...args)).then(() => Reflect.apply(method, target, args));
+          return typeof method === "function" ? method.bind(target) : method;
+        },
+      }),
+    } : webcrypto,
     TextEncoder,
     TextDecoder,
     URL,
