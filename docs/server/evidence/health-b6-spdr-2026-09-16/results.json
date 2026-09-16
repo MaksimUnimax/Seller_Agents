@@ -1,0 +1,96 @@
+{
+  "taskId": "SA-HEALTH-B6-SPDR-R1-20260916-01",
+  "roadmap": "P8.4 / B6_SECURITY_PRIVACY_DETERMINISTIC_REGRESSION",
+  "repository": "MaksimUnimax/runtime-fixtures",
+  "worktree": "/root/runtime-fixtures",
+  "branch": "feature/server-health-h3-p8-4",
+  "initial": {
+    "localHead": "f8b35fdec3212dedf0e186830e4af21c719d890d",
+    "remoteHealthBeforeRecovery": "bf3c27a817c7e4698f539ff5cacc1db73c833710",
+    "requiredBase": "bf3c27a817c7e4698f539ff5cacc1db73c833710",
+    "requiredBaseTree": "2223a72ecfdf98758c6c3f96c1adeb7b541ec168",
+    "requiredBaseParent": "668877ecda66d73f7046339393226309b966c7a3",
+    "architectVerifiedMain": "bc718cc5c677ad0eb4598e7de3ad766473ff0847",
+    "worktreeCleanBeforeRecovery": true,
+    "recovery": "verified fast-forward only; local HEAD became requiredBase"
+  },
+  "toolchain": {
+    "node": "24.20.0",
+    "pnpm": "10.34.5",
+    "vitest": "3.2.6",
+    "playwright": "1.62.1"
+  },
+  "sourceTestBlobAuthority": [
+    {"path": "apps/health-runner/src/h3-contracts.ts", "blobSha": "1c8da19ecc5dd4e10ac96df235be47b35a5d251f", "role": "production authority"},
+    {"path": "apps/health-runner/src/h3-contracts.test.ts", "blobSha": "925cede2d65c1f2ead7c6cd5b910481e8bd9cc77", "role": "unit/security gate"},
+    {"path": "apps/health-runner/src/h3-actions.ts", "blobSha": "33e26bc386881ab411047f71a9c69d2e402a20c8", "role": "production authority"},
+    {"path": "apps/health-runner/src/h3-actions.test.ts", "blobSha": "4b5a111e68764e2178ecd0ed5d32d1430ac82ef2", "role": "unit/security gate"},
+    {"path": "apps/health-runner/src/h3-engine.ts", "blobSha": "475f0a5cd4c0de81cc3e3ae2ed15cd1732351160", "role": "production authority"},
+    {"path": "apps/health-runner/src/h3-engine.test.ts", "blobSha": "c556c94eab3396caf7a94b6a657194b1a43ea702", "role": "unit/security gate"},
+    {"path": "apps/health-runner/src/browser-driver.ts", "blobSha": "9a68c852568b380755d9e1c2e160367b8f334da9", "role": "production authority"},
+    {"path": "apps/health-runner/src/h2.ts", "blobSha": "af6b81108370bd7de53331c038ee15e6a998d5bc", "role": "production authority"},
+    {"path": "apps/health-runner/src/h2.test.ts", "blobSha": "9fe0a447f21bac025f929bd30dab1f74ab425b3a", "role": "unit/security gate"},
+    {"path": "apps/health-runner/src/evidence-sanitizer.ts", "blobSha": "362b1e0ea77ef48ae28e2bd34d2f6dc13623802e", "role": "production authority"},
+    {"path": "apps/health-runner/src/h3-health-persistence.ts", "blobSha": "7b968ffdc3a3fe35a9847b9aaeaa702e3be42ecf", "role": "production authority"},
+    {"path": "apps/health-runner/src/h3-health-persistence.test.ts", "blobSha": "5abbd4083e7966951525c328c7ca116c348f1e95", "role": "unit/security gate"},
+    {"path": "apps/health-runner/package.json", "blobSha": "33a2b9a396c60efa42161b24bf908702bd335013", "role": "dependency boundary"},
+    {"path": "tests/e2e/server/health-h2.spec.ts", "blobSha": "4697e84891237539e4e8a01f78a6f475924eb164", "role": "real Chromium H2 gate"},
+    {"path": "tests/e2e/server/health-standard-h3.spec.ts", "blobSha": "18ed2c011b714e1387941be00fd8c74fd5571c6c", "role": "real Chromium Standard H3 gate"},
+    {"path": "tests/e2e/server/health-work-h3.spec.ts", "blobSha": "990756797a1cc11e6480ddff08596793ec24842d", "role": "real Chromium Work H3 gate"},
+    {"path": "tests/integration/server/h3-health-persistence.integration.test.ts", "blobSha": "935b5c82331ca7371695b27217c22023f3c7e57e", "role": "PostgreSQL regression gate"}
+  ],
+  "spdr": [
+    {"id": "SPDR-01", "result": "PASS", "authority": ["h3-actions.test.ts: admits only the closed packaged action kinds", "h3-actions.test.ts: compiles from safe plan authority and rejects injected action input", "h3-actions.test.ts: rejects unsafe action field %s", "h3-actions.test.ts: keeps target authority outside actions and only uses the packaged prompt id", "h3-actions.test.ts: models exactly one irreversible send and no retry primitive", "h3-actions.test.ts: keeps cleanup terminal and the sequence immutable", "h3-actions.test.ts: contains the fixed Bridge-shaped validation set"]},
+    {"id": "SPDR-02", "result": "PASS", "authority": ["h3-engine.test.ts: keeps the exported engine surface semantic and bounded", "h2.test.ts: rejects unknown H2 plan fields and raw selector authority", "h2.test.ts: runtime-encapsulates raw Playwright handles", "browser-driver.ts: semantic BrowserDriver interface and private Playwright handles"]},
+    {"id": "SPDR-03", "result": "PASS", "authority": ["h3-actions.test.ts: models exactly one irreversible send and no retry primitive", "h3-engine.test.ts: does not retry a failed or uncertain send", "h3-engine.test.ts: does not resend after a post-send failure", "h3-engine.test.ts: enforces the total run budget without retrying send", "health-standard-h3.spec.ts: post-send failures never retry", "health-work-h3.spec.ts: bounded post-Send failures never retry"]},
+    {"id": "SPDR-04", "result": "PASS", "authority": ["h3-contracts.test.ts: maps the only prompt id to a local benign fixed prompt", "h3-contracts.ts: H3PromptIdSchema and getPackagedH3Prompt", "h3-contracts.test.ts: rejects remote raw prompt, selector, URL and script authority"]},
+    {"id": "SPDR-05", "result": "PASS", "authority": ["apps/health-runner/package.json: dependency boundary has no Ozon/Wildberries marketplace runtime dependency", "health-h2.spec.ts, health-standard-h3.spec.ts, health-work-h3.spec.ts: loopback/local controlled fixtures", "execution inputs: no provider, customer-session, or credential material supplied"]},
+    {"id": "SPDR-06", "result": "PASS", "authority": ["h3-actions.test.ts: accepts only distinct packaged Standard and Work identities", "h3-engine.test.ts: isolates Standard and Work strategies through one registry and rejects mismatches", "health-standard-h3.spec.ts: registers Standard only and rejects Work resolution", "health-work-h3.spec.ts: Work never falls back to Standard and Standard rejects Work"]},
+    {"id": "SPDR-07", "result": "PASS", "authority": ["h2.test.ts: accepts only registered controlled targets", "h2.test.ts: rejects embedded target credentials", "h2.test.ts: requires the start origin to be in the top-level origin policy", "h2.test.ts: reports structural misses without fabricating BROKEN or invoking persistence", "health-h2.spec.ts: rejects an unsafe top-level redirect", "health-h2.spec.ts: isolates cookies between separate ephemeral contexts", "health-h2.spec.ts: blocks an unapproved cross-origin popup before its document request"]},
+    {"id": "SPDR-08", "result": "PASS", "authority": ["h3-contracts.test.ts: accepts only bounded metadata evidence", "h3-contracts.test.ts: rejects raw conversation data at bundle level", "h3-health-persistence.test.ts: accepts only the strict bounded observation vocabulary", "h3-health-persistence.test.ts: maps %s post-Send FAIL without raw response details", "h3-health-persistence.test.ts: rejects unknown source fields before selecting any evidence", "h3-health-persistence.test.ts: keeps evidence references opaque and bounded", "h3-health-persistence.integration.test.ts: persists %s PASS with sanitized contour evidence", "h3-health-persistence.integration.test.ts: persists %s bridge-validation C11 failure provenance", "h3-health-persistence.integration.test.ts: persists %s post-Send FAIL without raw response/DOM"]},
+    {"id": "SPDR-09", "result": "PASS", "authority": ["browser-driver.ts: sessionKind EPHEMERAL_CONTROLLED, fresh chromium.launch and browser.newContext", "h2.test.ts: keeps session mode ephemeral across driver instances", "h2.test.ts: runtime-encapsulates raw Playwright handles", "health-h2.spec.ts: isolates cookies between separate ephemeral contexts"]},
+    {"id": "SPDR-10", "result": "PASS", "authority": ["h3-engine.test.ts: fails before send and still cleans up exactly once", "h3-engine.test.ts: reports cleanup failure and preserves both primary and cleanup failures", "h3-engine.test.ts: enforces the total run budget without retrying send", "h2.test.ts: maps a bounded observation timeout to environment uncertainty and cleans up", "h2.test.ts: cleans up when observation fails unexpectedly"]},
+    {"id": "SPDR-11", "result": "PASS", "authority": ["h3-health-persistence.test.ts: maps %s PASS into durable contour evidence", "h3-health-persistence.test.ts: maps %s post-Send FAIL without raw response details", "h3-health-persistence.test.ts: maps %s pre-Send environment uncertainty", "h3-health-persistence.test.ts: keeps evidence references opaque and bounded", "h3-health-persistence.integration.test.ts: sanitized contour assertions", "health-standard-h3.spec.ts and health-work-h3.spec.ts: serialized-result absence assertions"]}
+  ],
+  "commands": [
+    {"command": "pnpm --filter @product/health-runner exec vitest run src/h2.test.ts src/h3-contracts.test.ts src/h3-actions.test.ts src/h3-engine.test.ts src/h3-health-persistence.test.ts", "exit": 0, "testFiles": 5, "passed": 98, "skipped": 0},
+    {"command": "pnpm --filter @product/health-runner typecheck", "exit": 0, "testFiles": null, "passed": null, "skipped": 0},
+    {"command": "pnpm bridge:guard", "exit": 0, "testFiles": null, "passed": null, "skipped": 0},
+    {"command": "pnpm exec vitest run --config tests/integration/server/vitest.config.ts tests/integration/server/h3-health-persistence.integration.test.ts", "exit": 0, "testFiles": 1, "passed": 18, "skipped": 0},
+    {"command": "PRODUCT_CONTROL_PLANE_E2E=1 pnpm exec playwright test --config tests/e2e/server/playwright.config.ts tests/e2e/server/health-h2.spec.ts tests/e2e/server/health-standard-h3.spec.ts tests/e2e/server/health-work-h3.spec.ts", "exit": 0, "testFiles": 3, "passed": 92, "skipped": 0, "breakdown": {"health-h2.spec.ts": 13, "health-standard-h3.spec.ts": 37, "health-work-h3.spec.ts": 42}}
+  ],
+  "postgres": {
+    "image": "postgres:18.0",
+    "container": "health-b6-spdr-pg",
+    "database": "e2e",
+    "hostBinding": "127.0.0.1 dynamically assigned port",
+    "isolation": "task-owned disposable database; not a development or customer database",
+    "removed": true,
+    "removalVerified": true,
+    "secretMaterialPersisted": false
+  },
+  "scope": {
+    "browserFixtures": "existing loopback/local controlled fixtures only",
+    "liveProviderCalls": 0,
+    "liveChatGPTCalls": 0,
+    "marketplaceCalls": 0,
+    "customerSessionReuse": false,
+    "b7Started": false,
+    "productionChanges": 0,
+    "testChanges": 0,
+    "packageOrDependencyVersionChanges": 0,
+    "workflowChanges": 0,
+    "migrationOrSchemaChanges": 0
+  },
+  "documentationVerification": {
+    "jsonParse": "PASS",
+    "docsCheck": "PASS: 410 files, 225 Markdown files, 320 relative links, 26 requirements, 32 acceptance scenarios",
+    "diffCheck": "PASS"
+  },
+  "allowlist": [
+    "docs/server/B6_SECURITY_PRIVACY_DETERMINISTIC_REGRESSION_2026-09-16.md",
+    "docs/server/evidence/health-b6-spdr-2026-09-16/README.md",
+    "docs/server/evidence/health-b6-spdr-2026-09-16/results.json"
+  ],
+  "acceptance": "B6 remains pending architect review and exact-head remote Server CI after publication"
+}
