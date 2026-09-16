@@ -81,8 +81,22 @@ turn a blocked database gate into a pass.
 
 ## Publication record
 
-Parent/base and final tree are recorded in the terminal implementation report
-and the draft PR. The final candidate commit, remote Server CI and
-Documentation CI URLs/statuses, and their checkout SHA are appended here
-after the fast-forward push. A push is not a merge; this branch is not merged
-and PR7 is not modified.
+- Parent/base: `5d7c8853cc69dd95bc6e713cac3fb2aa0a63383`.
+- Implementation commit pushed fast-forward: `3710aeeef82314fff37e914833ca280ad5f56ab7`.
+- Implementation tree: `81be89e3133b774860a7fb1ab35e217bf502e08a`.
+- Remote branch: [feature/server-i1-srv5-acceptance-2026-09-16](https://github.com/MaksimUnimax/Seller_Agents/tree/feature/server-i1-srv5-acceptance-2026-09-16).
+- Draft PR: not created. `gh` is unavailable (`/bin/bash: gh: command not found`),
+  and the unauthenticated GitHub REST create-PR request returned HTTP 401
+  `Requires authentication`. This is an access blocker, not a merge or a
+  review result.
+- Server CI workflow source:
+  [server-ci.yml](https://github.com/MaksimUnimax/Seller_Agents/blob/3710aeeef82314fff37e914833ca280ad5f56ab7/.github/workflows/server-ci.yml).
+  No authenticated run URL/status was available; checkout SHA for the pushed
+  candidate is `3710aeeef82314fff37e914833ca280ad5f56ab7` and CI status is
+  `UNKNOWN`, not PASS.
+- Documentation CI workflow source:
+  [documentation.yml](https://github.com/MaksimUnimax/Seller_Agents/blob/3710aeeef82314fff37e914833ca280ad5f56ab7/.github/workflows/documentation.yml).
+  It requires the missing PR context for this feature branch; no run
+  URL/status was available. Status is `UNKNOWN`, not PASS.
+
+A push is not a merge; the branch is unmerged and PR7 is not modified.
