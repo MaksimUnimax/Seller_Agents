@@ -5,9 +5,13 @@ Status: CURRENT STRATEGY RESEARCH NOTE.
 
 ## Product framing
 
-Octoport is not positioned as another dashboard-only analytics service, a card-image generator, or a real-time bid-management bot. The product thesis is an AI employee/assistant working with a seller's marketplace cabinet through the user's chosen LLM.
+Octoport is **not the AI employee itself**. Octoport is the access/control layer that turns a user's chosen supported AI/LLM into a marketplace employee by giving that AI governed access to the seller's Ozon/Wildberries data and supported working capabilities.
 
-The SEO acquisition layer should capture people searching for existing problem/solution language even when they do not yet know the new category name `ИИ-сотрудник`.
+The product is therefore not another proprietary AI assistant, dashboard-only analytics service, card-image generator, or real-time bid-management bot. The user's AI remains the intelligence/conversation layer; Octoport gives it the marketplace context, data and tools required to work as the seller's AI employee.
+
+Conceptual positioning: `your AI -> Octoport -> marketplace cabinet/data/tools -> your AI can work as an employee`.
+
+The SEO acquisition layer should capture people searching for existing problem/solution language even when they do not yet know the new category or the Octoport mechanism. Existing searches for AI agents, analytics, seller reports, marketplace assistance and LLM-to-store connection can all be acquisition entrances when the underlying user job matches the product.
 
 ## Priority acquisition intents
 
@@ -84,16 +88,16 @@ Therefore use the same architectural distinction as for WB:
 
 - marketplace API = live seller/shop/advertising/report truth;
 - official seller help/knowledge pages = procedural/product knowledge about how the cabinet works;
-- AI combines both only when each source is independently authoritative/current.
+- the user's AI can combine both through Octoport only when each source is independently authoritative/current.
 
 Do not describe knowledge-base answers as coming `through Seller API` unless a dedicated API is later found and verified.
 
 ## Strategic consequence for SEO
 
-The semantic universe should not be inflated to millions of phrases. The goal is to capture a bounded set of human jobs around one product category:
+The semantic universe should not be inflated to millions of phrases. The goal is to capture a bounded set of human jobs around one product mechanism:
 
-`AI employee for the marketplace seller`.
+`turn the user's chosen AI into a marketplace employee`.
 
-Existing search language can enter through older categories — AI agents, analytics services, seller reports, marketplace help, product-card work, ad analytics — while Octoport explains a newer umbrella category after acquisition.
+Existing search language can enter through older categories — AI agents, analytics services, seller reports, marketplace help, product-card work, ad analytics — while Octoport explains the newer mechanism after acquisition: the user does not buy another proprietary AI; Octoport equips the AI they choose with marketplace data and tools.
 
 The key distinction is task-level fit, not exact vocabulary match.
