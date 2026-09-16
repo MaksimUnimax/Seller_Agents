@@ -2,7 +2,7 @@
 
 Дата подготовки: 2026-09-16.
 Branch: `seo/wordstat-batch-01-2026-09-16`.
-Status: `READY_NOT_STARTED`.
+Status: `COMPLETE`.
 
 ## Goal
 
@@ -41,6 +41,13 @@ All calls use:
 | B02-14 | `какой ии для маркетплейсов` | observed at 128; comparison/recommendation informational intent |
 | B02-15 | `ии агент для селлера` | controlled seller-role variant derived from observed agent + seller/helper vocabulary |
 
+## Completion
+
+All `15/15` planned calls completed successfully on 2026-09-16. All 15 returned a usable `totalCount`; no B02 call returned an exact empty `result: {}` and no provider failure occurred. Estimated provider cost for the batch: `0.30 ₽`.
+
+Synthesis: `BATCH_02_SYNTHESIS_2026-09-16.md`.
+Next phase plan: `../SERP_VERIFICATION_PLAN_2026-09-16.md`.
+
 ## Decision gates after B02
 
 Do not create final page architecture merely from counts. After B02:
@@ -50,6 +57,8 @@ Do not create final page architecture merely from counts. After B02:
 3. identify commercial vs informational vs marketplace-specific intent;
 4. choose priority clusters for SERP verification;
 5. only after SERP evidence assign target page roles and page specs.
+
+These gates have now been applied through the Batch 02 synthesis; final page-role decisions remain blocked on the planned SERP pass.
 
 ## Isolation rule
 
