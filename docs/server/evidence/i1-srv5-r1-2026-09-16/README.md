@@ -36,7 +36,8 @@ traces, screenshots, and video were not logged or retained.
 - `pnpm test:integration` — `1507 passed / 20 skipped`, then FAIL in the
   unrelated health-persistence setup on duplicate fixed `ai_adapters` primary
   key. No task file was changed for that existing fixture collision.
-- `pnpm docs:check` — run after documentation finalization.
+- `pnpm docs:check` — PASS (`418` files, `0` errors) after documentation
+  finalization.
 
 The earlier candidate’s local disk-exhaustion results remain historical
 `BLOCKED` evidence; they are not retroactively changed to PASS.
@@ -45,6 +46,10 @@ The earlier candidate’s local disk-exhaustion results remain historical
 
 PR8 is the existing draft and is reused:
 https://github.com/MaksimUnimax/Seller_Agents/pull/8
+
+The R1 correction commit is `39478f0b4e28dd875111ce28670396531a8efc4d`
+(`37fc3eea2c37060cb3599d7380df7623bad95229` tree); the final published head
+is reported in the terminal handoff.
 
 No production, cryptographic verifier, API contract, shared fixture,
 dependency, lockfile, workflow, migration, extension, Health, PR7, main, or

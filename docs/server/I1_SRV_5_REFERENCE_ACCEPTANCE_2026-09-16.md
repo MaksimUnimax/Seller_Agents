@@ -78,7 +78,8 @@ following local gates passed: `pnpm lint`, `pnpm format:check`,
 `pnpm typecheck`, `pnpm test`, `pnpm openapi:check`, `pnpm bridge:guard`,
 `pnpm build`, the Playwright config regression, the focused new regression,
 the two-test reference file, `pnpm db:migrate`, and full `pnpm test:e2e`
-(`88/88`). `pnpm test:integration` ran against the task-owned database and
+(`88/88`); `pnpm docs:check` also passed (`418` files, `0` errors).
+`pnpm test:integration` ran against the task-owned database and
 reported `1507 passed / 20 skipped`, then failed in the unrelated
 `health-persistence.integration.test.ts` setup on a duplicate fixed
 `ai_adapters` primary key. No allowed file was changed for that collision.
@@ -100,6 +101,8 @@ turn a blocked database gate into a pass.
   tree `9ebcf18e4d0c24d7058a8b730a7e18a74ff950b6`.
 - Prior implementation parent: `3710aeeef82314fff37e914833ca280ad5f56ab7`,
   tree `81be89e3133b774860a7fb1ab35e217bf502e08a`.
+- R1 correction commit: `39478f0b4e28dd875111ce28670396531a8efc4d`,
+  tree `37fc3eea2c37060cb3599d7380df7623bad95229`.
 - Remote branch: [feature/server-i1-srv5-acceptance-2026-09-16](https://github.com/MaksimUnimax/Seller_Agents/tree/feature/server-i1-srv5-acceptance-2026-09-16).
 - Historical publication blocker: PR creation was previously unavailable
   because `gh` was absent and an unauthenticated GitHub REST create-PR request
