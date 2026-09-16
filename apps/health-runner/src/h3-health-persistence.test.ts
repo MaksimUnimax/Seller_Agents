@@ -169,8 +169,16 @@ function execution(
   surface: "CHATGPT_STANDARD" | "CHATGPT_WORK",
   outcome: "PASS" | "FAIL" | "UNCERTAIN",
   events: readonly ReturnType<typeof event>[],
-  failureCode: "RESPONSE_OBSERVATION_FAILED" | "LOGIN_REQUIRED" | null,
-  failureStep: "OBSERVE_RESPONSE" | "IDENTIFY_SURFACE" | null,
+  failureCode:
+    | "RESPONSE_OBSERVATION_FAILED"
+    | "BRIDGE_SURFACE_VALIDATION_FAILED"
+    | "LOGIN_REQUIRED"
+    | null,
+  failureStep:
+    | "OBSERVE_RESPONSE"
+    | "VALIDATE_BRIDGE_SURFACES"
+    | "IDENTIFY_SURFACE"
+    | null,
   environmentUncertainty: "LOGIN_EXPIRED" | null,
 ) {
   return H3ExecutionResultSchema.parse({
@@ -218,6 +226,70 @@ function context(
     operatorMaintenanceAuthority: null,
     classifierVersion: "p8.1-classifier-v1",
   };
+}
+
+for (const [surface, key, revision] of [
+  ["CHATGPT_STANDARD", "standard", 2],
+  ["CHATGPT_WORK", "work", 1],
+] as const) {
+  it(`retains ${surface} C11 bridge failure provenance`, () => {
+    const failedEvents = [
+      ...PASS_EVENTS.slice(0, 7),
+      bridgeFailureEvent(),
+      event("CLEANUP", "PASS"),
+    ];
+    const command = createH3HealthPersistenceCommand(
+      execution(
+        surface,
+        "FAIL",
+        failedEvents,
+        "BRIDGE_SURFACE_VALIDATION_FAILED",
+        "VALIDATE_BRIDGE_SURFACES",
+        null,
+      ),
+      context(key, revision),
+    );
+    const results = new Map(
+      command.results.map((result) => [result.contourKey, result]),
+    );
+    for (const contourKey of [
+      "C09_COMMAND_CODE_BLOCK_SURFACE",
+      "C10_NATIVE_COPY_CONTROL",
+      "C11_CONVERSATION_IDENTITY",
+      "C12_DELIVERY_INSERTION_PATH",
+    ] as const) {
+      expect(results.get(contourKey)?.observationStatus).toBe("PRESENT");
+    }
+    expect(results.get("C09_COMMAND_CODE_BLOCK_SURFACE")).toMatchObject({
+      primaryStrategyOutcome: "PASS",
+    });
+    expect(results.get("C10_NATIVE_COPY_CONTROL")).toMatchObject({
+      primaryStrategyOutcome: "PASS",
+    });
+    expect(results.get("C12_DELIVERY_INSERTION_PATH")).toMatchObject({
+      primaryStrategyOutcome: "PASS",
+    });
+    expect(results.get("C11_CONVERSATION_IDENTITY")).toMatchObject({
+      primaryStrategyOutcome: "FAIL",
+      fallbackStrategyOutcomes: [
+        { strategyId: "CONVERSATION_URL_IDENTITY", outcome: "FAIL" },
+      ],
+      selectedStrategyId: "CONVERSATION_URL_IDENTITY",
+      structuralOutcome: "FAIL",
+      behavioralOutcome: "FAIL",
+      fallbackQuality: "APPROVED_EQUIVALENT",
+      environmentStatus: "VALID",
+      uncertaintyReason: null,
+      evidence: [],
+    });
+    expect(
+      classifyHealth({
+        suite: command.suite,
+        results: command.results,
+        operatorMaintenance: command.operatorMaintenance,
+      }),
+    ).toBe("BROKEN");
+  });
 }
 
 const TIMESTAMP_CASES = [
@@ -307,6 +379,62 @@ function withObservations(
     item === bridge ? { ...item, observations: [...observations] } : item,
   );
   return execution("CHATGPT_STANDARD", "PASS", events, null, null, null);
+}
+
+function bridgeFailureEvent(): H3SafeEvidenceEvent {
+  const passObservation = (
+    contourKey: string,
+    strategyId: string,
+    evidenceKind: "NONE" | "METADATA" | "STATE_TRANSITION_TRACE" = "NONE",
+  ): H3ContourObservation =>
+    H3ContourObservationSchema.parse({
+      contourKey,
+      observationStatus: "PRESENT",
+      primaryStrategyOutcome: "PASS",
+      fallbackStrategyOutcomes: [],
+      selectedStrategyId: strategyId,
+      structuralOutcome: "PASS",
+      behavioralOutcome: "PASS",
+      fallbackQuality: "NOT_APPLICABLE",
+      environmentStatus: "VALID",
+      uncertaintyReason: null,
+      evidenceKind,
+    });
+  return {
+    step: "VALIDATE_BRIDGE_SURFACES",
+    outcome: "FAIL",
+    durationMs: 4,
+    markerCount: 4,
+    transitionObserved: false,
+    observations: [
+      passObservation("C09_COMMAND_CODE_BLOCK_SURFACE", "COMMAND_SURFACE"),
+      passObservation(
+        "C10_NATIVE_COPY_CONTROL",
+        "NATIVE_COPY_CONTROL",
+        "METADATA",
+      ),
+      H3ContourObservationSchema.parse({
+        contourKey: "C11_CONVERSATION_IDENTITY",
+        observationStatus: "PRESENT",
+        primaryStrategyOutcome: "FAIL",
+        fallbackStrategyOutcomes: [
+          { strategyId: "CONVERSATION_URL_IDENTITY", outcome: "FAIL" },
+        ],
+        selectedStrategyId: "CONVERSATION_URL_IDENTITY",
+        structuralOutcome: "FAIL",
+        behavioralOutcome: "FAIL",
+        fallbackQuality: "APPROVED_EQUIVALENT",
+        environmentStatus: "VALID",
+        uncertaintyReason: null,
+        evidenceKind: "NONE",
+      }),
+      passObservation(
+        "C12_DELIVERY_INSERTION_PATH",
+        "DELIVERY_TARGET",
+        "STATE_TRANSITION_TRACE",
+      ),
+    ],
+  };
 }
 
 for (const [surface, profileRevision] of [

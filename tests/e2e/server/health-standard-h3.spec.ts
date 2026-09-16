@@ -1,11 +1,15 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 import {
   ChromeBrowserDriver,
   H3SurfaceStrategyRegistry,
   createControlledTargetRegistry,
   createH3RunPlan,
+  runH3BehavioralSmoke,
   runH3BehavioralSmokeFromRegistry,
+  type H3ExecutionResult,
+  type H3SurfaceStrategy,
 } from "@product/health-runner";
+import { createChatGPTStandardH3Strategy } from "../../../apps/health-runner/src/standard-h3-strategy.js";
 import {
   startHealthStandardH3Fixture,
   type HealthStandardH3Fixture,
@@ -13,6 +17,134 @@ import {
 } from "./support/health-standard-h3-fixture.js";
 
 const TARGET_KEY = "chatgpt_standard_health";
+
+function createScriptedPage(
+  realPage: Page,
+  changedUrl: string,
+  changedCanonicalHref: string,
+  flipAtCanonicalHrefRead: number,
+): Readonly<{
+  page: Page;
+  arm: () => void;
+  canonicalHrefReads: () => number;
+  drifted: () => boolean;
+}> {
+  let armed = false;
+  let canonicalHrefReads = 0;
+  let drifted = false;
+
+  const canonicalLocator = (realLocator: Locator): Locator =>
+    new Proxy(realLocator, {
+      get(target, property) {
+        if (property === "getAttribute") {
+          return async (...args: Parameters<Locator["getAttribute"]>) => {
+            const realResult = await target.getAttribute(...args);
+            const [name] = args;
+            if (name !== "href" || !armed) return realResult;
+            canonicalHrefReads += 1;
+            if (canonicalHrefReads >= flipAtCanonicalHrefRead) drifted = true;
+            return drifted ? changedCanonicalHref : realResult;
+          };
+        }
+        const value = Reflect.get(target, property, target);
+        return typeof value === "function" ? value.bind(target) : value;
+      },
+    });
+
+  const page = new Proxy(realPage, {
+    get(target, property) {
+      if (property === "url")
+        return () => (drifted ? changedUrl : target.url());
+      if (property === "locator") {
+        return (...args: Parameters<Page["locator"]>) => {
+          const locator = target.locator(...args);
+          return args[0] === 'link[rel="canonical"]'
+            ? canonicalLocator(locator)
+            : locator;
+        };
+      }
+      const value = Reflect.get(target, property, target);
+      return typeof value === "function" ? value.bind(target) : value;
+    },
+  });
+
+  return {
+    page,
+    arm: () => {
+      armed = true;
+      canonicalHrefReads = 0;
+      drifted = false;
+    },
+    canonicalHrefReads: () => canonicalHrefReads,
+    drifted: () => drifted,
+  };
+}
+
+function withBridgeValidationArm(
+  strategy: H3SurfaceStrategy,
+  scriptedPage: ReturnType<typeof createScriptedPage>,
+): H3SurfaceStrategy {
+  return new Proxy(strategy, {
+    get(target, property) {
+      if (property === "validateBridgeSurfaces") {
+        return (
+          ...args: Parameters<H3SurfaceStrategy["validateBridgeSurfaces"]>
+        ) => {
+          scriptedPage.arm();
+          return target.validateBridgeSurfaces(...args);
+        };
+      }
+      const value = Reflect.get(target, property, target);
+      return typeof value === "function" ? value.bind(target) : value;
+    },
+  });
+}
+
+function expectC11BridgeFailure(result: H3ExecutionResult): void {
+  expect(result.outcome).toBe("FAIL");
+  expect(result.failureStep).toBe("VALIDATE_BRIDGE_SURFACES");
+  expect(result.failureCode).toBe("BRIDGE_SURFACE_VALIDATION_FAILED");
+  const bridgeEvent = result.events.find(
+    (event) => event.step === "VALIDATE_BRIDGE_SURFACES",
+  );
+  expect(bridgeEvent?.observations).toHaveLength(4);
+  expect(bridgeEvent?.observations.map((item) => item.contourKey)).toEqual([
+    "C09_COMMAND_CODE_BLOCK_SURFACE",
+    "C10_NATIVE_COPY_CONTROL",
+    "C11_CONVERSATION_IDENTITY",
+    "C12_DELIVERY_INSERTION_PATH",
+  ]);
+  const observations = bridgeEvent?.observations ?? [];
+  expect(observations[0]).toMatchObject({
+    primaryStrategyOutcome: "PASS",
+    structuralOutcome: "PASS",
+    behavioralOutcome: "PASS",
+  });
+  expect(observations[1]).toMatchObject({
+    primaryStrategyOutcome: "PASS",
+    structuralOutcome: "PASS",
+    behavioralOutcome: "PASS",
+  });
+  expect(observations[2]).toMatchObject({
+    observationStatus: "PRESENT",
+    primaryStrategyOutcome: "FAIL",
+    fallbackStrategyOutcomes: [
+      { strategyId: "CONVERSATION_URL_IDENTITY", outcome: "FAIL" },
+    ],
+    selectedStrategyId: "CONVERSATION_URL_IDENTITY",
+    structuralOutcome: "FAIL",
+    behavioralOutcome: "FAIL",
+    fallbackQuality: "APPROVED_EQUIVALENT",
+    environmentStatus: "VALID",
+    uncertaintyReason: null,
+    evidenceKind: "NONE",
+  });
+  expect(observations[3]).toMatchObject({
+    primaryStrategyOutcome: "PASS",
+    structuralOutcome: "PASS",
+    behavioralOutcome: "PASS",
+  });
+}
 
 async function runVariant(
   fixture: HealthStandardH3Fixture,
@@ -141,6 +273,50 @@ test.describe("B3 packaged ChatGPT Standard H3", () => {
     try {
       const result = await runVariant(fixture, "EXISTING_CONVERSATION");
       expect(result.outcome).toBe("PASS");
+      await waitForFixtureState(fixture, {
+        promptMatches: 1,
+        sendActivations: 1,
+      });
+    } finally {
+      await fixture.close();
+    }
+  });
+
+  test("retains C11 provenance when an existing conversation drifts at validation", async ({
+    page,
+  }) => {
+    const fixture = await startHealthStandardH3Fixture();
+    const changedUrl = `${fixture.origin}/c/00000000-0000-4000-8000-000000000003`;
+    const target = createControlledTargetRegistry([
+      {
+        key: TARGET_KEY,
+        startUrl: fixture.startUrl("EXISTING_CONVERSATION"),
+        allowedTopLevelOrigins: [fixture.origin],
+        browserFamily: "chrome",
+        navigationTimeoutMs: 5_000,
+      },
+    ]).resolve(TARGET_KEY);
+    const scriptedPage = createScriptedPage(page, changedUrl, changedUrl, 1);
+    try {
+      await page.goto(target.startUrl);
+      const strategy = withBridgeValidationArm(
+        createChatGPTStandardH3Strategy(
+          scriptedPage.page,
+          target,
+          async () => undefined,
+        ),
+        scriptedPage,
+      );
+      const result = await runH3BehavioralSmoke(
+        strategy,
+        createH3RunPlan(TARGET_KEY, "CHATGPT_STANDARD", {
+          stepTimeoutMs: 5_000,
+          runTimeoutMs: 30_000,
+        }),
+      );
+      expect(scriptedPage.canonicalHrefReads()).toBeGreaterThanOrEqual(1);
+      expect(scriptedPage.drifted()).toBe(true);
+      expectC11BridgeFailure(result);
       await waitForFixtureState(fixture, {
         promptMatches: 1,
         sendActivations: 1,

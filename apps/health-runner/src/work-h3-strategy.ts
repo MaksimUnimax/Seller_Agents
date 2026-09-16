@@ -594,7 +594,7 @@ class ChatGPTWorkH3Strategy implements H3SurfaceStrategy {
           "FAIL",
           identityPass ? "PASS" : "FAIL",
           identityPass ? "PASS" : "FAIL",
-          identityPass ? "CONVERSATION_URL_IDENTITY" : null,
+          "CONVERSATION_URL_IDENTITY",
           [
             {
               strategyId: "CONVERSATION_URL_IDENTITY",

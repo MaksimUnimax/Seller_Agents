@@ -135,9 +135,20 @@ function event(step: H3BehaviorStep, outcome: "PASS" | "FAIL" | "UNCERTAIN") {
 function execution(
   surface: "CHATGPT_STANDARD" | "CHATGPT_WORK",
   outcome: "PASS" | "FAIL" | "UNCERTAIN",
-  events: readonly ReturnType<typeof event>[],
-  failureCode: "RESPONSE_OBSERVATION_FAILED" | "LOGIN_REQUIRED" | null,
-  failureStep: "OBSERVE_RESPONSE" | "IDENTIFY_SURFACE" | null,
+  events: readonly {
+    step: H3BehaviorStep;
+    outcome: "PASS" | "FAIL" | "UNCERTAIN";
+  }[],
+  failureCode:
+    | "RESPONSE_OBSERVATION_FAILED"
+    | "BRIDGE_SURFACE_VALIDATION_FAILED"
+    | "LOGIN_REQUIRED"
+    | null,
+  failureStep:
+    | "OBSERVE_RESPONSE"
+    | "VALIDATE_BRIDGE_SURFACES"
+    | "IDENTIFY_SURFACE"
+    | null,
   environmentUncertainty: "LOGIN_EXPIRED" | null,
 ) {
   return H3ExecutionResultSchema.parse({
@@ -183,6 +194,70 @@ const PASS_EVENTS = [
   event("VALIDATE_BRIDGE_SURFACES", "PASS"),
   event("CLEANUP", "PASS"),
 ] as const;
+
+const BRIDGE_FAILURE_EVENT = {
+  step: "VALIDATE_BRIDGE_SURFACES",
+  outcome: "FAIL",
+  durationMs: 4,
+  markerCount: 4,
+  transitionObserved: false,
+  observations: [
+    {
+      contourKey: "C09_COMMAND_CODE_BLOCK_SURFACE",
+      observationStatus: "PRESENT",
+      primaryStrategyOutcome: "PASS",
+      fallbackStrategyOutcomes: [],
+      selectedStrategyId: "COMMAND_SURFACE",
+      structuralOutcome: "PASS",
+      behavioralOutcome: "PASS",
+      fallbackQuality: "NOT_APPLICABLE",
+      environmentStatus: "VALID",
+      uncertaintyReason: null,
+      evidenceKind: "NONE",
+    },
+    {
+      contourKey: "C10_NATIVE_COPY_CONTROL",
+      observationStatus: "PRESENT",
+      primaryStrategyOutcome: "PASS",
+      fallbackStrategyOutcomes: [],
+      selectedStrategyId: "NATIVE_COPY_CONTROL",
+      structuralOutcome: "PASS",
+      behavioralOutcome: "PASS",
+      fallbackQuality: "NOT_APPLICABLE",
+      environmentStatus: "VALID",
+      uncertaintyReason: null,
+      evidenceKind: "METADATA",
+    },
+    {
+      contourKey: "C11_CONVERSATION_IDENTITY",
+      observationStatus: "PRESENT",
+      primaryStrategyOutcome: "FAIL",
+      fallbackStrategyOutcomes: [
+        { strategyId: "CONVERSATION_URL_IDENTITY", outcome: "FAIL" },
+      ],
+      selectedStrategyId: "CONVERSATION_URL_IDENTITY",
+      structuralOutcome: "FAIL",
+      behavioralOutcome: "FAIL",
+      fallbackQuality: "APPROVED_EQUIVALENT",
+      environmentStatus: "VALID",
+      uncertaintyReason: null,
+      evidenceKind: "NONE",
+    },
+    {
+      contourKey: "C12_DELIVERY_INSERTION_PATH",
+      observationStatus: "PRESENT",
+      primaryStrategyOutcome: "PASS",
+      fallbackStrategyOutcomes: [],
+      selectedStrategyId: "DELIVERY_TARGET",
+      structuralOutcome: "PASS",
+      behavioralOutcome: "PASS",
+      fallbackQuality: "NOT_APPLICABLE",
+      environmentStatus: "VALID",
+      uncertaintyReason: null,
+      evidenceKind: "STATE_TRANSITION_TRACE",
+    },
+  ],
+} as const;
 
 function suiteFor(surface: "standard" | "work"): HealthSuiteDefinition {
   const standard = surface === "standard";
@@ -429,6 +504,68 @@ describe("B5 durable Standard/Work H3 evidence", () => {
       expect(JSON.stringify(stored)).not.toMatch(
         /TOXIC_PROMPT|TOXIC_RESPONSE|TOXIC_DOM|TOXIC_HTML|TOXIC_PROJECT|TOXIC_CONVERSATION|TOXIC_COOKIE|TOXIC_TOKEN|TOXIC_STORAGE|TOXIC_SELLER/i,
       );
+    },
+  );
+
+  it.each([
+    ["standard", "CHATGPT_STANDARD"],
+    ["work", "CHATGPT_WORK"],
+  ] as const)(
+    "persists %s bridge-validation C11 failure provenance",
+    async (surface, executionSurface) => {
+      const stored = await persist(
+        surface,
+        execution(
+          executionSurface,
+          "FAIL",
+          [
+            ...PASS_EVENTS.slice(0, 7),
+            BRIDGE_FAILURE_EVENT,
+            event("CLEANUP", "PASS"),
+          ],
+          "BRIDGE_SURFACE_VALIDATION_FAILED",
+          "VALIDATE_BRIDGE_SURFACES",
+          null,
+        ),
+      );
+      expect(stored.run.healthState).toBe("BROKEN");
+      expect(stored.run.surfaceId).toBe(
+        surface === "standard" ? IDS.standardSurface : IDS.workSurface,
+      );
+      expect(stored.run.profileId).toBe(
+        surface === "standard" ? IDS.standardProfile : IDS.workProfile,
+      );
+      expect(stored.contours).toHaveLength(13);
+      for (const contourKey of [
+        "C09_COMMAND_CODE_BLOCK_SURFACE",
+        "C10_NATIVE_COPY_CONTROL",
+        "C12_DELIVERY_INSERTION_PATH",
+      ]) {
+        expect(
+          stored.contours.find((item) => item.contourKey === contourKey),
+        ).toMatchObject({
+          observationStatus: "PRESENT",
+          primaryStrategyOutcome: "PASS",
+        });
+      }
+      expect(
+        stored.contours.find(
+          (item) => item.contourKey === "C11_CONVERSATION_IDENTITY",
+        ),
+      ).toMatchObject({
+        observationStatus: "PRESENT",
+        primaryStrategyOutcome: "FAIL",
+        fallbackStrategyOutcomes: [
+          { strategyId: "CONVERSATION_URL_IDENTITY", outcome: "FAIL" },
+        ],
+        selectedStrategyId: "CONVERSATION_URL_IDENTITY",
+        structuralOutcome: "FAIL",
+        behavioralOutcome: "FAIL",
+        fallbackQuality: "APPROVED_EQUIVALENT",
+        environmentStatus: "VALID",
+        uncertaintyReason: null,
+        evidence: [],
+      });
     },
   );
 
