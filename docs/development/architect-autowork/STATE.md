@@ -1,62 +1,94 @@
 # Server / I1 / Health current cursor — 2026-09-16
 
-Current: HEALTH_P8_4_B5_ACCEPTED / HEALTH_B6_FIRST_ATTEMPT_STOPPED_STALE_LOCAL_CHECKOUT / HEALTH_B6_SPDR_R1_PREPARED_FOR_SINGLE_FINAL_SUBMISSION / I1_C2_2A_OPEN_BLOCKED.
+Current: HEALTH_P8_4_B6_ACCEPTED / HEALTH_B7_BLOCKED_EXTERNAL_PREREQUISITE_DEDICATED_HEALTH_SESSION / HEALTH_B8_NONLIVE_FINAL_READINESS_PREPARED_FOR_SINGLE_FINAL_SUBMISSION / I1_C2_2A_OPEN_BLOCKED.
 
-Owner continuous autowork is active. One architect and one sequential Codex executor only. The first B6 terminal has been received and architect-reviewed. Executor stopped before any product/evidence change or test execution. No parallel implementation task is claimed. Saving the recovery task is preparation, not delivery/start evidence.
+Owner continuous autowork is active. One architect and one sequential Codex executor only. SA-HEALTH-B6-SPDR-R1-20260916-01 terminal has been received and independently accepted. Executor stopped after terminal. No other implementation executor is claimed running at this snapshot. Saving/preparing B8 is not delivery/start evidence.
 
 ## Canonical refs
 
 - Canonical implementation repository: MaksimUnimax/runtime-fixtures, stable repository ID 1369117174.
 - Health branch: feature/server-health-h3-p8-4.
-- Accepted Health/B5 remote head and required B6 base: bf3c27a817c7e4698f539ff5cacc1db73c833710.
-- Accepted Health/B5 tree: 2223a72ecfdf98758c6c3f96c1adeb7b541ec168.
-- Accepted Health/B5 final parent: 668877ecda66d73f7046339393226309b966c7a3.
-- R2 implementation commit: b4a8c17f7ad1a1468a511a4fd793c439bfbd97c3.
-- Main independently rechecked remains bc718cc5c677ad0eb4598e7de3ad766473ff0847.
-- I1 branch integration/i1-c1-srv5-2026-09-16 remains at last verified bounded regression head 076af64efbcdfdc67aec8713969c31c276a90b2d. C2.2-A remains OPEN/BLOCKED at PR9/current acceptance gates and reserved docs/README.md conflict.
+- Accepted Health/B6 remote head: 697eea7adc337e1f11def16818829c2e443efb15.
+- Accepted Health/B6 tree: 40552ecc3475a183b6b14dfffcee77d033e743b6.
+- Accepted Health/B6 parent / B5 head: bf3c27a817c7e4698f539ff5cacc1db73c833710.
+- P8.4 pre-B1 comparison base: de41f33646d5dd61bcae66624225e16538fd8f3a.
+- Main remains bc718cc5c677ad0eb4598e7de3ad766473ff0847 at the latest architect check. Preserve owner/parallel public-doc/site/SEO/domain scope.
+- I1 branch integration/i1-c1-srv5-2026-09-16 remains 076af64efbcdfdc67aec8713969c31c276a90b2d. PR9 remains open/draft/mergeable=false; C2.2-A remains OPEN/BLOCKED at its current gates and reserved docs/README.md conflict.
 
-## Accepted B5
+## Accepted Health history
 
-SA-HEALTH-B5-C11-R2-20260916-01: ACCEPTED.
-P8.4 / B5_SANITIZED_H3_EVIDENCE_INTEGRATION: ACCEPTED.
+Health P8.4 B1-B5 remain accepted in their recorded bounded scopes. B5 final accepted head bf3c27a817c7e4698f539ff5cacc1db73c833710 passed exact-head Server CI run 35098078398 / job 104800314556 / SUCCESS.
 
-Exact final-SHA Server CI: run 35098078398 / job 104800314556 / head bf3c27a817c7e4698f539ff5cacc1db73c833710 / SUCCESS, completed 2026-09-16T12:59:58Z. Install, lint, format, typecheck, Playwright config regression, unit, PostgreSQL integration, db:migrate, openapi:check, bridge:guard, build, Chromium install, E2E, post steps and container cleanup all succeeded. Feature-branch frozen-import verification was conditionally skipped and is not a failure.
+## B6 final verdict
 
-Independent final review is recorded at docs/development/architect-autowork/references/HEALTH_B5_C11_R2_FINAL_REVIEW.md. B5 acceptance remains bounded: it does not accept B6-B8, P8.5+, live-provider behavior, deployment or release.
+SA-HEALTH-B6-SPDR-R1-20260916-01: ACCEPTED.
+P8.4 / B6_SECURITY_PRIVACY_DETERMINISTIC_REGRESSION: ACCEPTED.
 
-## B6 first terminal — stale local checkout only
+The stale local checkout was recovered only by verified fast-forward from f8b35fde to accepted B5 bf3c27a. No reset/rebase/stash/cherry-pick/history rewrite was used.
 
-Initial B6 task SA-HEALTH-B6-SPDR-20260916-01 was delivered. Executor correctly stopped before changes/tests because its product worktree was stale:
+Independent base-to-final compare bf3c27a -> 697eea7 is ahead by 1, behind by 0, merge base exactly bf3c27a. The final commit changes exactly three allowed evidence paths and zero production/test/package/workflow/migration/schema/API/fixture/reserved/private paths.
 
-- worktree /root/runtime-fixtures;
-- branch feature/server-health-h3-p8-4;
-- local HEAD f8b35fdec3212dedf0e186830e4af21c719d890d / tree e8ecb16f857fcdbafc29889ae4a4fd37d54c1b8c;
-- required/remote head bf3c27a817c7e4698f539ff5cacc1db73c833710 / tree 2223a72ecfdf98758c6c3f96c1adeb7b541ec168;
-- remote main bc718cc5c677ad0eb4598e7de3ad766473ff0847;
-- worktree clean;
-- canonical B6 task read in full;
-- zero files changed, zero tests run, zero database/container work, zero pushes and zero reset/rebase/stash/cherry-pick/amend/force operations.
+Published B6 focused evidence on unchanged accepted B5 source records:
 
-Verdict: BLOCKED_LOCAL_CHECKOUT_STALE_ONLY. This is not a B6 product/test failure.
+- SPDR-01 through SPDR-11 PASS;
+- Health-runner security/unit matrix 5 files / 98 passed / 0 skipped;
+- Health-runner typecheck PASS;
+- bridge:guard PASS;
+- focused PostgreSQL H3 persistence 1 file / 18 passed / 0 skipped;
+- real Chromium existing local controlled fixtures 3 files / 92 passed / 0 skipped (H2 13, Standard 37, Work 42);
+- task-owned postgres:18.0 / health-b6-spdr-pg / e2e / loopback dynamic port, removed and absence verified;
+- zero live ChatGPT/provider/marketplace/customer-session calls and no persisted credentials.
 
-Independent GitHub comparison proves the recovery is a pure fast-forward: f8b35fde -> bf3c27a has status ahead, ahead_by=4, behind_by=0 and merge base exactly f8b35fde. Remote Health was independently rechecked still exactly bf3c27a. Therefore the safe recovery is fetch plus a local fast-forward-only merge of origin/feature/server-health-h3-p8-4; reset/rebase/cherry-pick/stash are unnecessary and forbidden.
+Exact-head Server CI:
 
-## Next task
+- run 35101822297;
+- job 104812875780;
+- head 697eea7adc337e1f11def16818829c2e443efb15;
+- completed 2026-09-16T13:36:17Z;
+- conclusion SUCCESS;
+- install, lint, format, typecheck, Playwright-config regression, unit, PostgreSQL integration, db:migrate, openapi:check, bridge:guard, build, Chromium install, E2E, post steps and container cleanup all SUCCESS;
+- frozen-import verification is conditionally skipped on the feature branch and is not an acceptance failure.
 
-Next task ID: SA-HEALTH-B6-SPDR-R1-20260916-01.
-Recovery wrapper: docs/development/architect-autowork/tasks/HEALTH_B6_SPDR_R1_WORKTREE_SYNC_2026-09-16.md.
-Canonical B6 task: docs/development/architect-autowork/tasks/HEALTH_B6_SECURITY_PRIVACY_DETERMINISTIC_2026-09-16.md.
+Detailed review: docs/development/architect-autowork/references/HEALTH_B6_FINAL_REVIEW.md.
 
-R1 must first verify clean local state and zero local divergence, fetch current refs, then advance only by fast-forward to exact accepted B5 base bf3c27a. Once local HEAD/tree match bf3c27a/2223a72e and remain clean, execute the unchanged canonical B6 proof task.
+## B7 controlled-live boundary
 
-B6 architecture remains unchanged: evidence-only security/privacy/deterministic gate over existing permanent regressions; zero production/test/package/workflow/migration changes; SPDR-01..SPDR-11; one task-owned disposable PostgreSQL 18 database; focused unit/type/bridge-guard/PostgreSQL/real-Chromium-local-fixture matrix; only three B6 evidence/doc paths may change; zero live ChatGPT/provider/marketplace/customer-session calls. Live controlled H3 remains B7 and must not start in B6.
+B7_CONTROLLED_LIVE_H3 = BLOCKED_EXTERNAL_PREREQUISITE.
 
-If local divergence or a B6 source/test contradiction is found, executor stops and reports the exact condition instead of designing a fix.
+Accepted ChromeBrowserDriver deliberately launches fresh EPHEMERAL_CONTROLLED Chromium/browser contexts and has no sanctioned customer-profile/storageState/session injection. Positive live Work requires an authenticated Work surface. Current repository authority contains no sanctioned dedicated-Health authentication/session provisioning mechanism for that fresh controlled context.
+
+The owner-approved authenticated Opera capture used for B4 is structural authority only and explicitly is not B7 live acceptance.
+
+Exact prerequisite before B7 can pass: an owner-approved dedicated Health account/session/profile plus a sanctioned way for the controlled Health runner to use that dedicated identity while preserving the accepted security boundary. Customer/owner normal profile reuse, copied customer cookies/tokens/storage, seller/marketplace credentials, generic raw browser login automation, and CAPTCHA/anti-bot/auth/geoblock bypass are forbidden.
+
+Reference: docs/development/architect-autowork/references/HEALTH_B7_LIVE_PREREQUISITE.md.
+
+## Next independent step — B8 non-live final readiness
+
+Next task ID: SA-HEALTH-B8-NONLIVE-FINAL-READINESS-20260916-01.
+Task file: docs/development/architect-autowork/tasks/HEALTH_B8_NONLIVE_FINAL_READINESS_2026-09-16.md.
+Required exact start/base: accepted B6 head 697eea7adc337e1f11def16818829c2e443efb15.
+
+B8 is evidence-only over unchanged accepted B6 source. It closes every independently startable non-live P8.4 final-acceptance criterion: exact B1-B6 chain, complete P8.4 ancestry/diff inventory, architecture/security/privacy/fixture/persistence closure, exact B6 CI/readback, forbidden-path audit and bounded actual-secret/privacy audit.
+
+Architect already independently observed de41f336... -> 697eea7... as a linear ahead-by-28 / behind-by-0 chain with merge base de41f336. B8 must recompute and record it, not blindly inherit the number.
+
+B8 makes zero live ChatGPT/provider/marketplace/customer-session calls and zero production/test/package/workflow/migration changes. It must not rerun the already-green full local repository cycle; accepted exact-head B6 CI and focused B6 evidence are the code/test authority.
+
+If the non-live matrix passes, only these verdicts are allowed:
+
+- P8.4_NONLIVE_FINAL_READINESS = PASS;
+- B7_CONTROLLED_LIVE_H3 = BLOCKED_EXTERNAL_PREREQUISITE;
+- B8_FULL_P8_4_ACCEPTANCE = BLOCKED_B7_LIVE;
+- P8.4 = NOT_ACCEPTED;
+- P8.5 = NOT_STARTED.
+
+B8 cannot waive/skip/accept B7. Only a later real controlled-live B7 PASS can remove the blocker and allow full P8.4 acceptance / subsequent P8.5 under the current autorun policy.
+
+Allowed B8 product-branch changes are only docs/server/B8_P8_4_NONLIVE_FINAL_READINESS_2026-09-16.md and docs/server/evidence/health-b8-final-readiness-2026-09-16/{README.md,results.json}.
 
 ## Preserved broader roadmap / boundaries
 
-Historical bounded acceptances remain: extension C1; I1-SRV.5; I1 synchronization; C2.1 durable context/time; C2.2-A R3 regression correction in its bounded scope; Health P8.4 B1-B5. Health B6-B8 are not accepted at this snapshot. P8.5+, S1.2 real email/preprod, D3, full C2/I1/D2, general beta, deployment and release remain open.
+Historical bounded acceptances remain: extension C1; I1-SRV.5; I1 synchronization; C2.1; C2.2-A R3 regression correction in its bounded scope; Health B1-B6. Full C2/I1/D2, S1.2 real email/preprod, D3, general beta, deployment and release remain open.
 
-C2.2-A remains open in place; its reserved docs/README.md conflict belongs to the parallel presentation stream and is not silently transferred/bypassed by Health work. Owner manual acceptance remains after joint installed C2 and later Q1 before beta.
-
-No main merge, deploy, release or live-provider acceptance is implied by B5 acceptance or B6 preparation. Do not edit README.md, AGENTS.md, docs/README.md, CHANGELOG.md, site/SEO/domain/public presentation or private workspace-control from this stream.
+C2.2-A stays open in place; do not resolve its reserved docs/README.md conflict in this stream. No main merge/deploy/release is authorized. Do not edit README.md, AGENTS.md, docs/README.md, CHANGELOG.md, site/SEO/domain/public presentation or private workspace-control.
