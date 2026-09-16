@@ -1,3 +1,29 @@
+# Server/I1/Health cursor — 2026-09-16
+
+Current: I1_C2_2A_R3_ACCEPTED_IN_REGRESSION_SCOPE / C2_2A_OPEN_BLOCKED / HEALTH_B5_GATE_R1_PREPARED_FOR_SINGLE_FINAL_SUBMISSION.
+Reviewed completed executor task SA-I1-C2-2A-R3-20260916-01. No other running executor is confirmed; no direct Bridge/process visibility. Next task saved/prepared is not a confirmed delivery/start.
+
+Canonical repository MaksimUnimax/runtime-fixtures, ID1369117174.
+I1 branch integration/i1-c1-srv5-2026-09-16 final076af64efbcdfdc67aec8713969c31c276a90b2d/tree3c35d4a619af1cde362939c94ebc4b367fe9e25e/parent34261bcce48fa6a1d9b60cbb44d9ad1fe0ba6b17. Start edc70704cec965b9e7bc58ca4d3c961834573517/tree3aaad9a0fd29649f492ebb0cd3152236f2475dcc.
+Erratum: earlier architect task/cursor duplicated a 6 in the start tree, yielding 41 characters. Executor's R3 start tree is correct, not truncated. This explicit correction supersedes that old diagnosis; history retained below.
+
+R3 verdict ACCEPTED only for assigned regression correction, independent source/extracted37/37 each and source review complete. references/I1_C2_2A_R3_REVIEW.md.
+Extension run35079055286 on af5487e462d2a8239efb2bb9e56b576d710f8036: all5jobs SUCCESS, including completed native104738350435 and WBbrowser104738350257. Final076af differs from testedaf5487 only in3evidence docs. No final-SHA run invented. Native synthetic source/extracted is not installed acceptance.
+Default ZIP1834654/SHA2562c1f5765b0eb382d9387e3ea1a59e71bd549344f10c107a39069d92719f341de independently reproduced earlier; runtime/harness unchanged. Separate native log receipt recorded in review, not downloaded.
+
+C2.2-A remains OPEN/BLOCKED: current required I1/installed/Server/Docs acceptance absent; PR9 draft/dirty with docs/README.md conflict in owner's parallel presentation scope. mainbc718cc5c677ad0eb4598e7de3ad766473ff0847 unchanged. No protected edits/merge/rebase/workflow rerun. Exposed connector lacks workflow dispatch. Preserve conflict for parallel owner; no silent criterion transfer.
+
+Next bounded independent step SA-HEALTH-B5-GATE-R1-20260916-01, tasks/HEALTH_B5_GATE_R1_2026-09-16.md.
+Existing Health branch feature/server-health-h3-p8-4, starta80cd3706a10d25079fedb9553fc7f5b2fc21683/tree4569d243b0fedf239efaa36085375911b0507e82/parent3138966bb0d1cd66e060b43703169975f48e9265.
+Gate verdict REWORK_REQUIRED: exact CI34955906130/job104337782297 PG23505 machine_key chatgpt during H3 setup,6cases skipped; independently read code proves two health fixtures omit schema reset/migrations. Exact two-fixture setup solution documented references/HEALTH_B5_GATE_R1_DIAGNOSIS.md. No fresh architect PG run claimed.
+Temporary independent Health step is justified by reserved external PR9-conflict dependency and existing authorized queue; C2.2-A stays open in place, no roadmap stage bypass. B5 NOT ACCEPTED, B6–B8 not started.
+Submit the prepared task ONCE in final. Do not treat this cursor save as executor launch or resend on unknown delivery. After terminal independently review changed fixtures, exact remote CI and remaining B5 production acceptance.
+
+C1/SRV5/SYNC/C2.1 historical bounded acceptances retained. Full C2/I1/D2/S1.2/D3/general beta/release remain open. Internal HealthP8.4B1–B8 is distinct from betaB1/B2. Owner manual testing follows joint installed C2 then Q1, not requested now.
+Owner parallel domain migration/SEO/public presentation preserved. Do not edit README.md/AGENTS.md/docs/README.md/CHANGELOG.md/site/private workspace-control. No main merge/deploy/release.
+
+## Previous snapshots — preserved history, superseded where corrected above
+
 # Server/I1 cursor — R3 review in progress, 2026-09-16
 
 Current: SA-I1-C2-2A-R3-20260916-01 terminal received; ARCHITECT_REVIEW_IN_PROGRESS. No new Codex task issued or executor start confirmed.
