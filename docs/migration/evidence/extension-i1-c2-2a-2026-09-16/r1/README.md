@@ -27,3 +27,7 @@ Focused source and extracted runs both completed with Node `v22.22.2`; the compl
 Default-development composition archive: `1834654` bytes, SHA-256 `2c1f5765b0eb382d9387e3ea1a59e71bd549344f10c107a39069d92719f341de`. Repeat archive matched; source/extracted byte readback matched. Ephemeral-key native receipt: `UNKNOWN`.
 
 Historical remote facts are not transferred to this current receipt. No merge, deploy, release, Work grant, provider replay, or full-I1 acceptance is claimed.
+
+## R2 correction
+
+This R1 receipt and its result JSON remain historical and are not rewritten. The R2 candidate adds the assigned missing acceptance rows and stable Q1–Q7 case IDs on the later exact start supplied by the architect. Its current evidence is in `../r2/README.md` and `../r2/results.json`; R1’s historical RED/PASS provenance is not re-run or replaced.

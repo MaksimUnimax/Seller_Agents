@@ -15,3 +15,11 @@ This API returns verified configuration only. It does not set `authority.workAll
 ## R1 correction ledger
 
 The initial candidate receipt’s broad A–H declaration was incomplete. R1 records the endpoint-bound 503 provenance control, successful-write obsolescence control, public-return fence, local/body-failure control, both AUTH set/remove outcomes, and context dimensions in `docs/migration/evidence/extension-i1-c2-2a-2026-09-16/r1/README.md`. The original result JSON remains historical evidence and is not rewritten.
+
+## R2 test/evidence addendum
+
+Task `SA-I1-C2-2A-R2-20260916-01` extends the acceptance ledger without changing the production client. The test now records stable per-case outcomes and covers the assigned Q1 classification rows, Q2 fixed-time boundaries and restart floors, Q3 first-floor storage/IDB/catalog retention, Q4 signed context distinctions, Q5 asynchronous ownership barriers, and Q6 the final public-return fence. The shared worker harness forwards existing clock/IDB options and provides only a test-only `beforeCryptoVerify` barrier; production closure state is not exposed.
+
+The focused policy suite passed on both source and extracted composed runtimes under the local Node `v22.22.2` toolchain. The full local I1 checker passed `100` processes, and the shared core checker passed `111` processes. `docs:check`, `bridge:guard`, and the underlying `@product/api openapi:check` passed. No native/installed-local rerun was performed, and no authenticated current-task remote CI run is claimed.
+
+The production client source remained byte-identical to the supplied start: blob `5f6a195048e257304c16fb92a25c4ff772d98fe0`. Detailed named results and provenance are in `docs/migration/evidence/extension-i1-c2-2a-2026-09-16/r2/README.md` and `r2/results.json`.

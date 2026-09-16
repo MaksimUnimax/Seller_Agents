@@ -43,3 +43,9 @@ See `results.json` for the machine-readable local ledger. Architect review is re
 The initial receipt above was written before the independent review and its broad A–H summary was incomplete: the published test did not prove endpoint-bound audited 503 eligibility or the denial-write obsolescence race. The current receipt was terminal in the executor workspace while the initial evidence file still said `UNKNOWN`; that historical wording is preserved here rather than rewritten.
 
 The corrected source/extracted receipt and explicit case ledger are in `r1/README.md` and `r1/results.json`. No historical result JSON was changed.
+
+## R2 factual reconciliation
+
+The historical R1 receipt above is preserved. R2 is the tests/evidence-only continuation from exact start `90f3f5ab4787d1ed4b782bff4f97181dd9fe3772`, tree `835ce56a1fd235196f7010936817485bf7347eb5`, and parent/code `65596c5f1b5189c60de64d72a80773d43f1a203f`. It adds only the allowlisted policy test, deterministic worker-harness hook, and append-only/current R2 evidence.
+
+The stable per-case ledger, source/extracted results, gate provenance, package receipt, remote-CI status, and production byte-identity comparison are recorded in `r2/README.md` and `r2/results.json`. The older root and R1 result JSON files remain unchanged.
