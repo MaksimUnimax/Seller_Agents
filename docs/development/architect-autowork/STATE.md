@@ -1,15 +1,22 @@
 # Seller Agents — единый cursor
 
-Дата: 2026-09-16. Current: C2_1_R3_REVIEW_COMPLETE / WAITING_EXISTING_WB_BROWSER_CI / C2_2A_PREPARED_NOT_SUBMITTED.
-Task SA-I1-C2-1-R3-20260916-01 terminal received; executor stopped per report. No new executor job issued. Architect remains active.
-Candidate4acc5fb3336e3e38fa30d6a7ec16c80730bcd7e1/tree14e8e61d86b955b8a8f22b0c9e24f255654e92f7; code/parent6dc770ec30fe7c7165f4c14ff8b6356cd55937d6; start06e0eb79badc5e65ea972035a2968f72fdaae6a7. Integration branch unchanged, PR9 draft; main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c. Merge48bfe9632c055a7743f1da5c5a8a1159fa48b7c0 identical tree.
-Independent exact-source cleanup probe PASS; current I1/native/installed/server/docs and package39/39 readback PASS. Only WB-browser PRjob104687049023/run35062978154 and pushjob104687037055/run35062974367 remain IN_PROGRESS at this checkpoint. Do not rerun or mark them PASS.
-Review: references/I1_C2_1_R3_REVIEW.md; probes/readback: references/I1_C2_1_R3_REVIEW_PROBE/.
-Next task tasks/I1_C2_2A_2026-09-16.md prepared only, not dispatched. Finish existing CI, record final verdict, submit once. No direct Bridge delivery/process visibility.
-C1/SRV5/SYNC bounded acceptance retained. C2.1 final acceptance pending that gate; offline/profile/joint C2 and product readiness remain open. Health B5 not accepted/B6–8 queued, S1.2/D3/beta/release open.
-Owner's parallel агентселлер.ру→октопорт.ру migration authorized; preserve it and strict origin checks. Owner manual tests after joint installed C2 then Q1.
+Дата: 2026-09-16. Current: I1_C1_ACCEPTED / I1_SRV5_ACCEPTED / I1_SYNC_ACCEPTED / C2_1_ACCEPTED / C2_2A_PREPARED_FOR_SINGLE_FINAL_SUBMISSION.
 
-## Historical cursor snapshots — retained, not instructions to repeat
+## Текущая точка
+- SA-I1-C2-1-R3-20260916-01 terminal independently reviewed; verdict ACCEPTED only for C2.1 durable context/time/restore and fresh-only Work guards. Executor stopped per terminal. No new running job confirmed; direct Bridge/process access absent.
+- Branch integration/i1-c1-srv5-2026-09-16, head4acc5fb3336e3e38fa30d6a7ec16c80730bcd7e1/tree14e8e61d86b955b8a8f22b0c9e24f255654e92f7; parent/code6dc770ec30fe7c7165f4c14ff8b6356cd55937d6; start06e0eb79badc5e65ea972035a2968f72fdaae6a7.
+- PR9 remains draft/unmerged. Tested PR checkout48bfe9632c055a7743f1da5c5a8a1159fa48b7c0 has candidate-identical tree and tested main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c+candidate parents.
+- Main NOW c7d82639ec848ef3f7ae45feec321bea16607dd4/treef87cc06ea37456ace0be41893ccf84ce43ba6f43: owner-authorized Octoport docs migration, seven documentation paths and zero runtime changes. Preserve it. Do not reset to historical main or silently import/revert the migration. Candidate acceptance does not claim a new merged checkout was tested.
+- Independent failed AUTH write probe: restore resolves, write1/remove1, durable pending absent, exact clientblob35497eac2582877e7851bcb27b3c5833bd060e79. Source/tests reviewed; current focused source/package R3-A–D and T1–T7 PASS.
+- All candidate runs completed SUCCESS: Docs35062978385, I135062978145, Server35062978184, Extension PR35062978154 and push35062974367. Server log1527integration/all20health+88E2E; native source/extracted and installed-local two-account scenarios pass; WB browsers321source+321package in each existing run. No reruns.
+- Independently downloaded default ZIP artifact10433241137:1822450bytes/SHA256ceede563a4869184f26d161875ce6ca39f12c37245ee49c2917302d3a4ea4e59;39/39runtime/extracted readback. Executor-reported1823235/03ed7c... remains separate local-package evidence, not that download.
+- Review references/I1_C2_1_R3_REVIEW.md; compact CI references/I1_C2_1_R3_CI.json; probe/readback references/I1_C2_1_R3_REVIEW_PROBE/. R3 stale R2 CI attribution and truncated start are corrected here; next task appends errata without rewriting historical results.
+- Next task SA-I1-C2-2A-20260916-01 at tasks/I1_C2_2A_2026-09-16.md. Precise design: online-first verified cached-bootstrap acquisition with trusted transport classification, exact context/signature checks and durable grace deadline. No offline Work grant in this bounded prerequisite; signed capability/profile consumption and installed offline command/result follow.
+- Task saved/prepared for ONE final submission, not claimed delivered/running. After final prompt, await actual terminal, do not resend on unknown delivery. Continuous autowork remains authorized.
+- Historical C1/SRV5/SYNC scope accepted; Health P8.4 B5 NOT ACCEPTED/B6–B8 queued; S1.2 real email/preprod,D3,fullC2/I1/D2,beta/deploy/release open. Manual owner tests after joint installed C2, then Q1, not needed now.
+- Preserve owner's parallel агентселлер.ру→октопорт.ру migration and strict origin/auth checks. No merge/deploy/release authorized by this task.
+
+## Historical cursor snapshots — not commands to repeat
 
 Дата: 2026-09-16. Статус: I1_C1_ACCEPTED / I1_SRV5_ACCEPTED / I1_SYNC_ACCEPTED / C2_1_REWORK_REQUIRED / C2_1_R1_REWORK_REQUIRED / C2_1_R2_REWORK_REQUIRED / C2_1_R3_PREPARED_FOR_SINGLE_FINAL_SUBMISSION.
 
@@ -19,7 +26,7 @@ Owner's parallel агентселлер.ру→октопорт.ру migration a
 
 Astra / очень высокая глубина рассуждения — главный разработчик, senior engineer, единственный архитектор. Вся архитектура, исследования, поиск причин, планирование, проектирование, управление разработкой и независимая приёмка на ней. Один серверный Codex / Luna Max реализует заданный код и тесты и выполняет назначенные проверки. Исследования, поиск решения и архитектуру ему не делегировать. Новые пользовательские ограничения сильнее исторической формулировки AGENTS о самостоятельных технических решениях исполнителя.
 
-## Текущая задача — C2.1 R2 review / R3
+## История C2.1 R2 review / R3 preparation — не повторять
 
 - SA-I1-C2-1-R2-20260916-01 terminal проверен; executor stopped per report. Direct Bridge/process visibility отсутствует, новой running-задачи не подтверждено.
 - Branch integration/i1-c1-srv5-2026-09-16; head06e0eb79badc5e65ea972035a2968f72fdaae6a7; treee090b748a6a1aa8d35869f215c7846984e4f73f3; parentead575816dde5df2613a61cb8aa599e216c8066a; code790975c4879de41043d747485f4c957e7f51b003; start13068c24354e8ec61bab6cf05598a5bb6ced7b65.

@@ -6,11 +6,11 @@ Tree: 14e8e61d86b955b8a8f22b0c9e24f255654e92f7
 Parent/code: 6dc770ec30fe7c7165f4c14ff8b6356cd55937d6
 Start: 06e0eb79badc5e65ea972035a2968f72fdaae6a7
 Branch: integration/i1-c1-srv5-2026-09-16
-PR9 draft/unmerged; main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c unchanged.
+PR9 draft/unmerged. Tested main base5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c. Final ref readback found authorized Octoport main advancement to c7d82639ec848ef3f7ae45feec321bea16607dd4/tree f87cc06ea37456ace0be41893ccf84ce43ba6f43: seven documentation paths only, no runtime changes. Candidate acceptance is bound to its exact tested head; no claim of re-testing a future PR merge.
 PR virtual merge48bfe9632c055a7743f1da5c5a8a1159fa48b7c0 has the identical candidate tree and main+candidate parents.
 
 ## Decision
-WAITING only for the already running WB browser baseline jobs. Source review, independent defect reproduction, targeted current CI and artifact readback are complete. No executor currently running per terminal; no new prompt submitted yet.
+ACCEPTED for C2.1 durable cache context/time, activation restore and fresh-only Work guards on candidate4acc5fb. Independent source review/probe, all five applicable current-head CI runs and39/39 package readback passed. This does not accept offline-grace Work, signed-profile execution, fullC2/I1, Health or release. Executor stopped per terminal; next task prepared for one final submission.
 
 ## Source and behavior
 Compare exact R2 start to candidate: five allowed files, production change is the single invalid restored activation branch routed through terminal invalidateKnown.
@@ -22,8 +22,8 @@ Downloaded current CI focused source/extracted logs both PASS with R3-A–D and 
 
 ## Current remote evidence
 I1 run35062978145, installed104687048991 and client104687049183 SUCCESS. Completed logs prove checkout48bfe963..., two isolated account/device/authorization scenarios, same worker, development OTP, zero live provider calls.
-Extension PR run35062978154: native104687049112 SUCCESS with source/extracted Chromium151.0.7922.34, actual popup/text/binary/IDB/Finish under synthetic AI/fetch. Core104687048920/Ozon104687049205/WB-nodes104687049107 SUCCESS by job API. WB-browsers104687049023 pending at this checkpoint.
-Additional existing push run35062974367: core104687036989/Ozon104687037101/WB-nodes104687036940/native104687037225 SUCCESS; WB-browsers104687037055 pending. Neither run relaunched.
+Extension PR run35062978154: native104687049112 SUCCESS with source/extracted Chromium151.0.7922.34, actual popup/text/binary/IDB/Finish under synthetic AI/fetch. Core104687048920/Ozon104687049205/WB-nodes104687049107 SUCCESS by job API. WB-browsers104687049023 SUCCESS; completed log321 source+321 package assertions,0failed, actual checkout48bfe963....
+Additional existing push run35062974367: core104687036989/Ozon104687037101/WB-nodes104687036940/native104687037225 SUCCESS; WB-browsers104687037055 SUCCESS; completed log321 source+321 package assertions,0failed, actual checkout4acc5fb.... Neither run relaunched.
 Server35062978184/job104687050044 SUCCESS; completed log shows39 integration files/1527 tests, all20 health-persistence tests executed,88 E2E passed. This does not accept separate Health B5.
 Documentation35062978385/job104687049763 SUCCESS.
 No old R2 CI is counted as current R3 proof.
@@ -31,7 +31,7 @@ No old R2 CI is counted as current R3 proof.
 ## Package
 Independent downloaded artifact10433241137 from current I1 run: default development ZIP1822450bytes, SHA256ceede563a4869184f26d161875ce6ca39f12c37245ee49c2917302d3a4ea4e59.39/39 package files identical to packaged runtime and extracted copies; no mismatches. Checker98 processes PASS.
 Changed client input SHA256eca6f66f9376a80933df068dbbd893e1d45a6b2ffced513ce1090f5592487f8a/61119bytes matches exact remote Git content and downloaded composition input receipt.
-Executor reported1823235bytes/SHA25603ed7c22618cbb9b49c83e0c2b6a4735b314c0a30480258550b02492cc8dab65 is separate local ephemeral-key package evidence, not the downloaded default ZIP. Current native CI's ephemeral-key ZIP also has a separate hash86db3a4c3ff65198f4f823ae4121b765ac69b8ddd888b46cd7cb9e62480521f9.
+Executor reported1823235bytes/SHA25603ed7c22618cbb9b49c83e0c2b6a4735b314c0a30480258550b02492cc8dab65 is separate executor-reported local package evidence, not the downloaded default ZIP; its configuration was not independently downloaded. Current native CI's ephemeral-key ZIP also has a separate hash86db3a4c3ff65198f4f823ae4121b765ac69b8ddd888b46cd7cb9e62480521f9.
 
 ## Evidence errata and boundaries
 R3 README/results label runs35060667796/35060667782 and checkoutc8652fb as current candidate facts. They belong to R2. The correct R3 refs/jobs above supersede that attribution; original evidence is retained as history. R3 start field is truncated; full start is stated above. Next task requires a factual addendum, not rewriting old result JSON.
@@ -41,4 +41,4 @@ Owner's parallel агентселлер.ру→октопорт.ру migration i
 
 ## Next
 Prepared SA-I1-C2-2A-20260916-01: private trustworthy request provenance, online-first bootstrapWithPolicy, reverified exact-context cache acquisition under signed grace and existing durable clock. Work consumers remain fresh-only pending separate signed-profile/capability integration.
-Task is prepared, not sent or running. Await final existing CI gate in active architect cycle, then update acceptance/cursor and submit exactly once.
+All candidate CI gates completed SUCCESS. Task is prepared for one final submission; saving it does not establish delivery or a running executor. After that submission await the actual terminal and do not duplicate on unknown delivery.

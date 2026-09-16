@@ -1,0 +1,160 @@
+{
+  "candidate": "4acc5fb3336e3e38fa30d6a7ec16c80730bcd7e1",
+  "currentMain": "c7d82639ec848ef3f7ae45feec321bea16607dd4",
+  "currentMainChange": "authorized Octoport; seven docs only; no runtime diff",
+  "downloadedArtifact": 10433241137,
+  "executorLocalPackage": "reported separately, not independently downloaded",
+  "logsReadJobs": [
+    104687049112,
+    104687048991,
+    104687049183,
+    104687050044,
+    104687049023,
+    104687037055
+  ],
+  "runs": [
+    {
+      "conclusion": "success",
+      "event": "pull_request",
+      "head_sha": "4acc5fb3336e3e38fa30d6a7ec16c80730bcd7e1",
+      "id": 35062978385,
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 104687049763,
+          "name": "documentation",
+          "status": "completed"
+        }
+      ],
+      "name": "Documentation CI",
+      "status": "completed",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/35062978385"
+    },
+    {
+      "conclusion": "success",
+      "event": "pull_request",
+      "head_sha": "4acc5fb3336e3e38fa30d6a7ec16c80730bcd7e1",
+      "id": 35062978145,
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 104687048991,
+          "name": "Installed local API / portal / PostgreSQL acceptance",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 104687049183,
+          "name": "client-i1",
+          "status": "completed"
+        }
+      ],
+      "name": "Extension I1-C1 client",
+      "status": "completed",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/35062978145"
+    },
+    {
+      "conclusion": "success",
+      "event": "pull_request",
+      "head_sha": "4acc5fb3336e3e38fa30d6a7ec16c80730bcd7e1",
+      "id": 35062978184,
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 104687050044,
+          "name": "server",
+          "status": "completed"
+        }
+      ],
+      "name": "Server CI",
+      "status": "completed",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/35062978184"
+    },
+    {
+      "conclusion": "success",
+      "event": "pull_request",
+      "head_sha": "4acc5fb3336e3e38fa30d6a7ec16c80730bcd7e1",
+      "id": 35062978154,
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 104687048920,
+          "name": "Common core / source and package",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 104687049023,
+          "name": "Baseline / wb-browsers",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 104687049107,
+          "name": "Baseline / wb-nodes",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 104687049112,
+          "name": "Common application / native Chromium fixture",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 104687049205,
+          "name": "Baseline / ozon",
+          "status": "completed"
+        }
+      ],
+      "name": "Extension CI",
+      "status": "completed",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/35062978154"
+    },
+    {
+      "conclusion": "success",
+      "event": "push",
+      "head_sha": "4acc5fb3336e3e38fa30d6a7ec16c80730bcd7e1",
+      "id": 35062974367,
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 104687036940,
+          "name": "Baseline / wb-nodes",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 104687036989,
+          "name": "Common core / source and package",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 104687037055,
+          "name": "Baseline / wb-browsers",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 104687037101,
+          "name": "Baseline / ozon",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 104687037225,
+          "name": "Common application / native Chromium fixture",
+          "status": "completed"
+        }
+      ],
+      "name": "Extension CI",
+      "status": "completed",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/35062974367"
+    }
+  ],
+  "testedBase": "5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+  "testedPRCheckout": "48bfe9632c055a7743f1da5c5a8a1159fa48b7c0",
+  "tree": "14e8e61d86b955b8a8f22b0c9e24f255654e92f7",
+  "verdict": "ACCEPTED_C2_1_BOUNDED"
+}
