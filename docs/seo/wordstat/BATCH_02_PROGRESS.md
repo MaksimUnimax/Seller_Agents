@@ -32,13 +32,14 @@ SEO work remains isolated from parallel server development:
 |---|---|---|---:|---|---|---|
 | B02-01 | ии агенты для маркетплейсов | SUCCESS | 134 | `wordstat-b0eb0733-6829-4df8-b57c-4f5d2c6b0662` | `raw/B02_01_2026-09-16.md` | `analysis/B02_01_2026-09-16.md` |
 | B02-02 | ии для работы с маркетплейсами | SUCCESS | 39 | `wordstat-b3cd4d29-e472-480b-bef1-a82d6febfb9c` | `raw/B02_02_2026-09-16.md` | `analysis/B02_02_2026-09-16.md` |
+| B02-03 | ии для продаж на маркетплейсах | SUCCESS | 23 | `wordstat-0f933523-9845-4cc0-aa04-4ad1efa1c1ea` | `raw/B02_03_2026-09-16.md` | `analysis/B02_03_2026-09-16.md` |
 
 ## Totals
 
-- successful HTTP/provider calls: `2/15`;
-- calls with usable `totalCount`: `2/15`;
+- successful HTTP/provider calls: `3/15`;
+- calls with usable `totalCount`: `3/15`;
 - successful-empty result calls: `0`;
 - provider failures: `0`;
-- accumulated estimated cost: `0.04 ₽`;
-- current cursor: `B02-03`;
-- next seed: `ии для продаж на маркетплейсах`.
+- accumulated estimated cost: `0.06 ₽`;
+- current cursor: `B02-04`;
+- next seed: `ии для аналитики маркетплейсов`.
