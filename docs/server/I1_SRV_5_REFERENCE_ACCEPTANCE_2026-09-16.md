@@ -1,7 +1,7 @@
 # I1-SRV.5 Reference Acceptance and Evidence Matrix
 
 Date: 2026-09-16
-Status: `I1-SRV.5 IMPLEMENTED_CANDIDATE / ARCHITECT_REVIEW_PENDING`
+Status: `I1-SRV.5 ACCEPTED` for the bounded server/reference lifecycle and signing-fixture gates at `086ae20c2858849ec13b1ab67c2f7661259022c3`. This is candidate acceptance, not a merge or deployment.
 
 ## Scope and exact authority
 
@@ -14,6 +14,14 @@ Status: `I1-SRV.5 IMPLEMENTED_CANDIDATE / ARCHITECT_REVIEW_PENDING`
   dependency, migration, contract, or extension runtime code changed.
 - The scenario is server/reference plus browser portal acceptance. It is not
   installed-extension, marketplace, email-delivery, or offline-V2 acceptance.
+
+The architect accepted this exact server candidate for the bounded
+server/reference lifecycle and fixture scope using
+`docs/development/architect-autowork/references/I1_SRV5_R2_REVIEW.md` and
+`I1_SRV5_R2_CI.json` from the read-only
+`docs/architect-autowork-handoff-2026-09-15` branch. The combined
+extension/server synchronization is a separate candidate and remains
+`IMPLEMENTED_CANDIDATE / ARCHITECT_REVIEW_PENDING`.
 
 The new scenario is
 `tests/e2e/server/i1-reference-acceptance.spec.ts` —
@@ -66,10 +74,11 @@ zero live calls were made. The recorded successful remote checks are R5 final
 Extension CI runs `34980773590` and `34980778417`, I1 runs `34980773436` and
 `34980778468`, and Documentation CI `34980778452`.
 
-This candidate does not declare whole I1/D2 or beta complete. C2/offline/
+This accepted bounded server scope does not declare whole I1/D2 or beta complete. C2/offline/
 profile integration remains pending. S1.2/D3 and Health/Stream B remain
-outside this synchronization handoff. I1-SRV.5 remains
-`IMPLEMENTED_CANDIDATE / ARCHITECT_REVIEW_PENDING` until the architect verdict.
+outside this synchronization handoff. I1-SRV.5 remains `ACCEPTED` only for
+the stated server/reference scope; the combined candidate remains
+`IMPLEMENTED_CANDIDATE / ARCHITECT_REVIEW_PENDING` until architect review.
 
 ## Verification record
 
@@ -129,4 +138,5 @@ was made.
   The required Documentation CI remains a gate on the newly published
   candidate; its exact run status is not claimed in this local record.
 
-A push is not a merge; the branch is unmerged and PR7 is not modified.
+A push is not a merge; this server branch remains unmerged, PR8 remains draft
+and unmerged, and PR7 is not modified.

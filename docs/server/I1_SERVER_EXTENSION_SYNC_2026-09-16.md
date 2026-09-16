@@ -1,7 +1,26 @@
 # I1 Server / Extension Synchronization Handoff
 
 Date: 2026-09-16
-Status: `I1-SRV.5 IMPLEMENTED_CANDIDATE / ARCHITECT_REVIEW_PENDING`
+Status: `IMPLEMENTED_CANDIDATE / ARCHITECT_REVIEW_PENDING`
+
+## Combined candidate authority
+
+This candidate is the ordinary `--no-ff` merge of the two already accepted
+heads, created on `integration/i1-c1-srv5-2026-09-16`:
+
+- merge: `9d3407bc248e935860c5d7d3a50536c6a08d92f4`
+- tree: `e834d3af55bb102e0378218dff731dd15b124d02`
+- first parent/server: `086ae20c2858849ec13b1ab67c2f7661259022c3`
+- second parent/client: `56c81a3521c02502b65fd713aec890e5a30f038d`
+- common ancestor: `bc0cd0088ca50ba06021ea602a46bdd90de91378`
+- canonical `main` remains `5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c`;
+  PR7 and PR8 remain draft and unmerged.
+
+The client changed 54 paths and the server changed 19 paths relative to the
+common ancestor, with zero intersection. The merge preserves the server as
+first parent and client as second parent; its non-documentation tree is not
+being independently redesigned. Full blob/mode provenance is in
+`evidence/i1-sync-2026-09-16/runtime-blobs.json`.
 
 ## Implemented server contract
 
@@ -39,11 +58,43 @@ marketplace/email/provider acceptance.
 
 ## Pending client and product integration
 
-C2/offline/profile integration is still pending. The existing
+C2 offline/profile/joint command-result integration is still pending. The
+combined candidate is `IMPLEMENTED_CANDIDATE / ARCHITECT_REVIEW_PENDING` until
+architect review. The existing
 `SimulatedExtensionClient` is intentionally a V1 policy/reference path; the
 new server test uses direct V2 HTTP requests for V2 acceptance and does not
 claim V2 cached browser behavior. No second client auth stack or V2 retrofit is
 authorized by this handoff.
+
+## Combined local validation
+
+The combined cycle used Node `24.20.0`, pnpm `10.34.5`, the frozen lockfile,
+the existing Python/browser requirements, and sequential fresh task-owned
+PostgreSQL databases. `pnpm install --frozen-lockfile`, lint, format check,
+typecheck, the retained Playwright config assertions (`1/1`), and `pnpm test`
+passed. The server sequence passed with `39` integration files and `1527/1527`
+tests, all `20` health tests executed, migrations/OpenAPI/bridge guard/build,
+and `88/88` E2E tests, including both I1 reference tests. No new skips were
+introduced; the health schema reset/migrate correction and the two Playwright
+reference assertions were retained exactly.
+
+The extension core checker passed source and extracted routes in `111`
+processes, and the I1 checker passed source and extracted routes in `96`
+processes. Both browser verifier routes passed with Chromium `151.0.7922.34`.
+The native application fixture passed on runtime and extracted packages with
+an ephemeral signing key kept outside published artifacts. Installed-local
+acceptance passed using the actual Chromium extension, API/portal/PostgreSQL,
+approval/exchange/bootstrap, two existing account scenarios, same-worker
+account isolation and fail-closed checks; it recorded zero live-provider calls.
+
+The package remains development `0.2.4` with composition unchanged. The
+default-development and ephemeral-key browser receipts are separate in
+`evidence/i1-sync-2026-09-16/package-receipt.json`, including ZIP hashes,
+sizes, repeated-build equality, source/extracted parity and every packaged
+file byte readback. The required Documentation CI, Server CI, Extension CI,
+and both Extension I1 jobs remain remote gates on the draft PR; run URLs and
+checkout SHA are `UNKNOWN` here because authenticated remote visibility is
+unavailable.
 
 ## Explicit boundaries
 
@@ -62,4 +113,6 @@ See [I1-SRV.5 reference acceptance](I1_SRV_5_REFERENCE_ACCEPTANCE_2026-09-16.md)
 for the criterion matrix, exact test names, current gate outcomes, historical
 I1-SRV.0–4/PR6 evidence, and C1/PR7 separation. The branch is to be reviewed
 as a draft PR only; no merge or follow-on S1.2/D3/C2/Health launch is part of
-this task.
+this task. Historical disk-exhaustion `BLOCKED`, R1 integration `FAIL`, R2
+setup-interlock `BLOCKED`, and deterministic RED/GREEN history remain
+unchanged historical evidence and are not relabeled PASS.

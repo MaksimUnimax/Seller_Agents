@@ -1,8 +1,8 @@
 # I1-C1 client candidate
 
-Status: R3 implementation candidate prepared for architect review. This work does not accept or close I1, C2, I1-SRV.4, I1-SRV.5, D3, Health/P8, S1.2, release or deployment.
+Status: `C1 ACCEPTED` at `56c81a3521c02502b65fd713aec890e5a30f038d` for the bounded source/package/native and installed-local development scope. This acceptance does not close I1, C2, I1-SRV.5, D3, Health/P8, S1.2, release or deployment.
 
-Base: `bc0cd0088ca50ba06021ea602a46bdd90de91378`. R2 assigned starting head: `9e80e8ad531f079b38bf03b9e29f171c87c477c0`. Final head is recorded in the R2 evidence after publication.
+Base: `bc0cd0088ca50ba06021ea602a46bdd90de91378`. Accepted C1 head: `56c81a3521c02502b65fd713aec890e5a30f038d` on `feature/extension-i1-client-2026-09-15`. The source branch remains separate, draft and unmerged.
 
 R2 was reviewed for the earlier flight-owner, forced-bootstrap-refresh, fail-closed authority, composed signed-out routing, and contractual version-comparison scope. R3 corrects the remaining client authority/response classification and context-ownership paths, and adds meaningful same-worker account, rotation, denial, version, and composed-worker coverage. Polling, activation and refresh owners carry generation and logical identity; restrictive denial replaces in-memory authority before persistence/cleanup and uses removal as a durable fallback. Work permission is checked separately from composed application readiness. Pending transport/status/rate-limit failures remain retryable until the attempt deadline, while terminal denial is not restored as authority after restart.
 
@@ -26,4 +26,4 @@ The I1 checker preserves source and extracted-package gates and the full compose
 
 ## Evidence and handoff
 
-Secret-free results, the F1–F8 mapping, package receipt/hash and exact commands are in `docs/migration/evidence/extension-i1-client-2026-09-15/`. No server implementation, OpenAPI, migration, global STATUS/ROADMAP, Health/P8 or Stream B file is changed by this client candidate. The draft PR remains open for review; no merge, release or deployment is performed.
+Secret-free results, the F1–F8 mapping, package receipt/hash and exact commands are in `docs/migration/evidence/extension-i1-client-2026-09-15/`. No server implementation, OpenAPI, migration, global STATUS/ROADMAP, Health/P8 or Stream B file was changed by the accepted client candidate. The accepted files are imported into the separate synchronization candidate only; the client source branch and PR7 remain unchanged, draft and unmerged. No release or deployment is performed.
