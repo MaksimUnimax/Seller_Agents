@@ -14,6 +14,7 @@ import {
   createDatabaseRuntime,
   createHealthPersistenceRepository,
 } from "@product/db";
+import { runMigrations } from "@product/db/migrations";
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) throw new Error("DATABASE_URL is required");
@@ -241,6 +242,10 @@ async function persist(
 describe("B5 durable Standard/Work H3 evidence", () => {
   beforeAll(async () => {
     await runtime.ready();
+    await runtime.query("DROP SCHEMA IF EXISTS public CASCADE");
+    await runtime.query("DROP SCHEMA IF EXISTS drizzle CASCADE");
+    await runtime.query("CREATE SCHEMA public");
+    await runMigrations({ connectionString: connectionString! });
     await runtime.query(
       `INSERT INTO ai_adapters(id,machine_key,display_name) VALUES($1,'chatgpt','ChatGPT')`,
       [IDS.adapter],
