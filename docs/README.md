@@ -1,77 +1,41 @@
-# Карта документации
+# Technical Documentation Index
 
-Версия спецификации: 1.0. Дата: 2026-09-16.
-Нормативная документация описывает целевое поведение. Реализацию и подтверждения смотреть отдельно в [STATUS](STATUS.md).
+This directory contains implementation-oriented technical notes, contracts, validation records, migration evidence, and operational procedures for the workspace.
 
-## Продукт
+## Architecture
 
-- [SPEC](product/SPEC.md): состав сервиса и обязательные требования.
-- [UX](product/UX.md): экраны, действия, ошибки и переходы.
-- [BETA_ADMISSION](product/BETA_ADMISSION.md): ограничение новых регистраций.
-- [ADMIN_AND_WEB](product/ADMIN_AND_WEB.md): сайт, роли, админка и статистика.
+- [System overview](architecture/OVERVIEW.md)
+- [Repository structure](architecture/REPOSITORY.md)
+- [Data and security](architecture/DATA_AND_SECURITY.md)
+- [Shared contracts](architecture/CONTRACTS.md)
+- [Synchronization rules](architecture/SYNC.md)
+- [State machines](architecture/STATE_MACHINES.md)
 
-## Архитектура
+## Development and validation
 
-- [OVERVIEW](architecture/OVERVIEW.md): компоненты и зависимости.
-- [REPOSITORY](architecture/REPOSITORY.md): каталоги и правила размещения.
-- [DATA_AND_SECURITY](architecture/DATA_AND_SECURITY.md): данные, права и хранение.
-- [CONTRACTS](architecture/CONTRACTS.md): обмен и версии.
-- [SYNC](architecture/SYNC.md): автономность, привязки и перенос.
-- [STATE_MACHINES](architecture/STATE_MACHINES.md): рабочие состояния и поздние события.
+- [Development workflow](development/WORKFLOW.md)
+- [Quality rules](development/QUALITY.md)
+- [Acceptance matrix](development/ACCEPTANCE_MATRIX.md)
+- [Failure ledger](development/FAILURE_LEDGER.md)
 
-## Интеграции
+## Operations
 
-- [Общая read-only политика](integrations/READ_POLICY.md).
-- [Ozon](integrations/ozon/README.md), [WB](integrations/wildberries/README.md).
-- [ИИ](integrations/ai/README.md), [браузеры](integrations/browsers/README.md).
+- [Release and recovery](operations/RELEASE_AND_RECOVERY.md)
+- [Monitoring](operations/MONITORING.md)
+- [Capacity](operations/CAPACITY.md)
 
-## SEO и семантика Октопорта
+## Integration material
 
-- [Точка входа SEO](seo/README.md): authority, границы, evidence levels и текущий cursor.
-- [Product truth для SEO](seo/PRODUCT_TRUTH.md): публичный бренд, допустимые обещания и запреты.
-- [Методика](seo/METHODOLOGY.md): Wordstat → semantic universe → intent clusters → target pages → technical SEO.
-- [SEO roadmap](seo/SEO_ROADMAP.md): этапы SEO-S0…SEO-S10 и критерии завершения.
-- [Initial seed universe](seo/SEED_UNIVERSE.md): гипотезы первого discovery-прохода без выдуманных частотностей.
-- [SEO worklog](seo/WORKLOG.md): append-only ход работы, факты, решения, ошибки и blockers.
-- [Wordstat Batch 01](seo/wordstat/BATCH_01_BROAD_DISCOVERY.md): первый bounded provider batch, подготовлен к исполнению.
-- [Current site SEO baseline](seo/technical/CURRENT_SITE_BASELINE_2026-09-16.md): source-аудит текущей статической страницы без утверждения о production crawl.
+Provider- and surface-specific implementation notes live under `integrations/` and the relevant application/package directories. Read only the area required by the active task.
 
-## Разработка и выпуск
+## Migration and evidence
 
-- [D2.3: WB adapter, зависимости и прикладные границы](development/EXTENSION_WB_ADAPTER.md), [квитанция](migration/evidence/extension-wb-adapter-d2-3-2026-09-14/README.md).
-- [D2.2: очередь и контекст пакета](migration/evidence/extension-context-d2-2-2026-09-14/README.md).
-- [Общее ядро D2.1/D2.2 и development-сборка](development/EXTENSION_CORE.md), [квитанция](migration/evidence/extension-core-d2-1-2026-09-14/README.md).
-- [WORKFLOW](development/WORKFLOW.md), [QUALITY](development/QUALITY.md).
-- [Расширения после импорта](development/EXTENSION_BASELINE.md), [приёмка D1.E1](migration/evidence/extension-import-2026-09-14/README.md).
-- [ACCEPTANCE_MATRIX](development/ACCEPTANCE_MATRIX.md): обязательные сценарии.
-- [FAILURE_LEDGER](development/FAILURE_LEDGER.md): известные классы ошибок.
-- [RELEASE_AND_RECOVERY](operations/RELEASE_AND_RECOVERY.md).
-- [MONITORING](operations/MONITORING.md).
-- [CAPACITY](operations/CAPACITY.md): нагрузка, бюджеты и измерения.
-- [Octoport domain migration](operations/OCTOPORT_DOMAIN_MIGRATION.md): факты DOMAIN-D0, состояние перехода и границы этапов.
-- [Текущая production-доменная authority Octoport](server/DOMAIN_INGRESS_PLAN_2026-09-16.md): `octoport.ru`, `app.octoport.ru`, same-origin admin и `api.octoport.ru`.
-- [ROADMAP](ROADMAP.md), [STATUS](STATUS.md).
+Historical import, migration, and acceptance evidence lives under `migration/`. Evidence records describe the scope that was checked at a specific revision; they are not a substitute for current runtime verification.
 
-## Решения и происхождение
+## Current coordination files
 
-- [DECISIONS](decisions/DECISIONS.md): принятые решения и заменённые варианты.
-- [OPEN_ITEMS](decisions/OPEN_ITEMS.md): внешние проверки и намеренно отложенные детали.
-- [SOURCES](migration/SOURCES.md), [PLAN](migration/PLAN.md).
-- [Карта расширений D1.E0](migration/EXTENSION_IMPORT_MAP.md), [выполненный импорт D1.E1](migration/EXTENSION_IMPORT_NEXT_STEP.md).
-- [Квитанция D1.E0](migration/evidence/extensions-2026-09-14/README.md), [расхождения исходников](migration/evidence/extensions-2026-09-14/FINDINGS.md).
-- [SOURCE_STATUS](migration/evidence/SOURCE_STATUS.md): границы доказательств.
-- [DOCUMENTATION_ACCEPTANCE](migration/evidence/DOCUMENTATION_ACCEPTANCE.md): проверка текущего этапа.
-- [Инструкции пользователя](user/README.md).
+`STATUS.md`, `ROADMAP.md`, and `decisions/` are maintenance records. Do not infer permission to start a new stage merely because an older record mentions it.
 
-## Как избегаем расхождения
+## Documentation rule
 
-Правило живёт в одном основном документе. Другие документы дают ссылку. Реестры операций и HELP в реализации происходят из одного машинного источника; OpenAPI генерируется из контрактов.
-Изменение правила сопровождается обновлением решений и сценария приёмки. Документы источников сохраняют исторический смысл; их старые статусы не заменяют текущую оценку владельца.
-
-## Перенесённый сервер
-
-- [Серверная точка входа](server/README.md).
-- [Квитанция переноса](migration/evidence/SERVER_IMPORT_ACCEPTANCE.md).
-- [Поручение серверному Codex](development/SERVER_CODEX_HANDOFF.md).
-
-Текущий D2.4: [общий пользовательский маршрут Ozon/WB](development/EXTENSION_APPLICATION.md).
+Keep durable rules in one canonical technical document and link to them elsewhere. When behavior changes, update the affected contract and the validation scenario that proves it. Historical evidence keeps its original meaning and should not be rewritten as current acceptance.

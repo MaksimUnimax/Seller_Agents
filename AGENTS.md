@@ -1,52 +1,56 @@
-# Правила работы в Seller_Agents
+# Repository Maintenance Rules
 
-## Обязательная точка входа
+## Entry point
 
-Прочитать README.md, docs/STATUS.md, docs/ROADMAP.md, docs/decisions/DECISIONS.md и документы своей области по docs/README.md. Перед изменением чужого контракта прочитать docs/architecture/CONTRACTS.md. Не перечитывать весь исторический Blood & Sand вместо актуальных документов этого проекта.
+Read `README.md`, `docs/README.md`, and the documentation for the subsystem you are changing. If the task changes a shared contract, read `docs/architecture/CONTRACTS.md` before editing it.
 
-Приоритет: действующие указания владельца в сессии → принятые продуктовые решения → нормативные документы этой ревизии → сведения о фактической реализации. Исторический документ и уже существующий код не отменяют новое явно принятое решение. Расхождение записывается и исправляется; код не объявляется соответствующим ТЗ по одному факту существования.
+Current maintainer instructions for the active task take priority over historical notes. Existing code is evidence of implementation, not automatic proof that a behavior is still intended.
 
-## Объём текущего этапа
+## Scope discipline
 
-D2.4 принят как DEVELOPMENT_APPLICATION_VERIFIED по source/package/native fixture/remote CI/readback: настоящий каталог, общий popup, прикладные Start/execution/delivery Ozon/WB, Hide/Finish и технический TTL. Открыт новым «Делай» после D2.3, продолжен после снятия владельцем паузы. Code 96af54f1d67c20f6eca2ade552fde20948f1e66d; development 0.2.3, полный CI 34846554237 SUCCESS. Точка входа: docs/development/EXTENSION_APPLICATION.md; квитанция: docs/migration/evidence/extension-application-d2-4-2026-09-14/README.md. Это не закрытие D2/installed/live и не готовая бета. Следующий отдельный участок — ранний I1 с реальным account/auth; backup/relay/logout, R1–R8, live calls, сервер/wire contracts и production остаются отдельными границами.
+- Work only inside the explicitly requested subsystem.
+- Do not start adjacent roadmap work because a preceding step finished.
+- Do not redesign shared contracts, authentication/session behavior, migrations, deployment topology, or cross-component interfaces unless the task explicitly includes them.
+- Prefer the smallest complete change that fixes the requested behavior.
+- Preserve proven behavior outside the affected boundary.
+- Do not convert fixture, documentation, package, or simulated checks into claims about installed or live acceptance.
 
-D2.3 открыт поручением владельца «Восстанавливай контекст и ход работы и продолжай». Адаптер WB исполняется через общую очередь, await guards Ozon/WB имеют одну реализацию; source/ZIP/remote CI/readback PASS. Внутренний adapter API принят; это не приёмка WB application route. Объём: provider API adapter, сохранённая authority WB в изолированном scope, shared queue/context/observed quota, проверка и публикация. На момент D2.3 реальный popup/content route WB ещё не был подключён; его подключение и настоящая модель магазинов относятся к текущему D2.4. Не объявлять этот adapter-level шаг installed acceptance или завершением D2. Не переносить старый WB popup; Ozon — эталон применимой общей механики. Сервер/wire contracts, исходные baselines, R1–R8, live calls и production не менять. Точка входа: docs/development/EXTENSION_WB_ADAPTER.md; квитанция: docs/migration/evidence/extension-wb-adapter-d2-3-2026-09-14/README.md.
+## Parallel work
 
-D2.2 принят по source/package/remote CI/readback; этап был открыт новым поручением владельца «Делай» после отчёта D2.1: общая очередь и закреплённый контекст ручного пакета, guard до provider dispatch и доставки, source/ZIP/remote приёмка. Сервер, wire contracts, WB reference и live calls не менять. Полный WB adapter и каталог магазинов не объявлять реализованными этим шагом. Текущая квитанция: docs/migration/evidence/extension-context-d2-2-2026-09-14/README.md.
+Multiple branches may be active at the same time.
 
-D2 открыт новым поручением владельца «Делай» после приёмки D1.E1. D2.1 принят по source/package/remote CI и readback; квитанция: docs/migration/evidence/extension-core-d2-1-2026-09-14/README.md. Объём выполненного первого шага D2.1: выделить общие Work/discovery/execution/delivery-модули из закреплённого Ozon, подключить их в реальную development-сборку, сохранить provider policy через порты и исходные регрессии, выполнить проверки исходников/ZIP и опубликовать результат. D2.1 не объявляет весь D2 завершённым. WB reference, сервер и wire contracts не менять; WB R1–R8, live-provider вызовы, deploy и browser-store release не выполнять. Следующие реализации продолжаются по общей последовательности D2.
+Before integration or merge work:
 
-D1.E1 завершён: IMPORT_ACCEPTED, remote CI и 232-file readback PASS. Этап был открыт новым поручением владельца «Делай» после отчёта D1.E0. Объём этого поручения: перенос закреплённых Ozon/WB исходников и тестов по карте, минимальная адаптация путей/упаковки/CI, проверка и публикация переноса в Seller_Agents. Ozon runtime переносится без изменения байтов; WB сохраняется как reference с INSTALLED FAIL. Сервер, его контракты и исходные ветки не менять. D2, live provider tests и browser-store publication этим этапом не выполняются. Результаты: docs/migration/evidence/extension-import-2026-09-14/README.md; команды: docs/development/EXTENSION_BASELINE.md. Следующий этап D2 выполняется отдельным поручением; закрытие импорта не запускает его автоматически.
+1. fetch the current remote `main`;
+2. inspect drift since the branch base;
+3. avoid files owned by another active stream unless a synchronization boundary was explicitly agreed;
+4. do not force-push to erase divergence;
+5. keep one clear integration boundary for shared changes.
 
-D1.E0 — карта переноса расширений — подготовлена по поручению владельца «Делай» после передачи актуального Ozon 0.1.22. Объём этого поручения: сверка источников, файлов, зависимостей и проверок; публикация карты и обновление документации. Runtime-код в D1.E0 не переносить и не исправлять, не менять сервер, не выполнять live marketplace calls. Результат и следующий ограниченный импорт D1.E1: docs/migration/EXTENSION_IMPORT_MAP.md и EXTENSION_IMPORT_NEXT_STEP.md. Источники Ozon/WB закреплены в SOURCES; исторический Ozon donor WB нужен только для fixtures.
+## Executor boundary
 
-D1.S1 завершён и принят; действовавшее поручение владельца разрешало: перенос сервера из замороженной ветки feature/product-control-plane-p8-4-h3-2026-09-14, commit 3f16bbf6387cc62303e292fcfe61449c8f243b92, с проверкой и публикацией в Seller_Agents. Изменять пути и конфигурацию для переноса разрешено. Не продолжать P8.4 H3 browser actions/P8.5/P8.6, не переносить расширения этим этапом, не выполнять marketplace-запросы, не менять исходную ветку и не развёртывать production. D0 завершён. Новые работы выполняются по следующему поручению; закрытие переноса не запускает H3/P8.5/P8.6 автоматически.
+An implementation executor may write or fix code, run prescribed tests, and report factual results inside a bounded task.
 
-Переходы: документация → отдельный перенос → объединение и раннее подключение сервера → совместная приёмка → бесплатная бета. Завершение первого этапа не является разрешением автоматически выполнять все следующие.
+It must not independently choose project roadmap, architecture, product scope, repository strategy, or the next stage of work.
 
-## Разделение работы
+## Validation
 
-- Основной архитектор ведёт документацию, перенос, общие контракты, интеграцию и итоговую оценку.
-- Отдельный Codex после переноса развивает сервер по ограниченным задачам.
-- Не запускать дополнительные агенты без явного поручения владельца.
-- У каждой параллельной задачи свой список файлов и критериев. Общие контракты имеют одного текущего исполнителя. См. docs/development/WORKFLOW.md.
-- Технические решения внутри согласованных границ исполнитель принимает самостоятельно. Новую продуктовую механику не выдавать за старое согласованное требование.
+- Reproduce a concrete defect or requirement before changing behavior when practical.
+- Keep source, packaged, browser, database, integration, and deployment evidence distinct.
+- A green documentation check proves documentation consistency only.
+- A green package build proves package construction only.
+- Installed/live acceptance requires the checks defined for that boundary.
+- Record exact commit/revision identifiers for accepted evidence.
 
-## Источники и достоверность
+## Security and data
 
-Перед переносом получить актуальные ветки и закрепить точные коммиты отдельно для каждой части. Снимки в docs/migration/SOURCES.md — сведения на дату проверки, не вечный donor.
-Не объявлять исторические multi-AI ветки второй актуальной установленной версией Ozon и не сливать их без доказанного сценарного расхождения.
-Источник WB 0.3.0 имеет установленный FAIL по сообщению владельца; прежние source/ZIP PASS сохраняются как ограниченные исторические доказательства. R1–R8 не начинать.
-Полнота переноса проверяется по поведению подсистем и их зависимостей. Числа файлов, строк, байтов, 102 capabilities или 1075 тестов сами по себе полноту не доказывают.
+- Never commit credentials, private keys, production tokens, raw customer data, or private conversation content.
+- Do not add sensitive values to fixtures, logs, screenshots, CI artifacts, or documentation.
+- Treat destructive server cleanup and broad deletion as separate operations requiring explicit maintainer approval.
 
-## Изменения и проверка
+## Git safety
 
-- Сначала конкретный дефект/требование, затем минимально достаточная корректировка всей затронутой подсистемы.
-- Не переписывать доказанно эквивалентные части; не защищать старую WB реализацию без differential.
-- Ошибки bootstrap, файла, callback, отправки и неизвестного исхода различать.
-- Проверять исполняемую сборку и реальные сценарии, а не только наличие строк в исходниках.
-- Не превращать зелёный docs-check, имитационный тест или сборку ZIP в installed acceptance.
-- Секреты, сырые данные продавца и переписка не попадают в Git, тестовые отчёты или обычную серверную телеметрию.
-- Поддерживать актуальными STATUS, roadmap и затронутые правила. Историю не переписывать.
-- Перед push повторно проверить удалённый HEAD; не использовать force для обхода чужих изменений.
-- В отчёте: что изменено, доказательства, ограничения, точный удалённый коммит и следующий разрешённый этап.
+- Re-check remote `main` before publishing or merging.
+- Do not use force push to bypass another stream's work.
+- Keep unrelated formatting or cleanup out of bounded changes.
+- Report what changed, what was tested, remaining limitations, and the exact resulting revision.
