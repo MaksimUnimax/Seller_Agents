@@ -1,6 +1,10 @@
 # I1-SRV.4 Error / Revocation / Offline Semantics
 
-Status: `I1-SRV.4 CORRECTED IMPLEMENTED CANDIDATE / OWNER_ARCHITECT_REVIEW_PENDING`
+Status: `I1-SRV.4 ACCEPTED on main5d7c8853 / PR6`
+
+The original candidate wording and evidence below are preserved as historical
+record. It does not reopen I1-SRV.4 implementation; the consolidated
+I1-SRV.5 reference acceptance is recorded separately.
 
 Repository: `MaksimUnimax/Seller_Agents`
 Base main SHA: `bc0cd0088ca50ba06021ea602a46bdd90de91378`
