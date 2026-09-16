@@ -53,8 +53,10 @@
   function contextForState(extra = {}) { return { generation: state.generation, attemptId: state.pending?.attemptId || null, deviceId: state.credentials?.deviceId || null, sessionId: state.credentials?.sessionId || null, ...extra }; }
   function commitIfCurrent(context, updater, reason = "state_changed") { return queueMutation(async () => { if (!isCurrent(context)) return false; const next = await updater(clone(state)); if (!next || !isCurrent(context)) return false; await commit(next, state.authority, reason); return true; }); }
   function validCredentials(value) { return value && UUID.test(value.deviceId) && UUID.test(value.sessionId) && value.tokenType === "Bearer" && TOKEN.test(value.accessToken) && OPAQUE_TOKEN.test(value.refreshToken) && Number.isFinite(Date.parse(value.accessTokenExpiresAt)) && Number.isFinite(Date.parse(value.refreshTokenExpiresAt)); }
-  function validAuthContext(value) { return exactKeys(value, ["contextVersion", "controlApiOrigin", "portalOrigin", "contractVersion"]) && value.contextVersion === "control_auth_context_v1" && origin(value.controlApiOrigin) && origin(value.portalOrigin) && typeof value.contractVersion === "string" && value.controlApiOrigin === config.controlApiOrigin && value.portalOrigin === config.portalOrigin; }
-  function validPending(value) { return value && typeof value.attemptId === "string" && value.attemptId.length > 0 && UUID.test(value.authorizationId) && OPAQUE_TOKEN.test(value.deviceCode) && /^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{4}-[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{4}$/.test(value.userCode) && Number.isFinite(Date.parse(value.expiresAt)) && TOKEN.test(value.startIdempotencyKey) && TOKEN.test(value.exchangeIdempotencyKey) && validAuthContext(value.authContext); }
+  function validAuthContext(value) { return exactKeys(value, ["contextVersion", "controlApiOrigin", "portalOrigin", "contractVersion"]) && value.contextVersion === "control_auth_context_v1" && origin(value.controlApiOrigin) && origin(value.portalOrigin) && typeof value.contractVersion === "string" && value.controlApiOrigin === config.controlApiOrigin && value.portalOrigin === config.portalOrigin && value.contractVersion === config.contractVersion; }
+  function validStarting(value) { return exactKeys(value, ["phase", "attemptId", "startIdempotencyKey", "authContext"]) && value.phase === "starting" && typeof value.attemptId === "string" && value.attemptId.length > 0 && TOKEN.test(value.startIdempotencyKey) && validAuthContext(value.authContext); }
+  function validPending(value) { return exactKeys(value, ["phase", "attemptId", "authorizationId", "deviceCode", "userCode", "expiresAt", "startIdempotencyKey", "exchangeIdempotencyKey", "authContext"]) && value.phase === "pending" && typeof value.attemptId === "string" && value.attemptId.length > 0 && UUID.test(value.authorizationId) && OPAQUE_TOKEN.test(value.deviceCode) && /^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{4}-[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{4}$/.test(value.userCode) && Number.isFinite(Date.parse(value.expiresAt)) && TOKEN.test(value.startIdempotencyKey) && TOKEN.test(value.exchangeIdempotencyKey) && validAuthContext(value.authContext); }
+  function validRestoredPending(value) { return validStarting(value) || validPending(value) && parsedMillis(value.expiresAt) > now(); }
   function pendingLive(value) { return value?.phase !== "starting" && validPending(value) && Date.parse(value.expiresAt) > now(); }
   function publicPending(value) { if (!value) return null; return { authorizationId: value.authorizationId, userCode: value.userCode, expiresAt: value.expiresAt, verificationUri: url(`/activate?authorizationId=${encodeURIComponent(value.authorizationId)}`, config.portalOrigin) }; }
   function publicStatus(decision = null) { const authority = state.authority, accountId = authority?.payload?.account?.id || null, snapshot = authority?.payload || null, matching = decision && decision.identity && sameAuthorityRuntimeIdentity(decision.identity, authorityDecisionIdentity()); return Object.freeze({ authenticated: Boolean(state.credentials && authority && accountId), accountId, account: accountId ? { kind: "control_account", label: `Аккаунт · ${accountId.slice(0, 8)}` } : null, pending: pendingLive(state.pending) ? publicPending(state.pending) : null, lastError: state.lastError, generation: state.generation, workAllowed: Boolean(accountId && matching && decision.allowed === true), authority: authority ? { configVersion: snapshot.configVersion, expiresAt: snapshot.expiresAt, aiStatus: snapshot.ai.status } : null }); }
@@ -439,9 +441,15 @@
     });
     if (changed) void notifyAuthorityChange(null, "authority_invalid", generation);
   }
+  async function discardOrphanCredentialState() {
+    const next = { ...state, rotation: null, authority: null, cacheClock: null };
+    state = next;
+    try { await persist(next); } catch (_) { /* signed-out memory remains safe; pending state is not discarded */ }
+  }
   async function restoreOnce() {
     await chrome.storage.local.setAccessLevel?.({ accessLevel: "TRUSTED_CONTEXTS" }); const result = await chrome.storage.local.get(STORAGE_KEY); const saved = result[STORAGE_KEY]; if (saved && typeof saved === "object") state = { ...state, ...clone(saved) };
-    if (saved && !validCredentials(state.credentials)) await invalidateKnown(contextForState(), error("STORED_CREDENTIALS_INVALID"), true);
+    if (state.credentials !== null && state.credentials !== undefined && !validCredentials(state.credentials)) await invalidateKnown(contextForState(), error("STORED_CREDENTIALS_INVALID"), true);
+    else if ((state.credentials === null || state.credentials === undefined) && saved && (state.rotation || state.authority || state.cacheClock)) await discardOrphanCredentialState();
     if (state.credentials && !validCacheClock(state.cacheClock, state.credentials)) await invalidateKnown(contextForState(), error("STORED_CACHE_CLOCK_INVALID"), true);
     if (state.credentials && state.authority) {
       const savedAuthority = state.authority, binding = savedAuthority.cacheBinding, clock = state.cacheClock;
@@ -467,7 +475,7 @@
         else if (state.credentials) await discardRestoredAuthority(authorityFailure);
       }
     }
-    if (state.pending && state.pending.phase !== "starting" && !validPending(state.pending)) await queueMutation(async () => { await commit({ ...state, generation: state.generation + 1, pending: null, lastError: safeError(error("ACTIVATION_CONTEXT_MISMATCH")) }, state.authority, "activation_context_invalid"); });
+    if (state.pending && !validRestoredPending(state.pending)) await queueMutation(async () => { await commit({ ...state, generation: state.generation + 1, pending: null, lastError: safeError(error("ACTIVATION_CONTEXT_MISMATCH")) }, state.authority, "activation_context_invalid"); });
     const restoredDecision = state.authority && state.credentials ? await cacheAuthorizationCheckpoint() : { allowed: false };
     initialized = true; if (pendingLive(state.pending)) void ensurePolling(); return publicStatus(restoredDecision);
   }

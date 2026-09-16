@@ -15,3 +15,7 @@ Named focused cases actually executed in both source and extracted runtimes:
 The completion-veto distinction is deliberate: the pre-write effective floor is the durable checkpoint; a fresh post-write sample is a veto and runtime high-watermark for the next checkpoint, not a falsely labeled persisted value. Authenticated account state without authority remains `Work=false`.
 
 No live provider calls were made. Offline grace/profile consumption/joint offline acceptance remain C2.2+; Health B5/B6–B8, S1.2/D3, full I1/D2 and beta remain open.
+
+## R2 factual review addendum
+
+The original R1 receipt used task ID `SA-I1-C2-1-20260916-01`, which is also the exact ID for this R2 correction; its base, implementation and historical results remain unchanged. The R1 held-write receipt described a same-call expiry veto, but that local assertion released the write before moving the injected clock to `expiresAt`; R2 executes the required order. R1 also did not execute the required valid pending restart, valid starting restart, storage-removal, exact-owner, composed-expiry, and full T6/T7 assertions. Those omissions are preserved as historical R1 facts, not rewritten as R1 passes; the corrective results are in [`../r2/`](../r2/).

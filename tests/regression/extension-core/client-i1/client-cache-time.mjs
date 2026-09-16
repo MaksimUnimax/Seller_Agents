@@ -20,6 +20,136 @@ async function fixture(options = {}) {
   return { worker, backing, clock };
 }
 
+async function signedOutTemplate(clock) {
+  const backing = { local: {}, session: {} };
+  const seeded = await makeWorker(runtime, { backing, wallClock: () => clock.wall, monotonicClock: () => clock.mono });
+  const payload = clone(backing.local[AUTH].authority.payload);
+  seeded.close();
+  delete backing.local[AUTH];
+  return { backing, payload };
+}
+
+function activationResponse(clock, values = {}) {
+  return { status: "pending", authorizationId: values.authorizationId || "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa", deviceCode: values.deviceCode || "D".repeat(43), userCode: values.userCode || "ABCD-EFGH", expiresAt: values.expiresAt || new Date(clock.wall + 60000).toISOString() };
+}
+
+function activatedResponse(clock, values = {}) {
+  return { status: "activated", deviceId: values.deviceId || "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb", sessionId: values.sessionId || "cccccccc-cccc-4ccc-8ccc-cccccccccccc", tokenType: "Bearer", accessToken: "A".repeat(24), accessTokenExpiresAt: new Date(clock.wall + 3600000).toISOString(), refreshToken: "R".repeat(43), refreshTokenExpiresAt: new Date(clock.wall + 7200000).toISOString() };
+}
+
+async function signedBootstrap(backing, payload, clock, accountId = "11111111-1111-4111-8111-111111111111") {
+  return signed(backing, { ...clone(payload), account: { id: accountId, status: "ACTIVE" }, serverTime: new Date(clock.wall).toISOString(), expiresAt: new Date(clock.wall + 3600000).toISOString(), offlineGraceUntil: new Date(clock.wall + 7200000).toISOString() });
+}
+
+// T1: a real pending activation is an independent signed-out restore state.
+// The held exchange belongs to the old VM and is intentionally never released.
+{
+  const clock = { wall: baseWall, mono: 1000 }, { backing, payload } = await signedOutTemplate(clock);
+  const requests = [], exchangeWait = new Promise(() => {});
+  const first = await makeWorker(runtime, { backing, seedAuthority: false, wallClock: () => clock.wall, monotonicClock: () => clock.mono, fetch: async (url, init) => {
+    requests.push({ url, key: init.headers?.get?.("Idempotency-Key") || init.headers?.["Idempotency-Key"] || null, body: init.body || "" });
+    if (url.endsWith("/v1/device-authorizations")) return json(activationResponse(clock), 201);
+    if (url.endsWith("/v1/device-authorizations/token")) return exchangeWait;
+    throw new Error("unexpected T1 request " + url);
+  } });
+  const started = await first.call("SellerAgentsControlClient.startActivation");
+  await until(() => backing.local[AUTH]?.pending?.phase === "pending", "T1 pending persisted");
+  const savedPending = clone(backing.local[AUTH].pending), savedGeneration = backing.local[AUTH].generation;
+  assert.equal(requests.filter(row => row.url.endsWith("/v1/device-authorizations")).length, 1);
+  assert.equal(requests.filter(row => row.url.endsWith("/v1/device-authorizations/token")).length, 1);
+  assert.equal(started.pending.authorizationId, savedPending.authorizationId);
+  first.close();
+  const resumedRequests = [];
+  const resumed = await makeWorker(runtime, { backing, seedAuthority: false, wallClock: () => clock.wall, monotonicClock: () => clock.mono, fetch: async (url, init) => {
+    resumedRequests.push({ url, key: init.headers?.get?.("Idempotency-Key") || init.headers?.["Idempotency-Key"] || null, body: init.body || "" });
+    if (url.endsWith("/v1/device-authorizations")) throw new Error("T1 allocated a new device attempt");
+    if (url.endsWith("/v1/device-authorizations/token")) return json(activatedResponse(clock));
+    if (url.endsWith("/v1/bootstrap")) return signedBootstrap(backing, payload, clock);
+    throw new Error("unexpected T1 resume request " + url);
+  } });
+  try {
+    await until(() => resumedRequests.some(row => row.url.endsWith("/v1/device-authorizations/token")), "T1 resumed exchange");
+    await until(async () => (await resumed.call("SellerAgentsControlClient.status")).authenticated, "T1 signed bootstrap");
+    assert.equal(backing.local[AUTH].generation, savedGeneration + 1);
+    assert.equal(backing.local[AUTH].credentials.sessionId, "cccccccc-cccc-4ccc-8ccc-cccccccccccc");
+    assert.equal(backing.local[AUTH].cacheClock.owner.sessionId, backing.local[AUTH].credentials.sessionId);
+    assert.equal(backing.local[AUTH].pending, null);
+    assert.equal(resumedRequests.filter(row => row.url.endsWith("/v1/device-authorizations")).length, 0);
+    const exchange = resumedRequests.find(row => row.url.endsWith("/v1/device-authorizations/token"));
+    assert.equal(exchange.key, savedPending.exchangeIdempotencyKey);
+    assert.equal(JSON.parse(exchange.body).deviceCode, savedPending.deviceCode);
+    assert.equal(backing.local[AUTH].authority.payload.account.id, "11111111-1111-4111-8111-111111111111");
+  } finally { resumed.close(); }
+}
+
+// T2: a durably stored starting attempt keeps its attempt and start keys. The
+// old held HTTP promise is not released after its worker VM is closed.
+{
+  const clock = { wall: baseWall, mono: 1000 }, { backing, payload } = await signedOutTemplate(clock);
+  const firstRequests = [], oldStart = new Promise(() => {});
+  const first = await makeWorker(runtime, { backing, seedAuthority: false, wallClock: () => clock.wall, monotonicClock: () => clock.mono, fetch: async (url, init) => {
+    firstRequests.push({ url, key: init.headers?.get?.("Idempotency-Key") || init.headers?.["Idempotency-Key"] || null });
+    if (url.endsWith("/v1/device-authorizations")) return oldStart;
+    throw new Error("unexpected T2 old request " + url);
+  } });
+  const oldStartCall = first.call("SellerAgentsControlClient.startActivation");
+  await until(() => backing.local[AUTH]?.pending?.phase === "starting", "T2 starting persisted");
+  const savedStarting = clone(backing.local[AUTH].pending);
+  first.close();
+  const secondRequests = [];
+  const second = await makeWorker(runtime, { backing, seedAuthority: false, wallClock: () => clock.wall, monotonicClock: () => clock.mono, fetch: async (url, init) => {
+    secondRequests.push({ url, key: init.headers?.get?.("Idempotency-Key") || init.headers?.["Idempotency-Key"] || null });
+    if (url.endsWith("/v1/device-authorizations")) return json(activationResponse(clock, { authorizationId: "dddddddd-dddd-4ddd-8ddd-dddddddddddd", deviceCode: "E".repeat(43) }), 201);
+    if (url.endsWith("/v1/device-authorizations/token")) return json(activatedResponse(clock));
+    if (url.endsWith("/v1/bootstrap")) return signedBootstrap(backing, payload, clock);
+    throw new Error("unexpected T2 resume request " + url);
+  } });
+  try {
+    const resumedStart = await second.call("SellerAgentsControlClient.startActivation");
+    await until(() => secondRequests.some(row => row.url.endsWith("/v1/device-authorizations/token")), "T2 exchange");
+    await until(async () => (await second.call("SellerAgentsControlClient.status")).authenticated, "T2 signed bootstrap");
+    const start = secondRequests.find(row => row.url.endsWith("/v1/device-authorizations"));
+    assert.equal(start.key, savedStarting.startIdempotencyKey);
+    assert.equal(resumedStart.pending.authorizationId, "dddddddd-dddd-4ddd-8ddd-dddddddddddd");
+    assert.equal(secondRequests.filter(row => row.url.endsWith("/v1/device-authorizations")).length, 1);
+    assert.equal(firstRequests.length, 1);
+  } finally { second.close(); oldStartCall.catch(() => {}); }
+}
+
+// T3: each invalid pending/starting control is durably discarded before a
+// fresh activation can emit a request. A valid same-context pending record and
+// a normal signed-out restart remain positive controls.
+{
+  const controls = [
+    ["api-origin", pending => { pending.authContext.controlApiOrigin = "http://127.0.0.1:43199"; }],
+    ["portal-origin", pending => { pending.authContext.portalOrigin = "http://127.0.0.1:43199"; }],
+    ["contract", pending => { pending.authContext.contractVersion = "control_plane_v3"; }],
+    ["missing-context", pending => { delete pending.authContext; }],
+    ["pending-shape", pending => { pending.deviceCode = "bad"; }],
+    ["starting-shape", pending => { pending = { phase: "starting", attemptId: pending.attemptId, startIdempotencyKey: "bad", authContext: pending.authContext }; return pending; }],
+    ["expired", pending => { pending.expiresAt = new Date(baseWall).toISOString(); }],
+  ];
+  for (const [label, mutate] of controls) {
+    const clock = { wall: baseWall, mono: 1000 }, { backing } = await signedOutTemplate(clock);
+    const source = await makeWorker(runtime, { backing, seedAuthority: false, wallClock: () => clock.wall, monotonicClock: () => clock.mono, fetch: async url => url.endsWith("/v1/device-authorizations") ? json(activationResponse(clock), 201) : new Promise(() => {}) });
+    await source.call("SellerAgentsControlClient.startActivation"); await until(() => backing.local[AUTH]?.pending?.phase === "pending", `${label} seed`); source.close();
+    const original = clone(backing.local[AUTH].pending);
+    let replacement = clone(original); const result = mutate(replacement); if (result) replacement = result; backing.local[AUTH].pending = replacement;
+    const requests = [];
+    const worker = await makeWorker(runtime, { backing, seedAuthority: false, wallClock: () => clock.wall, monotonicClock: () => clock.mono, fetch: async (url, init) => { requests.push({ url, key: init.headers?.get?.("Idempotency-Key") || init.headers?.["Idempotency-Key"] || null, body: init.body || "" }); return url.endsWith("/v1/device-authorizations") ? json(activationResponse(clock, { authorizationId: "eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee", deviceCode: "F".repeat(43) }), 201) : new Promise(() => {}); } });
+    try {
+      const status = await worker.call("SellerAgentsControlClient.status"); assert.equal(status.pending, null, label); assert.equal(backing.local[AUTH].pending, null, `${label} durable discard`);
+      const started = await worker.call("SellerAgentsControlClient.startActivation"); assert.ok(started.pending); await until(() => requests.some(row => row.url.endsWith("/v1/device-authorizations")), `${label} fresh start`);
+      assert.notEqual(requests.find(row => row.url.endsWith("/v1/device-authorizations")).key, original.startIdempotencyKey, `${label} fresh start key`);
+      assert.equal(requests.some(row => String(row.body).includes(original.deviceCode)), false, `${label} old device code reuse`);
+    } finally { worker.close(); }
+  }
+  const positiveClock = { wall: baseWall, mono: 1000 }, positive = await signedOutTemplate(positiveClock);
+  const positiveRequests = [], positiveWorker = await makeWorker(runtime, { backing: positive.backing, seedAuthority: false, wallClock: () => positiveClock.wall, monotonicClock: () => positiveClock.mono, fetch: async (url, init) => { positiveRequests.push({ url, key: init.headers?.get?.("Idempotency-Key") || init.headers?.["Idempotency-Key"] || null }); return url.endsWith("/v1/device-authorizations/token") ? new Promise(() => {}) : json(activationResponse(positiveClock), 201); } });
+  try { const output = await positiveWorker.call("SellerAgentsControlClient.startActivation"); assert.ok(output.pending); await until(() => positiveWorker.portalTabs.length === 1, "same-context portal"); assert.equal(positiveWorker.network.length, 2); } finally { positiveWorker.close(); }
+  const normalClock = { wall: baseWall, mono: 1000 }, normal = await signedOutTemplate(normalClock); const normalWorker = await makeWorker(runtime, { backing: normal.backing, seedAuthority: false, wallClock: () => normalClock.wall, monotonicClock: () => normalClock.mono }); try { const status = await normalWorker.call("SellerAgentsControlClient.status"); assert.equal(status.lastError, null); assert.equal(status.pending, null); } finally { normalWorker.close(); }
+}
+
 // C2.1-R1: exact base behavior was the known regression. The candidate's
 // seeded record has the new metadata; the explicit legacy branch records the
 // pre-change behavior when this suite is run against the exact base runtime.
@@ -97,6 +227,35 @@ async function fixture(options = {}) {
   } finally { worker.close(); }
 }
 
+// T5: a failed checkpoint with a successful removal is durably fail-closed;
+// when both writes fail, only the in-memory denial is proven until a later
+// successful, nondecreasing floor is persisted.
+{
+  const clock = { wall: baseWall, mono: 1000 }, backing = { local: {}, session: {} };
+  let fail = false;
+  const seeded = await fixture({ backing, clock }); seeded.worker.close();
+  const denied = await fixture({ backing, clock, onStorageWrite: async (kind, values) => { if (fail && kind === "local" && Object.hasOwn(values, AUTH)) throw new Error("T5 set failure"); } });
+  try {
+    await denied.worker.call("SellerAgentsControlClient.canWork"); fail = true; clock.wall += 100; clock.mono += 100;
+    assert.equal(await denied.worker.call("SellerAgentsControlClient.canWork"), false);
+    assert.equal(backing.local[AUTH], undefined, "successful removal clears the record");
+  } finally { denied.worker.close(); }
+  const restartDenied = await makeWorker(runtime, { backing, seedAuthority: false, wallClock: () => clock.wall, monotonicClock: () => clock.mono });
+  try { assert.equal(await restartDenied.call("SellerAgentsControlClient.canWork"), false); } finally { restartDenied.close(); }
+
+  const limitedClock = { wall: baseWall, mono: 1000 }, limitedBacking = { local: {}, session: {} }, limitedSeed = await fixture({ backing: limitedBacking, clock: limitedClock }); limitedSeed.worker.close();
+  let limited = true;
+  const limitedWorker = await fixture({ backing: limitedBacking, clock: limitedClock, onStorageWrite: async (kind, values) => { if (limited && kind === "local" && Object.hasOwn(values, AUTH)) throw new Error("T5 set failure"); }, onStorageRemove: async () => { if (limited) throw new Error("T5 remove failure"); } });
+  const oldFloor = limitedBacking.local[AUTH].cacheClock.effectiveTimeMs;
+  try {
+    limitedClock.wall += 100; limitedClock.mono += 100; assert.equal(await limitedWorker.worker.call("SellerAgentsControlClient.canWork"), false);
+    assert.ok(limitedBacking.local[AUTH], "failed set/remove leaves a record whose restart protection is unproven");
+  } finally { limitedWorker.worker.close(); }
+  limited = false; limitedClock.wall += 100; limitedClock.mono += 100;
+  const recovered = await fixture({ backing: limitedBacking, clock: limitedClock });
+  try { assert.equal(await recovered.worker.call("SellerAgentsControlClient.canWork"), true); assert.ok(limitedBacking.local[AUTH].cacheClock.effectiveTimeMs >= oldFloor); } finally { recovered.worker.close(); }
+}
+
 // C2.1-R7/R8: every packaged context dimension denies cached Work. Origin
 // changes are checked before bootstrap so no old credential-bearing request is
 // emitted; same-origin package mismatch keeps credentials for signed refresh.
@@ -168,16 +327,54 @@ async function fixture(options = {}) {
   basePayload = clone(backing.local[AUTH].authority.payload);
   try {
     const oldBootstrap = owned.worker.call("SellerAgentsControlClient.bootstrap"); await until(() => releaseA, "held A verification");
+    const oldEnvelope = clone(backing.local[AUTH].authority.envelope);
     await owned.worker.call("SellerAgentsControlClient.localReset"); await owned.worker.call("SellerAgentsControlClient.startActivation");
-    await until(async () => (await owned.worker.call("SellerAgentsControlClient.status")).authenticated, "B activation"); releaseA();
+    await until(async () => (await owned.worker.call("SellerAgentsControlClient.status")).authenticated, "B activation");
+    const bRecord = clone(backing.local[AUTH]), bEnvelope = clone(bRecord.authority.envelope), bClock = clone(bRecord.cacheClock);
+    assert.notDeepEqual(bEnvelope, oldEnvelope, "B signed envelope replaces A");
+    releaseA();
     await assert.rejects(oldBootstrap, /AUTH_GENERATION_CHANGED/); assert.equal(await owned.worker.call("SellerAgentsControlClient.currentAccount"), "99999999-9999-4999-8999-999999999999"); assert.equal((await owned.worker.call("SellerAgentsControlClient.status")).workAllowed, false);
+    assert.deepEqual(backing.local[AUTH].authority.envelope, bEnvelope, "old A cannot replace B envelope");
+    assert.deepEqual(backing.local[AUTH].cacheClock, bClock, "old A cannot replace B clock");
   } finally { releaseA?.(); owned.worker.close(); }
 }
 
-// C2.1-R1-A architect reproductions: the rolling anchor rejects a decrease
-// after a larger reading, while equal readings remain legal.  The held-write
-// assertions prove the public promise is not resolved by an in-memory floor,
-// and the expiry crossing is vetoed on that same released call.
+// T6: same-session signed renewal keeps both floors, while terminal refresh
+// invalidation gives a later device/session a fresh owner-scoped clock.
+{
+  const clock = { wall: baseWall, mono: 1000 }, backing = { local: {}, session: {} }, seed = await fixture({ backing, clock });
+  const original = clone(backing.local[AUTH].authority.payload), initialClock = clone(backing.local[AUTH].cacheClock); seed.worker.close();
+  const replacement = await makeWorker(runtime, { backing, seedAuthority: false, wallClock: () => clock.wall, monotonicClock: () => clock.mono, fetch: async (url, init) => {
+    if (url.endsWith("/v1/bootstrap")) return signedBootstrap(backing, original, clock);
+    if (url.endsWith("/v1/auth/refresh")) return json({ error: { code: "AUTH_REFRESH_INVALID" } }, 401);
+    throw new Error("unexpected T6 request " + url);
+  } });
+  let oldFloor;
+  try {
+    clock.wall += 100000; clock.mono += 100000; assert.equal(await replacement.call("SellerAgentsControlClient.canWork"), true); oldFloor = backing.local[AUTH].cacheClock.effectiveTimeMs;
+    clock.wall += 1000; clock.mono += 1000; await replacement.call("SellerAgentsControlClient.bootstrap");
+    assert.ok(backing.local[AUTH].cacheClock.trustedServerTimeMs >= initialClock.trustedServerTimeMs);
+    assert.ok(backing.local[AUTH].cacheClock.effectiveTimeMs >= oldFloor);
+    await assert.rejects(replacement.call("SellerAgentsControlClient.refresh", { force: true }), /AUTH_REFRESH_INVALID|AUTH_REQUIRED/);
+  } finally { replacement.close(); }
+  clock.wall = baseWall + 2000; clock.mono += 1000;
+  const freshRequests = [], fresh = await makeWorker(runtime, { backing, seedAuthority: false, wallClock: () => clock.wall, monotonicClock: () => clock.mono, fetch: async (url, init) => {
+    freshRequests.push({ url, key: init.headers?.get?.("Idempotency-Key") || init.headers?.["Idempotency-Key"] || null });
+    if (url.endsWith("/v1/device-authorizations")) return json(activationResponse(clock, { authorizationId: "ffffffff-ffff-4fff-8fff-ffffffffffff", deviceCode: "G".repeat(43) }), 201);
+    if (url.endsWith("/v1/device-authorizations/token")) return json(activatedResponse(clock, { deviceId: "99999999-9999-4999-8999-999999999999", sessionId: "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee" }));
+    if (url.endsWith("/v1/bootstrap")) return signedBootstrap(backing, original, clock, "99999999-9999-4999-8999-999999999999");
+    throw new Error("unexpected T6 fresh request " + url);
+  } });
+  try {
+    await fresh.call("SellerAgentsControlClient.startActivation"); await until(async () => (await fresh.call("SellerAgentsControlClient.status")).authenticated, "T6 fresh session");
+    assert.equal(backing.local[AUTH].cacheClock.owner.sessionId, "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee");
+    assert.ok(backing.local[AUTH].cacheClock.effectiveTimeMs < oldFloor, "new session does not inherit old floor");
+  } finally { fresh.close(); }
+}
+
+// T4/C2.1-R1-A: the rolling anchor rejects a decrease after a larger reading,
+// while equal readings remain legal. The held-write assertion crosses exact
+// expiry before releasing the write, so the same public call must deny.
 {
   const clock = { wall: baseWall, mono: 1000 };
   const { worker, backing } = await fixture({ clock });
@@ -214,9 +411,29 @@ async function fixture(options = {}) {
     const pending = worker.call("SellerAgentsControlClient.canWork").then(value => { settled = true; return value; });
     await until(() => releaseWrite, "checkpoint write latch");
     await new Promise(resolve => setImmediate(resolve)); assert.equal(settled, false);
-    releaseWrite(); assert.equal(await pending, true);
-    hold = false; releaseWrite = undefined; clock.wall = Date.parse(backing.local[AUTH].authority.payload.expiresAt); clock.mono += 1;
-    assert.equal(await worker.call("SellerAgentsControlClient.canWork"), false, "half-open expiry denial");
+    const expiry = Date.parse(backing.local[AUTH].authority.payload.expiresAt);
+    clock.wall = expiry; clock.mono += 1;
+    releaseWrite(); assert.equal(await pending, false, "same-call exact-expiry veto");
+    assert.ok(backing.local[AUTH].cacheClock.effectiveTimeMs >= expiry);
+    hold = false; releaseWrite = undefined;
+    assert.equal(await worker.call("SellerAgentsControlClient.status").then(status => status.workAllowed), false, "status denial");
+    assert.equal(await worker.call("SellerAgentsControlClient.getAuthority").then(authority => authority.workAllowed), false, "authority denial");
+    worker.close();
+    const restarted = await makeWorker(runtime, { backing: backing, seedAuthority: false, wallClock: () => baseWall - 100000, monotonicClock: () => 1 });
+    try { assert.equal(await restarted.call("SellerAgentsControlClient.canWork"), false, "rolled-back restart denial"); } finally { restarted.close(); }
+  } finally { releaseWrite?.(); worker.close(); }
+}
+{
+  const clock = { wall: baseWall, mono: 1000 }, backing = { local: {}, session: {} };
+  let hold = false, releaseWrite;
+  const { worker } = await fixture({ backing, clock, onStorageWrite: async (kind, values) => {
+    if (hold && kind === "local" && Object.hasOwn(values, AUTH) && !releaseWrite) await new Promise(resolve => { releaseWrite = resolve; });
+  } });
+  try {
+    await worker.call("SellerAgentsControlClient.canWork"); hold = true; clock.wall += 100; clock.mono += 100;
+    const pending = worker.call("SellerAgentsControlClient.canWork"); await until(() => releaseWrite, "fresh checkpoint write latch");
+    assert.equal(await Promise.race([pending.then(() => "settled"), new Promise(resolve => setImmediate(() => resolve("held")))]), "held");
+    releaseWrite(); assert.equal(await pending, true, "still-fresh held-write control");
   } finally { releaseWrite?.(); worker.close(); }
 }
 
@@ -255,4 +472,92 @@ async function fixture(options = {}) {
   try { assert.equal((await pendingWorker.call("SellerAgentsControlClient.status")).pending, null); await pendingWorker.call("SellerAgentsControlClient.startActivation"); await until(() => pendingNetwork.some(row => row.url.endsWith("/v1/device-authorizations")), "new activation after legacy pending"); assert.equal(pendingNetwork.some(row => String(row.body).includes("D".repeat(43))), false); } finally { pendingWorker.close(); }
 }
 
-console.log(JSON.stringify({ status: "PASS", focused: "client-cache-time", fresh_boundary: true, effective_floor: true, restart_floor: true, context_matrix: 11, legacy_closed: true, ownership_reset_race: true, no_live_provider_calls: true, r1_cases: { "A-rolling-monotonic-and-completion-veto": 2, "B-origin-and-same-origin-replacement": 2, "C-legacy-and-pending-provenance": 2, "D-wall-rollback-and-restart-floor": 1, "prior-focused-matrix": 11 } }));
+// T7: composed Work uses the real store/start/identity/provider path. Fresh
+// text and binary controls succeed, then exact signed expiry denies every
+// captured real owner/delivery/artifact operation without replay.
+function t7FakeIDB() {
+  const records = new Map(), stats = { reads: 0, writes: 0 };
+  return { records, stats, open() {
+    const request = {};
+    queueMicrotask(() => {
+      request.result = { objectStoreNames: { contains: () => true }, close() {}, transaction() {
+        const tx = { objectStore() {
+          const op = (kind, value) => { const result = {}; queueMicrotask(() => { if (kind === "get" || kind === "all") stats.reads++; if (kind === "put") { stats.writes++; records.set(value.artifact_key, value); } if (kind === "delete") { stats.writes++; records.delete(value); } result.result = kind === "get" ? records.get(value) : kind === "all" ? [...records.values()] : value?.artifact_key; result.onsuccess?.(); queueMicrotask(() => tx.oncomplete?.()); }); return result; };
+          return { get: key => op("get", key), put: value => op("put", value), delete: key => op("delete", key), getAll: () => op("all") };
+        } }; return tx;
+      } };
+      request.onsuccess?.();
+    }); return request;
+  } };
+}
+const t7IdentitySender = worker => ({ tab: { id: worker.tabId }, url: worker.identity.origin + "/c/" + worker.identity.conversation_id });
+const t7PopupSender = { url: "chrome-extension://core-fixture/popup.html" };
+const t7Stores = {
+  ozon: { marketplace: "ozon", credentials: { seller: { clientId: "FIXTURE_R5_OZON_CLIENT", apiKey: "FIXTURE_R5_OZON_KEY" } }, personalDataEnabled: true },
+  wildberries: { marketplace: "wildberries", credentials: { token: "FIXTURE_R5_WB_TOKEN" }, personalDataEnabled: true },
+};
+async function t7StartStore(worker, store) {
+  const saved = await worker.popup({ type: "SA_STORE_SAVE", store }); assert.equal(saved.ok, true, JSON.stringify(saved));
+  const started = await worker.popup({ type: "SA_WORK_START", store_id: saved.store.id, tab_id: worker.tabId, confirm_change: true }); assert.equal(started.ok, true, JSON.stringify(started));
+  const pending = await until(async () => { const row = (await worker.call("getPendingWorkStarts"))[worker.tabId]; if (row?.send_outcome === "failed") throw new Error("T7 start failed " + JSON.stringify(row)); return row?.send_outcome === "sent_acknowledged" ? row : null; }, "T7 start acknowledgement");
+  const active = await worker.request({ type: "OZ_WORK_PENDING_IDENTITY", intent_id: pending.intent_id, revision: pending.revision, identity: worker.identity, first_response_complete: true }); assert.equal(active.ok, true, JSON.stringify(active));
+  return { store: saved.store, key: active.binding.conversation_key, session: active.session };
+}
+async function t7Collect(worker, started, command, requestId) {
+  const admitted = await worker.request({ type: "OZ_EXECUTE_COMMAND", conversation_key: started.key, command_text: command, manual_request_id: requestId, work_session_id: started.session.start_intent_id }, t7IdentitySender(worker)); assert.equal(admitted.accepted, true, JSON.stringify(admitted));
+  return until(async () => { const owner = await worker.call("getManualOperation", started.key); if (owner?.status === "failed") throw new Error(JSON.stringify(owner.last_error)); return owner?.status === "delivering" && owner; }, "T7 delivering owner");
+}
+async function t7BinaryCommand(worker) {
+  const contract = await worker.call("(() => SellerAgentsWBReference.contract)");
+  const meta = Object.values(contract.OPERATIONS).find(item => item.response_mode === "binary" && item.execution_enabled && item.privacy === "standard"); assert.ok(meta);
+  return "WB_API_V1 " + JSON.stringify({ operation: meta.alias, params: { path: Object.fromEntries([...meta.path.matchAll(/\{([^}]+)\}/g)].map(match => [match[1], "fixture"])), query: Object.fromEntries(meta.required_query_keys.map(key => [key, "1"])), ...(meta.body_required ? { body: {} } : {}) } });
+}
+for (const marketplace of ["ozon", "wildberries"]) {
+  const clock = { wall: Date.now(), mono: 1000 }, bytes = new Uint8Array([37, 80, 68, 70, 45, 49, 10, 0, 255]), idb = t7FakeIDB();
+  let expired = false, providerCalls = 0, controlRequests = 0, cleanupResolve;
+  const cleanupAttempt = new Promise(resolve => { cleanupResolve = resolve; }), cleanupAttempts = [];
+  const worker = await makeWorker(runtime, { indexedDB: marketplace === "wildberries" ? idb : undefined, wallClock: () => clock.wall, monotonicClock: () => clock.mono, fetch: async url => {
+    if (url.startsWith("https://")) { providerCalls++; return marketplace === "wildberries" ? new Response(bytes, { headers: { "content-type": "application/pdf", "content-disposition": 'attachment; filename="t7.pdf"' } }) : json({ result: [] }); }
+    controlRequests++; return json({ ok: true });
+  }, onStorageWrite: async (kind, values) => {
+    if (expired && kind === "local" && Object.keys(values).some(key => /work|binding|manual/i.test(key))) { cleanupAttempts.push(Object.keys(values)); cleanupResolve(); throw new Error("T7 cleanup write rejection"); }
+  } });
+  try {
+    worker.setDialogue("11111111-1111-4111-8111-111111111111");
+    const started = await t7StartStore(worker, t7Stores[marketplace]);
+    const owner = await t7Collect(worker, started, marketplace === "ozon" ? 'OZON_API_V1 {"operation":"seller_info","params":{}}' : await t7BinaryCommand(worker), `t7-${marketplace}`);
+    assert.equal(providerCalls, 1); assert.equal(owner.status, "delivering"); assert.ok(owner.delivery?.delivery_id);
+    const fields = { owner_kind: "manual", owner_id: owner.operation_id, conversation_key: started.key, delivery_id: owner.delivery.delivery_id, actor_id: `t7-${marketplace}` };
+    let artifactKey = null, originalBytes = null;
+    if (marketplace === "ozon") {
+      assert.equal(owner.delivery.mode, "batch_watch_v1");
+      assert.equal((await worker.request({ type: "OZ_BATCH_DELIVERY_INSERT_COMMIT", ...fields }, t7IdentitySender(worker))).insert_allowed, true);
+      assert.equal((await worker.request({ type: "OZ_BATCH_DELIVERY_INSERTED", ...fields }, t7IdentitySender(worker))).inserted, true);
+    } else {
+      const commit = await worker.portRequest({ type: "OZ_ATTACHMENT_COMMIT", ...fields, live_owner: worker.identity }); assert.equal(commit.attach_allowed, true);
+      const meta = await worker.portRequest({ type: "OZ_ATTACHMENT_ARTIFACT_META", ...fields, live_owner: worker.identity }); assert.equal(meta.ok, true);
+      const descriptor = meta.descriptors.find(item => item.source_kind === "original_provider_file"); assert.ok(descriptor); artifactKey = descriptor.artifact_key;
+      const chunk = await worker.portRequest({ type: "OZ_ATTACHMENT_ARTIFACT_CHUNK", ...fields, live_owner: worker.identity, artifact_key: artifactKey, offset: 0, length: bytes.length }); originalBytes = Buffer.from(chunk.chunk_base64, "base64"); assert.deepEqual(originalBytes, Buffer.from(bytes));
+    }
+    const advertisements = worker.messages.filter(message => message.type === "OZ_BATCH_DELIVERY_AVAILABLE").length, controlsBeforeExpiry = controlRequests;
+    const expiry = Date.parse(worker.backing.local[AUTH].authority.payload.expiresAt); clock.wall = expiry; clock.mono += 1; expired = true;
+    const deniedInsert = await worker.request({ type: "OZ_BATCH_DELIVERY_INSERT_COMMIT", ...fields }, t7IdentitySender(worker)); assert.notEqual(deniedInsert.insert_allowed, true);
+    await until(() => cleanupAttempts.length > 0, "T7 explicit cleanup-attempt latch"); await cleanupAttempt;
+    const readsBefore = idb.stats.reads;
+    assert.notEqual((await worker.request({ type: "OZ_WORK_DELIVERY_ASSERT", ...fields }, t7IdentitySender(worker))).ok, true);
+    assert.notEqual((await worker.request({ type: "OZ_WORK_SEND_COMMIT", ...fields }, t7IdentitySender(worker))).click_allowed, true);
+    if (marketplace === "wildberries") {
+      for (const type of ["OZ_ATTACHMENT_RECOVERY_GET", "OZ_ATTACHMENT_COMMIT", "OZ_ATTACHMENT_ARTIFACT_META", "OZ_ATTACHMENT_ARTIFACT_CHUNK", "OZ_ATTACHMENT_SEND_COMMIT"]) {
+        const result = await worker.portRequest({ type, ...fields, live_owner: worker.identity, artifact_key: artifactKey, offset: 0, length: bytes.length });
+        assert.equal(result.recovery, undefined); assert.equal(result.descriptors, undefined); assert.equal(result.chunk_base64, undefined); assert.notEqual(result.attach_allowed, true); assert.notEqual(result.send_allowed, true);
+      }
+      assert.deepEqual(originalBytes, Buffer.from(bytes));
+    }
+    assert.equal(idb.stats.reads, readsBefore, "T7 guard precedes artifact reads");
+    for (const type of ["OZ_CONTENT_READY", "OZ_CONTENT_SYNC"]) { const recovery = await worker.request({ type, identity: worker.identity }, t7IdentitySender(worker)); assert.equal(recovery.outgoing_text, undefined); assert.equal(recovery.recovery, undefined); }
+    assert.equal(worker.messages.filter(message => message.type === "OZ_BATCH_DELIVERY_AVAILABLE").length, advertisements);
+    assert.equal(providerCalls, 1); assert.equal(controlRequests, controlsBeforeExpiry, "T7 local guards add no control-plane HTTP");
+  } finally { cleanupResolve(); worker.close(); }
+}
+
+console.log(JSON.stringify({ status: "PASS", focused: "client-cache-time", t1_valid_pending_restart: true, t2_valid_starting_restart: true, t3_pending_controls: 7, t4_completion_veto: true, t5_storage_failures: true, t6_ownership_renewal: true, t7_composed_expiry: { marketplaces: ["ozon", "wildberries"], provider_replay: false, control_guard_http: 0 }, fresh_boundary: true, effective_floor: true, restart_floor: true, context_matrix: 11, legacy_closed: true, ownership_reset_race: true, no_live_provider_calls: true, r1_cases: { "A-rolling-monotonic-and-completion-veto": 2, "B-origin-and-same-origin-replacement": 2, "C-legacy-and-pending-provenance": 2, "D-wall-rollback-and-restart-floor": 1, "prior-focused-matrix": 11 } }));
