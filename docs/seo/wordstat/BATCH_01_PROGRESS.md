@@ -44,13 +44,14 @@ Until a separate synchronization/review step:
 | B01-10 | chatgpt для ozon | SUCCESS | 9 | `wordstat-4b69ad8c-a098-4551-a4f9-8d9873fe7136` | `raw/B01_10_2026-09-16.md` | `analysis/B01_10_2026-09-16.md` |
 | B01-11 | chatgpt для wildberries | SUCCESS | 10 | `wordstat-9cf53937-17d9-4047-a37e-0b43deeb2b73` | `raw/B01_11_2026-09-16.md` | `analysis/B01_11_2026-09-16.md` |
 | B01-12 | ии анализ продаж маркетплейсов | SUCCESS_EMPTY_RESULT | n/a | `wordstat-7fe638ab-f79b-461f-b54c-44230336238c` | `raw/B01_12_2026-09-16.md` | `analysis/B01_12_2026-09-16.md` |
+| B01-13 | подключить ии к маркетплейсу | SUCCESS_EMPTY_RESULT | n/a | `wordstat-294bc81e-a90b-4f44-b68c-411407470a9c` | `raw/B01_13_2026-09-16.md` | `analysis/B01_13_2026-09-16.md` |
 
 ## Totals
 
-- successful HTTP/provider calls: `12/15`;
+- successful HTTP/provider calls: `13/15`;
 - calls with usable `totalCount`: `11/15`;
-- successful-empty result calls: `1`;
+- successful-empty result calls: `2`;
 - provider failures: `0`;
-- accumulated estimated cost: `0.24 ₽`;
-- current cursor: `B01-13`;
-- next seed: `подключить ии к маркетплейсу`.
+- accumulated estimated cost: `0.26 ₽`;
+- current cursor: `B01-14`;
+- next seed: `сервис аналитики маркетплейсов`.
