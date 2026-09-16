@@ -2,7 +2,7 @@
 
 Дата: 2026-09-16.
 Branch: `seo/wordstat-batch-01-2026-09-16`.
-Status: `READY_SUBMIT_S01`.
+Status: `WAITING_S01_OPERATION`.
 
 ## Evidence rule
 
@@ -41,26 +41,31 @@ Optional control after priorities: `нейросеть помощь для ма�
 | S01-01 | ии агенты для маркетплейсов | `MANUAL_ADMISSION` | `SERVICE_NOT_ACTIVE` | `false` | `raw/S01_01_ADMISSION_ERROR_2026-09-16.md` | `analysis/S01_01_ADMISSION_ERROR_2026-09-16.md` |
 | S01-02 | ии агенты для маркетплейсов | `MANUAL_ADMISSION` | `SERVICE_NOT_ACTIVE` | `false` | `raw/S01_02_ADMISSION_ERROR_2026-09-16.md` | `analysis/S01_02_ADMISSION_ERROR_2026-09-16.md` |
 | S01-03 | ии агенты для маркетплейсов | `start` | `START_ACCEPTED_PENDING` | `false` | `raw/S01_03_START_2026-09-16.md` | `analysis/S01_03_START_2026-09-16.md` |
+| S01-04 | ии агенты для маркетплейсов | `submitN` | `ACCEPTED_WAITING` | `true` | `raw/S01_04_SUBMIT_2026-09-16.md` | `analysis/S01_04_SUBMIT_2026-09-16.md` |
 
 ## Current job state
 
 - job id: `octoport-serp-s01-20260916`;
+- operation id: `sprjotiech5gn23a4tq3`;
 - control: `RUNNING`;
 - total items: `1`;
-- `PENDING: 1`;
-- requests started: `0`;
-- operations accepted: `0`;
-- provider calls: `0`;
+- `WAITING: 1`;
+- requests started: `1`;
+- operations accepted: `1`;
+- polls started: `0`;
+- provider calls observed at submit: `1`;
 - unresolved: `1`;
-- revision: `0`.
+- revision: `2`.
 
 ## Totals
 
-- actual Search provider calls: `0`;
+- actual Search provider calls observed so far: `1`;
+- deferred search operations initiated: `1`;
 - completed priority SERP queries: `0/7`;
 - local admission failures: `2`;
 - provider failures: `0`;
-- Search provider cost incurred in this pass: `0 ₽`;
+- estimated tariff cost of the initiated daytime deferred search: `0.0305 ₽`;
 - current query: `ии агенты для маркетплейсов`;
-- next lifecycle action: exactly one `submitN` with `count: 1` for the current job;
-- after `submitN`: persist and verify its full returned envelope before any `collectN`.
+- next lifecycle action: `collectN` with `count: 1` after the documented minimum deferred-processing guard of 5 minutes;
+- do not resubmit;
+- after `collectN`: persist and verify its full returned envelope before any export or next query.
