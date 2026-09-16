@@ -483,7 +483,7 @@
         });
       } catch (failure) { await invalidateBootstrapFailure(attempt, failure, false); throw failure; }
       if (!committed) throw error("AUTH_GENERATION_CHANGED");
-      runtimeLastCheckpointAllowed = nextAuthority.workAllowed === true;
+      if (attempt.policy !== true) runtimeLastCheckpointAllowed = nextAuthority.workAllowed === true;
       return clone(verified.payload);
     }
   }
@@ -540,12 +540,13 @@
       }
       const resultFreshness = completion < expiresAt ? "FRESH" : "STALE_BUT_OFFLINE_GRACE_ELIGIBLE";
       if (!policyCurrent(capture)) throw cacheFailure("CACHE_ACQUISITION_OBSOLETED");
+      runtimeLastCheckpointAllowed = false;
       return { source: "CACHE", freshness: resultFreshness, payload: clone(payload) };
     });
   }
   async function bootstrapWithPolicy(options = {}) {
     if (!options || typeof options !== "object" || Array.isArray(options) || options.context !== undefined && !validContext(options.context)) throw error("AUTH_CONTEXT_INVALID");
-    const sequence = ++bootstrapAttemptSequence, attempt = { sequence, context: null, observedBootstrap401: false, preflightRefresh: false };
+    const sequence = ++bootstrapAttemptSequence, attempt = { sequence, context: null, observedBootstrap401: false, preflightRefresh: false, policy: true };
     try {
       await init(); if (!state.credentials) throw error("AUTH_REQUIRED"); await ensureAuthOwnership();
       attempt.context = options.context ? clone(options.context) : contextForState();
