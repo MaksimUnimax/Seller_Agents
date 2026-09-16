@@ -1,3 +1,20 @@
+# Server/I1 current cursor — 2026-09-16
+
+Current: C2_1_ACCEPTED / C2_2A_R2_REWORK_REQUIRED / C2_2A_R3_PREPARED_FOR_SINGLE_FINAL_SUBMISSION.
+
+- Canonical implementation repository: MaksimUnimax/runtime-fixtures, stable ID1369117174. Owner confirmed rename/publication; same repository/history/PRs. Use canonical name in new operations. Preserve independently owned presentation/site/SEO/domain work; no edits to private control repository.
+- Current task reviewed: SA-I1-C2-2A-R2-20260916-01. Executor terminal complete. No new executing task confirmed; no direct Bridge/process visibility.
+- Branch integration/i1-c1-srv5-2026-09-16; headedc70704cec965b9e7bc58ca4d3c961834573517/tree3aaad9a0fd29649f492ebb0cd31522366f2475dcc/parentd927b2498262798f03d2fa9f0accf9c62fbaaad0. Start90f3f5ab4787d1ed4b782bff4f97181dd9fe3772. Draft PR9.
+- Verdict REWORK_REQUIRED: test false-positive retention, account-positive mislabelled as negative, incomplete exact-owner comparisons and policy-floor proof. Production unchanged, no new runtime defect established. Independent correction probes pass.
+- Review references/I1_C2_2A_R2_REVIEW.md; CI references/I1_C2_2A_R2_CI.json; probes references/I1_C2_2A_R2_REVIEW_PROBE/.
+- Mainbc718cc5c677ad0eb4598e7de3ad766473ff0847. PR9 dirty; read-only merge-tree proves sole conflict docs/README.md. Owner explicitly reserves this presentation file to another stream. Do not merge/rebase main or edit it in R3. Required current PR I1/Server/Docs/installed evidence remains open; not moved to another stage.
+- Exact candidate focused source/extracted PASS36 ledger rows under architect Nodev24.19.0; defaultZIP1834654/SHA2562c1f5765b0eb382d9387e3ea1a59e71bd549344f10c107a39069d92719f341de independently reproduced including repeat/parity.
+- Current Extension pushrun35075574262 SUCCESS/allfivejobs. Native104727071214 exacthead log read, synthetic source/extracted PASS, zero live calls. Native log receipt1835439/1b0ad27a67946fa2755d2637af9d4fba345b3bc7d425fc939f8c18c315d72468 separate, not downloaded. No current PR/installed/Server/Docs result claimed.
+- Next SA-I1-C2-2A-R3-20260916-01, tasks/I1_C2_2A_R3_2026-09-16.md. Bounded policy test/evidence repairs; immutable harness/runtime. Prepared for ONE final Bridge submission; saving is not delivery/start. Await actual terminal after issuing, no duplicates.
+- C1/SRV5/SYNC/C2.1 historical bounded acceptances retained. FullC2/I1/D2/S1.2/D3/beta/release open. HealthP8.4B5 NOT ACCEPTED/B6–B8 queued. Owner manual tests after joint installed C2 then Q1, not needed now. No main merge/deploy/release.
+
+## Historical cursor — retained, not instructions to repeat
+
 # Seller Agents — единый cursor
 
 Дата: 2026-09-16. Current: C2_1_ACCEPTED / C2_2A_R1_REWORK_REQUIRED / C2_2A_R2_PREPARED_FOR_SINGLE_FINAL_SUBMISSION.
