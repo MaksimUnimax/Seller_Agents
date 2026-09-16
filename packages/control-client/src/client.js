@@ -17,6 +17,8 @@
   let initialized = false, initFlight = null, mutationQueue = Promise.resolve();
   let activationFlight = null, refreshFlight = null, pollingFlight = null, authorityChanged = null;
   let runtimeClockOwner = null, runtimeAnchor = null, runtimeEffectiveHighWatermark = null, runtimeFloorNeedsPersistence = false, runtimeLastCheckpointAllowed = null;
+  let bootstrapAttemptSequence = 0;
+  const transportProvenance = new WeakMap();
   function error(code, detail) { const value = Object.assign(new Error(code), { code }); if (detail !== undefined) value.detail = detail; return value; }
   function now() { return Date.now(); }
   function validMillis(value) { return typeof value === "number" && Number.isSafeInteger(value) && value >= 0 && value <= MAX_DATE_MS; }
@@ -190,7 +192,25 @@
     for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
     return decoder.decode(bytes);
   }
-  async function request(path, options = {}) { const headers = new Headers(options.headers || {}); headers.set("Accept", "application/json"); if (options.body !== undefined) { headers.set("Content-Type", "application/json"); options.body = JSON.stringify(options.body); } const response = await fetch(url(path), { ...options, headers }); let body = null; try { const text = await readLimitedBody(response); body = text ? JSON.parse(text) : null; } catch (failure) { if (failure?.code === "CONTROL_RESPONSE_TOO_LARGE") { failure.status = response.status; failure.responseOk = response.ok; failure.retryAfterMs = parseRetryAfter(response); failure.body = null; } else { failure = null; } if (failure) throw failure; } if (!response.ok) { const failure = error(body?.error?.code || `CONTROL_HTTP_${response.status}`); failure.status = response.status; failure.retryAfterMs = parseRetryAfter(response); failure.body = body; throw failure; } return { body, response }; }
+  async function request(path, options = {}) {
+    const endpoint = url(path), headers = new Headers(options.headers || {}), requestOptions = { ...options };
+    headers.set("Accept", "application/json");
+    if (requestOptions.body !== undefined) { headers.set("Content-Type", "application/json"); requestOptions.body = JSON.stringify(requestOptions.body); }
+    requestOptions.headers = headers;
+    let response;
+    try { response = await fetch(endpoint, requestOptions); }
+    catch (_) { const failure = error("CONTROL_TRANSPORT_UNAVAILABLE"); transportProvenance.set(failure, endpoint); throw failure; }
+    let body = null;
+    try {
+      const text = await readLimitedBody(response); body = text ? JSON.parse(text) : null;
+    } catch (failure) {
+      if (failure?.code === "CONTROL_RESPONSE_TOO_LARGE") { failure.status = response.status; failure.responseOk = response.ok; failure.retryAfterMs = parseRetryAfter(response); failure.body = null; }
+      else { failure = null; }
+      if (failure) throw failure;
+    }
+    if (!response.ok) { const failure = error(body?.error?.code || `CONTROL_HTTP_${response.status}`); failure.status = response.status; failure.retryAfterMs = parseRetryAfter(response); failure.body = body; throw failure; }
+    return { body, response };
+  }
   function assertStart(body) { if (!body || body.status !== "pending" || !UUID.test(body.authorizationId) || !OPAQUE_TOKEN.test(body.deviceCode) || !/^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{4}-[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{4}$/.test(body.userCode) || !Number.isFinite(Date.parse(body.expiresAt))) throw error("INVALID_DEVICE_AUTH_RESPONSE"); return body; }
   function assertTokens(body) { if (!body || body.status !== "activated" || !validCredentials(body)) throw error("INVALID_TOKEN_RESPONSE"); return { deviceId: body.deviceId, sessionId: body.sessionId, tokenType: body.tokenType, accessToken: body.accessToken, accessTokenExpiresAt: body.accessTokenExpiresAt, refreshToken: body.refreshToken, refreshTokenExpiresAt: body.refreshTokenExpiresAt }; }
   function assertRefreshTokens(body, previous) { if (!body || body.tokenType !== "Bearer" || typeof body.accessToken !== "string" || !body.accessToken || !OPAQUE_TOKEN.test(body.refreshToken || "") || !Number.isFinite(Date.parse(body.accessTokenExpiresAt)) || !Number.isFinite(Date.parse(body.refreshTokenExpiresAt))) throw error("INVALID_REFRESH_RESPONSE"); return { deviceId: previous.deviceId, sessionId: previous.sessionId, tokenType: body.tokenType, accessToken: body.accessToken, accessTokenExpiresAt: body.accessTokenExpiresAt, refreshToken: body.refreshToken, refreshTokenExpiresAt: body.refreshTokenExpiresAt }; }
@@ -381,38 +401,71 @@
     });
   }
   async function invalidateUnauthorized(context, failure) { return invalidateKnown(context, failure, true); }
-  async function bootstrap(options = {}) {
-    if (!options || typeof options !== "object" || Array.isArray(options) || options.context !== undefined && !validContext(options.context)) throw error("AUTH_CONTEXT_INVALID");
-    await init(); if (!state.credentials) throw error("AUTH_REQUIRED"); await ensureAuthOwnership(); const context = options.context ? clone(options.context) : contextForState(); if (!isCurrent(context)) throw error("AUTH_GENERATION_CHANGED"); const requestedAi = options.detectedAi?.family || null; if (options.detectedAi && (!LOCAL_AI[requestedAi] || options.detectedAi.surface !== LOCAL_AI[requestedAi].surface || options.detectedAi.variant !== null)) { const failure = error("BOOTSTRAP_PROFILE_INCOMPATIBLE"); await invalidateKnown(context, failure, false); throw failure; } if (!accessFresh()) { await refresh({ context }); if (!isCurrent(context)) throw error("AUTH_GENERATION_CHANGED"); } let credentials = clone(state.credentials), authority = clone(state.authority), retried = false;
+  function bootstrapAttemptCurrent(attempt) { return bootstrapAttemptSequence === attempt.sequence && isCurrent(attempt.context); }
+  function endpointFor(path) { return url(path); }
+  function registeredTransport(failure, path) { return transportProvenance.get(failure) === endpointFor(path); }
+  async function invalidateBootstrapFailure(attempt, failure, terminal = false) {
+    if (!bootstrapAttemptCurrent(attempt)) return false;
+    return invalidateKnown(attempt.context, failure, terminal);
+  }
+  async function bootstrapOnline(options, attempt) {
+    await init();
+    if (!state.credentials) throw error("AUTH_REQUIRED");
+    await ensureAuthOwnership();
+    if (!bootstrapAttemptCurrent(attempt)) throw error("AUTH_GENERATION_CHANGED");
+    const requestedAi = options.detectedAi?.family || null;
+    if (options.detectedAi && (!LOCAL_AI[requestedAi] || options.detectedAi.surface !== LOCAL_AI[requestedAi].surface || options.detectedAi.variant !== null)) {
+      const failure = error("BOOTSTRAP_PROFILE_INCOMPATIBLE"); await invalidateBootstrapFailure(attempt, failure); throw failure;
+    }
+    if (!accessFresh()) {
+      attempt.preflightRefresh = true;
+      try { await refresh({ context: attempt.context }); }
+      catch (failure) {
+        attempt.preflightRefreshTransport = registeredTransport(failure, "/v1/auth/refresh");
+        attempt.preflightRefresh = false;
+        if (failure.status === 401 || failure.status === 403 || terminalAuthFailure(failure)) await invalidateBootstrapFailure(attempt, failure, true);
+        throw failure;
+      }
+      attempt.preflightRefresh = false;
+      if (!bootstrapAttemptCurrent(attempt)) throw error("AUTH_GENERATION_CHANGED");
+    }
+    let credentials = clone(state.credentials), authority = clone(state.authority), retried = false;
     while (true) {
-      if (!isCurrent(context)) throw error("AUTH_GENERATION_CHANGED");
+      if (!bootstrapAttemptCurrent(attempt)) throw error("AUTH_GENERATION_CHANGED");
       let result;
       try { result = await requestBootstrap(credentials, authority, options.detectedAi); }
       catch (failure) {
-        if (failure.status === 401 && !retried && isCurrent(context)) {
-          retried = true;
-          await refresh({ force: true, rejectedAccessToken: credentials.accessToken, context });
-          if (!isCurrent(context)) throw error("AUTH_GENERATION_CHANGED");
+        if (failure.status === 401 && !retried && bootstrapAttemptCurrent(attempt)) {
+          retried = true; attempt.observedBootstrap401 = true;
+          try { await refresh({ force: true, rejectedAccessToken: credentials.accessToken, context: attempt.context }); }
+          catch (refreshFailure) {
+            if (failure.status === 401 && bootstrapAttemptCurrent(attempt)) await invalidateBootstrapFailure(attempt, failure, true);
+            throw failure;
+          }
+          if (!bootstrapAttemptCurrent(attempt)) throw error("AUTH_GENERATION_CHANGED");
           credentials = clone(state.credentials); authority = clone(state.authority); continue;
         }
-        if (failure.status === 401) await invalidateUnauthorized(context, failure);
-        else if (failure.status === 403 || (failure.code === "CONTROL_RESPONSE_TOO_LARGE" && failure.responseOk === true)) await invalidateKnown(context, failure, false);
+        if (failure.status === 401) await invalidateBootstrapFailure(attempt, failure, true);
+        else if (failure.status === 403 || (failure.code === "CONTROL_RESPONSE_TOO_LARGE" && failure.responseOk === true)) await invalidateBootstrapFailure(attempt, failure, false);
         throw failure;
       }
+      if (!bootstrapAttemptCurrent(attempt)) throw error("AUTH_GENERATION_CHANGED");
       let verified;
       try { verified = await verifier.verifyV2(result.body, config.trustBundle); }
-      catch (verificationFailure) { const failure = error(`BOOTSTRAP_${verificationFailure?.code || "VERIFICATION_FAILED"}`); await invalidateKnown(context, failure, false); throw failure; }
-      if (!isCurrent(context)) throw error("AUTH_GENERATION_CHANGED");
-      if (!verified.ok) { const failure = error(`BOOTSTRAP_${verified.error}`); await invalidateKnown(context, failure, false); throw failure; }
+      catch (verificationFailure) { const failure = error(`BOOTSTRAP_${verificationFailure?.code || "VERIFICATION_FAILED"}`); await invalidateBootstrapFailure(attempt, failure, false); throw failure; }
+      if (!bootstrapAttemptCurrent(attempt)) throw error("AUTH_GENERATION_CHANGED");
+      if (!verified.ok) { const failure = error(`BOOTSTRAP_${verified.error}`); await invalidateBootstrapFailure(attempt, failure, false); throw failure; }
       const validation = await validateBootstrapAuthority(verified.payload, requestedAi).catch(() => null);
-      if (!validation) { const failure = error("BOOTSTRAP_PROFILE_INCOMPATIBLE"); await invalidateKnown(context, failure, false); throw failure; }
+      if (!bootstrapAttemptCurrent(attempt)) throw error("AUTH_GENERATION_CHANGED");
+      if (!validation) { const failure = error("BOOTSTRAP_PROFILE_INCOMPATIBLE"); await invalidateBootstrapFailure(attempt, failure, false); throw failure; }
       const cacheBinding = await expectedCacheBinding(verified.payload, validation.requestedAi);
-      if (!isCurrent(context)) throw error("AUTH_GENERATION_CHANGED");
-      const nextAuthority = { verified: true, workAllowed: validation.workAllowed, payload: verified.payload, envelope: verified.envelope, deviceId: credentials.deviceId, sessionId: credentials.sessionId, generation: context.generation, requestedAi: validation.requestedAi, cacheBinding };
+      if (!bootstrapAttemptCurrent(attempt)) throw error("AUTH_GENERATION_CHANGED");
+      const nextAuthority = { verified: true, workAllowed: validation.workAllowed, payload: verified.payload, envelope: verified.envelope, deviceId: credentials.deviceId, sessionId: credentials.sessionId, generation: attempt.context.generation, requestedAi: validation.requestedAi, cacheBinding };
       let committed;
       try {
-        committed = await commitIfCurrent(context, current => {
-          const signedServerTimeMs = parsedMillis(verified.payload.serverTime), previousClock = current.cacheClock;
+        committed = await queueMutation(async () => {
+          if (!bootstrapAttemptCurrent(attempt)) return false;
+          const current = clone(state), signedServerTimeMs = parsedMillis(verified.payload.serverTime), previousClock = current.cacheClock;
           if (signedServerTimeMs === null) throw error("BOOTSTRAP_SERVER_TIME_INVALID");
           if (previousClock && signedServerTimeMs < previousClock.trustedServerTimeMs) throw error("BOOTSTRAP_SERVER_TIME_REGRESSION");
           const owner = clockOwner(credentials), baseTrusted = Math.max(previousClock?.trustedServerTimeMs || 0, signedServerTimeMs), baseEffective = Math.max(previousClock?.effectiveTimeMs || 0, baseTrusted);
@@ -421,11 +474,119 @@
           if (!authorityBaseValid(verified.payload, effective)) throw error("BOOTSTRAP_EXPIRED_OR_INCOMPATIBLE");
           const authorityContextChanged = current.authority && current.authority.requestedAi !== nextAuthority.requestedAi;
           const generation = authorityContextChanged ? current.generation + 1 : current.generation;
-          return { ...current, generation, cacheClock: { ...candidateClock, effectiveTimeMs: Math.max(candidateClock.effectiveTimeMs, effective) }, authority: { ...nextAuthority, generation }, lastError: null };
-        }, "bootstrap_verified");
-      } catch (failure) { await invalidateKnown(context, failure, false); throw failure; }
-      if (!committed) throw error("AUTH_GENERATION_CHANGED"); runtimeLastCheckpointAllowed = nextAuthority.workAllowed === true; return clone(verified.payload);
+          const next = { ...current, generation, cacheClock: { ...candidateClock, effectiveTimeMs: Math.max(candidateClock.effectiveTimeMs, effective) }, authority: { ...nextAuthority, generation }, lastError: null };
+          if (!bootstrapAttemptCurrent(attempt)) return false;
+          await commit(next, current.authority, "bootstrap_verified");
+          /* A requested-AI authority replacement intentionally advances generation. */
+          attempt.context = { ...attempt.context, generation };
+          return bootstrapAttemptCurrent(attempt);
+        });
+      } catch (failure) { await invalidateBootstrapFailure(attempt, failure, false); throw failure; }
+      if (!committed) throw error("AUTH_GENERATION_CHANGED");
+      runtimeLastCheckpointAllowed = nextAuthority.workAllowed === true;
+      return clone(verified.payload);
     }
+  }
+  function cacheIdentity(authority, generation) { return authority ? verifier.canonicalJson({ generation, deviceId: authority.deviceId, sessionId: authority.sessionId, requestedAi: authority.requestedAi ?? null, accountId: authority.payload?.account?.id || null, envelope: authority.envelope, cacheBinding: authority.cacheBinding }) : null; }
+  function policyCurrent(capture) { return bootstrapAttemptSequence === capture.sequence && isCurrent(capture.context) && validCredentials(state.credentials) && cacheIdentity(state.authority, state.generation) === capture.authorityIdentity; }
+  function cacheFailure(code) { return error(code); }
+  async function persistCacheDenial(next, capture) {
+    if (!policyCurrent(capture)) throw cacheFailure("CACHE_ACQUISITION_OBSOLETED");
+    state = next;
+    try { await persist(next); runtimeFloorNeedsPersistence = false; if (!policyCurrent(capture)) throw cacheFailure("CACHE_ACQUISITION_OBSOLETED"); }
+    catch (_) {
+      runtimeFloorNeedsPersistence = true;
+      state = { ...state, authority: state.authority ? { ...state.authority, workAllowed: false } : null };
+      runtimeLastCheckpointAllowed = false;
+      try { await chrome.storage.local.remove(STORAGE_KEY); }
+      catch (removeFailure) { const failure = error("AUTH_DENIAL_PERSISTENCE_FAILED"); failure.detail = safeError(removeFailure); state = { ...state, lastError: safeError(failure) }; throw failure; }
+      throw error("AUTH_DENIAL_PERSISTENCE_FAILED");
+    }
+  }
+  async function cachedBootstrapCheckpoint(capture, payload) {
+    return queueMutation(async () => {
+      if (!policyCurrent(capture)) throw cacheFailure("CACHE_ACQUISITION_OBSOLETED");
+      const authority = state.authority, clock = state.cacheClock;
+      if (!authority || !validCacheClock(clock, state.credentials, payload) || clock.owner.contractVersion !== config.contractVersion) throw cacheFailure("CACHE_CLOCK_INVALID");
+      const expiresAt = parsedMillis(payload.expiresAt), grace = parsedMillis(payload.offlineGraceUntil);
+      if (expiresAt === null || grace === null || grace <= expiresAt) throw cacheFailure("CACHE_EXPIRY_INVALID");
+      let effective;
+      try { effective = effectiveTime(clock); } catch (_) { throw cacheFailure("CACHE_EFFECTIVE_TIME_INVALID"); }
+      if (!policyCurrent(capture)) throw cacheFailure("CACHE_ACQUISITION_OBSOLETED");
+      const floor = Math.max(clock.effectiveTimeMs, effective);
+      if (!validMillis(floor)) throw cacheFailure("CACHE_EFFECTIVE_TIME_INVALID");
+      const freshness = effective < expiresAt ? "FRESH" : effective < grace ? "STALE_BUT_OFFLINE_GRACE_ELIGIBLE" : null;
+      const next = floor === clock.effectiveTimeMs && !runtimeFloorNeedsPersistence ? state : { ...state, cacheClock: { ...clock, effectiveTimeMs: floor } };
+      if (next !== state) {
+        state = next;
+        try { await persist(next); runtimeFloorNeedsPersistence = false; if (!policyCurrent(capture)) throw cacheFailure("CACHE_ACQUISITION_OBSOLETED"); }
+        catch (failure) {
+          if (failure?.code === "CACHE_ACQUISITION_OBSOLETED") throw failure;
+          runtimeFloorNeedsPersistence = true; state = { ...state, authority: state.authority ? { ...state.authority, workAllowed: false } : null }; runtimeLastCheckpointAllowed = false;
+          try { await chrome.storage.local.remove(STORAGE_KEY); }
+          catch (removeFailure) { const denial = error("AUTH_DENIAL_PERSISTENCE_FAILED"); denial.detail = safeError(removeFailure); state = { ...state, lastError: safeError(denial) }; throw denial; }
+          throw error("AUTH_DENIAL_PERSISTENCE_FAILED");
+        }
+      }
+      if (!policyCurrent(capture)) throw cacheFailure("CACHE_ACQUISITION_OBSOLETED");
+      if (!freshness) { await persistCacheDenial({ ...state, cacheClock: { ...state.cacheClock, effectiveTimeMs: floor }, authority: { ...authority, workAllowed: false } }, capture); throw cacheFailure("CACHE_EXPIRED"); }
+      let completion;
+      try { completion = effectiveTime(state.cacheClock); } catch (_) { throw cacheFailure("CACHE_EFFECTIVE_TIME_INVALID"); }
+      if (!policyCurrent(capture)) throw cacheFailure("CACHE_ACQUISITION_OBSOLETED");
+      if (completion >= grace) {
+        const denialFloor = Math.max(state.cacheClock.effectiveTimeMs, completion);
+        await persistCacheDenial({ ...state, cacheClock: { ...state.cacheClock, effectiveTimeMs: denialFloor }, authority: { ...authority, workAllowed: false } }, capture);
+        throw cacheFailure("CACHE_EXPIRED");
+      }
+      const resultFreshness = completion < expiresAt ? "FRESH" : "STALE_BUT_OFFLINE_GRACE_ELIGIBLE";
+      if (!policyCurrent(capture)) throw cacheFailure("CACHE_ACQUISITION_OBSOLETED");
+      return { source: "CACHE", freshness: resultFreshness, payload: clone(payload) };
+    });
+  }
+  async function bootstrapWithPolicy(options = {}) {
+    if (!options || typeof options !== "object" || Array.isArray(options) || options.context !== undefined && !validContext(options.context)) throw error("AUTH_CONTEXT_INVALID");
+    const sequence = ++bootstrapAttemptSequence, attempt = { sequence, context: null, observedBootstrap401: false, preflightRefresh: false };
+    try {
+      await init(); if (!state.credentials) throw error("AUTH_REQUIRED"); await ensureAuthOwnership();
+      attempt.context = options.context ? clone(options.context) : contextForState();
+      if (!isCurrent(attempt.context)) throw error("AUTH_GENERATION_CHANGED");
+      const requestedAi = options.detectedAi?.family || null;
+      const capturedAuthority = clone(state.authority), capturedClock = clone(state.cacheClock);
+      Object.assign(attempt, { requestedAi, authority: capturedAuthority, clock: capturedClock, authorityIdentity: cacheIdentity(capturedAuthority, attempt.context.generation) });
+      const payload = await bootstrapOnline(options, attempt);
+      if (!bootstrapAttemptCurrent(attempt)) throw error("AUTH_GENERATION_CHANGED");
+      return { source: "ONLINE", freshness: "FRESH", payload: clone(payload) };
+    } catch (onlineFailure) {
+      const capture = typeof attempt.authorityIdentity === "string" || attempt.authorityIdentity === null ? attempt : null;
+      const eligible = capture && !attempt.observedBootstrap401 && (registeredTransport(onlineFailure, "/v1/bootstrap") || (attempt.preflightRefreshTransport === true && registeredTransport(onlineFailure, "/v1/auth/refresh")) || (onlineFailure.status === 503 && onlineFailure.code === "BOOTSTRAP_UNAVAILABLE" && !transportProvenance.has(onlineFailure)));
+      if (!eligible || !policyCurrent(capture)) throw onlineFailure;
+      const authority = capture.authority, requestedAi = capture.requestedAi;
+      if (!authority || authority.requestedAi !== requestedAi || !capture.clock || !validCacheBinding(authority.cacheBinding)) throw onlineFailure;
+      let verified;
+      try {
+        verified = await verifier.verifyV2(authority.envelope, config.trustBundle);
+        if (!policyCurrent(capture)) throw cacheFailure("CACHE_ACQUISITION_OBSOLETED");
+        if (!verified.ok || verifier.canonicalJson(verified.payload) !== verifier.canonicalJson(authority.payload)) throw cacheFailure("CACHE_VERIFICATION_FAILED");
+        const validation = await validateAccountProfile(verified.payload, requestedAi, true);
+        if (!policyCurrent(capture)) throw cacheFailure("CACHE_ACQUISITION_OBSOLETED");
+        if (!validation || validation.requestedAi !== requestedAi) throw cacheFailure("CACHE_CONTEXT_MISMATCH");
+        const expected = await expectedCacheBinding(verified.payload, validation.requestedAi);
+        if (!policyCurrent(capture)) throw cacheFailure("CACHE_ACQUISITION_OBSOLETED");
+        if (verifier.canonicalJson(authority.cacheBinding) !== verifier.canonicalJson(expected) || !validCacheClock(capture.clock, state.credentials, verified.payload) || capture.clock.owner.contractVersion !== config.contractVersion) throw cacheFailure("CACHE_CONTEXT_MISMATCH");
+        const currentAuthority = state.authority;
+        if (!currentAuthority || cacheIdentity(currentAuthority, state.generation) !== capture.authorityIdentity) throw cacheFailure("CACHE_ACQUISITION_OBSOLETED");
+        return await cachedBootstrapCheckpoint(capture, verified.payload);
+      } catch (cacheError) {
+        if (cacheError?.code === "AUTH_DENIAL_PERSISTENCE_FAILED" || cacheError?.code === "CACHE_ACQUISITION_OBSOLETED" || cacheError?.code === "CACHE_CLOCK_INVALID" || cacheError?.code === "CACHE_EFFECTIVE_TIME_INVALID" || cacheError?.code === "CACHE_CONTEXT_MISMATCH" || cacheError?.code === "CACHE_VERIFICATION_FAILED" || cacheError?.code === "CACHE_EXPIRY_INVALID" || cacheError?.code === "CACHE_EXPIRED") throw cacheError;
+        throw onlineFailure;
+      }
+    }
+  }
+  async function bootstrap(options = {}) {
+    if (!options || typeof options !== "object" || Array.isArray(options) || options.context !== undefined && !validContext(options.context)) throw error("AUTH_CONTEXT_INVALID");
+    const sequence = ++bootstrapAttemptSequence, attempt = { sequence, context: options.context ? clone(options.context) : null, observedBootstrap401: false, preflightRefresh: false };
+    await init(); if (!state.credentials) throw error("AUTH_REQUIRED"); await ensureAuthOwnership(); if (!attempt.context) attempt.context = contextForState(); if (!bootstrapAttemptCurrent(attempt)) throw error("AUTH_GENERATION_CHANGED");
+    return bootstrapOnline(options, attempt);
   }
   async function ensureForIdentity(identity) { await init(); const decision = await cacheAuthorizationCheckpoint(); if (!state.credentials) throw error("AUTH_REQUIRED"); const requested = LOCAL_AI[identity?.ai_id] ? identity.ai_id : null; if (!requested) throw error("WORK_UNSUPPORTED_AI"); const current = state.authority; if (decision.allowed && decision.identity === authorityDecisionIdentity() && current && current.generation === state.generation && current.requestedAi === requested && current.payload?.ai?.detected?.family === requested) return clone(current.payload); return bootstrap({ detectedAi: { family: requested, surface: LOCAL_AI[requested].surface, variant: null } }); }
   async function discardRestoredAuthority(failure) {
@@ -482,6 +643,6 @@
   function init() { if (initialized) return Promise.resolve(publicStatus()); if (!initFlight) initFlight = restoreOnce().finally(() => { initFlight = null; }); return initFlight; }
   async function localReset() { await init(); await queueMutation(async () => { activationFlight = null; pollingFlight = null; refreshFlight = null; resetRuntimeClock(); await commit({ generation: state.generation + 1, credentials: null, pending: null, rotation: null, authority: null, cacheClock: null, lastError: null }, state.authority, "local_reset"); }); return publicStatus(); }
   async function cancelActivation() { await init(); await queueMutation(async () => { activationFlight = null; pollingFlight = null; await commit({ ...state, generation: state.generation + 1, pending: null, lastError: null }, state.authority, "activation_cancelled"); }); return publicStatus(); }
-  const api = { restore: init, status: async () => { await init(); const decision = await cacheAuthorizationCheckpoint(); return publicStatus(decision); }, currentAccount: async () => { await init(); return state.authority?.payload?.account?.id || null; }, generation: async () => { await init(); return state.generation; }, hasAuthority: async () => { await init(); return Boolean(state.authority && state.credentials); }, canWork: async () => { await init(); const decision = await cacheAuthorizationCheckpoint(); return decision.identity === authorityDecisionIdentity() && decision.allowed === true; }, getAuthority: async () => { await init(); const decision = await cacheAuthorizationCheckpoint(); const authority = clone(state.authority); if (authority && !(decision.identity === authorityDecisionIdentity() && decision.allowed === true)) authority.workAllowed = false; return authority; }, startActivation, cancelActivation, refresh, bootstrap, ensureForIdentity, localReset, openPortal: async () => { await init(); const pending = state.pending; if (!pendingLive(pending) || !validAuthContext(pending.authContext)) throw error("NO_ACTIVATION_ATTEMPT"); return openPortal(pending.authorizationId); }, onAuthorityChanged: handler => { authorityChanged = handler; } };
+  const api = { restore: init, status: async () => { await init(); const decision = await cacheAuthorizationCheckpoint(); return publicStatus(decision); }, currentAccount: async () => { await init(); return state.authority?.payload?.account?.id || null; }, generation: async () => { await init(); return state.generation; }, hasAuthority: async () => { await init(); return Boolean(state.authority && state.credentials); }, canWork: async () => { await init(); const decision = await cacheAuthorizationCheckpoint(); return decision.identity === authorityDecisionIdentity() && decision.allowed === true; }, getAuthority: async () => { await init(); const decision = await cacheAuthorizationCheckpoint(); const authority = clone(state.authority); if (authority && !(decision.identity === authorityDecisionIdentity() && decision.allowed === true)) authority.workAllowed = false; return authority; }, startActivation, cancelActivation, refresh, bootstrap, bootstrapWithPolicy, ensureForIdentity, localReset, openPortal: async () => { await init(); const pending = state.pending; if (!pendingLive(state.pending) || !validAuthContext(pending.authContext)) throw error("NO_ACTIVATION_ATTEMPT"); return openPortal(pending.authorizationId); }, onAuthorityChanged: handler => { authorityChanged = handler; } };
   globalThis.SellerAgentsControlClient = Object.freeze(api);
 })();

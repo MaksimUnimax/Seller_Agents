@@ -53,6 +53,7 @@ def main():
                 ("i1-r4", ROOT / "tests/regression/extension-core/client-i1/client-r4.mjs"),
                 ("i1-r5", ROOT / "tests/regression/extension-core/client-i1/client-r5.mjs"),
                 ("i1-cache-time", ROOT / "tests/regression/extension-core/client-i1/client-cache-time.mjs"),
+                ("i1-offline-policy", ROOT / "tests/regression/extension-core/client-i1/client-offline-policy.mjs"),
             ]
             for test_name, test in tests:
                 runner.run(label + "-" + test_name, [node, test, runtime])
