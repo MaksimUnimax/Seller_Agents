@@ -53,4 +53,35 @@ bash infra/production/scripts/verify-octoport-ingress.sh
 
 D2 не является production launch. Реальные upstream для portal/admin/API добавляются отдельным этапом после их production deployment и acceptance.
 
+## SITE-S1: static public-site deployment candidate
+
+SITE-S1 публикует только уже принятую статическую поверхность из `apps/site/public/` на `https://octoport.ru/`.
+
+Подготовленная схема:
+
+- каждый Git HEAD публикуется в отдельный неизменяемый каталог `/var/www/octoport-site/releases/<sha>`;
+- `/var/www/octoport-site/current` атомарно переключается symlink-ом на выбранный release;
+- `nginx/octoport-site.conf` заменяет только apex `503` реальным статическим root;
+- `www.octoport.ru` остаётся redirect-only;
+- `app.octoport.ru` и `api.octoport.ru` продолжают отвечать intentional `503` до их отдельных deployment-этапов;
+- `admin.octoport.ru` не включается как application vhost;
+- `docs.selleragents.ru` остаётся отдельным действующим сервисом;
+- существующий сертификат Octoport переиспользуется, новый Certbot issuance SITE-S1 не выполняет.
+
+Deploy:
+
+```bash
+bash infra/production/scripts/deploy-octoport-site.sh
+```
+
+Отдельная проверка:
+
+```bash
+bash infra/production/scripts/verify-octoport-site.sh
+```
+
+Deploy script делает backup текущих Octoport nginx-конфигов и target текущего release, проверяет byte parity staged release, выполняет `nginx -t`, reload и live verification. При ошибке он сохраняет диагностику и восстанавливает предыдущие nginx/current состояния. Release-каталоги автоматически не удаляются.
+
+Подготовка SITE-S1 в Git не означает, что публичный сайт уже переключён. Серверное выполнение и внешняя визуальная/HTTP приёмка фиксируются отдельно.
+
 Границы репозитория: [архитектура](../../docs/architecture/OVERVIEW.md), [размещение](../../docs/architecture/REPOSITORY.md), [текущий статус](../../docs/STATUS.md).
