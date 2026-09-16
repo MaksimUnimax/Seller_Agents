@@ -154,7 +154,7 @@ jobs:
           grep -Fq 'Content-Security-Policy' "${nginx_conf}"
           grep -Fq 'default-src '\''none'\''' "${nginx_conf}"
 
-          if grep -Fq 'add_header Cache-Control' "${nginx_conf}"; then
+          if grep -Eq '^[[:space:]]*add_header[[:space:]]+Cache-Control([[:space:]]|;)' "${nginx_conf}"; then
             echo 'location-level add_header Cache-Control would break security-header inheritance' >&2
             exit 1
           fi
