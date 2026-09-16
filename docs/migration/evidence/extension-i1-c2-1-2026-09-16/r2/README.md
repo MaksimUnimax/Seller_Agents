@@ -18,4 +18,6 @@ No live provider calls were made. The R1 receipt and results remain historical; 
 
 The native Chromium application source and extracted routes were run unchanged and both failed at the existing restore assertion (`authenticated`/`workAllowed` after seed-and-restart); the prior built runtime reproduced the same failure. This is recorded as `FAIL`, not converted to a pass. The signed-bootstrap browser verifier passed. Installed-local acceptance passed against a task-owned disposable PostgreSQL container with two isolated accounts/device sessions and zero live provider calls.
 
+R3 review addendum: the R2 published results remain historical. The current-head native CI run `35060667796` (`job104680101447`) passed both source and extracted routes; installed CI run `35060667782` (`job104680101417`) passed, and client job `104680101221` was successful. The candidate-identical checkout is `c8652fb156b4a14e67ecbf9de8c016176163e1bb`. These current CI facts are separate from the executor's historical native result recorded above. Run `35057935403` was R1 evidence, not R2 CI.
+
 Offline grace, signed profile consumption, joint offline command-result acceptance, Health, merge, deployment and release remain outside this task.

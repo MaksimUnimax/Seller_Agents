@@ -1,0 +1,86 @@
+{
+  "task_id": "SA-I1-C2-1-R3-20260916-01",
+  "status": "PENDING_ARCHITECT_REVIEW",
+  "review": "R3 narrow terminal discard and acceptance completion",
+  "refs": {
+    "start": "06e0eb79badc5e65ea972035a2968f72fdaae6a",
+    "start_tree": "e090b748a6a1aa8d35869f215c7846984e4f73f3",
+    "start_parent": "ead575816dde5df2613a61cb8aa599e216c8066a",
+    "main": "5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+    "code_commit": "6dc770ec30fe7c7165f4c14ff8b6356cd55937d6",
+    "code_parent": "06e0eb79badc5e65ea972035a2968f72fdaae6a7",
+    "candidate_identical_checkout": "c8652fb156b4a14e67ecbf9de8c016176163e1bb"
+  },
+  "changed_paths": [
+    "packages/control-client/src/client.js",
+    "tests/regression/extension-core/client-i1/client-cache-time.mjs",
+    "docs/migration/evidence/extension-i1-c2-1-2026-09-16/r2/README.md",
+    "docs/migration/evidence/extension-i1-c2-1-2026-09-16/r3/README.md",
+    "docs/migration/evidence/extension-i1-c2-1-2026-09-16/r3/results.json"
+  ],
+  "implementation": {
+    "restore_invalid_attempt": "invalidateKnown(contextForState(), error(\"ACTIVATION_CONTEXT_MISMATCH\"), true)",
+    "scope": "terminal auth-record discard; no new auth stack or production closure state"
+  },
+  "focused": {
+    "source": "PASS",
+    "extracted": "PASS",
+    "red_exact_start": "FAIL at intended raw AUTH set exception before correction",
+    "green_exact_candidate": "PASS",
+    "r3_a": "PASS: real pending, expiry, failed set/successful remove, deleted restart, fresh attempt",
+    "r3_b": "PASS: invalid-origin and malformed-starting, both set/remove fail, denied initialization and fresh recovery",
+    "r3_c_queued_reset_b_ordering": "PASS",
+    "r3_c_same_session_signed_replacement": "PASS",
+    "r3_d_t7_expired_commands": "PASS for ozon and wildberries",
+    "retained_t1": "PASS",
+    "retained_t2": "PASS",
+    "retained_t3": "PASS",
+    "retained_t4": "PASS",
+    "retained_t5": "PASS",
+    "retained_t6": "PASS, including R3-C cases",
+    "retained_t7": "PASS, including R3-D cases",
+    "missing": [],
+    "failed": [],
+    "skipped": [],
+    "live_provider_calls": 0
+  },
+  "gates": {
+    "extension_i1_source_extracted": {"status": "PASS", "processes": 98, "node": "v24.20.0"},
+    "extension_core_source_extracted": {"status": "PASS", "processes": 111, "node": "v24.20.0"},
+    "browser_verifier_source_extracted": {"status": "PASS", "browser": "151.0.7922.34"},
+    "native_application_source_extracted": {"status": "PASS", "browser": "151.0.7922.34", "live_provider_calls": 0, "same_ephemeral_key_and_packaged_public_config": true},
+    "installed_local_api_portal_postgresql": {"status": "PASS", "database": "seller_agents_i1_sync_r3_20260916", "container": "seller-agents-i1-sync-pg", "browser": "151.0.7922.34", "live_provider_calls": 0, "same_worker": true, "distinct_accounts": true, "distinct_device_sessions": true, "distinct_authorizations": true, "control_counts": {"device_start": 2, "exchange": 2, "bootstrap": 2}, "bff_counts": {"otp_request_202": 2, "otp_verify_200": 2, "logout_204": 1}, "fixture_accounts_prepared": 2, "beta_unchanged": true},
+    "docs_check": {"status": "PASS", "files": 464, "markdown_files": 243, "requirements": 26, "acceptance_scenarios": 32},
+    "bridge_guard": "PASS",
+    "openapi_check": "PASS",
+    "remote_ci": {"native_run": "35060667796", "native_job": "104680101447", "installed_run": "35060667782", "installed_job": "104680101417", "client_job": "104680101221", "status": "SUCCESS (existing current-head facts; not rerun)"},
+    "remote_installed_job_observability": "UNKNOWN"
+  },
+  "package": {
+    "path": "build/c2-r3-final-i1/package/SELLER_AGENTS_I1_C1_v0.2.4_LOCAL_DEVELOPMENT.zip",
+    "name": "SELLER_AGENTS_I1_C1_v0.2.4_LOCAL_DEVELOPMENT.zip",
+    "bytes": 1823235,
+    "sha256": "03ed7c22618cbb9b49c83e0c2b6a4735b314c0a30480258550b02492cc8dab65",
+    "runtime_files": 39,
+    "repeat_archive_match": true,
+    "source_extracted_bytes_match": true,
+    "runtime_service_worker_sha256": "9a9728bac54f6ba014c5ebe470925f5fcea06936650ad0b68c29c4074bfc23b0",
+    "extracted_service_worker_sha256": "9a9728bac54f6ba014c5ebe470925f5fcea06936650ad0b68c29c4074bfc23b0",
+    "receipt": "build/c2-r3-final-i1/package/composition-receipt.json"
+  },
+  "evidence_paths": {
+    "focused_suite": "tests/regression/extension-core/client-i1/client-cache-time.mjs",
+    "r2_addendum": "docs/migration/evidence/extension-i1-c2-1-2026-09-16/r2/README.md",
+    "r3_readme": "docs/migration/evidence/extension-i1-c2-1-2026-09-16/r3/README.md",
+    "r3_results": "docs/migration/evidence/extension-i1-c2-1-2026-09-16/r3/results.json",
+    "package_receipt": "build/c2-r3-final-i1/package/composition-receipt.json"
+  },
+  "scope": {
+    "domain_migration": "OUT_OF_SCOPE",
+    "offline_grace_c2_2_plus": "OPEN",
+    "profile_consumption": "OPEN",
+    "health": "OUT_OF_SCOPE",
+    "merge_deploy_release": "OUT_OF_SCOPE",
+    "architect_review": "REQUIRED"
+  }
+}
