@@ -1,6 +1,6 @@
-# I1-C1 client candidate
+# I1-C1 / C2.1 client candidate
 
-Status: `C1 ACCEPTED` at `56c81a3521c02502b65fd713aec890e5a30f038d` for the bounded source/package/native and installed-local development scope. This acceptance does not close I1, C2, I1-SRV.5, D3, Health/P8, S1.2, release or deployment.
+Status: `C1 ACCEPTED`; C2.1 fresh-cache context/effective-time candidate is `PENDING ARCHITECT REVIEW`. This acceptance does not close I1, C2, I1-SRV.5, D3, Health/P8, S1.2, release or deployment.
 
 Base: `bc0cd0088ca50ba06021ea602a46bdd90de91378`. Accepted C1 head: `56c81a3521c02502b65fd713aec890e5a30f038d` on `feature/extension-i1-client-2026-09-15`. The source branch remains separate, draft and unmerged.
 
@@ -9,6 +9,8 @@ R2 was reviewed for the earlier flight-owner, forced-bootstrap-refresh, fail-clo
 Bootstrap V2 remains WebCrypto Ed25519 with packaged trust, exact signed bytes and strict envelope/payload checks. Work requires a current account/device/session generation, compatible browser/extension, supported local AI mapping, signed policy and a validated profile fingerprint; unsupported AI/profile fallback is denied. The browser verifier is included in the extracted package and is tested against source/package fixtures, including payload and identifier boundaries.
 
 Account authority and local Work context carry auth generation. Compatible same-session bootstrap does not globally finish Work; authority changes and late callbacks are fenced. Ozon/WB queues, delivery, recovery, attachment/IDB and ordinary local marketplace dispatch remain covered by the preserved composed route. Popup account reset is visible in authenticated and pending states, with pending cancellation available.
+
+C2.1 adds only durable `authority.cacheBinding` context and `state.cacheClock` metadata to `seller_agents_control_auth_v2`. Restore re-verifies the unchanged signed envelope and payload, requires exact packaged origin/contract/version/browser/trust/AI context, and preserves structurally valid credentials for same-origin package mismatch. A nondecreasing effective-time floor combines wall and monotonic time and is persisted through the existing mutation queue before cached Work is allowed; freshness remains half-open (`effectiveNow < expiresAt`). Missing or unsafe metadata fails closed. Offline grace eligibility, signed profile consumption and joint offline command-result acceptance remain C2.2+ work and are not enabled here.
 
 ## Verification
 
@@ -22,8 +24,8 @@ PATH=/root/.nvm/versions/node/v24.20.0/bin:$PATH corepack pnpm bridge:guard
 PATH=/root/.nvm/versions/node/v24.20.0/bin:$PATH corepack pnpm openapi:check
 ```
 
-The I1 checker preserves source and extracted-package gates and the full composed route; it includes lifecycle, race, verifier, context, Ozon/WB, recovery and package readback assertions. The native Chromium fixture uses a per-run ephemeral signing key: only its public trust bundle enters the local package, while the private key stays in a temporary file. A separate CI job runs installed local API/portal/PostgreSQL acceptance with the server test harness, development OTP `424242`, device approval, exchange, browser V2 verification, catalog and second-account isolation. Development OTP is not real email delivery evidence; local installed acceptance is not preprod/production evidence.
+The I1 checker preserves source and extracted-package gates and the full composed route; it includes lifecycle, race, verifier, context, Ozon/WB, recovery, cache-time matrix and package readback assertions. The native Chromium fixture uses a per-run ephemeral signing key: only its public trust bundle enters the local package, while the private key stays in a temporary file. A separate CI job runs installed local API/portal/PostgreSQL acceptance with the server test harness, development OTP `424242`, device approval, exchange, browser V2 verification, catalog and second-account isolation. Development OTP is not real email delivery evidence; local installed acceptance is not preprod/production evidence.
 
 ## Evidence and handoff
 
-Secret-free results, the F1–F8 mapping, package receipt/hash and exact commands are in `docs/migration/evidence/extension-i1-client-2026-09-15/`. No server implementation, OpenAPI, migration, global STATUS/ROADMAP, Health/P8 or Stream B file was changed by the accepted client candidate. The accepted files are imported into the separate synchronization candidate only; the client source branch and PR7 remain unchanged, draft and unmerged. No release or deployment is performed.
+Secret-free C2.1 results, the focused RED/GREEN matrix, package receipt/hash, source/extracted parity and exact command outcomes are in `docs/migration/evidence/extension-i1-c2-1-2026-09-16/`; design notes are in `C2_CACHE_TIME_2026-09-16.md`. No server implementation, OpenAPI, migration, global STATUS/ROADMAP, Health/P8 or Stream B file was changed. Health B5/B6–B8, S1.2/D3, full I1/D2 and release boundaries remain preserved. No release or deployment is performed.

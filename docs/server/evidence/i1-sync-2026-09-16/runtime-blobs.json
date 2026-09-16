@@ -1304,7 +1304,13 @@
   "post_merge_non_documentation_check": {
     "status": "PASS",
     "compared_against_merge_tree": "e834d3af55bb102e0378218dff731dd15b124d02",
-    "compared_non_documentation_paths": 990,
+    "compared_inventory_paths_excluding_preexisting_allowlisted_documentation": 990,
+    "architect_verified_actual_non_documentation_paths": 759,
+    "architect_verified_actual_non_documentation_check": {
+      "status": "PASS",
+      "compared_against": "1ff322b3dd2b68c4f02e5390850cd2f1b9548186",
+      "mismatches": []
+    },
     "mismatches": [],
     "allowlisted_post_merge_paths": [
       "docs/STATUS.md",

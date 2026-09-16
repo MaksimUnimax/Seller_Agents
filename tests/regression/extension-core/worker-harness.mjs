@@ -28,7 +28,7 @@ export async function signFixtureBootstrap(backing, payload, keyId = "fixture-ke
 }
 
 export async function until(fn, description) {
-  const end = Date.now() + 3500;
+  const end = Date.now() + 10000;
   while (Date.now() < end) {
     const value = await fn();
     if (value) return value;
@@ -44,6 +44,8 @@ export async function makeWorker(directory, options = {}) {
     storageChangedListeners = [],
     timers = new Set();
   const backing = options.backing || { local: {}, session: {} };
+  const wallClock = () => typeof options.wallClock === "function" ? options.wallClock() : options.wallClock ?? Date.now();
+  const monotonicClock = () => typeof options.monotonicClock === "function" ? options.monotonicClock() : options.monotonicClock ?? (typeof performance === "object" && typeof performance.now === "function" ? performance.now() : 0);
   const accountId = options.accountId || "11111111-1111-4111-8111-111111111111";
   const deviceId = options.deviceId || "22222222-2222-4222-8222-222222222222";
   const sessionId = options.sessionId || "33333333-3333-4333-8333-333333333333";
@@ -75,10 +77,10 @@ export async function makeWorker(directory, options = {}) {
     trustBundle: { trustBundleVersion: "bootstrap_trust_bundle_v1", algorithm: "Ed25519", publicKeyFormat: "spki_der", publicKeyEncoding: "base64", fingerprintAlgorithm: "sha256", fingerprintEncoding: "lowercase_hex", keys: [{ keyId, publicKey: Buffer.from(spki).toString("base64"), fingerprintSha256: fingerprint, lifecycle: "ACTIVE", trustEligibility: "SIGNING_AND_VERIFICATION" }] },
   };
   if (options.seedAuthority !== false && !backing.local[AUTH_STORAGE_KEY]) {
-    const issued = new Date(Date.now() - 1000).toISOString();
-    const serverTime = new Date().toISOString();
-    const expires = new Date(Date.now() + 3600000).toISOString();
-    const grace = new Date(Date.now() + 7200000).toISOString();
+    const issued = new Date(wallClock() - 1000).toISOString();
+    const serverTime = new Date(wallClock()).toISOString();
+    const expires = new Date(wallClock() + 3600000).toISOString();
+    const grace = new Date(wallClock() + 7200000).toISOString();
     const content = { schemaVersion: "adapter_profile_v1", page: { identityStrategy: "page_identity", conversationStrategy: "conversation_root", composerStrategy: "composer_root" },
       selectors: { conversation: { strategy: "conversation_root", primary: { kind: "packaged_selector_reference", reference: "conversation-root" }, fallbacks: [], timeoutMs: 1000, observationMode: "polling" },
         composer: { strategy: "composer_root", primary: { kind: "packaged_selector_reference", reference: "composer-root" }, fallbacks: [], timeoutMs: 1000, observationMode: "polling" },
@@ -99,8 +101,11 @@ export async function makeWorker(directory, options = {}) {
     const domain = new Uint8Array([...new TextEncoder().encode("product-control-plane/bootstrap-snapshot/v1"), 0, ...new TextEncoder().encode(keyId), 0]);
     const signed = new Uint8Array(domain.length + payloadBytes.length); signed.set(domain); signed.set(payloadBytes, domain.length);
     const signature = await webcrypto.subtle.sign("Ed25519", signing.privateKey, signed);
+    const trustBundleSha256 = Buffer.from(await webcrypto.subtle.digest("SHA-256", new TextEncoder().encode(canonical(fixtureConfig.trustBundle)))).toString("hex");
+    const cacheBinding = { cacheVersion: "control_cache_binding_v1", controlApiOrigin: fixtureConfig.controlApiOrigin, portalOrigin: fixtureConfig.portalOrigin, contractVersion: fixtureConfig.contractVersion, extensionVersion: fixtureConfig.extensionVersion, browser: { family: String(options.userAgent || "").toLowerCase().includes("yabrowser") ? "yandex_chromium" : "chrome", version: (String(options.userAgent || "").match(/(?:Chrome|YaBrowser)\/(\d+(?:\.\d+){0,3})/i) || [null, "0.0.0"])[1] }, detectedAi: { family: "chatgpt", surface: "web", variant: null }, trustBundleSha256 };
+    const cacheClock = { cacheVersion: "control_cache_clock_v1", owner: { controlApiOrigin: fixtureConfig.controlApiOrigin, portalOrigin: fixtureConfig.portalOrigin, contractVersion: fixtureConfig.contractVersion, deviceId, sessionId }, trustedServerTimeMs: Date.parse(serverTime), effectiveTimeMs: Date.parse(serverTime) };
     backing.local[AUTH_STORAGE_KEY] = { generation: 1, credentials: { deviceId, sessionId, tokenType: "Bearer", accessToken: "fixture_access_token", accessTokenExpiresAt: expires, refreshToken: "A".repeat(43), refreshTokenExpiresAt: grace }, pending: null, rotation: null,
-      authority: { verified: true, workAllowed: true, requestedAi: "chatgpt", generation: 1, payload, envelope: { envelopeVersion: "bootstrap_envelope_v2", algorithm: "Ed25519", keyId, payload: b64url(payloadBytes), signature: b64url(signature) }, deviceId, sessionId }, lastError: null };
+      authority: { verified: true, workAllowed: true, requestedAi: "chatgpt", generation: 1, payload, envelope: { envelopeVersion: "bootstrap_envelope_v2", algorithm: "Ed25519", keyId, payload: b64url(payloadBytes), signature: b64url(signature) }, deviceId, sessionId, cacheBinding }, cacheClock, lastError: null };
   }
   let context,
     request,
@@ -252,6 +257,7 @@ export async function makeWorker(directory, options = {}) {
     AbortController,
     Blob,
     navigator: { userAgent: options.userAgent || "" },
+    performance: { now: monotonicClock },
     indexedDB: options.indexedDB,
     __SELLER_AGENTS_PACKAGED_CONFIG__: JSON.stringify(fixtureConfig),
     structuredClone,
@@ -297,6 +303,10 @@ export async function makeWorker(directory, options = {}) {
       clearInterval(timer);
     },
   };
+  if (options.wallClock !== undefined) {
+    const RealDate = Date;
+    sandbox.Date = class extends RealDate { static now() { return wallClock(); } };
+  }
   context = vm.createContext(sandbox);
   sandbox.importScripts = (...files) => {
     for (const name of files)
@@ -339,6 +349,10 @@ export async function makeWorker(directory, options = {}) {
   const call = (name, ...args) =>
     vm.runInContext(`${name}(...${JSON.stringify(args)})`, context);
   await new Promise((r) => setTimeout(r, 5));
+  // Wait for the real worker's startup restore before returning the fixture;
+  // this keeps close/reopen barriers deterministic when restore persists a
+  // cache floor asynchronously.
+  await call("SellerAgentsControlClient.restore");
   return {
     network,
     messages,

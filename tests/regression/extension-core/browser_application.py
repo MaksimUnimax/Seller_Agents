@@ -65,8 +65,15 @@ def seed_authority(worker, private_key):
       const signed = new Uint8Array(prefix.length + payloadBytes.length); signed.set(prefix); signed.set(payloadBytes, prefix.length);
       const signature = new Uint8Array(await crypto.subtle.sign('Ed25519', key, signed));
       const envelope = {envelopeVersion: 'bootstrap_envelope_v2', algorithm: 'Ed25519', keyId, payload: v.base64urlEncode(payloadBytes), signature: v.base64urlEncode(signature)};
+      const cfg = SellerAgentsControlConfig;
+      const ua = String(navigator.userAgent || '').toLowerCase();
+      const browser = {family: ua.includes('yabrowser') ? 'yandex_chromium' : 'chrome', version: (String(navigator.userAgent || '').match(/(?:Chrome|YaBrowser)\/(\d+(?:\.\d+){0,3})/i) || [null, '0.0.0'])[1]};
+      const trustBundleSha256 = hex(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(v.canonicalJson(cfg.trustBundle)))));
+      const cacheBinding = {cacheVersion: 'control_cache_binding_v1', controlApiOrigin: cfg.controlApiOrigin, portalOrigin: cfg.portalOrigin, contractVersion: cfg.contractVersion, extensionVersion: cfg.extensionVersion, browser, detectedAi: {family: 'chatgpt', surface: 'web', variant: null}, trustBundleSha256};
+      const serverTimeMs = Date.parse(payload.serverTime);
+      const cacheClock = {cacheVersion: 'control_cache_clock_v1', owner: {controlApiOrigin: cfg.controlApiOrigin, portalOrigin: cfg.portalOrigin, contractVersion: cfg.contractVersion, deviceId, sessionId}, trustedServerTimeMs: serverTimeMs, effectiveTimeMs: serverTimeMs};
       const credentials = {deviceId, sessionId, tokenType: 'Bearer', accessToken: 'fixture_access_token', accessTokenExpiresAt: '2099-09-16T00:00:00Z', refreshToken: 'A'.repeat(43), refreshTokenExpiresAt: '2099-09-17T00:00:00Z'};
-      await chrome.storage.local.set({seller_agents_control_auth_v2: {generation: 1, credentials, pending: null, rotation: null, authority: {verified: true, workAllowed: true, payload, envelope, deviceId, sessionId, generation: 1, requestedAi: 'chatgpt'}, lastError: null}});
+      await chrome.storage.local.set({seller_agents_control_auth_v2: {generation: 1, credentials, pending: null, rotation: null, authority: {verified: true, workAllowed: true, payload, envelope, deviceId, sessionId, generation: 1, requestedAi: 'chatgpt', cacheBinding}, cacheClock, lastError: null}});
     }""", encoded)
 
 def run(runtime,output,private_key):

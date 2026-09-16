@@ -12,11 +12,16 @@
   const RETRYABLE_EXCHANGE_STATUS = new Set([429, 500, 502, 503, 504]);
   const TERMINAL_EXCHANGE_ERRORS = new Set(["DEVICE_AUTH_CLOSED", "DEVICE_AUTH_INVALID", "DEVICE_LIMIT_REACHED", "SUBSCRIPTION_REQUIRED"]);
   const LOCAL_AI = Object.freeze({ chatgpt: Object.freeze({ family: "chatgpt", surface: "web" }), alice: Object.freeze({ family: "alice", surface: "web" }) });
-  let state = { generation: 0, credentials: null, pending: null, rotation: null, authority: null, lastError: null };
+  const MAX_DATE_MS = 8640000000000000;
+  let state = { generation: 0, credentials: null, pending: null, rotation: null, authority: null, cacheClock: null, lastError: null };
   let initialized = false, initFlight = null, mutationQueue = Promise.resolve();
   let activationFlight = null, refreshFlight = null, pollingFlight = null, authorityChanged = null;
+  let runtimeClockOwner = null, runtimeAnchor = null, runtimeEffectiveHighWatermark = null, runtimeFloorNeedsPersistence = false, runtimeLastCheckpointAllowed = null;
   function error(code, detail) { const value = Object.assign(new Error(code), { code }); if (detail !== undefined) value.detail = detail; return value; }
   function now() { return Date.now(); }
+  function validMillis(value) { return typeof value === "number" && Number.isSafeInteger(value) && value >= 0 && value <= MAX_DATE_MS; }
+  function parsedMillis(value) { const result = Date.parse(value); return validMillis(result) ? result : null; }
+  function monotonicNow() { const value = globalThis.performance && typeof globalThis.performance.now === "function" ? globalThis.performance.now() : NaN; if (typeof value !== "number" || !Number.isFinite(value) || value < 0 || !Number.isSafeInteger(Math.ceil(value))) throw error("CACHE_MONOTONIC_INVALID"); return value; }
   function clone(value) { return value == null ? value : JSON.parse(JSON.stringify(value)); }
   function key() { return crypto.randomUUID(); }
   function origin(value) { return typeof value === "string" && value === new URL(value).origin; }
@@ -24,8 +29,8 @@
   function safeError(value) { const code = typeof value?.code === "string" ? value.code : "CONTROL_REQUEST_FAILED"; return { code: code.slice(0, 80) }; }
   function queueMutation(fn) { const run = mutationQueue.then(fn); mutationQueue = run.catch(() => {}); return run; }
   async function persist(next) { await chrome.storage.local.set({ [STORAGE_KEY]: clone(next) }); }
-  function sameAuthorityIdentity(left, right) { return Boolean(left && right && left.deviceId === right.deviceId && left.sessionId === right.sessionId && left.payload?.account?.id === right.payload?.account?.id); }
-  function authorityNeedsInvalidation(previous, next, reason) { if (!previous || !next) return Boolean(previous || next); if (!sameAuthorityIdentity(previous, next)) return true; if (["refresh_invalid", "bootstrap_unauthorized", "authority_invalid", "local_reset"].includes(reason)) return true; if (previous.workAllowed && !next.workAllowed) return true; return canWork(previous.payload) && !canWork(next.payload); }
+  function sameAuthorityIdentity(left, right) { return Boolean(left && right && left.deviceId === right.deviceId && left.sessionId === right.sessionId && left.generation === right.generation && left.requestedAi === right.requestedAi && left.payload?.account?.id === right.payload?.account?.id); }
+  function authorityNeedsInvalidation(previous, next, reason) { if (!previous || !next) return Boolean(previous || next); if (!sameAuthorityIdentity(previous, next)) return true; if (["refresh_invalid", "bootstrap_unauthorized", "authority_invalid", "local_reset"].includes(reason)) return true; if (previous.workAllowed && !next.workAllowed) return true; return staticCanWork(previous.payload) && !staticCanWork(next.payload); }
   async function commit(next, previous = state.authority, reason = "state_changed") {
     const changed = authorityNeedsInvalidation(previous, next.authority, reason);
     await persist(next);
@@ -51,14 +56,85 @@
   function validPending(value) { return value && value.attemptId && UUID.test(value.authorizationId) && OPAQUE_TOKEN.test(value.deviceCode) && /^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{4}-[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{4}$/.test(value.userCode) && Number.isFinite(Date.parse(value.expiresAt)) && TOKEN.test(value.startIdempotencyKey) && TOKEN.test(value.exchangeIdempotencyKey); }
   function pendingLive(value) { return value?.phase !== "starting" && validPending(value) && Date.parse(value.expiresAt) > now(); }
   function publicPending(value) { if (!value) return null; return { authorizationId: value.authorizationId, userCode: value.userCode, expiresAt: value.expiresAt, verificationUri: url(`/activate?authorizationId=${encodeURIComponent(value.authorizationId)}`, config.portalOrigin) }; }
-  function publicStatus() { const authority = state.authority, accountId = authority?.payload?.account?.id || null, snapshot = authority?.payload || null; return Object.freeze({ authenticated: Boolean(state.credentials && authority && accountId), accountId, account: accountId ? { kind: "control_account", label: `Аккаунт · ${accountId.slice(0, 8)}` } : null, pending: pendingLive(state.pending) ? publicPending(state.pending) : null, lastError: state.lastError, generation: state.generation, workAllowed: Boolean(accountId && state.authority?.workAllowed && canWork(snapshot)), authority: authority ? { configVersion: snapshot.configVersion, expiresAt: snapshot.expiresAt, aiStatus: snapshot.ai.status } : null }); }
-  function authorityBaseValid(snapshot) {
+  function publicStatus(decision = null) { const authority = state.authority, accountId = authority?.payload?.account?.id || null, snapshot = authority?.payload || null; return Object.freeze({ authenticated: Boolean(state.credentials && authority && accountId), accountId, account: accountId ? { kind: "control_account", label: `Аккаунт · ${accountId.slice(0, 8)}` } : null, pending: pendingLive(state.pending) ? publicPending(state.pending) : null, lastError: state.lastError, generation: state.generation, workAllowed: Boolean(accountId && (decision ? decision.allowed : authority?.workAllowed === true && runtimeLastCheckpointAllowed !== false)), authority: authority ? { configVersion: snapshot.configVersion, expiresAt: snapshot.expiresAt, aiStatus: snapshot.ai.status } : null }); }
+  function authorityStaticValid(snapshot) {
     const extension = snapshot?.compatibility?.extension;
-    return Boolean(snapshot && snapshot.account?.status === "ACTIVE" && snapshot.devicePolicy?.status === "ACTIVE" && ["SUPPORTED", "UPDATE_RECOMMENDED"].includes(extension?.status) && snapshot.compatibility?.browser?.status === "SUPPORTED" && Date.parse(snapshot.expiresAt) > now() && (extension.minimumVersion === null || (parseSemver(extension.minimumVersion) && versionAtLeast(config.extensionVersion, extension.minimumVersion))));
+    return Boolean(snapshot && snapshot.account?.status === "ACTIVE" && snapshot.devicePolicy?.status === "ACTIVE" && ["SUPPORTED", "UPDATE_RECOMMENDED"].includes(extension?.status) && snapshot.compatibility?.browser?.status === "SUPPORTED" && (extension.minimumVersion === null || (parseSemver(extension.minimumVersion) && versionAtLeast(config.extensionVersion, extension.minimumVersion))));
   }
-  function canWork(snapshot) { return Boolean(authorityBaseValid(snapshot) && snapshot.ai?.status === "RESOLVED" && ["chatgpt", "alice"].includes(snapshot.ai.detected?.family)); }
+  function authorityBaseValid(snapshot, effectiveTimeMs) { const expiresAt = parsedMillis(snapshot?.expiresAt); return Boolean(authorityStaticValid(snapshot) && validMillis(effectiveTimeMs) && expiresAt !== null && effectiveTimeMs < expiresAt); }
+  function staticCanWork(snapshot) { return Boolean(authorityStaticValid(snapshot) && snapshot.ai?.status === "RESOLVED" && ["chatgpt", "alice"].includes(snapshot.ai.detected?.family)); }
+  function canWork(snapshot, effectiveTimeMs) { return Boolean(authorityBaseValid(snapshot, effectiveTimeMs) && snapshot.ai?.status === "RESOLVED" && ["chatgpt", "alice"].includes(snapshot.ai.detected?.family)); }
   function browserFamily() { const ua = typeof navigator === "object" ? String(navigator.userAgent || "").toLowerCase() : ""; return ua.includes("yabrowser") ? "yandex_chromium" : "chrome"; }
   function browserVersion() { const ua = typeof navigator === "object" ? String(navigator.userAgent || "") : ""; const match = ua.match(/(?:Chrome|YaBrowser)\/(\d+(?:\.\d+){0,3})/i); return match ? match[1] : "0.0.0"; }
+  function clockOwner(credentials) { return { controlApiOrigin: config.controlApiOrigin, portalOrigin: config.portalOrigin, contractVersion: config.contractVersion, deviceId: credentials.deviceId, sessionId: credentials.sessionId }; }
+  function authorityIdentity(authority = state.authority, generation = state.generation) { return authority ? { generation, deviceId: authority.deviceId, sessionId: authority.sessionId, accountId: authority.payload?.account?.id || null, requestedAi: authority.requestedAi ?? null } : null; }
+  function sameAuthorityRuntimeIdentity(left, right) { return Boolean(left && right && verifier.canonicalJson(left) === verifier.canonicalJson(right)); }
+  function validCacheBinding(value) {
+    if (!exactKeys(value, ["cacheVersion", "controlApiOrigin", "portalOrigin", "contractVersion", "extensionVersion", "browser", "detectedAi", "trustBundleSha256"]) || value.cacheVersion !== "control_cache_binding_v1" || !origin(value.controlApiOrigin) || !origin(value.portalOrigin) || typeof value.contractVersion !== "string" || typeof value.extensionVersion !== "string" || !exactKeys(value.browser, ["family", "version"]) || !["chrome", "yandex_chromium"].includes(value.browser.family) || !parseBrowser(value.browser.version) || !(value.detectedAi === null || exactKeys(value.detectedAi, ["family", "surface", "variant"]) && LOCAL_AI[value.detectedAi.family] && value.detectedAi.surface === LOCAL_AI[value.detectedAi.family].surface && value.detectedAi.variant === null) || !/^[0-9a-f]{64}$/.test(value.trustBundleSha256)) return false;
+    return true;
+  }
+  function validCacheClockShape(value, payload = null) {
+    if (!exactKeys(value, ["cacheVersion", "owner", "trustedServerTimeMs", "effectiveTimeMs"]) || value.cacheVersion !== "control_cache_clock_v1" || !exactKeys(value.owner, ["controlApiOrigin", "portalOrigin", "contractVersion", "deviceId", "sessionId"]) || !origin(value.owner.controlApiOrigin) || !origin(value.owner.portalOrigin) || typeof value.owner.contractVersion !== "string" || !UUID.test(value.owner.deviceId) || !UUID.test(value.owner.sessionId) || !validMillis(value.trustedServerTimeMs) || !validMillis(value.effectiveTimeMs) || value.effectiveTimeMs < value.trustedServerTimeMs) return false;
+    if (payload && (parsedMillis(payload.serverTime) === null || value.trustedServerTimeMs < parsedMillis(payload.serverTime))) return false;
+    return true;
+  }
+  function validCacheClock(value, credentials, payload = null) { return validCacheClockShape(value, payload) && verifier.canonicalJson(value.owner) === verifier.canonicalJson(clockOwner(credentials)); }
+  async function trustBundleDigest() { return [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(verifier.canonicalJson(config.trustBundle))))].map(value => value.toString(16).padStart(2, "0")).join(""); }
+  async function expectedCacheBinding(payload, requestedAi = null) { const detectedAi = payload?.ai?.status === "RESOLVED" ? { family: payload.ai.detected.family, surface: payload.ai.detected.surface, variant: payload.ai.detected.variant } : null; return { cacheVersion: "control_cache_binding_v1", controlApiOrigin: config.controlApiOrigin, portalOrigin: config.portalOrigin, contractVersion: config.contractVersion, extensionVersion: config.extensionVersion, browser: { family: browserFamily(), version: browserVersion() }, detectedAi, trustBundleSha256: await trustBundleDigest() }; }
+  function validRuntimeOwner(owner) { return typeof owner === "string" && owner.length > 0; }
+  function effectiveTime(clock) {
+    if (!validCacheClock(clock, state.credentials, state.authority?.payload || null)) throw error("CACHE_CLOCK_INVALID");
+    const wall = Date.now();
+    if (!validMillis(wall)) throw error("CACHE_WALL_CLOCK_INVALID");
+    const monotonic = monotonicNow();
+    const owner = verifier.canonicalJson(clock.owner);
+    if (runtimeClockOwner !== owner) {
+      runtimeClockOwner = owner;
+      runtimeAnchor = { effectiveNowMs: Math.max(wall, clock.trustedServerTimeMs, clock.effectiveTimeMs), monotonicNowMs: monotonic };
+      runtimeEffectiveHighWatermark = runtimeAnchor.effectiveNowMs;
+    } else {
+      if (!runtimeAnchor || monotonic < runtimeAnchor.monotonicNowMs) throw error("CACHE_MONOTONIC_DECREASING");
+      runtimeEffectiveHighWatermark = Math.max(runtimeEffectiveHighWatermark, clock.effectiveTimeMs);
+    }
+    const elapsed = monotonic - runtimeAnchor.monotonicNowMs;
+    const anchored = Math.ceil(runtimeAnchor.effectiveNowMs + elapsed);
+    if (!validMillis(anchored)) throw error("CACHE_EFFECTIVE_TIME_INVALID");
+    const result = Math.max(wall, clock.trustedServerTimeMs, clock.effectiveTimeMs, runtimeEffectiveHighWatermark, anchored);
+    if (!validMillis(result)) throw error("CACHE_EFFECTIVE_TIME_INVALID");
+    runtimeEffectiveHighWatermark = Math.max(runtimeEffectiveHighWatermark, result);
+    return result;
+  }
+  function currentWorkDecision(effectiveTimeMs) { const authority = state.authority; return { allowed: Boolean(authority && authority.workAllowed === true && canWork(authority.payload, effectiveTimeMs)), effectiveTimeMs }; }
+  async function notifyAuthorityChange(authority, reason, generation) { if (typeof authorityChanged === "function") { try { await authorityChanged(clone(authority), reason, generation); } catch (_) {} } }
+  async function cacheAuthorizationCheckpoint() {
+    const entryIdentity = authorityIdentity();
+    let outcome;
+    try {
+      outcome = await queueMutation(async () => {
+        if (!sameAuthorityRuntimeIdentity(entryIdentity, authorityIdentity())) return { allowed: false, stale: true };
+        const clock = state.cacheClock, previous = state.authority, effective = effectiveTime(clock);
+        const decision = currentWorkDecision(effective);
+        const floor = Math.max(clock.effectiveTimeMs, effective);
+        const changed = runtimeFloorNeedsPersistence || floor !== clock.effectiveTimeMs || Boolean(previous?.workAllowed && !decision.allowed);
+        const next = changed ? { ...state, cacheClock: { ...clock, effectiveTimeMs: floor }, authority: previous && !decision.allowed ? { ...previous, workAllowed: false } : previous } : state;
+        if (changed) state = next;
+        if (changed) {
+          try { await persist(next); runtimeFloorNeedsPersistence = false; }
+          catch (_) {
+            try { await chrome.storage.local.remove(STORAGE_KEY); }
+            catch (removeFailure) { runtimeFloorNeedsPersistence = true; state = { ...state, authority: decision.allowed ? state.authority : state.authority ? { ...state.authority, workAllowed: false } : null, lastError: safeError(Object.assign(error("AUTH_DENIAL_PERSISTENCE_FAILED"), { detail: safeError(removeFailure) })) }; return { allowed: false, persistenceFailure: true, changed: previous?.workAllowed === true }; }
+            runtimeFloorNeedsPersistence = true;
+            return { allowed: false, persistenceFailure: true, changed: previous?.workAllowed === true };
+          }
+        }
+        if (!sameAuthorityRuntimeIdentity(entryIdentity, authorityIdentity())) return { allowed: false, stale: true };
+        return { allowed: decision.allowed, effectiveTimeMs: effective, changed: previous?.workAllowed === true && !decision.allowed };
+      });
+    } catch (_) { runtimeLastCheckpointAllowed = false; return { allowed: false, persistenceFailure: true }; }
+    runtimeLastCheckpointAllowed = outcome?.allowed === true;
+    if (outcome?.changed) void notifyAuthorityChange(state.authority, "cache_time_expired", state.generation);
+    return outcome || { allowed: false };
+  }
   function parseRetryAfter(response) { const value = response.headers?.get("Retry-After"); if (!value) return 1000; const seconds = Number(value); if (Number.isFinite(seconds)) return Math.max(250, Math.min(60000, seconds * 1000)); const date = Date.parse(value); return Number.isFinite(date) ? Math.max(250, Math.min(60000, date - now())) : 1000; }
   async function readLimitedBody(response, limit = 1024 * 1024) {
     if (!response.body?.getReader) {
@@ -202,7 +278,7 @@
     const validPrimitive = primitive => exactKeys(primitive, ["kind", "reference"], ["role"]) && ["page-root", "conversation-root", "composer-root", "send-control", "assistant-response", "busy-control", "copy-control"].includes(primitive.reference) && (primitive.kind === "packaged_selector_reference" ? !Object.hasOwn(primitive, "role") : primitive.kind === "accessibility_role_name" && ["main", "article", "textbox", "button", "status"].includes(primitive.role));
     return validPrimitive(value.primary) && value.fallbacks.every(validPrimitive) && !(value.observationMode === "polling" && value.timeoutMs < 500);
   }
-  function validProfileShape(profile) {
+  function validProfileShape(profile, enforceEnvironment = true) {
     const content = profile?.content, compatibility = profile?.compatibility;
     if (!MACHINE.test(profile?.profileKey || "") || String(profile?.profileKey || "").length > 64 || !Number.isSafeInteger(profile?.revision) || profile.revision <= 0 || profile?.schemaVersion !== "adapter_profile_v1" || profile?.scopeVariant !== null) return false;
     if (!exactKeys(content, ["schemaVersion", "page", "selectors", "observation", "contours"]) || content.schemaVersion !== "adapter_profile_v1" || !exactKeys(content.page, ["identityStrategy", "conversationStrategy", "composerStrategy"]) || content.page.identityStrategy !== "page_identity" || content.page.conversationStrategy !== "conversation_root" || content.page.composerStrategy !== "composer_root") return false;
@@ -211,17 +287,23 @@
     const contourKeys = new Set(["page_identity", "conversation_root", "composer_root", "send_control", "busy_state", "assistant_response", "copy_control"]);
     if (!Array.isArray(content.contours) || content.contours.length < 4 || content.contours.length > 7 || new Set(content.contours.map(x => x.key)).size !== content.contours.length || !content.contours.every(x => exactKeys(x, ["key", "required", "expectedState", "strategy"]) && contourKeys.has(x.key) && typeof x.required === "boolean" && ["PRESENT", "INTERACTIVE", "COMPLETES"].includes(x.expectedState) && contourKeys.has(x.strategy))) return false;
     if (!exactKeys(compatibility, ["schemaVersion", "contractVersion", "browserFamilies", "minimumBrowserVersions", "minimumExtensionVersion"]) || compatibility.schemaVersion !== "profile_compatibility_v1" || compatibility.contractVersion !== "control_plane_v1" || !Array.isArray(compatibility.browserFamilies) || compatibility.browserFamilies.length < 1 || compatibility.browserFamilies.length > 2 || new Set(compatibility.browserFamilies).size !== compatibility.browserFamilies.length || !compatibility.browserFamilies.every(x => ["chrome", "yandex_chromium"].includes(x)) || !Array.isArray(compatibility.minimumBrowserVersions) || compatibility.minimumBrowserVersions.length > 2 || new Set(compatibility.minimumBrowserVersions.map(x => x.browserFamily)).size !== compatibility.minimumBrowserVersions.length || !compatibility.minimumBrowserVersions.every(x => exactKeys(x, ["browserFamily", "minimumVersion"]) && compatibility.browserFamilies.includes(x.browserFamily) && parseBrowser(x.minimumVersion)) || !(compatibility.minimumExtensionVersion === null || parseSemver(compatibility.minimumExtensionVersion))) return false;
+    if (!enforceEnvironment) return true;
     if (!compatibility.browserFamilies.includes(browserFamily()) || (compatibility.minimumExtensionVersion && !versionAtLeast(config.extensionVersion, compatibility.minimumExtensionVersion))) return false;
     const browserMin = compatibility.minimumBrowserVersions.find(x => x.browserFamily === browserFamily()); return !browserMin || versionAtLeast(browserVersion(), browserMin.minimumVersion, true);
   }
   async function profileFingerprint(profile) { const bytes = new TextEncoder().encode(verifier.canonicalJson({ content: profile.content, compatibility: profile.compatibility })); return [...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes))].map(x => x.toString(16).padStart(2, "0")).join(""); }
-  async function validateOperationalAuthority(payload, requestedAi = null) { if (!authorityBaseValid(payload) || !canWork(payload) || !validProfileShape(payload.ai.profile)) return false; const expected = requestedAi ? LOCAL_AI[requestedAi] : LOCAL_AI[payload.ai.detected.family], detected = payload.ai.detected; if (!expected || detected.family !== (requestedAi || detected.family) || detected.surface !== expected.surface || detected.variant !== null || payload.ai.profile.scopeVariant !== null) return false; return (await profileFingerprint(payload.ai.profile)) === payload.ai.profile.contentSha256; }
-  async function validateBootstrapAuthority(payload, requestedAi = null) {
-    if (!authorityBaseValid(payload) || requestedAi && !LOCAL_AI[requestedAi]) return null;
+  async function validateAccountProfile(payload, requestedAi = null, enforceEnvironment = true) {
+    if (!authorityStaticValid(payload) || requestedAi && !LOCAL_AI[requestedAi]) return null;
     if (payload.ai.status === "UNCONFIGURED") return requestedAi === null ? { workAllowed: false, requestedAi: null } : null;
-    if (payload.ai.status !== "RESOLVED") return null;
-    if (!await validateOperationalAuthority(payload, requestedAi)) return null;
+    if (payload.ai.status !== "RESOLVED" || !validProfileShape(payload.ai.profile, enforceEnvironment)) return null;
+    const expected = requestedAi ? LOCAL_AI[requestedAi] : LOCAL_AI[payload.ai.detected?.family], detected = payload.ai.detected;
+    if (!expected || detected.family !== (requestedAi || detected.family) || detected.surface !== expected.surface || detected.variant !== null || payload.ai.profile.scopeVariant !== null) return null;
+    if ((await profileFingerprint(payload.ai.profile)) !== payload.ai.profile.contentSha256) return null;
     return { workAllowed: true, requestedAi: requestedAi || payload.ai.detected.family };
+  }
+  async function validateOperationalAuthority(payload, requestedAi = null) { return Boolean(await validateAccountProfile(payload, requestedAi, true)); }
+  async function validateBootstrapAuthority(payload, requestedAi = null) {
+    return validateAccountProfile(payload, requestedAi, true);
   }
   async function requestBootstrap(credentials, authority, detectedAi) { return request("/v1/bootstrap", { method: "POST", headers: { Authorization: `Bearer ${credentials.accessToken}` }, body: bootstrapRequest(detectedAi, credentials, authority) }); }
   function terminalAuthFailure(failure) { return failure?.code === "AUTH_REFRESH_INVALID" || failure?.status === 401 || ["AUTH_INVALID", "DEVICE_REVOKED"].includes(failure?.code); }
@@ -274,19 +356,76 @@
       if (!verified.ok) { const failure = error(`BOOTSTRAP_${verified.error}`); await invalidateKnown(context, failure, false); throw failure; }
       const validation = await validateBootstrapAuthority(verified.payload, requestedAi).catch(() => null);
       if (!validation) { const failure = error("BOOTSTRAP_PROFILE_INCOMPATIBLE"); await invalidateKnown(context, failure, false); throw failure; }
-      const nextAuthority = { verified: true, workAllowed: validation.workAllowed, payload: verified.payload, envelope: verified.envelope, deviceId: credentials.deviceId, sessionId: credentials.sessionId, generation: context.generation, requestedAi: validation.requestedAi };
-      if (!await commitIfCurrent(context, current => { const authorityContextChanged = current.authority && current.authority.requestedAi !== nextAuthority.requestedAi; const generation = authorityContextChanged ? current.generation + 1 : current.generation; return { ...current, generation, authority: { ...nextAuthority, generation }, lastError: null }; }, "bootstrap_verified")) throw error("AUTH_GENERATION_CHANGED"); return clone(verified.payload);
+      const cacheBinding = await expectedCacheBinding(verified.payload, validation.requestedAi);
+      if (!isCurrent(context)) throw error("AUTH_GENERATION_CHANGED");
+      const nextAuthority = { verified: true, workAllowed: validation.workAllowed, payload: verified.payload, envelope: verified.envelope, deviceId: credentials.deviceId, sessionId: credentials.sessionId, generation: context.generation, requestedAi: validation.requestedAi, cacheBinding };
+      let committed;
+      try {
+        committed = await commitIfCurrent(context, current => {
+          const signedServerTimeMs = parsedMillis(verified.payload.serverTime), previousClock = current.cacheClock;
+          if (signedServerTimeMs === null) throw error("BOOTSTRAP_SERVER_TIME_INVALID");
+          if (previousClock && signedServerTimeMs < previousClock.trustedServerTimeMs) throw error("BOOTSTRAP_SERVER_TIME_REGRESSION");
+          const owner = clockOwner(credentials), baseTrusted = Math.max(previousClock?.trustedServerTimeMs || 0, signedServerTimeMs), baseEffective = Math.max(previousClock?.effectiveTimeMs || 0, baseTrusted);
+          const candidateClock = { cacheVersion: "control_cache_clock_v1", owner, trustedServerTimeMs: baseTrusted, effectiveTimeMs: baseEffective };
+          const effective = effectiveTime(candidateClock);
+          if (!authorityBaseValid(verified.payload, effective)) throw error("BOOTSTRAP_EXPIRED_OR_INCOMPATIBLE");
+          const authorityContextChanged = current.authority && current.authority.requestedAi !== nextAuthority.requestedAi;
+          const generation = authorityContextChanged ? current.generation + 1 : current.generation;
+          return { ...current, generation, cacheClock: { ...candidateClock, effectiveTimeMs: Math.max(candidateClock.effectiveTimeMs, effective) }, authority: { ...nextAuthority, generation }, lastError: null };
+        }, "bootstrap_verified");
+      } catch (failure) { await invalidateKnown(context, failure, false); throw failure; }
+      if (!committed) throw error("AUTH_GENERATION_CHANGED"); runtimeLastCheckpointAllowed = nextAuthority.workAllowed === true; return clone(verified.payload);
     }
   }
-  async function ensureForIdentity(identity) { await init(); if (!state.credentials) throw error("AUTH_REQUIRED"); const requested = LOCAL_AI[identity?.ai_id] ? identity.ai_id : null; if (!requested) throw error("WORK_UNSUPPORTED_AI"); const current = state.authority; if (current && current.generation === state.generation && current.requestedAi === requested && current.payload?.ai?.detected?.family === requested && current.workAllowed && canWork(current.payload)) return clone(current.payload); return bootstrap({ detectedAi: { family: requested, surface: LOCAL_AI[requested].surface, variant: null } }); }
+  async function ensureForIdentity(identity) { await init(); const decision = await cacheAuthorizationCheckpoint(); if (!state.credentials) throw error("AUTH_REQUIRED"); const requested = LOCAL_AI[identity?.ai_id] ? identity.ai_id : null; if (!requested) throw error("WORK_UNSUPPORTED_AI"); const current = state.authority; if (decision.allowed && current && current.generation === state.generation && current.requestedAi === requested && current.payload?.ai?.detected?.family === requested) return clone(current.payload); return bootstrap({ detectedAi: { family: requested, surface: LOCAL_AI[requested].surface, variant: null } }); }
+  async function discardRestoredAuthority(failure) {
+    const context = contextForState();
+    let changed = false, generation = state.generation;
+    await queueMutation(async () => {
+      if (!isCurrent(context)) return;
+      const previous = state.authority;
+      const next = { ...state, generation: state.generation + 1, authority: null, lastError: safeError(failure) };
+      state = next;
+      try { await persist(next); } catch (_) { try { await chrome.storage.local.remove(STORAGE_KEY); } catch (removeFailure) { state = { ...state, lastError: safeError(Object.assign(error("AUTH_DENIAL_PERSISTENCE_FAILED"), { detail: safeError(removeFailure) })) }; } }
+      changed = Boolean(previous); generation = state.generation;
+    });
+    if (changed) void notifyAuthorityChange(null, "authority_invalid", generation);
+  }
   async function restoreOnce() {
-    await chrome.storage.local.setAccessLevel?.({ accessLevel: "TRUSTED_CONTEXTS" }); const result = await chrome.storage.local.get(STORAGE_KEY); const saved = result[STORAGE_KEY]; if (saved && typeof saved === "object") state = { ...state, ...clone(saved) }; if (!validCredentials(state.credentials)) state = { ...state, credentials: null, authority: null, rotation: null };
-    if (state.authority && state.credentials) { try { if (state.authority.deviceId !== state.credentials.deviceId || state.authority.sessionId !== state.credentials.sessionId || state.authority.generation !== state.generation) throw error("AUTHORITY_CREDENTIAL_MISMATCH"); const verified = await verifier.verifyV2(state.authority.envelope, config.trustBundle); if (!verified.ok) throw error(`STORED_AUTHORITY_${verified.error}`); if (verifier.canonicalJson(verified.payload) !== verifier.canonicalJson(state.authority.payload)) throw error("STORED_AUTHORITY_PAYLOAD_MISMATCH"); const allowed = await validateBootstrapAuthority(verified.payload, state.authority.requestedAi).catch(() => null); if (!allowed || allowed.workAllowed !== state.authority.workAllowed || allowed.requestedAi !== (state.authority.requestedAi ?? null)) throw error("STORED_AUTHORITY_POLICY_MISMATCH"); } catch (failure) { const previous = state.authority, next = { ...state, authority: null, lastError: safeError(failure), generation: state.generation + 1 }; await persist(next); state = next; if (previous && typeof authorityChanged === "function") { try { await authorityChanged(null, "authority_invalid", state.generation); } catch (_) {} } } }
-    initialized = true; if (pendingLive(state.pending)) void ensurePolling(); return publicStatus();
+    await chrome.storage.local.setAccessLevel?.({ accessLevel: "TRUSTED_CONTEXTS" }); const result = await chrome.storage.local.get(STORAGE_KEY); const saved = result[STORAGE_KEY]; if (saved && typeof saved === "object") state = { ...state, ...clone(saved) }; if (!validCredentials(state.credentials)) state = { ...state, credentials: null, authority: null, rotation: null, cacheClock: null };
+    if (state.authority && state.credentials) {
+      const savedAuthority = state.authority, binding = savedAuthority.cacheBinding, clock = state.cacheClock;
+      try {
+        if (!validCacheBinding(binding) || !clock || !validCacheClockShape(clock)) throw error("STORED_CACHE_METADATA_INVALID");
+        const originMismatch = binding.controlApiOrigin !== config.controlApiOrigin || binding.portalOrigin !== config.portalOrigin || clock.owner.controlApiOrigin !== config.controlApiOrigin || clock.owner.portalOrigin !== config.portalOrigin;
+        if (originMismatch) throw error("STORED_CACHE_ORIGIN_MISMATCH");
+        if (savedAuthority.deviceId !== state.credentials.deviceId || savedAuthority.sessionId !== state.credentials.sessionId || savedAuthority.generation !== state.generation || clock.owner.deviceId !== state.credentials.deviceId || clock.owner.sessionId !== state.credentials.sessionId) throw error("AUTHORITY_CREDENTIAL_MISMATCH");
+        if (binding.contractVersion !== config.contractVersion || clock.owner.contractVersion !== config.contractVersion) { await discardRestoredAuthority(error("STORED_CACHE_CONTEXT_MISMATCH")); }
+        else {
+        const verified = await verifier.verifyV2(savedAuthority.envelope, config.trustBundle); if (!verified.ok) throw error(`STORED_AUTHORITY_${verified.error}`);
+        if (verifier.canonicalJson(verified.payload) !== verifier.canonicalJson(savedAuthority.payload)) throw error("STORED_AUTHORITY_PAYLOAD_MISMATCH");
+        const allowed = await validateAccountProfile(verified.payload, savedAuthority.requestedAi, false).catch(() => null); if (!allowed) throw error("STORED_AUTHORITY_POLICY_MISMATCH");
+        if (!validCacheClock(clock, state.credentials, verified.payload)) throw error("STORED_CACHE_CLOCK_INCONSISTENT");
+        const expected = await expectedCacheBinding(verified.payload, allowed.requestedAi);
+        if (verifier.canonicalJson(binding) !== verifier.canonicalJson(expected)) { await discardRestoredAuthority(error("STORED_CACHE_CONTEXT_MISMATCH")); }
+        else if (!await validateAccountProfile(verified.payload, savedAuthority.requestedAi, true).catch(() => null)) { await discardRestoredAuthority(error("STORED_AUTHORITY_ENVIRONMENT_MISMATCH")); }
+        else {
+          state.authority = { ...savedAuthority, payload: verified.payload, requestedAi: allowed.requestedAi, workAllowed: savedAuthority.workAllowed === true && allowed.workAllowed === true };
+          await cacheAuthorizationCheckpoint();
+        }
+        }
+      } catch (failure) {
+        if (failure.code === "STORED_CACHE_CONTEXT_MISMATCH" || failure.code === "STORED_AUTHORITY_ENVIRONMENT_MISMATCH") { /* handled above */ }
+        else if (failure.code === "STORED_CACHE_ORIGIN_MISMATCH" || failure.code === "AUTHORITY_CREDENTIAL_MISMATCH" || failure.code === "STORED_CACHE_METADATA_INVALID" || failure.code === "STORED_CACHE_CLOCK_INCONSISTENT") await invalidateKnown(contextForState(), failure, true);
+        else await discardRestoredAuthority(failure);
+      }
+    }
+    const restoredDecision = state.authority && state.credentials ? await cacheAuthorizationCheckpoint() : { allowed: false };
+    initialized = true; if (pendingLive(state.pending)) void ensurePolling(); return publicStatus(restoredDecision);
   }
   function init() { if (initialized) return Promise.resolve(publicStatus()); if (!initFlight) initFlight = restoreOnce().finally(() => { initFlight = null; }); return initFlight; }
-  async function localReset() { await init(); await queueMutation(async () => { activationFlight = null; pollingFlight = null; refreshFlight = null; await commit({ generation: state.generation + 1, credentials: null, pending: null, rotation: null, authority: null, lastError: null }, state.authority, "local_reset"); }); return publicStatus(); }
+  async function localReset() { await init(); await queueMutation(async () => { activationFlight = null; pollingFlight = null; refreshFlight = null; runtimeClockOwner = null; runtimeAnchor = null; runtimeEffectiveHighWatermark = null; runtimeFloorNeedsPersistence = false; runtimeLastCheckpointAllowed = null; await commit({ generation: state.generation + 1, credentials: null, pending: null, rotation: null, authority: null, cacheClock: null, lastError: null }, state.authority, "local_reset"); }); return publicStatus(); }
   async function cancelActivation() { await init(); await queueMutation(async () => { activationFlight = null; pollingFlight = null; await commit({ ...state, generation: state.generation + 1, pending: null, lastError: null }, state.authority, "activation_cancelled"); }); return publicStatus(); }
-  const api = { restore: init, status: async () => { await init(); return publicStatus(); }, currentAccount: async () => { await init(); return state.authority?.payload?.account?.id || null; }, generation: async () => { await init(); return state.generation; }, hasAuthority: async () => { await init(); return Boolean(state.authority && state.credentials); }, canWork: async () => { await init(); return Boolean(state.authority && state.authority.workAllowed && canWork(state.authority.payload)); }, getAuthority: async () => { await init(); return clone(state.authority); }, startActivation, cancelActivation, refresh, bootstrap, ensureForIdentity, localReset, openPortal: async () => { await init(); const pending = state.pending; if (!pendingLive(pending)) throw error("NO_ACTIVATION_ATTEMPT"); return openPortal(pending.authorizationId); }, onAuthorityChanged: handler => { authorityChanged = handler; } };
+  const api = { restore: init, status: async () => { await init(); const decision = await cacheAuthorizationCheckpoint(); return publicStatus(decision); }, currentAccount: async () => { await init(); return state.authority?.payload?.account?.id || null; }, generation: async () => { await init(); return state.generation; }, hasAuthority: async () => { await init(); return Boolean(state.authority && state.credentials); }, canWork: async () => { await init(); return (await cacheAuthorizationCheckpoint()).allowed === true; }, getAuthority: async () => { await init(); const decision = await cacheAuthorizationCheckpoint(); const authority = clone(state.authority); if (authority && !decision.allowed) authority.workAllowed = false; return authority; }, startActivation, cancelActivation, refresh, bootstrap, ensureForIdentity, localReset, openPortal: async () => { await init(); const pending = state.pending; if (!pendingLive(pending)) throw error("NO_ACTIVATION_ATTEMPT"); return openPortal(pending.authorizationId); }, onAuthorityChanged: handler => { authorityChanged = handler; } };
   globalThis.SellerAgentsControlClient = Object.freeze(api);
 })();
