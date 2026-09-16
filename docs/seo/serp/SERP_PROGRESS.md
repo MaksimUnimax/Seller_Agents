@@ -2,13 +2,13 @@
 
 Дата: 2026-09-16.
 Branch: `seo/wordstat-batch-01-2026-09-16`.
-Status: `S03_PRESTEP_PREPARED__OWNER_DISCLOSURE_REQUIRED_BEFORE_SUBMIT`.
+Status: `S03_PRESTEP_PASS__READY_SUBMIT_S03`.
 Master authority: `../SEO_MASTER_ROADMAP_2026-09-16.md`.
 Provider-query hard gate: `../PROVIDER_QUERY_RELEASE_RULE.md`.
 
 ## Evidence rule
 
-For every provider-backed query, a query-specific fresh-research/release gate must pass before the first Bridge lifecycle command. After every Bridge/provider response:
+For every provider-backed query, a query-specific fresh-research/release gate must pass before provider execution. After every Bridge/provider response:
 
 `FULL RESPONSE -> DURABLE PERSIST -> REMOTE READBACK -> ANALYSIS/PROGRESS -> NEXT ACTION`.
 
@@ -67,32 +67,27 @@ Observed local start:
 - raw evidence: `raw/S03_01_START_2026-09-16.md`;
 - remote readback: PASS.
 
-No Yandex provider request or cost occurred. Do not recreate the local job merely to hide the process defect.
+No Yandex provider request or cost occurred. The local job is retained and not recreated.
 
 ### Query-specific pre-step/release
 
 Authority: `S03_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-16.md`.
 Remote readback: PASS.
 
-It contains:
+Owner-facing fresh source disclosure and step analysis were delivered in the current chat before provider execution. The owner then explicitly instructed `Приступай к шагу 3`.
 
-- whole-goal/roadmap/cursor;
-- exact S03 decision question;
-- prior failure controls;
-- fresh official Yandex + industry research;
-- source-to-method trace;
-- information-gain/outcome contract;
-- provider settings/cost bound;
-- Bridge capability reconciliation;
-- Work-trigger evaluation;
-- hard gates;
-- 10-dimension quality score `94.5/100 = 9.45/10`.
+Activation authority: `S03_EXECUTION_ACTIVATION_2026-09-16.md`.
+Activation remote readback: PASS.
+
+Pre-step quality score: `94.5/100 = 9.45/10`.
 
 ### Current hard gate
 
-`submitN` remains blocked until the required owner-facing clickable source disclosure and step analysis are delivered in the current chat.
+Exactly one provider action is now released:
 
-After that disclosure, the existing S03 local job may continue with exactly one `submitN count=1`; no second `start` is needed.
+`SEARCH_ASYNC_BATCH_API_V1 {"action":"submitN","jobId":"octoport-serp-s03-20260916","count":1}`
+
+No second `start`, second submit, collect, export, retry or next query is authorized until the exact submit response is persisted/read back and analyzed.
 
 ## Current totals
 
@@ -104,4 +99,5 @@ After that disclosure, the existing S03 local job may continue with exactly one 
 - local admission failures: `2`;
 - local not-due guards: `2`;
 - provider failures: `0`;
-- current master stage: `M3 Ordinary Yandex SERP collection`.
+- current master stage: `M3 Ordinary Yandex SERP collection`;
+- next action: exactly one `S03 submitN count=1`.
