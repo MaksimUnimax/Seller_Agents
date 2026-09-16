@@ -2,19 +2,25 @@
 
 Дата: 2026-09-16.
 Branch: `seo/wordstat-batch-01-2026-09-16`.
-Status: `IN_PROGRESS`.
+Status: `BATCH_COMPLETE_PENDING_SYNTHESIS`.
 
 ## Persistence rule
 
 Owner rule: every provider result is persisted to repository immediately after receipt. Analysis and the next provider command are allowed only after the raw evidence write succeeds. Chat history is never treated as the only copy of a result.
 
-For every call:
+### Exact-envelope requirement
 
-1. save full received result/provenance under `wordstat/raw/`;
-2. verify successful GitHub write;
-3. save analytical interpretation separately under `wordstat/analysis/`;
+For every provider response, the raw evidence file MUST contain the **entire received `WORDSTAT_RESULT_V1` envelope**, including every top-level field and every nested field/array that was returned. A raw file must not be replaced by only a status note, summary table, extracted rows, or analytical paraphrase.
+
+Required order for every call:
+
+1. save the complete received provider envelope under `wordstat/raw/`;
+2. verify the GitHub write;
+3. only then save analytical interpretation separately under `wordstat/analysis/`;
 4. update progress/cursor;
 5. only then issue the next command.
+
+If the provider returns `result: {}`, preserve that exact empty object. Do not rewrite it as zero demand. If the provider omits `results`, `associations`, or `totalCount`, preserve the omission and do not fabricate them.
 
 ## Parallel-development isolation
 
@@ -46,13 +52,14 @@ Until a separate synchronization/review step:
 | B01-12 | ии анализ продаж маркетплейсов | SUCCESS_EMPTY_RESULT | n/a | `wordstat-7fe638ab-f79b-461f-b54c-44230336238c` | `raw/B01_12_2026-09-16.md` | `analysis/B01_12_2026-09-16.md` |
 | B01-13 | подключить ии к маркетплейсу | SUCCESS_EMPTY_RESULT | n/a | `wordstat-294bc81e-a90b-4f44-b68c-411407470a9c` | `raw/B01_13_2026-09-16.md` | `analysis/B01_13_2026-09-16.md` |
 | B01-14 | сервис аналитики маркетплейсов | SUCCESS | 756 | `wordstat-8220c941-f1f0-4fd3-a052-0b16ca1cb447` | `raw/B01_14_2026-09-16.md` | `analysis/B01_14_2026-09-16.md` |
+| B01-15 | как использовать ии для маркетплейсов | SUCCESS | 3 | `wordstat-336201c0-a30e-420a-83cc-475c2879a3e1` | `raw/B01_15_2026-09-16.md` | `analysis/B01_15_2026-09-16.md` |
 
 ## Totals
 
-- successful HTTP/provider calls: `14/15`;
-- calls with usable `totalCount`: `12/15`;
+- successful HTTP/provider calls: `15/15`;
+- calls with usable `totalCount`: `13/15`;
 - successful-empty result calls: `2`;
 - provider failures: `0`;
-- accumulated estimated cost: `0.28 ₽`;
-- current cursor: `B01-15`;
-- next seed: `как использовать ии для маркетплейсов`.
+- accumulated estimated cost: `0.30 ₽`;
+- Batch 01 provider collection: `COMPLETE`;
+- next step: synthesize Batch 01 evidence and derive targeted Batch 02 from observed vocabulary; no provider call until that synthesis is persisted.
