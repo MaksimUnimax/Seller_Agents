@@ -16,6 +16,18 @@ For every call:
 4. update progress/cursor;
 5. only then issue the next command.
 
+## Parallel-development isolation
+
+Owner reminder: server development is running in parallel and SEO work must not interfere with it.
+
+Until a separate synchronization/review step:
+
+- this working branch writes only under `docs/seo/**`;
+- do not edit `apps/api`, `apps/portal`, `apps/admin`, `apps/worker`, `packages/server`, migrations, shared auth/contracts, extension runtime, or site runtime from the SEO stream;
+- do not merge the SEO working branch into `main` blindly while parallel server/site work is moving;
+- before any later PR/merge, re-check current remote `main`, inspect overlap, and resolve only documentation-level conflicts deliberately;
+- Wordstat collection itself requires no server/runtime code changes.
+
 ## Calls
 
 | Call | Seed | Status | totalCount | Request ID | Raw | Analysis |
@@ -26,11 +38,12 @@ For every call:
 | B01-04 | аналитика маркетплейсов с ии | SUCCESS | 13 | `wordstat-d883fee5-3a1e-404e-884f-d50e890ee58e` | `raw/B01_04_2026-09-16.md` | `analysis/B01_04_2026-09-16.md` |
 | B01-05 | ии для ozon | SUCCESS | 128 | `wordstat-fbd8e2dc-a426-4e95-9b20-51bdd31e07c7` | `raw/B01_05_2026-09-16.md` | `analysis/B01_05_2026-09-16.md` |
 | B01-06 | ии для озон | SUCCESS | 972 | `wordstat-101b03ff-b998-457c-b9c0-d1a78c68d62c` | `raw/B01_06_2026-09-16.md` | `analysis/B01_06_2026-09-16.md` |
+| B01-07 | ии для wildberries | SUCCESS | 225 | `wordstat-06614787-cd5e-4b68-a155-69c03ff700c2` | `raw/B01_07_2026-09-16.md` | `analysis/B01_07_2026-09-16.md` |
 
 ## Totals
 
-- successful calls: `6/15`;
+- successful calls: `7/15`;
 - provider failures: `0`;
-- accumulated estimated cost: `0.12 ₽`;
-- current cursor: `B01-07`;
-- next seed: `ии для wildberries`.
+- accumulated estimated cost: `0.14 ₽`;
+- current cursor: `B01-08`;
+- next seed: `ии для вайлдберриз`.
