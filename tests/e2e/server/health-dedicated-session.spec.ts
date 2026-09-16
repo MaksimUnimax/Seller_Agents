@@ -2,18 +2,17 @@ import { expect, test } from "@playwright/test";
 import { chmod, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import * as HealthRunner from "@product/health-runner";
 import {
   ChromeBrowserDriver,
   createControlledTargetRegistry,
   createDedicatedHealthChromeBrowserDriver,
-  type DedicatedHealthSessionBinding,
+  loadDedicatedHealthSessionRegistry,
 } from "@product/health-runner";
 
 const COOKIE_NAME = "synthetic_health_cookie";
 const COOKIE_VALUE = "synthetic-health-only";
-const WORK_ROUTE = "/g/g-p-test-health/c/00000000-0000-4000-8000-000000000123";
-
 type LoopbackFixture = Readonly<{
   origin: string;
   requests: () => readonly Readonly<{ path: string; cookie: string }>[];
@@ -82,6 +81,34 @@ async function withStorageState(
   }
 }
 
+type LoadedRegistry = Awaited<
+  ReturnType<typeof loadDedicatedHealthSessionRegistry>
+>;
+
+async function withLoadedStandardRegistry(
+  callback: (
+    storageStatePath: string,
+    registry: LoadedRegistry,
+  ) => Promise<void>,
+): Promise<void> {
+  await withStorageState(async (storageStatePath) => {
+    const configPath = join(dirname(storageStatePath), "config.json");
+    await writeFile(
+      configPath,
+      JSON.stringify({
+        version: 1,
+        targets: {
+          chatgpt_standard_health: { storageStatePath },
+        },
+      }),
+      { mode: 0o600 },
+    );
+    await chmod(configPath, 0o600);
+    const registry = await loadDedicatedHealthSessionRegistry(configPath);
+    await callback(storageStatePath, registry);
+  });
+}
+
 function targets(origin: string) {
   return createControlledTargetRegistry([
     {
@@ -101,28 +128,15 @@ function targets(origin: string) {
   ]);
 }
 
-function standardBinding(
-  storageStatePath: string,
-): DedicatedHealthSessionBinding {
-  return { targetKey: "chatgpt_standard_health", storageStatePath };
-}
-
-function workBinding(
-  origin: string,
-  storageStatePath: string,
-  startUrl = `${origin}${WORK_ROUTE}`,
-): DedicatedHealthSessionBinding {
-  return { targetKey: "chatgpt_work_health", storageStatePath, startUrl };
-}
-
 test.describe("B7A dedicated Health session provisioning", () => {
   test("consumes dedicated Standard storage state in a fresh controlled context", async () => {
     const fixture = await startLoopbackFixture();
     try {
-      await withStorageState(async (storageStatePath) => {
+      await withLoadedStandardRegistry(async (storageStatePath, registry) => {
         const driver = createDedicatedHealthChromeBrowserDriver(
           targets(fixture.origin),
-          standardBinding(storageStatePath),
+          registry,
+          "chatgpt_standard_health",
         );
         try {
           await driver.start();
@@ -149,116 +163,17 @@ test.describe("B7A dedicated Health session provisioning", () => {
     }
   });
 
-  test("uses the local-only Work route and consumes its dedicated cookie", async () => {
+  test("rejects a target that is not configured by the loaded registry", async () => {
     const fixture = await startLoopbackFixture();
     try {
-      await withStorageState(async (storageStatePath) => {
-        const driver = createDedicatedHealthChromeBrowserDriver(
-          targets(fixture.origin),
-          workBinding(fixture.origin, storageStatePath),
-        );
-        try {
-          await driver.start();
-          const result = await driver.open("chatgpt_work_health");
-          expect(fixture.requests()).toContainEqual({
-            path: WORK_ROUTE,
-            cookie: `${COOKIE_NAME}=${COOKIE_VALUE}`,
-          });
-          expect(result).toEqual({
-            targetKey: "chatgpt_work_health",
-            finalOrigin: fixture.origin,
-          });
-          expect(JSON.stringify(result)).not.toContain(WORK_ROUTE);
-          expect(JSON.stringify(result)).not.toContain(COOKIE_VALUE);
-        } finally {
-          await driver.closeOrPersist();
-        }
-      });
-    } finally {
-      await fixture.close();
-    }
-  });
-
-  test("rejects dedicated binding target mismatch before any navigation", async () => {
-    const fixture = await startLoopbackFixture();
-    try {
-      await withStorageState(async (storageStatePath) => {
-        const workDriver = createDedicatedHealthChromeBrowserDriver(
-          targets(fixture.origin),
-          workBinding(fixture.origin, storageStatePath),
-        );
-        const standardDriver = createDedicatedHealthChromeBrowserDriver(
-          targets(fixture.origin),
-          standardBinding(storageStatePath),
-        );
-        try {
-          await workDriver.start();
-          await expect(
-            workDriver.open("chatgpt_standard_health"),
-          ).rejects.toMatchObject({
-            code: "DEDICATED_TARGET_MISMATCH",
-          });
-          await standardDriver.start();
-          await expect(
-            standardDriver.open("chatgpt_work_health"),
-          ).rejects.toMatchObject({
-            code: "DEDICATED_TARGET_MISMATCH",
-          });
-          expect(fixture.requests()).toEqual([]);
-        } finally {
-          await workDriver.closeOrPersist();
-          await standardDriver.closeOrPersist();
-        }
-      });
-    } finally {
-      await fixture.close();
-    }
-  });
-
-  test("rejects cross-origin, Standard-override, query/hash and invalid Work routes before navigation", async () => {
-    const fixture = await startLoopbackFixture();
-    try {
-      await withStorageState(async (storageStatePath) => {
-        const invalidUrls = [
-          "https://evil.example/g/g-p-test-health/c/00000000-0000-4000-8000-000000000123",
-          `${fixture.origin}${WORK_ROUTE}?unsafe=1`,
-          `${fixture.origin}${WORK_ROUTE}#unsafe`,
-          `${fixture.origin}/g/g-p-test-health/c/not-a-uuid`,
-        ];
-        for (const startUrl of invalidUrls) {
-          const driver = createDedicatedHealthChromeBrowserDriver(
+      await withLoadedStandardRegistry(async (_storageStatePath, registry) => {
+        expect(() =>
+          createDedicatedHealthChromeBrowserDriver(
             targets(fixture.origin),
-            workBinding(fixture.origin, storageStatePath, startUrl),
-          );
-          try {
-            await driver.start();
-            await expect(
-              driver.open("chatgpt_work_health"),
-            ).rejects.toMatchObject({
-              code: "DEDICATED_START_URL_INVALID",
-            });
-          } finally {
-            await driver.closeOrPersist();
-          }
-        }
-
-        const standardOverride = {
-          targetKey: "chatgpt_standard_health",
-          storageStatePath,
-          startUrl: `${fixture.origin}/injected-standard-start`,
-        } as unknown as DedicatedHealthSessionBinding;
-        const standardDriver = createDedicatedHealthChromeBrowserDriver(
-          targets(fixture.origin),
-          standardOverride,
-        );
-        try {
-          await standardDriver.start();
-          await expect(
-            standardDriver.open("chatgpt_standard_health"),
-          ).rejects.toMatchObject({ code: "DEDICATED_START_URL_INVALID" });
-        } finally {
-          await standardDriver.closeOrPersist();
-        }
+            registry,
+            "chatgpt_work_health",
+          ),
+        ).toThrowError("TARGET_NOT_CONFIGURED");
         expect(fixture.requests()).toEqual([]);
       });
     } finally {
@@ -266,13 +181,19 @@ test.describe("B7A dedicated Health session provisioning", () => {
     }
   });
 
+  test("does not expose a runtime registry or direct binding API at the root", () => {
+    expect("DedicatedHealthSessionRegistry" in HealthRunner).toBe(false);
+    expect("DedicatedHealthSessionBinding" in HealthRunner).toBe(false);
+  });
+
   test("does not carry dedicated cookies into a newly constructed default driver", async () => {
     const fixture = await startLoopbackFixture();
     try {
-      await withStorageState(async (storageStatePath) => {
+      await withLoadedStandardRegistry(async (_storageStatePath, registry) => {
         const dedicatedDriver = createDedicatedHealthChromeBrowserDriver(
           targets(fixture.origin),
-          standardBinding(storageStatePath),
+          registry,
+          "chatgpt_standard_health",
         );
         try {
           await dedicatedDriver.start();
@@ -293,6 +214,103 @@ test.describe("B7A dedicated Health session provisioning", () => {
           { path: "/standard-start", cookie: "" },
         ]);
       });
+    } finally {
+      await fixture.close();
+    }
+  });
+
+  test("rejects forged factory authority before synthetic state consumption", async () => {
+    const fixture = await startLoopbackFixture();
+    try {
+      await withStorageState(async (storageStatePath) => {
+        const forgedBinding = {
+          targetKey: "chatgpt_standard_health",
+          storageStatePath,
+        };
+        const factory = createDedicatedHealthChromeBrowserDriver as unknown as (
+          targetRegistry: ReturnType<typeof targets>,
+          forgedAuthority: unknown,
+        ) => ChromeBrowserDriver;
+        let driver: ChromeBrowserDriver | undefined;
+        let factoryError: unknown;
+        try {
+          driver = factory(targets(fixture.origin), forgedBinding);
+        } catch (error) {
+          factoryError = error;
+        }
+        if (factoryError !== undefined) {
+          expect(factoryError).toMatchObject({
+            code: "UNTRUSTED_SESSION_REGISTRY",
+          });
+          expect(fixture.requests()).toEqual([]);
+          return;
+        }
+        try {
+          await driver?.start();
+          await driver?.open("chatgpt_standard_health");
+        } finally {
+          await driver?.closeOrPersist();
+        }
+        expect(fixture.requests()).toEqual([
+          {
+            path: "/standard-start",
+            cookie: "",
+          },
+        ]);
+      });
+    } finally {
+      await fixture.close();
+    }
+  });
+
+  test("ignores a third ChromeBrowserDriver constructor argument", async () => {
+    const fixture = await startLoopbackFixture();
+    try {
+      await withStorageState(async (storageStatePath) => {
+        const forgedBinding = {
+          targetKey: "chatgpt_standard_health",
+          storageStatePath,
+        };
+        const DriverConstructor = ChromeBrowserDriver as unknown as new (
+          targetRegistry: ReturnType<typeof targets>,
+          launchTimeoutMs?: number,
+          forgedAuthority?: unknown,
+        ) => ChromeBrowserDriver;
+        const driver = new DriverConstructor(
+          targets(fixture.origin),
+          undefined,
+          forgedBinding,
+        );
+        try {
+          await driver.start();
+          await driver.open("chatgpt_standard_health");
+        } finally {
+          await driver.closeOrPersist();
+        }
+        expect(fixture.requests()).toEqual([
+          {
+            path: "/standard-start",
+            cookie: "",
+          },
+        ]);
+      });
+    } finally {
+      await fixture.close();
+    }
+  });
+
+  test("rejects a forged plain registry before browser launch", async () => {
+    const fixture = await startLoopbackFixture();
+    try {
+      const factory = createDedicatedHealthChromeBrowserDriver as unknown as (
+        targetRegistry: ReturnType<typeof targets>,
+        forgedRegistry: unknown,
+        targetKey: string,
+      ) => ChromeBrowserDriver;
+      expect(() =>
+        factory(targets(fixture.origin), {}, "chatgpt_standard_health"),
+      ).toThrowError("UNTRUSTED_SESSION_REGISTRY");
+      expect(fixture.requests()).toEqual([]);
     } finally {
       await fixture.close();
     }

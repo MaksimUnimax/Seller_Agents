@@ -1,19 +1,31 @@
 {
-  "taskId": "SA-HEALTH-B7A-SESSION-PROVISIONING-20260916-01",
+  "taskId": "SA-HEALTH-B7A-R1-CAPABILITY-PROVENANCE-20260916-01",
   "roadmap": "P8.4 / B7_CONTROLLED_LIVE_H3",
   "repository": "MaksimUnimax/runtime-fixtures",
   "worktree": "/root/runtime-fixtures",
   "branch": "feature/server-health-h3-p8-4",
   "authority": {
-    "startingHead": "90c1e0c66a47692634eb652aa1392fdafc1f8f10",
-    "startingRemoteHead": "90c1e0c66a47692634eb652aa1392fdafc1f8f10",
-    "startingTree": "447d6515954e051a287011596fdd3154e11c2561",
-    "startingParent": "697eea7adc337e1f11def16818829c2e443efb15",
+    "startingHead": "592b51da31ab5ecfd0e4d4b3e981897849731614",
+    "startingRemoteHead": "592b51da31ab5ecfd0e4d4b3e981897849731614",
+    "startingTree": "1e4737933665a6ba6d02e491e7873d3f40e47e6f",
+    "startingParent": "90c1e0c66a47692634eb652aa1392fdafc1f8f10",
     "architectMain": "bc718cc5c677ad0eb4598e7de3ad766473ff0847",
-    "architectControlHead": "664a8d1b5aaec0dd4bd33f79e126ea31a77e15c0"
+    "architectControlHead": "c122d57a8c4ffeaebedb2b7f7c7d310784860821"
+  },
+  "provenRedBeforeFix": {
+    "candidate": "592b51da31ab5ecfd0e4d4b3e981897849731614",
+    "forgedFactory": { "failed": 1, "reason": "synthetic cookie injection" },
+    "thirdConstructorArgument": {
+      "failed": 1,
+      "reason": "synthetic cookie injection"
+    },
+    "realAuthOrProviderCalls": 0
   },
   "implementation": {
     "registryVersion": 1,
+    "opaqueLoaderCapability": true,
+    "privateRegistryWeakMap": true,
+    "privateDriverWeakMap": true,
     "sessionKind": "EPHEMERAL_CONTROLLED",
     "persistentContext": false,
     "userDataDir": false,
@@ -26,37 +38,45 @@
   },
   "targetedChecks": {
     "dedicatedRegistry": { "passed": 11, "failed": 0, "skipped": 0 },
-    "healthRunnerUnit": { "files": 10, "passed": 119, "failed": 0, "skipped": 0 },
-    "dedicatedChromium": { "passed": 5, "failed": 0, "skipped": 0 },
-    "focusedHealthChromiumFirstPass": { "passed": 96, "failed": 1, "skipped": 0 },
-    "focusedHealthChromiumRetry": { "passed": 1, "failed": 0, "skipped": 0 },
-    "focusedH3Postgres": { "passed": 18, "failed": 0, "skipped": 0 },
-    "fullPlaywrightE2E": { "passed": 169, "failed": 0, "skipped": 0 }
+    "requiredHealthSubset": {
+      "files": 6,
+      "passed": 109,
+      "failed": 0,
+      "skipped": 0
+    },
+    "healthRunnerUnit": {
+      "files": 10,
+      "passed": 119,
+      "failed": 0,
+      "skipped": 0
+    },
+    "dedicatedChromium": { "passed": 7, "failed": 0, "skipped": 0 },
+    "playwrightConfigRegression": { "passed": 1, "failed": 0, "skipped": 0 }
   },
   "fullServerCycle": {
     "lint": "PASS",
     "formatCheck": "PASS",
     "typecheck": "PASS",
     "playwrightConfigRegression": "1 passed",
-    "unit": "PASS",
-    "integration": "39 files / 1526 passed",
-    "dbMigrate": "PASS",
+    "unit": "PASS; Health 119/119",
+    "integration": "BLOCKED/NOT_COMPLETED: DATABASE_URL absent; interrupted",
+    "dbMigrate": "BLOCKED: DATABASE_URL absent",
     "openapiCheck": "PASS",
     "bridgeGuard": "PASS",
     "build": "PASS",
-    "chromiumInstall": "NOT_NEEDED",
-    "e2e": "169 passed",
+    "chromiumInstall": "NOT_NEEDED for isolated dedicated E2E",
+    "canonicalE2E": "BLOCKED before tests: DATABASE_URL invalid/absent",
     "docsCheck": "PASS: 416 files / 229 Markdown / 320 relative links / 26 requirements / 32 scenarios"
   },
   "negativeCases": [
+    "forged registry rejected before launch/state consumption",
+    "third constructor argument has no authority",
     "strict schema and unknown fields",
     "relative, symlinked, non-regular, empty and oversized files",
     "POSIX group/other permissions",
     "duplicate storage-state file identity",
-    "Standard start override",
     "Work scheme/origin/credentials/query/hash/route failures",
-    "dedicated target mismatch",
-    "cross-origin runtime navigation",
+    "missing configured target",
     "default/dedicated cookie isolation"
   ],
   "privacy": {
@@ -83,7 +103,7 @@
   ],
   "allowlist": "PASS",
   "verdict": {
-    "B7A": "IMPLEMENTATION_CANDIDATE_PENDING_ARCHITECT_AND_EXACT_HEAD_CI",
+    "B7A_R1": "IMPLEMENTATION_CANDIDATE_PENDING_ARCHITECT_AND_EXACT_HEAD_CI",
     "B7_LIVE_BEHAVIORAL_ACCEPTANCE": "NOT_RUN",
     "P8.4": "NOT_ACCEPTED",
     "P8.5": "NOT_STARTED"
@@ -92,8 +112,8 @@
   "publication": {
     "finalCommit": "PENDING_COMMIT",
     "finalTree": "PENDING_COMMIT",
-    "finalParent": "90c1e0c66a47692634eb652aa1392fdafc1f8f10",
-    "remoteBefore": "90c1e0c66a47692634eb652aa1392fdafc1f8f10",
+    "finalParent": "592b51da31ab5ecfd0e4d4b3e981897849731614",
+    "remoteBefore": "592b51da31ab5ecfd0e4d4b3e981897849731614",
     "remoteAfter": "PENDING_PUSH",
     "immediateCi": "NOT_RUN_NOT_AWAITED"
   }

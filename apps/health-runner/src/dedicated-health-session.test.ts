@@ -13,6 +13,7 @@ import { describe, expect, it } from "vitest";
 import {
   DedicatedHealthSessionConfigError,
   loadDedicatedHealthSessionRegistry,
+  resolveDedicatedHealthSessionBinding,
 } from "./dedicated-health-session.js";
 
 const WORK_URL =
@@ -82,7 +83,10 @@ describe("dedicated Health session registry", () => {
       const registry = await loadDedicatedHealthSessionRegistry(
         await createConfig(directory, standardConfig(statePath)),
       );
-      const binding = registry.resolve("chatgpt_standard_health");
+      const binding = resolveDedicatedHealthSessionBinding(
+        registry,
+        "chatgpt_standard_health",
+      );
       expect(binding.targetKey).toBe("chatgpt_standard_health");
       expect(binding.storageStatePath).toBe(statePath);
       expect("startUrl" in binding).toBe(false);
@@ -96,7 +100,9 @@ describe("dedicated Health session registry", () => {
       const registry = await loadDedicatedHealthSessionRegistry(
         await createConfig(directory, workConfig(statePath)),
       );
-      expect(registry.resolve("chatgpt_work_health")).toMatchObject({
+      expect(
+        resolveDedicatedHealthSessionBinding(registry, "chatgpt_work_health"),
+      ).toMatchObject({
         targetKey: "chatgpt_work_health",
         storageStatePath: statePath,
         startUrl: WORK_URL,
@@ -120,19 +126,27 @@ describe("dedicated Health session registry", () => {
           },
         }),
       );
-      expect(registry.resolve("chatgpt_standard_health").storageStatePath).toBe(
-        standardState,
-      );
-      expect(registry.resolve("chatgpt_work_health").storageStatePath).toBe(
-        workState,
-      );
+      expect(
+        resolveDedicatedHealthSessionBinding(
+          registry,
+          "chatgpt_standard_health",
+        ).storageStatePath,
+      ).toBe(standardState);
+      expect(
+        resolveDedicatedHealthSessionBinding(registry, "chatgpt_work_health")
+          .storageStatePath,
+      ).toBe(workState);
       expect(JSON.stringify(registry)).not.toContain("standard.json");
       expect(JSON.stringify(registry)).not.toContain(WORK_URL);
       expect(
-        JSON.stringify(registry.resolve("chatgpt_work_health")),
+        JSON.stringify(
+          resolveDedicatedHealthSessionBinding(registry, "chatgpt_work_health"),
+        ),
       ).not.toContain(WORK_URL);
       expect(
-        JSON.stringify(registry.resolve("chatgpt_work_health")),
+        JSON.stringify(
+          resolveDedicatedHealthSessionBinding(registry, "chatgpt_work_health"),
+        ),
       ).not.toContain(workState);
     });
   });
@@ -144,8 +158,17 @@ describe("dedicated Health session registry", () => {
         await createConfig(directory, standardConfig(statePath)),
       );
       await expectConfigError(
-        async () => registry.resolve("missing_target"),
+        async () =>
+          resolveDedicatedHealthSessionBinding(registry, "missing_target"),
         "TARGET_NOT_CONFIGURED",
+      );
+      await expectConfigError(
+        async () =>
+          resolveDedicatedHealthSessionBinding(
+            {} as import("./dedicated-health-session.js").DedicatedHealthSessionRegistry,
+            "chatgpt_standard_health",
+          ),
+        "UNTRUSTED_SESSION_REGISTRY",
       );
       await expectConfigError(
         async () =>
@@ -282,7 +305,8 @@ describe("dedicated Health session registry", () => {
       );
       await chmod(configPath, 0o600);
       expect(
-        (await loadDedicatedHealthSessionRegistry(configPath)).resolve(
+        resolveDedicatedHealthSessionBinding(
+          await loadDedicatedHealthSessionRegistry(configPath),
           "chatgpt_standard_health",
         ).targetKey,
       ).toBe("chatgpt_standard_health");

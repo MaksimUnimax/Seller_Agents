@@ -32,6 +32,7 @@ export type DedicatedHealthSessionConfigErrorCode =
   | "STORAGE_STATE_PERMISSIONS"
   | "DUPLICATE_STORAGE_STATE"
   | "INVALID_WORK_START_URL"
+  | "UNTRUSTED_SESSION_REGISTRY"
   | "TARGET_NOT_CONFIGURED";
 
 export class DedicatedHealthSessionConfigError extends Error {
@@ -43,7 +44,7 @@ export class DedicatedHealthSessionConfigError extends Error {
   }
 }
 
-export type DedicatedHealthSessionBinding = Readonly<
+type DedicatedHealthSessionBinding = Readonly<
   | {
       targetKey: typeof STANDARD_TARGET_KEY;
       storageStatePath: string;
@@ -226,25 +227,31 @@ function parseConfig(value: unknown): DedicatedHealthSessionBinding[] {
   return bindings;
 }
 
-export class DedicatedHealthSessionRegistry {
-  readonly #bindings: ReadonlyMap<
-    DedicatedHealthSessionTargetKey,
-    DedicatedHealthSessionBinding
-  >;
+export interface DedicatedHealthSessionRegistry {
+  readonly __dedicatedHealthSessionRegistry?: never;
+}
 
-  public constructor(bindings: readonly DedicatedHealthSessionBinding[]) {
-    this.#bindings = new Map(
-      bindings.map((binding) => [binding.targetKey, binding]),
-    );
-  }
+const registryBindings = new WeakMap<
+  object,
+  ReadonlyMap<DedicatedHealthSessionTargetKey, DedicatedHealthSessionBinding>
+>();
 
-  public resolve(targetKey: string): DedicatedHealthSessionBinding {
-    if (targetKey !== STANDARD_TARGET_KEY && targetKey !== WORK_TARGET_KEY)
-      fail("TARGET_NOT_CONFIGURED");
-    const binding = this.#bindings.get(targetKey);
-    if (!binding) fail("TARGET_NOT_CONFIGURED");
-    return binding;
-  }
+export function resolveDedicatedHealthSessionBinding(
+  registry: DedicatedHealthSessionRegistry,
+  targetKey: string,
+): DedicatedHealthSessionBinding {
+  if (
+    (typeof registry !== "object" && typeof registry !== "function") ||
+    registry === null
+  )
+    fail("UNTRUSTED_SESSION_REGISTRY");
+  const bindings = registryBindings.get(registry);
+  if (!bindings) fail("UNTRUSTED_SESSION_REGISTRY");
+  if (targetKey !== STANDARD_TARGET_KEY && targetKey !== WORK_TARGET_KEY)
+    fail("TARGET_NOT_CONFIGURED");
+  const binding = bindings.get(targetKey);
+  if (!binding) fail("TARGET_NOT_CONFIGURED");
+  return binding;
 }
 
 export async function loadDedicatedHealthSessionRegistry(
@@ -290,7 +297,10 @@ export async function loadDedicatedHealthSessionRegistry(
       }
     }
   }
-  return new DedicatedHealthSessionRegistry(
-    inspectedStates.map(({ binding }) => binding),
+  const registry = Object.freeze({}) as DedicatedHealthSessionRegistry;
+  registryBindings.set(
+    registry,
+    new Map(inspectedStates.map(({ binding }) => [binding.targetKey, binding])),
   );
+  return registry;
 }

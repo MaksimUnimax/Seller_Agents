@@ -23,7 +23,11 @@ import { shouldBlockPrimaryDocumentRequest } from "./navigation-policy.js";
 import { createChatGPTStandardH3Strategy } from "./standard-h3-strategy.js";
 import { createChatGPTWorkH3Strategy } from "./work-h3-strategy.js";
 import type { H3SurfaceStrategy } from "./h3-strategy.js";
-import type { DedicatedHealthSessionBinding } from "./dedicated-health-session.js";
+import {
+  resolveDedicatedHealthSessionBinding,
+  type DedicatedHealthSessionRegistry,
+  type DedicatedHealthSessionTargetKey,
+} from "./dedicated-health-session.js";
 import { parseWorkRoute } from "./work-h3-profile.js";
 
 export type BrowserDriverErrorCode =
@@ -74,6 +78,15 @@ export type ControlledNavigationResult = Readonly<{
 const DEFAULT_LAUNCH_TIMEOUT_MS = 15_000;
 const NAVIGATION_STABILIZATION_MS = 350;
 
+type DedicatedHealthSessionBinding = ReturnType<
+  typeof resolveDedicatedHealthSessionBinding
+>;
+
+const dedicatedBindings = new WeakMap<
+  ChromeBrowserDriver,
+  DedicatedHealthSessionBinding
+>();
+
 type FetchRequestPausedEvent = Readonly<{
   requestId: string;
   request: Readonly<{ url: string }>;
@@ -106,14 +119,10 @@ export class ChromeBrowserDriver implements BrowserDriver {
   #cdpRequestPausedListener:
     | ((event: FetchRequestPausedEvent) => void)
     | undefined;
-  #dedicatedBinding: DedicatedHealthSessionBinding | undefined;
-
   public constructor(
     private readonly targets: ControlledTargetRegistry,
     private readonly launchTimeoutMs = DEFAULT_LAUNCH_TIMEOUT_MS,
-    dedicatedBinding?: DedicatedHealthSessionBinding,
   ) {
-    this.#dedicatedBinding = dedicatedBinding;
     if (
       !Number.isInteger(launchTimeoutMs) ||
       launchTimeoutMs < 250 ||
@@ -135,14 +144,15 @@ export class ChromeBrowserDriver implements BrowserDriver {
     if (this.#state !== "PREPARED")
       throw new BrowserDriverError("INVALID_DRIVER_LIFECYCLE");
     try {
+      const dedicatedBinding = dedicatedBindings.get(this);
       const browser = await chromium.launch({
         headless: true,
         timeout: this.launchTimeoutMs,
       });
       const context = await browser.newContext({
         acceptDownloads: false,
-        ...(this.#dedicatedBinding
-          ? { storageState: this.#dedicatedBinding.storageStatePath }
+        ...(dedicatedBinding
+          ? { storageState: dedicatedBinding.storageStatePath }
           : {}),
       });
       this.#browser = browser;
@@ -291,7 +301,7 @@ export class ChromeBrowserDriver implements BrowserDriver {
   }
 
   #resolveDedicatedStartUrl(target: ControlledTarget): string {
-    const binding = this.#dedicatedBinding;
+    const binding = dedicatedBindings.get(this);
     if (!binding) return target.startUrl;
     if (binding.targetKey !== target.key)
       throw new BrowserDriverError("DEDICATED_TARGET_MISMATCH");
@@ -518,8 +528,12 @@ export class ChromeBrowserDriver implements BrowserDriver {
 
 export function createDedicatedHealthChromeBrowserDriver(
   targets: ControlledTargetRegistry,
-  binding: DedicatedHealthSessionBinding,
+  registry: DedicatedHealthSessionRegistry,
+  targetKey: DedicatedHealthSessionTargetKey,
   launchTimeoutMs = DEFAULT_LAUNCH_TIMEOUT_MS,
 ): ChromeBrowserDriver {
-  return new ChromeBrowserDriver(targets, launchTimeoutMs, binding);
+  const binding = resolveDedicatedHealthSessionBinding(registry, targetKey);
+  const driver = new ChromeBrowserDriver(targets, launchTimeoutMs);
+  dedicatedBindings.set(driver, binding);
+  return driver;
 }
