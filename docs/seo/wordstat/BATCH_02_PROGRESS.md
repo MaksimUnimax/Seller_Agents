@@ -43,13 +43,14 @@ SEO work remains isolated from parallel server development:
 | B02-11 | сервис для аналитики продаж на маркетплейсах | SUCCESS | 19 | `wordstat-f9a27bb8-6454-4079-ae46-9ae91d0e3b8c` | `raw/B02_11_2026-09-16.md` | `analysis/B02_11_2026-09-16.md` |
 | B02-12 | сервис внутренней аналитики маркетплейсов | SUCCESS | 19 | `wordstat-4d58e65b-d980-4e99-85aa-94c76e7d1f4c` | `raw/B02_12_2026-09-16.md` | `analysis/B02_12_2026-09-16.md` |
 | B02-13 | нейросеть помощь для маркетплейсов | SUCCESS | 517 | `wordstat-d18b2c70-672e-41bd-99a1-25d237063726` | `raw/B02_13_2026-09-16.md` | `analysis/B02_13_2026-09-16.md` |
+| B02-14 | какой ии для маркетплейсов | SUCCESS | 128 | `wordstat-f62bad2c-c846-4f70-9a47-479894da758d` | `raw/B02_14_2026-09-16.md` | `analysis/B02_14_2026-09-16.md` |
 
 ## Totals
 
-- successful HTTP/provider calls: `13/15`;
-- calls with usable `totalCount`: `13/15`;
+- successful HTTP/provider calls: `14/15`;
+- calls with usable `totalCount`: `14/15`;
 - successful-empty result calls: `0`;
 - provider failures: `0`;
-- accumulated estimated cost: `0.26 ₽`;
-- current cursor: `B02-14`;
-- next seed: `какой ии для маркетплейсов`.
+- accumulated estimated cost: `0.28 ₽`;
+- current cursor: `B02-15`;
+- next seed: `ии агент для селлера`.
