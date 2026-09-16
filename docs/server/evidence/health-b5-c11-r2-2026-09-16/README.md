@@ -30,6 +30,9 @@ Failure step/code, structural and behavioral outcomes, environment validity,
 fallback quality, and evidence absence remain unchanged. No live provider
 calls were made; all browser coverage used local controlled fixtures.
 
-Full server-cycle results and publication identities are captured in
-`results.json`. B5 remains pending architect review and exact-head remote CI;
-this evidence does not self-accept B5.
+Full server-cycle results and local commit identities are captured in
+`results.json`. The normal fast-forward push was blocked by unavailable
+GitHub credentials; the target remote therefore remains at the required base
+and remote CI is not observable from this environment. B5 remains pending
+architect review and exact-head remote CI; this evidence does not self-accept
+B5.
