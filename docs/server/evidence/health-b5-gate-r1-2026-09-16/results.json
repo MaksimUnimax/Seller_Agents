@@ -88,8 +88,22 @@
     "live_provider_calls": 0
   },
   "ci": {
-    "server": "reported_in_terminal_report_if_available",
-    "documentation": "reported_in_terminal_report_if_available",
+    "server": {
+      "run_id": 35084983097,
+      "job_id": 104757575027,
+      "url": "https://github.com/MaksimUnimax/runtime-fixtures/actions/runs/35084983097",
+      "status_at_report": "in_progress",
+      "conclusion_at_report": null,
+      "checkout_sha": "0d42223331ec936a671179fba4f59a0bcbe07214"
+    },
+    "documentation": {
+      "status": "UNKNOWN_NA",
+      "reason": "workflow push trigger excludes feature branches and no pull-request run exists",
+      "latest_main_run_id": 35075454532,
+      "latest_main_url": "https://github.com/MaksimUnimax/runtime-fixtures/actions/runs/35075454532",
+      "latest_main_conclusion": "success",
+      "latest_main_checkout_sha": "bc718cc5c677ad0eb4598e7de3ad766473ff0847"
+    },
     "no_ci_retrigger_for_waiting": true
   }
 }

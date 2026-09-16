@@ -85,6 +85,25 @@ Next.js ESLint-plugin and apt root-run warnings were warnings only. The docs
 check reported structure, relative links, and requirement coverage only; it
 does not execute product tests.
 
+## Remote CI facts
+
+After the normal fast-forward push, the current candidate Server CI is
+`[run 35084983097](https://github.com/MaksimUnimax/runtime-fixtures/actions/runs/35084983097)`;
+its status at report time is `in_progress`, with job `server` ID
+`104757575027`. The run head and checkout SHA are
+`0d42223331ec936a671179fba4f59a0bcbe07214`. This is remote CI in progress,
+not a completed candidate PASS, and it was not awaited or retriggered.
+
+No current Documentation CI run exists for this feature branch: the workflow
+triggers on pushes to `main`/`migration/**`, pull requests, or manual dispatch,
+and no pull-request run was created for this task. Therefore the candidate
+Documentation CI result is `UNKNOWN/N/A`; local `pnpm docs:check` is the
+completed documentation gate. For reference, the latest accessible main
+Documentation CI is
+`[run 35075454532](https://github.com/MaksimUnimax/runtime-fixtures/actions/runs/35075454532)`,
+`success`, checkout/head SHA
+`bc718cc5c677ad0eb4598e7de3ad766473ff0847`.
+
 ## Allowlist and boundaries
 
 Changed paths in this task are exactly:
