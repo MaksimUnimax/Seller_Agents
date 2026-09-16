@@ -136,7 +136,7 @@ Endpoint authority находится в `reference-1.1.5/shared/wordstat_protoc
 
 Выбраны не подряд первые seeds, а независимые словари: общая AI category, нейросеть, seller-assistant language, analytics, Ozon/Озон, Wildberries/Вайлдберриз, ChatGPT pairings, sales analysis, integration language, adjacent analytics SaaS и informational how-to.
 
-Статус: `PREPARED / NOT EXECUTED`. Это важно: файл команд не считается Wordstat evidence.
+Статус подготовки: `PREPARED`.
 
 ### Current public-site source audit
 
@@ -169,14 +169,75 @@ Endpoint authority находится в `reference-1.1.5/shared/wordstat_protoc
 
 ### Git/PR state
 
-Создан PR `#15` — `docs(seo): establish Octoport semantic SEO authority`.
+Foundation PR `#15` прошёл Documentation CI и влит в `main` merge-коммитом `cfd63e5c2227a52ccff6cbb5bb2da4580ec3bb3a`.
 
-PR основан на main `16c0ac9b6aa9a72aa3100eb04f14bd74e4d6593a`. На момент повторной проверки main не сдвинулся. PR mergeable.
+Для provider evidence создана отдельная ветка:
 
-Documentation CI запущен автоматически; до завершения CI PR не объявляется принятым.
+`seo/wordstat-batch-01-2026-09-16`
 
-### Текущий cursor
+## 2026-09-16 — SEO-S1 / Wordstat Batch 01 execution started
 
-1. Дождаться Documentation CI для PR #15.
-2. Выполнить реальные Wordstat calls Batch 01 через локально авторизованный bridge.
-3. Сохранить raw outputs и перейти к normalization.
+### B01-01 — `ии для маркетплейсов`
+
+Provider result:
+
+- bridge `yandex-marketing-bridge` `0.1.8`;
+- request_id `wordstat-ee0583c8-f745-4c22-9212-cee56c5c444d`;
+- HTTP `200`;
+- elapsed `1312 ms`;
+- estimated cost `0.02 ₽`;
+- totalCount `3381`;
+- automatic_retry `false`.
+
+Raw evidence: `docs/seo/wordstat/raw/B01_01_2026-09-16.md`.
+
+`SEO_FINDING`: broad phrase имеет заметный объём, но выдача сильно доминируется генерацией карточек, фото, инфографики и изображений. Поэтому `3381` нельзя интерпретировать как чистый спрос на продукт класса Октопорта.
+
+Product-adjacent наблюдаемые фразы внутри выдачи:
+
+- `ии агенты для маркетплейсов` — `134`;
+- `какой ии для маркетплейсов` — `128`;
+- `ии для работы с маркетплейсами` — `39`;
+- `ии для продаж на маркетплейсах` — `23`;
+- `ии для аналитики маркетплейсов` — `15`;
+- `ии ассистент для маркетплейсов` — `13`.
+
+Вывод пока не маршрутизирует страницу: нужен отдельный seller-assistant/analytics/marketplace evidence.
+
+### B01-02 — `нейросеть для маркетплейсов`
+
+Provider result:
+
+- bridge `yandex-marketing-bridge` `0.1.8`;
+- request_id `wordstat-a162cb60-3be5-4014-a203-de28cb0983da`;
+- HTTP `200`;
+- elapsed `1437 ms`;
+- estimated cost `0.02 ₽`;
+- totalCount `3451`;
+- automatic_retry `false`.
+
+Raw evidence: `docs/seo/wordstat/raw/B01_02_2026-09-16.md`.
+
+`SEO_FINDING`: словарь «нейросеть для маркетплейсов» загрязнён карточками/изображениями/инфографикой ещё сильнее. Сам объём `3451` также нельзя назначать Октопорту как category demand.
+
+Product-adjacent наблюдаемые фразы:
+
+- `нейросеть помощь для маркетплейсов` — `517` — требует отдельной проверки интента, формулировка широкая;
+- `лучшие нейросети для маркетплейсов` — `103` — comparison/informational, не обязательно product landing;
+- `нейросеть для работы с маркетплейсами` — `29`;
+- `нейросети для менеджеров маркетплейсов` — `19`;
+- `топ нейросетей для маркетплейсов` — `15`;
+- `нейросети для торговли на маркетплейсах` — `11`.
+
+### Промежуточный вывод после 2/15 calls
+
+Два самых очевидных broad-category seeds показали одно и то же: рынок использует `ИИ/нейросеть + маркетплейсы` прежде всего для content-creation tasks. Это делает преждевременным продвижение главной только под широкую фразу «ИИ для маркетплейсов» без уточняющего seller-work/analytics context.
+
+Следующий seed намеренно меняет ось с generic AI на user-role/assistant language: `ии помощник селлера`.
+
+### Batch progress
+
+- successful calls: `2/15`;
+- provider failures: `0`;
+- accumulated estimated cost: `0.04 ₽`;
+- current cursor: `B01-03`.
