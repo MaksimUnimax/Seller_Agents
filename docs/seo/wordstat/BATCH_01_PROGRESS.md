@@ -2,7 +2,7 @@
 
 Дата: 2026-09-16.
 Branch: `seo/wordstat-batch-01-2026-09-16`.
-Status: `BATCH_COMPLETE_PENDING_SYNTHESIS`.
+Status: `BATCH_COMPLETE_SYNTHESIZED`.
 
 ## Persistence rule
 
@@ -62,4 +62,7 @@ Until a separate synchronization/review step:
 - provider failures: `0`;
 - accumulated estimated cost: `0.30 ₽`;
 - Batch 01 provider collection: `COMPLETE`;
-- next step: synthesize Batch 01 evidence and derive targeted Batch 02 from observed vocabulary; no provider call until that synthesis is persisted.
+- synthesis: `BATCH_01_SYNTHESIS_2026-09-16.md`;
+- next provider plan: `BATCH_02_TARGETED_EXPANSION.md`;
+- current cursor: `B02-01`;
+- next seed: `ии агенты для маркетплейсов`.
