@@ -2,7 +2,7 @@
 
 Дата: 2026-09-16.
 Branch: `seo/wordstat-batch-01-2026-09-16`.
-Status: `S01_EVIDENCE_CLOSED__MASTER_MATRIX_CONTINUES`.
+Status: `S02_STARTED__READY_SUBMIT_S02`.
 Master authority: `../SEO_MASTER_ROADMAP_2026-09-16.md`.
 
 ## Evidence rule
@@ -16,7 +16,7 @@ For every bridge/provider response:
 5. update progress;
 6. only then release the next provider action/query.
 
-Local admission errors and local due-time guards with `request_executed:false` do not count as provider calls.
+Local admission errors, local `start`, and local due-time guards with `request_executed:false` do not count as provider calls.
 
 ## Isolation
 
@@ -25,6 +25,8 @@ Local admission errors and local due-time guards with `request_executed:false` d
 - do not merge into moving `main` without a fresh overlap check.
 
 ## S01 — `ии агенты для маркетплейсов`
+
+Status: `CLOSED / 20 NORMALIZED RESULTS`.
 
 ### Lifecycle
 
@@ -43,41 +45,60 @@ Local admission errors and local due-time guards with `request_executed:false` d
 - operation id: `sprjotiech5gn23a4tq3`;
 - collect revision: `5`;
 - `SUCCEEDED:1`;
-- normalized items: `1`;
 - normalized result rows: `20`;
 - unresolved: `0`;
 - all successful: `true`;
-- source export attachment: `search-octoport-serp-s01-20260916-r5-0-0.json`;
-- source export size: `88320` bytes;
-- source export SHA-256: `6a669f140e0b1b0f4e697195d3eed74b44cab8139151970a7c1d3471c04566c6`;
+- source attachment: `search-octoport-serp-s01-20260916-r5-0-0.json`;
+- source SHA-256: `6a669f140e0b1b0f4e697195d3eed74b44cab8139151970a7c1d3471c04566c6`;
 - normalized SEO authority: `exports/S01_ИИ_АГЕНТЫ_ДЛЯ_МАРКЕТПЛЕЙСОВ_NORMALIZED_2026-09-16.json`;
-- URL-comparison validation: PASS (`document_count:20`, no missing/unsafe URL ranks).
+- URL-comparison validation: PASS.
 
-The byte-exact source attachment is retained as original conversation/file evidence and is hash-pinned above. The GitHub SEO authority currently stores the complete normalized top-20 result surface plus exact source filename/hash/size/provenance; it must not be misrepresented as a byte-identical copy of the original attachment.
+S01 establishes a real marketplace AI-agent SERP layer containing product/service landings, integrations and informational/comparison pages; final page ownership remains blocked until M7.
 
-## Preliminary S01 observation
+## S02 — `ии агент для озон`
 
-S01 is sufficient to reject the earlier possibility that `ии агенты для маркетплейсов` is merely another card-generation wording. The top-20 contains a material mix of:
+Purpose: test whether Ozon-specific wording has distinct commercial/product intent, recurring Ozon-specific competitors/pages, and materially different page types versus generic S01.
 
-- marketplace AI-agent product/service landings;
-- store-data/analytics-to-agent integrations;
-- seller automation products;
-- educational/guides/comparison pages;
-- a smaller amount of card/content-generation overlap.
+### Lifecycle
 
-This is evidence for a real AI-agent marketplace category, but **not yet final page ownership**. That decision remains blocked until the representative M3 matrix, recurring competitor corpus and Alice evidence satisfy the Collection Freeze gate.
+| Attempt | Stage | Status | Provider request executed | Evidence |
+|---|---|---|---|---|
+| S02-01 | `start` | `START_ACCEPTED_PENDING` | `false` | `raw/S02_01_START_2026-09-16.md` |
+
+### Current state
+
+- job id: `octoport-serp-s02-20260916`;
+- control: `RUNNING`;
+- total items: `1`;
+- `PENDING:1`;
+- requests started: `0`;
+- operations accepted: `0`;
+- polls started: `0`;
+- unresolved: `1`;
+- all successful: `false`;
+- revision: `0`;
+- provider calls so far for S02: `0`.
+
+### Next allowed action
+
+Exactly one:
+
+`SEARCH_ASYNC_BATCH_API_V1 {"action":"submitN","jobId":"octoport-serp-s02-20260916","count":1}`
+
+Do not collect or resubmit until the `submitN` envelope is durably persisted and remotely read back.
 
 ## Current totals
 
-- S01 completed/exported query families: `1`;
-- successful provider submit operations: `1`;
-- successful provider-backed collects: `1`;
+- completed/exported M3 queries: `1`;
+- active M3 queries: `1`;
+- successful provider submissions: `1` from S01;
+- successful provider-backed collects: `1` from S01;
 - local admission failures: `2`;
 - local not-due guards: `1`;
 - provider failures: `0`;
 - current master stage: `M3 Ordinary Yandex SERP collection`;
-- next queries are released according to the representative matrix and information-gain rules in `SEO_MASTER_ROADMAP_2026-09-16.md`, not the old fixed seven-query list alone.
+- next action: `S02 submitN count=1`.
 
-## UI observation / bridge bug evidence
+## Bridge/UI observation
 
-While S01 was pending, the extension popup could show `Нет локального deferred Search job` even though command lifecycle retained the job and later collected it successfully. The bridge-fix conversation has been given the exact start/submit/collect evidence and regression requirements. This UI bug does not invalidate S01 provider/search evidence.
+The S01 popup could show `Нет локального deferred Search job` while the command lifecycle retained and later successfully collected the job. Lifecycle/export evidence remains authority while that UI bug is repaired separately.
