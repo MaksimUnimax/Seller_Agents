@@ -1,0 +1,28 @@
+{
+  "scope": "independent source VM; actual candidate bytes and Ed25519; synthetic clocks/storage/network; no live or installed claim",
+  "monotonic_decrease_above_anchor": {
+    "observations": [
+      1000,
+      2000,
+      1500
+    ],
+    "workAllowed": false
+  },
+  "elapsed_after_wall_jump": {
+    "elapsedMonotonic": 1000,
+    "effectiveAdvance": 1000
+  },
+  "authority_null_origin_restart": {
+    "discarded": true,
+    "credentialsRetained": true,
+    "requests": []
+  },
+  "held_write_crosses_expiry": {
+    "returnedWorkAllowed": false,
+    "nextWorkAllowed": false
+  },
+  "pending_origin_restart": {
+    "requests": []
+  },
+  "clientGitBlob": "a6a2e7d18376f01fcfd73d0ca2452f2485723b42"
+}

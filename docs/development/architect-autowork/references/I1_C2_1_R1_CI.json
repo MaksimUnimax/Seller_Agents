@@ -1,0 +1,111 @@
+{
+  "head": "13068c24354e8ec61bab6cf05598a5bb6ced7b65",
+  "merge": "3e69df315214546b32b09c411fcdadf754ebdcdc",
+  "tree": "035cbd5ee60919597ae29f56aa1ed4240950fb06",
+  "runs": [
+    {
+      "conclusion": null,
+      "event": "pull_request",
+      "head_sha": "13068c24354e8ec61bab6cf05598a5bb6ced7b65",
+      "id": 35057935284,
+      "name": "Extension CI",
+      "status": "in_progress"
+    },
+    {
+      "conclusion": "success",
+      "event": "pull_request",
+      "head_sha": "13068c24354e8ec61bab6cf05598a5bb6ced7b65",
+      "id": 35057935305,
+      "name": "Documentation CI",
+      "status": "completed"
+    },
+    {
+      "conclusion": null,
+      "event": "pull_request",
+      "head_sha": "13068c24354e8ec61bab6cf05598a5bb6ced7b65",
+      "id": 35057935275,
+      "name": "Server CI",
+      "status": "in_progress"
+    },
+    {
+      "conclusion": "success",
+      "event": "pull_request",
+      "head_sha": "13068c24354e8ec61bab6cf05598a5bb6ced7b65",
+      "id": 35057935403,
+      "name": "Extension I1-C1 client",
+      "status": "completed"
+    },
+    {
+      "conclusion": null,
+      "event": "push",
+      "head_sha": "13068c24354e8ec61bab6cf05598a5bb6ced7b65",
+      "id": 35057932274,
+      "name": "Extension CI",
+      "status": "in_progress"
+    }
+  ],
+  "jobs": [
+    {
+      "run": 35057935403,
+      "id": 104671924481,
+      "name": "Installed local API / portal / PostgreSQL acceptance",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 35057935403,
+      "id": 104671924614,
+      "name": "client-i1",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 35057935284,
+      "id": 104671924135,
+      "name": "Common core / source and package",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 35057935284,
+      "id": 104671924256,
+      "name": "Baseline / wb-browsers",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "run": 35057935284,
+      "id": 104671924289,
+      "name": "Baseline / wb-nodes",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 35057935284,
+      "id": 104671924308,
+      "name": "Baseline / ozon",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 35057935284,
+      "id": 104671924344,
+      "name": "Common application / native Chromium fixture",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 35057935275,
+      "id": 104671924043,
+      "name": "server",
+      "status": "in_progress",
+      "conclusion": null
+    }
+  ],
+  "independentCompletedLogsRead": [
+    104671924481,
+    104671924614
+  ],
+  "verdict": "REWORK_REQUIRED",
+  "allGreenClaim": false
+}

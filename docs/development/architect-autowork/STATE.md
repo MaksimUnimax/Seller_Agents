@@ -1,14 +1,26 @@
 # Seller Agents — единый cursor
 
-Дата: 2026-09-16. Статус: I1_C1_ACCEPTED / I1_SRV5_ACCEPTED / I1_SYNC_ACCEPTED / C2_1_REWORK_REQUIRED / C2_1_R1_PREPARED_FOR_SINGLE_FINAL_SUBMISSION.
+Дата: 2026-09-16. Статус: I1_C1_ACCEPTED / I1_SRV5_ACCEPTED / I1_SYNC_ACCEPTED / C2_1_REWORK_REQUIRED / C2_1_R1_REWORK_REQUIRED / C2_1_R2_PREPARED_FOR_SINGLE_FINAL_SUBMISSION.
 
-Владелец разрешил непрерывный авторежим; один архитектор и один последовательный Codex. C2.1 terminal проверен; найденные независимо дефекты требуют R1. Предыдущие bounded C1/SRV5/SYNC acceptance сохранены. Подготовлен один R1 prompt; сохранение задачи не означает её доставку или запуск Codex.
+Владелец разрешил непрерывный авторежим; один архитектор и один последовательный Codex. C2.1 R1 terminal проверен; прежние дефекты исправлены, но выявлена регрессия восстановления активации и недостающие проверки. Предыдущие bounded C1/SRV5/SYNC acceptance сохранены. Подготовлен один R2 prompt; сохранение задачи не означает её доставку или запуск Codex.
 
 ## Роли
 
 Astra / очень высокая глубина рассуждения — главный разработчик, senior engineer, единственный архитектор. Вся архитектура, исследования, поиск причин, планирование, проектирование, управление разработкой и независимая приёмка на ней. Один серверный Codex / Luna Max реализует заданный код и тесты и выполняет назначенные проверки. Исследования, поиск решения и архитектуру ему не делегировать. Новые пользовательские ограничения сильнее исторической формулировки AGENTS о самостоятельных технических решениях исполнителя.
 
-## Текущая задача — C2.1 review / R1
+## Текущая задача — C2.1 R1 review / R2
+
+- Actual task SA-I1-C2-1-R1-20260916-01 terminal получен. В terminal/evidence ошибочно указан старый ID; точный base/diff подтверждает R1. Исполнитель остановлен на ревью по отчёту; direct Bridge/process visibility отсутствует.
+- Branch integration/i1-c1-srv5-2026-09-16; head13068c24354e8ec61bab6cf05598a5bb6ced7b65; tree035cbd5ee60919597ae29f56aa1ed4240950fb06; parent/code17d54dc3a8577ae6d46736608c0bbed909b70d1a; start981d7e422d45234674aeda84c762245be55ff493. Main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c unchanged.
+- PR9 draft/unmerged head verified; virtual merge3e69df315214546b32b09c411fcdadf754ebdcdc has candidate-identical tree and main+candidate parents.
+- Verdict REWORK_REQUIRED. Previous five origin/time probes now correct on exact client blob a6a2e7d18376f01fcfd73d0ca2452f2485723b42. New actual-start/recreated-worker probe loses valid pending activation with STORED_CREDENTIALS_INVALID because credentials=null is treated as corruption. validAuthContext lacks contract equality. Required storage/owner/composed-expiry proof incomplete; held-write regression does not move clocks while held despite its description.
+- Evidence references/I1_C2_1_R1_REVIEW.md, references/I1_C2_1_R1_REVIEW_PROBE/, references/I1_C2_1_R1_CI.json. These probes are source VM, not installed/live acceptance.
+- CI35057935403 installed104671924481/client104671924614 SUCCESS, completed logs independently read on exact PR merge checkout. Native/core/Ozon/WB-node job API statuses SUCCESS; Docs35057935305SUCCESS. Server35057935275 and WB browsers still in progress at snapshot; no all-green claim. Proven correction proceeds without rerunning/canceling workflows.
+- Reported ZIP1822215bytes/SHA2560dbfcf2f390b00417395164b5f20c4e676c02695ecaa359ee178cdaf027f39ae; no independent download for this rejected candidate.
+- Next SA-I1-C2-1-R2-20260916-01 at tasks/I1_C2_1_R2_2026-09-16.md prepared for ONE final submission: narrow restore-state correction and exact T1–T7 acceptance completion. Saving does not mean delivered/running. After final, wait for actual terminal; no duplicate task on unknown delivery.
+- C2.1 open; C2.2/offline/profile/joint offline not started. C1/SRV5/SYNC bounded accepted scopes preserved; Health B5 not accepted/B6–8 queued; S1.2/D3/full I1/beta/deploy/release open. Owner manual testing after joint C2 installed acceptance then Q1.
+
+## История C2.1 initial review / R1 preparation — не повторять
 
 - Current reviewed task SA-I1-C2-1-20260916-01, terminal получен; исполнитель остановлен на ревью по отчёту. Прямой видимости процессов/Bridge нет; нового подтверждённого running task нет.
 - Branch integration/i1-c1-srv5-2026-09-16; exact head981d7e422d45234674aeda84c762245be55ff493; tree4711cea969329f5552fe07e7f99af122fda60dc9; parent38471d667936f6f80a3f4aa682057309745ac080. Start1ff322b3dd2b68c4f02e5390850cd2f1b9548186. Main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c unchanged.

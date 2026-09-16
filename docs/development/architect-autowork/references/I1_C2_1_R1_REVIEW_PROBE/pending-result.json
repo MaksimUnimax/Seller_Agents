@@ -1,0 +1,20 @@
+{
+  "scope": "source VM, actual online start path with synthetic server; worker recreation at unchanged origin/context; no live provider",
+  "before": {
+    "phase": "pending",
+    "hasAuthContext": true,
+    "credentialsNull": true,
+    "exchangeCalls": 1
+  },
+  "after": {
+    "pending": null,
+    "exchangeCalls": 1,
+    "lastError": {
+      "code": "STORED_CREDENTIALS_INVALID"
+    }
+  },
+  "expected": {
+    "pendingPreserved": true,
+    "exchangeResumed": true
+  }
+}
