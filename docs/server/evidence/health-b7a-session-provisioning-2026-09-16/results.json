@@ -1,0 +1,100 @@
+{
+  "taskId": "SA-HEALTH-B7A-SESSION-PROVISIONING-20260916-01",
+  "roadmap": "P8.4 / B7_CONTROLLED_LIVE_H3",
+  "repository": "MaksimUnimax/runtime-fixtures",
+  "worktree": "/root/runtime-fixtures",
+  "branch": "feature/server-health-h3-p8-4",
+  "authority": {
+    "startingHead": "90c1e0c66a47692634eb652aa1392fdafc1f8f10",
+    "startingRemoteHead": "90c1e0c66a47692634eb652aa1392fdafc1f8f10",
+    "startingTree": "447d6515954e051a287011596fdd3154e11c2561",
+    "startingParent": "697eea7adc337e1f11def16818829c2e443efb15",
+    "architectMain": "bc718cc5c677ad0eb4598e7de3ad766473ff0847",
+    "architectControlHead": "664a8d1b5aaec0dd4bd33f79e126ea31a77e15c0"
+  },
+  "implementation": {
+    "registryVersion": 1,
+    "sessionKind": "EPHEMERAL_CONTROLLED",
+    "persistentContext": false,
+    "userDataDir": false,
+    "loginAutomation": false,
+    "storageStateContentsRead": false,
+    "runtimeStateWriteback": false,
+    "rawBrowserHandleExposure": false,
+    "remotePlanAuthority": false,
+    "resultSensitiveFields": false
+  },
+  "targetedChecks": {
+    "dedicatedRegistry": { "passed": 11, "failed": 0, "skipped": 0 },
+    "healthRunnerUnit": { "files": 10, "passed": 119, "failed": 0, "skipped": 0 },
+    "dedicatedChromium": { "passed": 5, "failed": 0, "skipped": 0 },
+    "focusedHealthChromiumFirstPass": { "passed": 96, "failed": 1, "skipped": 0 },
+    "focusedHealthChromiumRetry": { "passed": 1, "failed": 0, "skipped": 0 },
+    "focusedH3Postgres": { "passed": 18, "failed": 0, "skipped": 0 },
+    "fullPlaywrightE2E": { "passed": 169, "failed": 0, "skipped": 0 }
+  },
+  "fullServerCycle": {
+    "lint": "PASS",
+    "formatCheck": "PASS",
+    "typecheck": "PASS",
+    "playwrightConfigRegression": "1 passed",
+    "unit": "PASS",
+    "integration": "39 files / 1526 passed",
+    "dbMigrate": "PASS",
+    "openapiCheck": "PASS",
+    "bridgeGuard": "PASS",
+    "build": "PASS",
+    "chromiumInstall": "NOT_NEEDED",
+    "e2e": "169 passed",
+    "docsCheck": "PASS: 416 files / 229 Markdown / 320 relative links / 26 requirements / 32 scenarios"
+  },
+  "negativeCases": [
+    "strict schema and unknown fields",
+    "relative, symlinked, non-regular, empty and oversized files",
+    "POSIX group/other permissions",
+    "duplicate storage-state file identity",
+    "Standard start override",
+    "Work scheme/origin/credentials/query/hash/route failures",
+    "dedicated target mismatch",
+    "cross-origin runtime navigation",
+    "default/dedicated cookie isolation"
+  ],
+  "privacy": {
+    "storageStateContentsPublished": false,
+    "storageStatePathPublished": false,
+    "workStartRoutePublished": false,
+    "realCredentialsUsed": false,
+    "syntheticTemporaryDataOnly": true,
+    "liveChatGptCalls": 0,
+    "liveProviderCalls": 0,
+    "marketplaceCalls": 0,
+    "customerSessionReuse": false,
+    "loginCaptchaOrSecurityBypass": false
+  },
+  "changedPaths": [
+    "apps/health-runner/src/dedicated-health-session.ts",
+    "apps/health-runner/src/dedicated-health-session.test.ts",
+    "apps/health-runner/src/browser-driver.ts",
+    "apps/health-runner/src/index.ts",
+    "tests/e2e/server/health-dedicated-session.spec.ts",
+    "docs/server/B7A_DEDICATED_HEALTH_SESSION_PROVISIONING_2026-09-16.md",
+    "docs/server/evidence/health-b7a-session-provisioning-2026-09-16/README.md",
+    "docs/server/evidence/health-b7a-session-provisioning-2026-09-16/results.json"
+  ],
+  "allowlist": "PASS",
+  "verdict": {
+    "B7A": "IMPLEMENTATION_CANDIDATE_PENDING_ARCHITECT_AND_EXACT_HEAD_CI",
+    "B7_LIVE_BEHAVIORAL_ACCEPTANCE": "NOT_RUN",
+    "P8.4": "NOT_ACCEPTED",
+    "P8.5": "NOT_STARTED"
+  },
+  "remainingExternalPrerequisite": "owner-provisioned dedicated Health auth state/config for Standard and Work plus approved dedicated Work project/conversation route, all outside Git",
+  "publication": {
+    "finalCommit": "PENDING_COMMIT",
+    "finalTree": "PENDING_COMMIT",
+    "finalParent": "90c1e0c66a47692634eb652aa1392fdafc1f8f10",
+    "remoteBefore": "90c1e0c66a47692634eb652aa1392fdafc1f8f10",
+    "remoteAfter": "PENDING_PUSH",
+    "immediateCi": "NOT_RUN_NOT_AWAITED"
+  }
+}

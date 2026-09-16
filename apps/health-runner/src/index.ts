@@ -9,6 +9,17 @@ export type {
   ControlledNavigationResult,
 } from "./browser-driver.js";
 export { BrowserDriverError, ChromeBrowserDriver } from "./browser-driver.js";
+export { createDedicatedHealthChromeBrowserDriver } from "./browser-driver.js";
+export {
+  DedicatedHealthSessionConfigError,
+  DedicatedHealthSessionRegistry,
+  loadDedicatedHealthSessionRegistry,
+} from "./dedicated-health-session.js";
+export type {
+  DedicatedHealthSessionBinding,
+  DedicatedHealthSessionConfigErrorCode,
+  DedicatedHealthSessionTargetKey,
+} from "./dedicated-health-session.js";
 export {
   ControlledTargetRegistry,
   ControlledTargetKeySchema,

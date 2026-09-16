@@ -23,11 +23,15 @@ import { shouldBlockPrimaryDocumentRequest } from "./navigation-policy.js";
 import { createChatGPTStandardH3Strategy } from "./standard-h3-strategy.js";
 import { createChatGPTWorkH3Strategy } from "./work-h3-strategy.js";
 import type { H3SurfaceStrategy } from "./h3-strategy.js";
+import type { DedicatedHealthSessionBinding } from "./dedicated-health-session.js";
+import { parseWorkRoute } from "./work-h3-profile.js";
 
 export type BrowserDriverErrorCode =
   | "INVALID_DRIVER_LIFECYCLE"
   | "CONTROLLED_BROWSER_UNAVAILABLE"
   | "CONTROLLED_TARGET_NOT_REGISTERED"
+  | "DEDICATED_TARGET_MISMATCH"
+  | "DEDICATED_START_URL_INVALID"
   | "UNSAFE_TOP_LEVEL_REDIRECT"
   | "NAVIGATION_FAILED"
   | "OBSERVATION_TIMEOUT"
@@ -102,11 +106,14 @@ export class ChromeBrowserDriver implements BrowserDriver {
   #cdpRequestPausedListener:
     | ((event: FetchRequestPausedEvent) => void)
     | undefined;
+  #dedicatedBinding: DedicatedHealthSessionBinding | undefined;
 
   public constructor(
     private readonly targets: ControlledTargetRegistry,
     private readonly launchTimeoutMs = DEFAULT_LAUNCH_TIMEOUT_MS,
+    dedicatedBinding?: DedicatedHealthSessionBinding,
   ) {
+    this.#dedicatedBinding = dedicatedBinding;
     if (
       !Number.isInteger(launchTimeoutMs) ||
       launchTimeoutMs < 250 ||
@@ -134,6 +141,9 @@ export class ChromeBrowserDriver implements BrowserDriver {
       });
       const context = await browser.newContext({
         acceptDownloads: false,
+        ...(this.#dedicatedBinding
+          ? { storageState: this.#dedicatedBinding.storageStatePath }
+          : {}),
       });
       this.#browser = browser;
       this.#context = context;
@@ -172,10 +182,11 @@ export class ChromeBrowserDriver implements BrowserDriver {
     }
     if (target.browserFamily !== this.family)
       throw new BrowserDriverError("CONTROLLED_TARGET_NOT_REGISTERED");
+    const effectiveStartUrl = this.#resolveDedicatedStartUrl(target);
     this.#activeTarget = target;
     this.#primaryNavigationStarted = false;
     try {
-      await this.#page.goto(target.startUrl, {
+      await this.#page.goto(effectiveStartUrl, {
         timeout: target.navigationTimeoutMs,
         waitUntil: "domcontentloaded",
       });
@@ -277,6 +288,52 @@ export class ChromeBrowserDriver implements BrowserDriver {
 
   public async stop(): Promise<void> {
     await this.closeOrPersist();
+  }
+
+  #resolveDedicatedStartUrl(target: ControlledTarget): string {
+    const binding = this.#dedicatedBinding;
+    if (!binding) return target.startUrl;
+    if (binding.targetKey !== target.key)
+      throw new BrowserDriverError("DEDICATED_TARGET_MISMATCH");
+
+    if (target.key === "chatgpt_standard_health") {
+      if ("startUrl" in binding)
+        throw new BrowserDriverError("DEDICATED_START_URL_INVALID");
+      if (!this.#isDedicatedStartUrlAllowed(target.startUrl, target, false))
+        throw new BrowserDriverError("DEDICATED_START_URL_INVALID");
+      return target.startUrl;
+    }
+
+    if (
+      !("startUrl" in binding) ||
+      typeof binding.startUrl !== "string" ||
+      !this.#isDedicatedStartUrlAllowed(binding.startUrl, target, true)
+    ) {
+      throw new BrowserDriverError("DEDICATED_START_URL_INVALID");
+    }
+    return binding.startUrl;
+  }
+
+  #isDedicatedStartUrlAllowed(
+    url: string,
+    target: ControlledTarget,
+    requireWorkRoute: boolean,
+  ): boolean {
+    try {
+      const parsed = new URL(url);
+      if (
+        parsed.username !== "" ||
+        parsed.password !== "" ||
+        parsed.search !== "" ||
+        parsed.hash !== "" ||
+        !target.allowedTopLevelOrigins.includes(parsed.origin)
+      ) {
+        return false;
+      }
+      return !requireWorkRoute || parseWorkRoute(parsed.toString()) !== null;
+    } catch {
+      return false;
+    }
   }
 
   async #installContextNavigationGuard(context: BrowserContext): Promise<void> {
@@ -457,4 +514,12 @@ export class ChromeBrowserDriver implements BrowserDriver {
       setTimeout(resolve, NAVIGATION_STABILIZATION_MS);
     });
   }
+}
+
+export function createDedicatedHealthChromeBrowserDriver(
+  targets: ControlledTargetRegistry,
+  binding: DedicatedHealthSessionBinding,
+  launchTimeoutMs = DEFAULT_LAUNCH_TIMEOUT_MS,
+): ChromeBrowserDriver {
+  return new ChromeBrowserDriver(targets, launchTimeoutMs, binding);
 }
