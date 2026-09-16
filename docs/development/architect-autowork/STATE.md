@@ -1,8 +1,8 @@
 # Seller Agents — единый cursor
 
-Дата: 2026-09-16. Статус: I1_C1_ACCEPTED / I1_SRV5_PREPARED / BRIDGE_ACK_PENDING.
+Дата: 2026-09-16. Статус: I1_C1_ACCEPTED / I1_SRV5_REWORK_REQUIRED / I1_SRV5_R1_PREPARED.
 
-Владелец разрешил авторежим; один архитектор и один последовательный Codex. R5 принят после завершения всех применимых CI. Подготовлена следующая задача I1-SRV.5. Прямого управления Bridge/наблюдения серверных процессов нет; сохранение задачи не доказывает её доставку или запуск. История и очередь сохранены.
+Владелец разрешил непрерывный авторежим; один архитектор и один последовательный Codex. Terminal SA-I1-SRV5-20260916-01 получен: исполнитель остановился для review. Независимо доказан дефект per-run ключей Playwright; готова одна коррекция R1. Прямого наблюдения Bridge/process нет; сохранение промпта не доказывает запуск. История и очередь сохранены.
 
 ## Роли
 
@@ -10,17 +10,18 @@ Astra / очень высокая глубина рассуждения — гл
 
 ## Текущая задача
 
-- SA-I1-C1-R5-20260915-01: ACCEPTED в объёме C1 development source/package/native/installed-local auth. Весь I1/D2/live/email/release не закрыт.
-- Client branch feature/extension-i1-client-2026-09-15, head56c81a3521c02502b65fd713aec890e5a30f038d; tree5c14497e239922c3712d0c3be12af7ee59e665f5; base60c3a34bdc1b6a5563fad59e8ac38c78b76e32d3. PR7 draft/unmerged.
-- Main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c unchanged. PR7 merge542a334c39dd9cda52c72f07c98a676a207f84d1 parents main/current client verified previously.
-- Final pending WB jobs104420205685 and104420225471 SUCCESS; all Extension jobs34980773590/34980778417 SUCCESS. I1 runs34980773436/34980778468 and Documentation34980778452 SUCCESS.
-- Independent review/probe/readback: references/I1_C1_R5_REVIEW.md and associated CI/probe/package records. Historical exact source and installed verification retained; no redundant reruns.
-- CI ZIP2f364316986187db50251dc4708317ca612ce51dd7106138106f64239605ba43,1,801,114 bytes,39/39 independently verified. Executor browser-package b98b87a…e6e remains separately reported.
-- Next task SA-I1-SRV5-20260916-01; tasks/I1_SRV5_2026-09-16.md.
-- Target branch feature/server-i1-srv5-acceptance-2026-09-16 from main5d7c8853; test/documentation-only joined V2 lifecycle and reference acceptance. No merge/cherry-pick/client/Health code change.
-- Task PREPARED for one final prompt, BRIDGE_ACK_PENDING. R5 terminal complete; no active implementation task reported. New task launch not asserted without notification.
-- After delivery await terminal, review actual head and applicable CI. Pending CI is an active autowork continuation step; do not end solely to require owner to say continue. No duplicate prompt on uncertain delivery.
-- Queue: I1-SRV.5 review -> C2/joint integration; Health/P8.4 B5 remains NOT ACCEPTED, B6–B8 queued. General beta B1/B2 distinct.
+- SA-I1-SRV5-20260916-01: REWORK_REQUIRED on b0d93e36b2c7f37a4758ea4b33dbfa9cf2c688bb; tree9ebcf18e4d0c24d7058a8b730a7e18a74ff950b6.
+- Branch feature/server-i1-srv5-acceptance-2026-09-16, actual main/base5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c. Parent3710aeeef82314fff37e914833ca280ad5f56ab7. Remote ref/ancestry/diff independently verified.
+- Draft PR8 created by architect, unmerged. Virtual merge d86a0bcfc55552454af1f84dc8d27f0f7c7c6fa0 has the same tree as candidate.
+- Proven blocker: Playwright worker re-import regenerates CONFIG_SIGNING_PUBLIC_KEY_RING_JSON, so the new reference test uses a key different from the disposable API signer. Same-version worker probe RED on original config, GREEN on selected correction. Prior architect assumption about env stability corrected.
+- Review/evidence: references/I1_SRV5_REVIEW.md, I1_SRV5_CI.json and I1_SRV5_PROBE/.
+- Server push35043545567/job104628447057 FAILURE: exact b0d93e3 checkout, E2E new reference firstVerification at line86 expected true/received false; 86 other E2E pass. Integration/migration/build PASS. Completed job log independently read. PR35043813324/job104629216114 still in progress at latest read. Documentation35043813323/job104629215980 SUCCESS.
+- Local DB exhaustion remains executor-reported BLOCKED, not a global project stop.
+- Next task SA-I1-SRV5-R1-20260916-01, tasks/I1_SRV5_R1_2026-09-16.md, PREPARED_FOR_SINGLE_FINAL_SUBMISSION. Do not duplicate on unknown delivery. Terminal confirms previous executor stopped; next launch is not asserted.
+- R1 allows narrow Playwright config ownership fix plus real worker public-trust consistency regression; no production change. Reuse PR8.
+- C1/R5 remains ACCEPTED on56c81a3521c02502b65fd713aec890e5a30f038d, tree5c14497e239922c3712d0c3be12af7ee59e665f5, PR7 draft/unmerged. Prior final CI/review/package evidence retained in references/I1_C1_R5_REVIEW.md.
+- Queue: correct and accept I1-SRV.5 -> C2/joint integration; Health/P8.4 B5 remains NOT ACCEPTED, B6–B8 queued. General beta B1/B2 distinct.
+- After R1 terminal inspect its actual head/diff and all applicable CI; don't repeat unchanged C1 acceptance.
 
 ## Результат R1
 
@@ -59,7 +60,7 @@ Reported ZIP SHA-256 2580015cdf174c909e6733197d3b609ba10c3fe35008090df13ebc17a83
 
 ## Очередь в новом чате
 
-1. Закрыть реальные C1-R1 blockers и принять только доказанный scope.
+1. C1 принят в ограниченном scope на56c81a3; не повторять старые R1–R5 задания.
 2. I1-SRV.5, затем C2 и совместная установленная I1-приёмка по контрактным зависимостям.
 3. В ближайшей подходящей точке завершить B5 correction/acceptance, затем B6–B8. Если B5/Health — доказанный prerequisite C2, переставить раньше с записью причины.
 4. Согласовать объединение принятых клиентской и серверной веток с новым main; не терять ни одну линию и не применять ours/theirs вслепую.
@@ -113,3 +114,7 @@ WAITING_REQUIRED_WB_CI на56c81a3521c02502b65fd713aec890e5a30f038d. Ревью 
 ## Обязательное правило авторежима — 2026-09-16
 
 По прямому требованию владельца обновлён02_REPORT_PREFIX.md: всегда работает архитектор либо один Codex. Terminal report возвращает управление архитектору; CI pending не разрешает завершить активный цикл и ждать команды владельца. Новый готовый prompt выдаётся один раз после проверки, без повторного согласования. Не создавать фиктивные задачи/повторы; неизменны честность evidence, границы полномочий и явная пауза владельца. Сам факт записи префикса не означает замену его в локальном Business Bridge: такого инструмента нет.
+
+## I1-SRV.5 review — 2026-09-16
+
+Terminal b0d93e3 обработан. REWORK_REQUIRED по независимо воспроизведённому расхождению runner/worker public keys. Architect создал draft PR8, прочитал remote refs/CI и подготовил единственный R1 prompt. Исторические prepared/WAITING записи выше не являются текущими командами. Push Server CI подтвердил FAIL нового reference test; точный лог прочитан. PR CI ещё выполняется; конкретное исправление уже доказано и готово.

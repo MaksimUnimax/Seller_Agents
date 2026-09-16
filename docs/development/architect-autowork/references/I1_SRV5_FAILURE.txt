@@ -1,0 +1,33 @@
+2026-09-16T01:28:00.3242690Z   1) tests/e2e/server/i1-reference-acceptance.spec.ts:68:5 › I1-SRV.5 reference activation, V2 bootstrap, rotation, continuity, and revoke 
+2026-09-16T01:28:00.3292514Z 
+2026-09-16T01:28:00.3362803Z     Error: expect(received).toMatchObject(expected)
+2026-09-16T01:28:00.3381994Z 
+2026-09-16T01:28:00.3414063Z     - Expected  - 1
+2026-09-16T01:28:00.3468979Z     + Received  + 1
+2026-09-16T01:28:00.3531368Z 
+2026-09-16T01:28:00.3542657Z       Object {
+2026-09-16T01:28:00.3562469Z     -   "ok": true,
+2026-09-16T01:28:00.3593062Z     +   "ok": false,
+2026-09-16T01:28:00.3601104Z       }
+2026-09-16T01:28:00.3622174Z 
+2026-09-16T01:28:00.3634983Z       84 |   );
+2026-09-16T01:28:00.3635859Z       85 |   const firstVerification = verifyBootstrapEnvelopeV2(firstEnvelope, trustMap);
+2026-09-16T01:28:00.3636837Z     > 86 |   expect(firstVerification).toMatchObject({ ok: true });
+2026-09-16T01:28:00.3637333Z          |                             ^
+2026-09-16T01:28:00.3637811Z       87 |   if (!firstVerification.ok)
+2026-09-16T01:28:00.3638267Z       88 |     throw new Error("initial V2 bootstrap did not verify");
+2026-09-16T01:28:00.3638866Z       89 |   expect(firstVerification.payload.account.id).toBe(expectedAccountId);
+2026-09-16T01:28:00.3639781Z         at /home/runner/work/Seller_Agents/Seller_Agents/tests/e2e/server/i1-reference-acceptance.spec.ts:86:29
+2026-09-16T01:28:00.3640298Z 
+2026-09-16T01:28:00.3640794Z     Error Context: test-results/i1-reference-acceptance-I1-04405-ation-continuity-and-revoke/error-context.md
+2026-09-16T01:28:00.3641361Z 
+2026-09-16T01:28:00.3641432Z 
+2026-09-16T01:28:01.0105053Z [85/87] tests/e2e/server/security.spec.ts:6:5 › unsafe return targets stay on the portal origin
+2026-09-16T01:28:04.8064569Z [86/87] tests/e2e/server/security.spec.ts:32:5 › activation leaves secrets out of browser URLs and storage
+2026-09-16T01:28:07.0835940Z [87/87] tests/e2e/server/security.spec.ts:51:5 › suspended accounts remain manageable but cannot approve
+2026-09-16T01:28:10.2977321Z   1 failed
+2026-09-16T01:28:10.2978951Z     tests/e2e/server/i1-reference-acceptance.spec.ts:68:5 › I1-SRV.5 reference activation, V2 bootstrap, rotation, continuity, and revoke 
+2026-09-16T01:28:10.2979728Z   86 passed (3.6m)
+2026-09-16T01:28:10.3223376Z  ELIFECYCLE  Command failed with exit code 1.
+2026-09-16T01:28:10.3581036Z ##[error]Process completed with exit code 1.
+2026-09-16T01:28:10.3659862Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

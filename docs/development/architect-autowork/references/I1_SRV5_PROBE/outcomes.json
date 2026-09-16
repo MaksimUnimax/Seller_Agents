@@ -1,0 +1,13 @@
+{
+  "playwright": "1.62.1",
+  "node": "24.19.0",
+  "base": {
+    "sameRing": false,
+    "exitCode": 1
+  },
+  "fixed": {
+    "sameRing": true,
+    "exitCode": 0
+  },
+  "scope": "Actual Playwright worker environment reproduction; no API, database, browser or production change."
+}
