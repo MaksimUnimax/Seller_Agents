@@ -1,6 +1,6 @@
 # I1-C1 R5 architect review — 2026-09-15
 
-Verdict: WAITING — required WB browser jobs remain IN_PROGRESS. Implementation/source/package and installed-local checks reviewed successfully in the bounded scope below. No new rework task is warranted from this review; C1 is not closed before all applicable CI completes.
+Final verdict on 2026-09-16: ACCEPTED — I1-C1 development client source/package/native and installed-local auth scope described below. Both required WB browser jobs completed SUCCESS on unchanged candidate. The earlier waiting observations are preserved below as history; no repeat audit or green-suite rerun was needed. Whole I1/D2, live-provider/email/preproduction and release acceptance remain open.
 
 ## Current identity
 Task SA-I1-C1-R5-20260915-01; feature/extension-i1-client-2026-09-15; PR7 draft/unmerged.
@@ -37,3 +37,7 @@ Local README lists Node22 for source checks and later Node24/Corepack for instal
 R5 terminal processed once; executor is stopped according to terminal, no direct server-process observation. No R6 prepared or issued. Required CI is still running; do not duplicate R5 or rerun green checks.
 Next action: read only completion/status and, on failure, exact logs of pending WB jobs104420205685/104420225471. If successful with unchanged head, use this completed review for bounded R5/C1 acceptance, then prepare I1-SRV.5 against the current server handoff. Do not restart full review.
 Server I1-SRV.0–4 accepted history and Health/P8.4 B5 NOT ACCEPTED / B6–B8 pending preserved. C2, full joint installed/live acceptance, deployment/release remain separate.
+
+## Final CI readback / acceptance — 2026-09-16
+
+Unchanged remote candidate56c81a3521c02502b65fd713aec890e5a30f038d and main5d7c8853 independently reconfirmed. Push WB browsers104420205685 completed SUCCESS at2026-09-15T14:32:00Z; PR WB browsers104420225471 SUCCESS at14:32:07Z. All five Extension jobs on each run34980773590/34980778417 are now SUCCESS. Prior verified I1 and Documentation success stands. R5/C1 ACCEPTED in stated development/source/package/native/installed-local scope; PR7 remains draft/unmerged. Next prepared task SA-I1-SRV5-20260916-01, server reference acceptance on main. Prematurely ending the prior turn while CI was pending interrupted owner-authorized autowork; future pending CI must remain an active continuation step, not an implicit request for another owner command.

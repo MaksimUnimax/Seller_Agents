@@ -1,0 +1,81 @@
+{
+  "observedAt": "2026-09-16T00:59:59.446Z",
+  "candidate": "56c81a3521c02502b65fd713aec890e5a30f038d",
+  "main": "5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+  "push": [
+    {
+      "id": 104420205173,
+      "name": "Common application / native Chromium fixture",
+      "status": "completed",
+      "conclusion": "success",
+      "completed_at": "2026-09-15T14:20:29Z"
+    },
+    {
+      "id": 104420205623,
+      "name": "Baseline / wb-nodes",
+      "status": "completed",
+      "conclusion": "success",
+      "completed_at": "2026-09-15T14:19:26Z"
+    },
+    {
+      "id": 104420205656,
+      "name": "Common core / source and package",
+      "status": "completed",
+      "conclusion": "success",
+      "completed_at": "2026-09-15T14:19:25Z"
+    },
+    {
+      "id": 104420205673,
+      "name": "Baseline / ozon",
+      "status": "completed",
+      "conclusion": "success",
+      "completed_at": "2026-09-15T14:19:16Z"
+    },
+    {
+      "id": 104420205685,
+      "name": "Baseline / wb-browsers",
+      "status": "completed",
+      "conclusion": "success",
+      "completed_at": "2026-09-15T14:32:00Z"
+    }
+  ],
+  "pull_request": [
+    {
+      "id": 104420225185,
+      "name": "Common application / native Chromium fixture",
+      "status": "completed",
+      "conclusion": "success",
+      "completed_at": "2026-09-15T14:20:28Z"
+    },
+    {
+      "id": 104420225414,
+      "name": "Baseline / wb-nodes",
+      "status": "completed",
+      "conclusion": "success",
+      "completed_at": "2026-09-15T14:19:29Z"
+    },
+    {
+      "id": 104420225419,
+      "name": "Common core / source and package",
+      "status": "completed",
+      "conclusion": "success",
+      "completed_at": "2026-09-15T14:19:26Z"
+    },
+    {
+      "id": 104420225471,
+      "name": "Baseline / wb-browsers",
+      "status": "completed",
+      "conclusion": "success",
+      "completed_at": "2026-09-15T14:32:07Z"
+    },
+    {
+      "id": 104420225558,
+      "name": "Baseline / ozon",
+      "status": "completed",
+      "conclusion": "success",
+      "completed_at": "2026-09-15T14:19:25Z"
+    }
+  ],
+  "verdict": "ACCEPTED_C1_BOUNDED_SCOPE",
+  "previousReview": "I1_C1_R5_REVIEW.md"
+}
