@@ -44,6 +44,23 @@ expect_status_with_retry() {
   fail "${url} returned ${actual:-<no status>}, expected ${expected} after ${MAX_ATTEMPTS} attempts"
 }
 
+header_value() {
+  local headers=$1 name=$2
+  awk -v target="${name}" '
+    BEGIN { IGNORECASE=1 }
+    {
+      line=$0
+      sub(/\r$/, "", line)
+      split(line, parts, ":")
+      if (tolower(parts[1]) == tolower(target)) {
+        sub(/^[^:]+:[[:space:]]*/, "", line)
+        print line
+        exit
+      }
+    }
+  ' <<<"${headers}"
+}
+
 check_release() {
   [[ -L "${CURRENT_LINK}" ]] || fail "${CURRENT_LINK} is not a symlink"
   local target
@@ -102,18 +119,33 @@ check_site_content() {
   expect_status_with_retry 200 'https://octoport.ru/robots.txt' octoport.ru 443
   expect_status_with_retry 200 'https://octoport.ru/sitemap.xml' octoport.ru 443
 
-  local homepage headers content_type csp
+  local homepage homepage_headers css_headers content_type homepage_csp css_csp
+  local homepage_cache css_cache css_frame_options css_nosniff
+
   homepage="$(curl --silent --show-error --resolve 'octoport.ru:443:127.0.0.1' 'https://octoport.ru/')"
   grep -Fq '<title>Octoport' <<<"${homepage}" || fail "homepage does not contain the Octoport title"
   grep -Fq 'Набор ещё не открыт' <<<"${homepage}" || fail "homepage beta-state copy is missing"
 
-  headers="$(curl --silent --show-error --head --resolve 'octoport.ru:443:127.0.0.1' 'https://octoport.ru/')"
-  csp="$(awk 'BEGIN{IGNORECASE=1} /^content-security-policy:/ {sub(/\r$/, ""); sub(/^[^:]+:[[:space:]]*/, ""); print; exit}' <<<"${headers}")"
-  grep -Fq "default-src 'none'" <<<"${csp}" || fail "homepage CSP is missing the restrictive default-src"
+  homepage_headers="$(curl --silent --show-error --head --resolve 'octoport.ru:443:127.0.0.1' 'https://octoport.ru/')"
+  homepage_csp="$(header_value "${homepage_headers}" 'content-security-policy')"
+  grep -Fq "default-src 'none'" <<<"${homepage_csp}" || fail "homepage CSP is missing the restrictive default-src"
+  homepage_cache="$(header_value "${homepage_headers}" 'cache-control')"
+  grep -Fqi 'no-cache' <<<"${homepage_cache}" || fail "homepage cache-control is ${homepage_cache:-<missing>}, expected no-cache"
 
-  content_type="$(curl --silent --show-error --head --resolve 'octoport.ru:443:127.0.0.1' 'https://octoport.ru/styles.css' \
-    | awk 'BEGIN{IGNORECASE=1} /^content-type:/ {sub(/\r$/, ""); print $2; exit}')"
+  css_headers="$(curl --silent --show-error --head --resolve 'octoport.ru:443:127.0.0.1' 'https://octoport.ru/styles.css')"
+  content_type="$(header_value "${css_headers}" 'content-type')"
   [[ "${content_type}" == text/css* ]] || fail "styles.css content-type is ${content_type:-<missing>}"
+
+  # These checks specifically protect nginx add_header inheritance. Location-level
+  # cache policy must never silently remove the site security headers.
+  css_csp="$(header_value "${css_headers}" 'content-security-policy')"
+  grep -Fq "default-src 'none'" <<<"${css_csp}" || fail "styles.css lost the inherited CSP"
+  css_frame_options="$(header_value "${css_headers}" 'x-frame-options')"
+  [[ "${css_frame_options}" == 'DENY' ]] || fail "styles.css lost X-Frame-Options"
+  css_nosniff="$(header_value "${css_headers}" 'x-content-type-options')"
+  [[ "${css_nosniff}" == 'nosniff' ]] || fail "styles.css lost X-Content-Type-Options"
+  css_cache="$(header_value "${css_headers}" 'cache-control')"
+  grep -Fq 'max-age=300' <<<"${css_cache}" || fail "styles.css cache-control is ${css_cache:-<missing>}, expected max-age=300"
 }
 
 check_redirects_and_unavailable_apps() {
@@ -172,7 +204,7 @@ main() {
   systemctl is-active --quiet nginx || fail "nginx is not active"
   systemctl is-active --quiet certbot.timer || fail "certbot.timer is not active"
 
-  log "PASS: live static site, TLS, redirects, unavailable app/API boundaries and old docs service"
+  log "PASS: live static site, inherited security headers, TLS, redirects, unavailable app/API boundaries and old docs service"
 }
 
 main "$@"
