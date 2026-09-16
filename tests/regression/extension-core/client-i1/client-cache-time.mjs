@@ -174,4 +174,85 @@ async function fixture(options = {}) {
   } finally { releaseA?.(); owned.worker.close(); }
 }
 
-console.log(JSON.stringify({ status: "PASS", focused: "client-cache-time", fresh_boundary: true, effective_floor: true, restart_floor: true, context_matrix: 11, legacy_closed: true, ownership_reset_race: true, no_live_provider_calls: true }));
+// C2.1-R1-A architect reproductions: the rolling anchor rejects a decrease
+// after a larger reading, while equal readings remain legal.  The held-write
+// assertions prove the public promise is not resolved by an in-memory floor,
+// and the expiry crossing is vetoed on that same released call.
+{
+  const clock = { wall: baseWall, mono: 1000 };
+  const { worker, backing } = await fixture({ clock });
+  try {
+    assert.equal(await worker.call("SellerAgentsControlClient.canWork"), true);
+    clock.mono = 2000; assert.equal(await worker.call("SellerAgentsControlClient.canWork"), true);
+    clock.mono = 1500; assert.equal(await worker.call("SellerAgentsControlClient.canWork"), false);
+    clock.mono = 2000; assert.equal(await worker.call("SellerAgentsControlClient.canWork"), true);
+    clock.mono = 2000; assert.equal(await worker.call("SellerAgentsControlClient.canWork"), true);
+    const expiry = Date.parse(backing.local[AUTH].authority.payload.expiresAt);
+    const beforeWallJump = backing.local[AUTH].cacheClock.effectiveTimeMs;
+    clock.wall += 60000; clock.mono += 100;
+    assert.equal(await worker.call("SellerAgentsControlClient.canWork"), true);
+    const afterWallJump = backing.local[AUTH].cacheClock.effectiveTimeMs;
+    clock.wall -= 60000; clock.mono += 1000;
+    assert.equal(await worker.call("SellerAgentsControlClient.canWork"), true);
+    assert.ok(backing.local[AUTH].cacheClock.effectiveTimeMs >= afterWallJump + 1000);
+    assert.ok(afterWallJump >= clock.wall); assert.ok(afterWallJump > beforeWallJump);
+    clock.wall = expiry; clock.mono += 1;
+    assert.equal(await worker.call("SellerAgentsControlClient.canWork"), false);
+    worker.close();
+    const restarted = await makeWorker(runtime, { backing, wallClock: () => baseWall, monotonicClock: () => 1 });
+    try { assert.equal(await restarted.call("SellerAgentsControlClient.canWork"), false); } finally { restarted.close(); }
+  } catch (error) { worker.close(); throw error; }
+}
+{
+  const clock = { wall: baseWall, mono: 1000 }, backing = { local: {}, session: {} };
+  let hold = false, releaseWrite, settled = false;
+  const { worker } = await fixture({ backing, clock, onStorageWrite: async (kind, values) => {
+    if (hold && kind === "local" && Object.hasOwn(values, AUTH) && !releaseWrite) await new Promise(resolve => { releaseWrite = resolve; });
+  } });
+  try {
+    await worker.call("SellerAgentsControlClient.canWork"); hold = true; clock.wall += 100; clock.mono += 100;
+    const pending = worker.call("SellerAgentsControlClient.canWork").then(value => { settled = true; return value; });
+    await until(() => releaseWrite, "checkpoint write latch");
+    await new Promise(resolve => setImmediate(resolve)); assert.equal(settled, false);
+    releaseWrite(); assert.equal(await pending, true);
+    hold = false; releaseWrite = undefined; clock.wall = Date.parse(backing.local[AUTH].authority.payload.expiresAt); clock.mono += 1;
+    assert.equal(await worker.call("SellerAgentsControlClient.canWork"), false, "half-open expiry denial");
+  } finally { releaseWrite?.(); worker.close(); }
+}
+
+// C2.1-R1-B/D provenance and ownership: an actual origin replacement clears
+// transport ownership before any secret-bearing route; a same-origin package
+// replacement keeps only the valid session clock and obtains a fresh signed
+// authority online.
+{
+  const seed = await fixture(); const saved = clone(seed.backing.local[AUTH]); seed.backing.local.catalog_fixture = { keep: true }; seed.worker.close();
+  const network = [];
+  const changed = await makeWorker(runtime, { backing: seed.backing, seedAuthority: false, packagedConfig: { environment: "LOCAL DEVELOPMENT", controlApiOrigin: "http://127.0.0.1:43199", portalOrigin: "http://127.0.0.1:43101", extensionVersion: "0.2.4", contractVersion: "control_plane_v2", trustBundle: fixtureTrustBundle(seed.backing) }, fetch: async (url, init) => { network.push({ url, body: init?.body || "" }); return url.endsWith("/v1/device-authorizations") ? json({ status: "pending", authorizationId: "66666666-6666-4666-8666-666666666666", deviceCode: "N".repeat(43), userCode: "ABCD-EFGH", expiresAt: new Date(baseWall + 60000).toISOString() }) : json({ error: { code: "MUST_NOT_USE_OLD_SECRET" } }, 500); } });
+  try {
+    assert.equal((await changed.call("SellerAgentsControlClient.status")).authenticated, false);
+    await assert.rejects(changed.call("SellerAgentsControlClient.bootstrap"), /AUTH_REQUIRED/);
+    await assert.rejects(changed.call("SellerAgentsControlClient.refresh", { force: true }), /AUTH_REQUIRED/);
+    await changed.call("SellerAgentsControlClient.startActivation");
+    assert.equal(network[0].url.endsWith("/v1/device-authorizations"), true);
+    assert.equal(network.every(row => !row.body.includes(saved.credentials.accessToken) && !row.body.includes(saved.credentials.refreshToken)), true);
+  } finally { changed.close(); }
+  const sameOriginBacking = { local: {}, session: {} }, sameSeed = await fixture({ backing: sameOriginBacking });
+  const raisedFloor = sameOriginBacking.local[AUTH].cacheClock.effectiveTimeMs + 5000; sameOriginBacking.local[AUTH].cacheClock.effectiveTimeMs = raisedFloor; sameSeed.worker.close();
+  const replacementPayload = clone(sameOriginBacking.local[AUTH].authority.payload); const replacement = await makeWorker(runtime, { backing: sameOriginBacking, seedAuthority: false, wallClock: () => baseWall, monotonicClock: () => 1000, packagedConfig: { environment: "LOCAL DEVELOPMENT", controlApiOrigin: "http://127.0.0.1:43100", portalOrigin: "http://127.0.0.1:43101", extensionVersion: "0.2.5", contractVersion: "control_plane_v2", trustBundle: fixtureTrustBundle(sameOriginBacking) }, fetch: async url => url.endsWith("/v1/bootstrap") ? signed(sameOriginBacking, { ...replacementPayload, serverTime: new Date(baseWall).toISOString(), expiresAt: new Date(baseWall + 3600000).toISOString(), offlineGraceUntil: new Date(baseWall + 7200000).toISOString() }) : json({ error: { code: "UNEXPECTED" } }, 500) });
+  try { assert.equal((await replacement.call("SellerAgentsControlClient.status")).authenticated, false); assert.ok(replacement.backing.local[AUTH].credentials); assert.ok(replacement.backing.local[AUTH].cacheClock.effectiveTimeMs >= raisedFloor); await replacement.call("SellerAgentsControlClient.bootstrap"); assert.equal((await replacement.call("SellerAgentsControlClient.status")).authenticated, true); } finally { replacement.close(); }
+}
+
+// C2.1-R1-C: a real credential-bearing legacy record cannot be resumed when
+// its clock/binding metadata is absent, and pending attempts are bound before
+// their first request and again when the server response is stored.
+{
+  const seed = await fixture(); const backing = seed.backing; const saved = clone(backing.local[AUTH]); delete backing.local[AUTH].cacheClock; delete backing.local[AUTH].authority.cacheBinding; backing.local.catalog_fixture = { keep: true }; seed.worker.close();
+  const worker = await makeWorker(runtime, { backing, seedAuthority: false, fetch: async () => json({ error: { code: "NO_LEGACY_RESUME" } }, 500) });
+  try { assert.equal((await worker.call("SellerAgentsControlClient.status")).authenticated, false); assert.equal(backing.local.catalog_fixture.keep, true); assert.equal(backing.local[AUTH].credentials, null); } finally { worker.close(); }
+  const pendingBacking = { local: {}, session: {} }, pendingSeed = await fixture({ backing: pendingBacking }); pendingSeed.worker.close(); pendingBacking.local[AUTH].credentials = null; pendingBacking.local[AUTH].authority = null; pendingBacking.local[AUTH].cacheClock = null;
+  pendingBacking.local[AUTH].pending = { phase: "pending", attemptId: "legacy-attempt", authorizationId: "66666666-6666-4666-8666-666666666666", deviceCode: "D".repeat(43), userCode: "ABCD-EFGH", expiresAt: new Date(baseWall + 60000).toISOString(), startIdempotencyKey: "S".repeat(16), exchangeIdempotencyKey: "E".repeat(16) };
+  const pendingNetwork = []; const pendingWorker = await makeWorker(runtime, { backing: pendingBacking, seedAuthority: false, fetch: async (url, init) => { pendingNetwork.push({ url, body: init?.body || "" }); return url.endsWith("/v1/device-authorizations") ? json({ status: "pending", authorizationId: "77777777-7777-4777-8777-777777777777", deviceCode: "N".repeat(43), userCode: "JKLM-NPQR", expiresAt: new Date(baseWall + 60000).toISOString() }) : json({ error: { code: "NO_LEGACY_PENDING" } }, 500); } });
+  try { assert.equal((await pendingWorker.call("SellerAgentsControlClient.status")).pending, null); await pendingWorker.call("SellerAgentsControlClient.startActivation"); await until(() => pendingNetwork.some(row => row.url.endsWith("/v1/device-authorizations")), "new activation after legacy pending"); assert.equal(pendingNetwork.some(row => String(row.body).includes("D".repeat(43))), false); } finally { pendingWorker.close(); }
+}
+
+console.log(JSON.stringify({ status: "PASS", focused: "client-cache-time", fresh_boundary: true, effective_floor: true, restart_floor: true, context_matrix: 11, legacy_closed: true, ownership_reset_race: true, no_live_provider_calls: true, r1_cases: { "A-rolling-monotonic-and-completion-veto": 2, "B-origin-and-same-origin-replacement": 2, "C-legacy-and-pending-provenance": 2, "D-wall-rollback-and-restart-floor": 1, "prior-focused-matrix": 11 } }));
