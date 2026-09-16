@@ -1,6 +1,6 @@
 # Octoport domain migration
 
-Status: DOMAIN-D0 ACCEPTED / DOMAIN-D1 NEXT
+Status: DOMAIN-D0 ACCEPTED / DOMAIN-D1 ACCEPTED / DOMAIN-D2 NEXT
 Date opened: 2026-09-16
 Owner decision: migrate public/product domain family to `octoport.ru` before beginning the new public site implementation.
 
@@ -51,6 +51,8 @@ Initial Octoport topology:
 
 Reason: the accepted admin elevation flow depends on portal session/CSRF cookies. Current cookies are host-only; placing admin on a separate hostname would require an unnecessary authentication/cookie redesign. The prior Seller Agents ingress plan already required portal/admin same-origin for this reason.
 
+Current production ingress authority is [DOMAIN_INGRESS_PLAN_2026-09-16](../server/DOMAIN_INGRESS_PLAN_2026-09-16.md). The 2026-09-09 `selleragents.ru` plan is historical and remains preserved as evidence.
+
 ## Application findings relevant to migration
 
 ### Portal
@@ -59,7 +61,7 @@ Reason: the accepted admin elevation flow depends on portal session/CSRF cookies
 - Portal BFF reads `CONTROL_PLANE_API_ORIGIN`.
 - No old public domain is hardcoded in portal runtime.
 - Current cookies are host-only.
-- Target production value is expected to be `CONTROL_PLANE_API_ORIGIN=https://api.octoport.ru`.
+- Target production value is `CONTROL_PLANE_API_ORIGIN=https://api.octoport.ru` when production deployment is implemented.
 
 ### API
 
@@ -91,33 +93,47 @@ No production extension client currently needs an emergency old-domain cutover.
 
 Current repository configuration is development-only (`localhost:1025`, `no-reply@example.test`). Exim/Dovecot exist on the host, but no evidence proves they are the accepted production OTP provider for Octoport. Mail setup remains a separate acceptance boundary.
 
+## DOMAIN-D1 accepted result
+
+Repository authority now records:
+
+- Octoport as the future production domain family;
+- `octoport.ru` as the future public site origin;
+- `app.octoport.ru` as portal origin;
+- `app.octoport.ru/admin/` as same-origin admin route;
+- `api.octoport.ru` as future public Control Plane API origin;
+- `admin.octoport.ru` as reserved/not enabled initially;
+- `docs.selleragents.ru` as an active legacy documentation service intentionally preserved until separate migration;
+- the 2026-09-09 Seller Agents ingress plan as historical/superseded for future deployment.
+
+DOMAIN-D1 did not modify DNS, nginx, TLS, services, applications, extension runtime, databases or production environment.
+
 ## Migration principle
 
 This is a parallel migration, not a hard cutover.
 
 1. Preserve `docs.selleragents.ru` and all existing working services.
-2. Prepare Octoport domain authority/configuration in the repository.
+2. Keep Octoport domain authority/configuration in the repository.
 3. Add dedicated Octoport ingress/TLS without removing existing Seller Agents ingress.
 4. Deploy and accept portal/API/admin under the Octoport topology when their production deployment boundary is ready.
 5. Package new extension builds against Octoport endpoints only after API/portal acceptance.
 6. Make Octoport canonical only after the applicable runtime is accepted.
 7. Retain old web/domain compatibility as needed; retire old API only after proving no supported client depends on it.
 
-## DOMAIN-D0 safety result
+## DOMAIN-D2 next boundary
 
-DOMAIN-D0 was read-only. No DNS, nginx, TLS, application configuration, extension, email, database, service or environment changes were performed by the audit.
+DOMAIN-D2 is the first server-side implementation step.
 
-## DOMAIN-D1 next boundary
+Its scope is bounded ingress/TLS preparation only. It must:
 
-DOMAIN-D1 is a repository/domain-authority preparation step. It must NOT deploy portal/API/admin, issue TLS certificates, reload nginx, change databases, or ship an extension.
+- preserve `docs.selleragents.ru` exactly as a working service;
+- add explicit nginx handling for `octoport.ru`, `www.octoport.ru`, `app.octoport.ru` and `api.octoport.ru` without pretending undeployed portal/API apps exist;
+- prepare/issue correct TLS only for hostnames that can be safely terminated at this stage;
+- prevent Octoport hosts from falling through to the `docs.selleragents.ru` certificate/default behavior;
+- keep application upstreams private and avoid exposing nonexistent product processes;
+- leave `admin.octoport.ru` disabled as an application hostname;
+- validate nginx/certificate behavior and rollback.
 
-D1 should:
-
-- replace the old `selleragents.ru` production-domain authority in current normative ingress documentation with the accepted Octoport topology;
-- preserve historical evidence instead of rewriting it;
-- encode/clarify the same-origin portal/admin rule for `app.octoport.ru/admin/`;
-- define configurable production URL/environment names rather than scattering domain literals;
-- prepare an exact later ingress/TLS deployment plan for `octoport.ru`, `www.octoport.ru`, `app.octoport.ru`, and `api.octoport.ru`;
-- keep `docs.selleragents.ru` operational and out of the Octoport cutover until separately migrated.
+Exact D2 implementation details are owned by the architect; server Codex is used only as an executor for bounded server code/config changes and prescribed tests, not for planning or architecture.
 
 No cleanup or unrelated implementation belongs to this branch.
