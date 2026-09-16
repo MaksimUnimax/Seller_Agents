@@ -1,5 +1,27 @@
 # Server/I1/Health cursor — 2026-09-16
 
+Current: HEALTH_B5_GATE_R1_ACCEPTED / HEALTH_B5_REWORK_REQUIRED / HEALTH_B5_TIME_R1_PREPARED_FOR_SINGLE_FINAL_SUBMISSION.
+Task SA-HEALTH-B5-GATE-R1-20260916-01 terminal independently reviewed; executor stopped per report. No running Codex task confirmed, no direct Bridge/process visibility. Saving next task is not submission/start.
+
+Canonical repository MaksimUnimax/runtime-fixtures ID1369117174.
+Health branch feature/server-health-h3-p8-4: finald8f5157696d137750176d1aa44aedf9c2116404e/tree6612db9fbc1cd370a2882c7e5add696329413316/parent0d42223331ec936a671179fba4f59a0bcbe07214.
+Starta80cd3706a10d25079fedb9553fc7f5b2fc21683; code3b3ba9f8cfdbb0fb431072029541f61c5863237e.
+Gate verdict ACCEPTED only for two-fixture schema preparation;10TypeScript additions, allowlist preserved. Exact-head Server CI35085259171/job104758554519 SUCCESS; completed log checkout verified, integration1514/1514 including6H3/21DB-health, E2E162/162. Previous35084983097/job104757575027 CANCELLED, notPASS.
+Independent final docs-check PASS403files; Documentation workflow excludes featurepush, unrelatedmainrun not transferred. ExecutorRED/GREEN logs inspected; no local architect PG execution claimed.
+Review references/HEALTH_B5_GATE_R1_AND_TIME_REVIEW.md; CI references/HEALTH_B5_GATE_R1_CI.json.
+
+B5 remains REWORK_REQUIRED: H3HealthPersistenceContextSchema compares allowed ISO timestamp strings lexically. Verbatimcallback probe shows5wrongdecisions on offset/fraction/equalinstants. Proposed Date.parse comparison corrects all6probe decisions, not claimed as fullmapper/DB execution.
+Next task SA-HEALTH-B5-TIME-R1-20260916-01, tasks/HEALTH_B5_TIME_R1_2026-09-16.md: one chronology predicate + realmapper Standard/Work regressions + PGroundtrip/no-write negatives. Prepared for ONE final submission; do not duplicate on unknown delivery. Keep fixture gate repair.
+Remaining architect-owned B5 review item: C11 identityPass=false is incompatible with selected=null and APPROVED_EQUIVALENT in both strategies; #safe can discard observations on validation error. Source-level finding requires controlled actual-strategy reproduction/testdesign; Work earlyguard requires examining latechange. Not yet browser-reproduced, not assigned to executor's time task, must not disappear or be deferred toB6. FullB5 cannot be accepted solely after chronology correction.
+
+Mainbc718cc5c677ad0eb4598e7de3ad766473ff0847 unchanged. PR9 rechecked draft/dirty/mergeablefalse, integration head076af64efbcdfdc67aec8713969c31c276a90b2d. C2.2-A remains OPEN/BLOCKED at its own current PR gates/reserved docs/README.md conflict. R3regressionboundedACCEPTED preserved. No mainintegration/merge/deploy/release/livecalls.
+Owner parallel dirty docs/ROADMAP.md and docs/development/SERVER_CODEX_HANDOFF.md preserved perexecutor; architect clean detached review. Nexttask forbids staging/reset/stash of owner changes.
+C1/SRV5/SYNC/C2.1 accepted history retained. HealthB4accepted; B5open; B6–B8/C2.2-B notstarted. FullC2/I1/D2/S1.2/D3/beta/releaseopen. Manualowner testing afterjointinstalledC2thenQ1, notnow.
+Preserve site/SEO/domain/publicpresentation ownership; no edits to reserved entrypoint files or privatecontrol.
+
+## Previous snapshots — retained history
+# Server/I1/Health cursor — 2026-09-16
+
 Current: I1_C2_2A_R3_ACCEPTED_IN_REGRESSION_SCOPE / C2_2A_OPEN_BLOCKED / HEALTH_B5_GATE_R1_PREPARED_FOR_SINGLE_FINAL_SUBMISSION.
 Reviewed completed executor task SA-I1-C2-2A-R3-20260916-01. No other running executor is confirmed; no direct Bridge/process visibility. Next task saved/prepared is not a confirmed delivery/start.
 

@@ -1,0 +1,84 @@
+{
+  "head": "d8f5157696d137750176d1aa44aedf9c2116404e",
+  "scope": "verbatim context superRefine callback; not full Zod/mapper/DB execution",
+  "results": [
+    {
+      "name": "valid-offset-order",
+      "startedAt": "2026-09-16T10:00:00+05:00",
+      "completedAt": "2026-09-16T06:00:00Z",
+      "deltaMs": 3600000,
+      "expectedAccepted": true,
+      "actualAccepted": false,
+      "issues": [
+        {
+          "code": "custom",
+          "path": [
+            "completedAt"
+          ],
+          "message": "completedAt must not precede startedAt"
+        }
+      ]
+    },
+    {
+      "name": "invalid-offset-order",
+      "startedAt": "2026-09-16T06:00:00Z",
+      "completedAt": "2026-09-16T10:00:00+05:00",
+      "deltaMs": -3600000,
+      "expectedAccepted": false,
+      "actualAccepted": true,
+      "issues": []
+    },
+    {
+      "name": "valid-fraction-order",
+      "startedAt": "2026-09-16T06:00:00Z",
+      "completedAt": "2026-09-16T06:00:00.100Z",
+      "deltaMs": 100,
+      "expectedAccepted": true,
+      "actualAccepted": false,
+      "issues": [
+        {
+          "code": "custom",
+          "path": [
+            "completedAt"
+          ],
+          "message": "completedAt must not precede startedAt"
+        }
+      ]
+    },
+    {
+      "name": "invalid-fraction-order",
+      "startedAt": "2026-09-16T06:00:00.100Z",
+      "completedAt": "2026-09-16T06:00:00Z",
+      "deltaMs": -100,
+      "expectedAccepted": false,
+      "actualAccepted": true,
+      "issues": []
+    },
+    {
+      "name": "equal-instant-offset",
+      "startedAt": "2026-09-16T10:00:00+05:00",
+      "completedAt": "2026-09-16T05:00:00Z",
+      "deltaMs": 0,
+      "expectedAccepted": true,
+      "actualAccepted": false,
+      "issues": [
+        {
+          "code": "custom",
+          "path": [
+            "completedAt"
+          ],
+          "message": "completedAt must not precede startedAt"
+        }
+      ]
+    },
+    {
+      "name": "existing-utc-forward",
+      "startedAt": "2026-09-16T06:00:00.000Z",
+      "completedAt": "2026-09-16T06:00:01.000Z",
+      "deltaMs": 1000,
+      "expectedAccepted": true,
+      "actualAccepted": true,
+      "issues": []
+    }
+  ]
+}
