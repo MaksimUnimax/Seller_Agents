@@ -1,0 +1,13 @@
+{
+  "changedBrowser": true,
+  "changedOrigin": true,
+  "expired": false,
+  "hashes": {
+    "client.js": "a7c6afdbde242f08ae39c39059c094588e468968",
+    "config.js": "7c0a8019703929bc201995ed9e38e7c1706a459b",
+    "crypto.js": "c1fbb7671bb363e4ca6210e9243ac58b1a304561"
+  },
+  "initial": true,
+  "rollback": true,
+  "scope": "independent source VM, real Ed25519 verifier, synthetic clock/storage, no installed/live claim"
+}

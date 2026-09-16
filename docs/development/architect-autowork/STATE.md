@@ -1,8 +1,8 @@
 # Seller Agents — единый cursor
 
-Дата: 2026-09-16. Статус: I1_C1_ACCEPTED / I1_SRV5_ACCEPTED / I1_SYNC_PREPARED.
+Дата: 2026-09-16. Статус: I1_C1_ACCEPTED / I1_SRV5_ACCEPTED / I1_SYNC_REVIEW_ACTIVE / C2_1_DESIGNED_NOT_SUBMITTED.
 
-Владелец разрешил непрерывный авторежим; один архитектор и один последовательный Codex. R2 terminal проверен; обязательные CI завершились SUCCESS в активном цикле. I1-SRV.5 принят в ограниченном server/reference scope. Подготовлено одно объединение принятых server/client кандидатов. Прямого наблюдения Bridge/process нет; сохранение задачи не доказывает запуск. История и очередь сохранены.
+Владелец разрешил непрерывный авторежим; один архитектор и один последовательный Codex. SYNC terminal получен; source/package/installed-local review завершён, обязательные оставшиеся CI контролируются в активном цикле. Следующий C2.1 спроектирован, но не выдан. Сохранение checkpoint не означает остановку или запуск Codex.
 
 ## Роли
 
@@ -10,17 +10,17 @@ Astra / очень высокая глубина рассуждения — гл
 
 ## Текущая задача
 
-- SA-I1-SRV5-R2-20260916-01: ACCEPTED в server/reference scope на086ae20c2858849ec13b1ab67c2f7661259022c3, treeea17da20acb01ae3c03a14d5b18128c8040e27e7. Parent/code1822e861b70ade3326d12f37d655467db53a1b05; predecessor832b135f129154dae2a1ce726528fdb353e92292.
-- Branch feature/server-i1-srv5-acceptance-2026-09-16; PR8 draft/unmerged. Canonical main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c unchanged. PR merge8be4f8a3fc4b95bd67bc9900b97dc650c4ea81cb has identical candidate tree and verified main/candidate parents.
-- Exact-head Server push35049731202/job104647274595 SUCCESS; Server PR35049733772/job104647282357 SUCCESS; Documentation PR35049733775/job104647282143 SUCCESS. Completed logs independently read; both Server jobs integration39files/1527tests including health20; E2E88 including both I1 reference tests. Documentation419files/0errors.
-- Reviewed exactly seven allowlisted changed paths. Five code lines implement canonical reset/migrate before seeding; assertions and production behavior unchanged. Ordered local RED/GREEN/repeat are executor-reported evidence; remote full-cycle results independently observed.
-- Review/evidence: references/I1_SRV5_R2_REVIEW.md and references/I1_SRV5_R2_CI.json. All prior BLOCKED/FAIL history retained.
-- R2 terminal complete; no server executor currently reported running. Direct Bridge/process visibility is unavailable; absence of all server processes is not asserted.
-- C1 remains ACCEPTED on56c81a3521c02502b65fd713aec890e5a30f038d, tree5c14497e239922c3712d0c3be12af7ee59e665f5; PR7 draft/unmerged.
-- Next SA-I1-SYNC-20260916-01: tasks/I1_SYNC_2026-09-16.md; PREPARED_FOR_SINGLE_FINAL_SUBMISSION. Saving this task is not delivery or start evidence. Issue exactly once in the final Bridge block, then await its actual terminal; do not resubmit on a duplicate R2 report.
-- Target integration/i1-c1-srv5-2026-09-16 from server086ae20, normal no-ff merge of client56c81a3. Target branch/PR absent at preparation. Compared against common ancestorbc0cd0088ca50ba06021ea602a46bdd90de91378: client54 changed paths, server19, no overlap. Preserve runtime blobs; factual docs only after merge.
-- Queue: combined candidate acceptance -> C2 offline/profile/joint integration. Health/P8.4 B5 NOT ACCEPTED; B6–B8 queued. S1.2 real email/preprod and D3 not started. No full I1/D2, live or release acceptance.
-- Ручная приёмка владельцем понадобится после C2/совместной установленной I1-проверки и в Q1 перед бетой; текущие серверные/сборочные проверки выполняет инженерный цикл.
+- SA-I1-SYNC-20260916-01 terminal получен и проверен. Head1ff322b3dd2b68c4f02e5390850cd2f1b9548186, treef944feef7fb5cf7631df51d20fc70b2692ee907f; parentb8cd19ccfe9b7a1b92b9fa3376f94dccceb2c3ed. Branch integration/i1-c1-srv5-2026-09-16.
+- Merge9d3407bc248e935860c5d7d3a50536c6a08d92f4; treee834d3af55bb102e0378218dff731dd15b124d02; parents server086ae20c2858849ec13b1ab67c2f7661259022c3, client56c81a3521c02502b65fd713aec890e5a30f038d.
+- Main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c unchanged. Architect created draft PR9 once after deduplication; virtual mergefd3949e26ae10dfbd40d7527e2981b607a4b5837 has candidate-identical tree and verified parents. PR7/8 unchanged.
+- Independent Git-tree provenance PASS:54client/19server/0overlap/922unchanged, no blob/mode mismatches; exactly8allowed docs follow-up changes. Actual non-doc759 unchanged; receipt990 label is inaccurate and needs only factual correction.
+- Independent CI ZIP readback PASS: artifact10428733930,39/39files,1801114bytes, SHA2562f364316986187db50251dc4708317ca612ce51dd7106138106f64239605ba43. Separate local ephemeral fixture ZIP remains reported.
+- Verdict at checkpoint: WAITING_REQUIRED_REMOTE_GATES; architect remains active. Server push35052294338/job104655147186 SUCCESS; PR Server35052418502/job104655465041 and WB-browser104655465480/run35052418514 still monitored. Other Extension/I1/Documentation gates SUCCESS. See references/I1_SYNC_REVIEW.md and references/I1_SYNC_CI.json.
+- Current incomplete operation: finish monitoring those existing jobs; read their completed logs; accept bounded sync or diagnose exact failure. No workflow rerun or duplicate executor task.
+- Next task SA-I1-C2-1-20260916-01 fully designed at tasks/I1_C2_1_2026-09-16.md, NOT_SUBMITTED. C2.1 covers durable context/time before offline grace. Independent source VM found rollback reauthorization and changed-origin/browser cache acceptance; references/I1_C2_1_DESIGN.md and probe files. C2.2+ offline/profile/joint Work remains open.
+- Previous executor stopped for review per terminal. No confirmed executor running; direct Bridge/process visibility unavailable. Saving task is not delivery/start. Do not repeat SYNC on duplicate terminal or issue C2 before gate acceptance.
+- C1 and I1-SRV.5 remain accepted in their recorded scopes. Health/P8.4 B5 NOT ACCEPTED, B6–B8 queued. S1.2 real email/preprod and D3 deferred; no main merge, deployment, release, full I1/D2 or beta completion.
+- Ручные тесты владельца — после C2/совместной установленной I1-приёмки и в Q1 перед бетой; сейчас инженерные проверки продолжаются.
 
 ## Результат R1
 
@@ -142,3 +142,19 @@ R1 terminal832b135 обработан: signing fixture соответствуе�
 ## I1-SRV.5 R2 acceptance / I1 synchronization — 2026-09-16
 
 R2 terminal обработан; source correction и exact-head remote gates проверены, ACCEPTED в bounded server/reference scope. Следующий SA-I1-SYNC-20260916-01 подготовлен для единственной финальной передачи. Ни один исторический prepared/WAITING блок не является разрешением повторить старую задачу. Полный I1/C2 и Health B5 остаются открыты.
+
+
+## Исторический cursor перед SYNC terminal
+
+- SA-I1-SRV5-R2-20260916-01: ACCEPTED в server/reference scope на086ae20c2858849ec13b1ab67c2f7661259022c3, treeea17da20acb01ae3c03a14d5b18128c8040e27e7. Parent/code1822e861b70ade3326d12f37d655467db53a1b05; predecessor832b135f129154dae2a1ce726528fdb353e92292.
+- Branch feature/server-i1-srv5-acceptance-2026-09-16; PR8 draft/unmerged. Canonical main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c unchanged. PR merge8be4f8a3fc4b95bd67bc9900b97dc650c4ea81cb has identical candidate tree and verified main/candidate parents.
+- Exact-head Server push35049731202/job104647274595 SUCCESS; Server PR35049733772/job104647282357 SUCCESS; Documentation PR35049733775/job104647282143 SUCCESS. Completed logs independently read; both Server jobs integration39files/1527tests including health20; E2E88 including both I1 reference tests. Documentation419files/0errors.
+- Reviewed exactly seven allowlisted changed paths. Five code lines implement canonical reset/migrate before seeding; assertions and production behavior unchanged. Ordered local RED/GREEN/repeat are executor-reported evidence; remote full-cycle results independently observed.
+- Review/evidence: references/I1_SRV5_R2_REVIEW.md and references/I1_SRV5_R2_CI.json. All prior BLOCKED/FAIL history retained.
+- R2 terminal complete; no server executor currently reported running. Direct Bridge/process visibility is unavailable; absence of all server processes is not asserted.
+- C1 remains ACCEPTED on56c81a3521c02502b65fd713aec890e5a30f038d, tree5c14497e239922c3712d0c3be12af7ee59e665f5; PR7 draft/unmerged.
+- Next SA-I1-SYNC-20260916-01: tasks/I1_SYNC_2026-09-16.md; PREPARED_FOR_SINGLE_FINAL_SUBMISSION. Saving this task is not delivery or start evidence. Issue exactly once in the final Bridge block, then await its actual terminal; do not resubmit on a duplicate R2 report.
+- Target integration/i1-c1-srv5-2026-09-16 from server086ae20, normal no-ff merge of client56c81a3. Target branch/PR absent at preparation. Compared against common ancestorbc0cd0088ca50ba06021ea602a46bdd90de91378: client54 changed paths, server19, no overlap. Preserve runtime blobs; factual docs only after merge.
+- Queue: combined candidate acceptance -> C2 offline/profile/joint integration. Health/P8.4 B5 NOT ACCEPTED; B6–B8 queued. S1.2 real email/preprod and D3 not started. No full I1/D2, live or release acceptance.
+- Ручная приёмка владельцем понадобится после C2/совместной установленной I1-проверки и в Q1 перед бетой; текущие серверные/сборочные проверки выполняет инженерный цикл.
+

@@ -1,0 +1,30 @@
+import fs from "node:fs";
+import vm from "node:vm";
+import { webcrypto, createHash } from "node:crypto";
+import { makeWorker } from "./seed.mjs";
+const root=new URL(".",import.meta.url), auth="seller_agents_control_auth_v2";
+const {backing,fixtureConfig}=await makeWorker("unused");
+let now=Date.now();
+async function open(config=fixtureConfig, userAgent="Mozilla/5.0 Chrome/120.0.0.0"){
+ const box={crypto:webcrypto,TextEncoder,TextDecoder,Uint8Array,atob,btoa,URL,Headers,Response,setTimeout,clearTimeout,navigator:{userAgent},performance:{now:()=>0},_clock:()=>now};
+ const ctx=vm.createContext(box);
+ const clone=x=>vm.runInContext("JSON.parse",ctx)(JSON.stringify(x));
+ box.chrome={storage:{local:{get:async key=>clone({[key]:backing.local[key]}),set:async value=>Object.assign(backing.local,structuredClone(value)),remove:async key=>{delete backing.local[key]}}}};
+ box.__SELLER_AGENTS_PACKAGED_CONFIG__=JSON.stringify(config);
+ box.fetch=async()=>{throw Error("source probe forbids network")};
+ vm.runInContext("Date.now=()=>_clock()",ctx);
+ for(const p of ["config.js","crypto.js","client.js"])vm.runInContext(fs.readFileSync(new URL(p,root),"utf8"),ctx);
+ await vm.runInContext("SellerAgentsControlClient.restore()",ctx);
+ return ()=>vm.runInContext("SellerAgentsControlClient.canWork()",ctx);
+}
+const expiry=Date.parse(backing.local[auth].authority.payload.expiresAt);
+let check=await open();
+const initial=await check();
+now=expiry+1; const expired=await check();
+now=expiry-1000; const rollback=await check();
+check=await open({...fixtureConfig,controlApiOrigin:"http://127.0.0.1:43102"});
+const changedOrigin=await check();
+check=await open(fixtureConfig,"Mozilla/5.0 Chrome/151.0.0.0");
+const changedBrowser=await check();
+const hashes=Object.fromEntries(["client.js","config.js","crypto.js"].map(p=>{const b=fs.readFileSync(new URL(p,root));return[p,createHash("sha1").update(Buffer.concat([Buffer.from("blob "+b.length+"\0"),b])).digest("hex")]}));
+console.log(JSON.stringify({scope:"independent source VM, real Ed25519 verifier, synthetic clock/storage, no installed/live claim",initial,expired,rollback,changedOrigin,changedBrowser,hashes},null,2));
