@@ -41,13 +41,14 @@ SEO work remains isolated from parallel server development:
 | B02-09 | ии агент для wildberries | SUCCESS | 20 | `wordstat-5d658b6b-1aae-4017-9934-8b7bec8a5baa` | `raw/B02_09_2026-09-16.md` | `analysis/B02_09_2026-09-16.md` |
 | B02-10 | сервис аналитика продаж на маркетплейсах | SUCCESS | 39 | `wordstat-faf230a2-d2c6-41f5-8bda-c09f46c2a0aa` | `raw/B02_10_2026-09-16.md` | `analysis/B02_10_2026-09-16.md` |
 | B02-11 | сервис для аналитики продаж на маркетплейсах | SUCCESS | 19 | `wordstat-f9a27bb8-6454-4079-ae46-9ae91d0e3b8c` | `raw/B02_11_2026-09-16.md` | `analysis/B02_11_2026-09-16.md` |
+| B02-12 | сервис внутренней аналитики маркетплейсов | SUCCESS | 19 | `wordstat-4d58e65b-d980-4e99-85aa-94c76e7d1f4c` | `raw/B02_12_2026-09-16.md` | `analysis/B02_12_2026-09-16.md` |
 
 ## Totals
 
-- successful HTTP/provider calls: `11/15`;
-- calls with usable `totalCount`: `11/15`;
+- successful HTTP/provider calls: `12/15`;
+- calls with usable `totalCount`: `12/15`;
 - successful-empty result calls: `0`;
 - provider failures: `0`;
-- accumulated estimated cost: `0.22 ₽`;
-- current cursor: `B02-12`;
-- next seed: `сервис внутренней аналитики маркетплейсов`.
+- accumulated estimated cost: `0.24 ₽`;
+- current cursor: `B02-13`;
+- next seed: `нейросеть помощь для маркетплейсов`.
