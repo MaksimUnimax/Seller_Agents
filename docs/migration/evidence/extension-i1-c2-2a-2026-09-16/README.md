@@ -20,7 +20,7 @@ The candidate adds private transport provenance, sequence-fenced shared online b
 |---|---|---|
 | Focused source/extracted | PASS | `client-offline-policy.mjs`, source and package |
 | Existing I1/client/core suites | PASS | local extension composition |
-| Browser verifier | UNKNOWN | not run in this workspace |
+| Browser verifier | PASS | Chromium 151.0.7922.34; signed snapshot valid and tamper rejected |
 | Native source/extracted | UNKNOWN | not run in this workspace |
 | Installed-local API/portal/PostgreSQL | UNKNOWN | not run in this workspace |
 | `docs:check` | PASS | 468 files, 245 Markdown files, 364 relative links |

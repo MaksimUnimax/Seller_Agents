@@ -37,7 +37,7 @@
   },
   "gates": {
     "existing_i1_core": "PASS",
-    "browser_verifier": "UNKNOWN",
+    "browser_verifier": "PASS (Chromium 151.0.7922.34)",
     "native_source_extracted": "UNKNOWN",
     "installed_local_api_portal_postgresql": "UNKNOWN",
     "docs_check": "PASS",
