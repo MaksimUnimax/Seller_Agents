@@ -1,8 +1,8 @@
 # Seller Agents — единый cursor
 
-Дата: 2026-09-16. Статус: I1_C1_ACCEPTED / I1_SRV5_REWORK_REQUIRED / I1_SRV5_R1_PREPARED.
+Дата: 2026-09-16. Статус: I1_C1_ACCEPTED / I1_SRV5_R1_REWORK_REQUIRED / I1_SRV5_R2_PREPARED.
 
-Владелец разрешил непрерывный авторежим; один архитектор и один последовательный Codex. Terminal SA-I1-SRV5-20260916-01 получен: исполнитель остановился для review. Независимо доказан дефект per-run ключей Playwright; готова одна коррекция R1. Прямого наблюдения Bridge/process нет; сохранение промпта не доказывает запуск. История и очередь сохранены.
+Владелец разрешил непрерывный авторежим; один архитектор и один последовательный Codex. R1 terminal получен и проверен. Коррекция Playwright соответствует решению, но обязательная integration-suite зависит от остаточных данных; готово точное R2 исправление setup. Прямого наблюдения Bridge/process нет; сохранение задачи не доказывает запуск. История и очередь сохранены.
 
 ## Роли
 
@@ -10,18 +10,18 @@ Astra / очень высокая глубина рассуждения — гл
 
 ## Текущая задача
 
-- SA-I1-SRV5-20260916-01: REWORK_REQUIRED on b0d93e36b2c7f37a4758ea4b33dbfa9cf2c688bb; tree9ebcf18e4d0c24d7058a8b730a7e18a74ff950b6.
-- Branch feature/server-i1-srv5-acceptance-2026-09-16, actual main/base5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c. Parent3710aeeef82314fff37e914833ca280ad5f56ab7. Remote ref/ancestry/diff independently verified.
-- Draft PR8 created by architect, unmerged. Virtual merge d86a0bcfc55552454af1f84dc8d27f0f7c7c6fa0 has the same tree as candidate.
-- Proven blocker: Playwright worker re-import regenerates CONFIG_SIGNING_PUBLIC_KEY_RING_JSON, so the new reference test uses a key different from the disposable API signer. Same-version worker probe RED on original config, GREEN on selected correction. Prior architect assumption about env stability corrected.
-- Review/evidence: references/I1_SRV5_REVIEW.md, I1_SRV5_CI.json and I1_SRV5_PROBE/.
-- Server push35043545567/job104628447057 FAILURE: exact b0d93e3 checkout, E2E new reference firstVerification at line86 expected true/received false; 86 other E2E pass. Integration/migration/build PASS. Completed job log independently read. PR35043813324/job104629216114 still in progress at latest read. Documentation35043813323/job104629215980 SUCCESS.
-- Local DB exhaustion remains executor-reported BLOCKED, not a global project stop.
-- Next task SA-I1-SRV5-R1-20260916-01, tasks/I1_SRV5_R1_2026-09-16.md, PREPARED_FOR_SINGLE_FINAL_SUBMISSION. Do not duplicate on unknown delivery. Terminal confirms previous executor stopped; next launch is not asserted.
-- R1 allows narrow Playwright config ownership fix plus real worker public-trust consistency regression; no production change. Reuse PR8.
-- C1/R5 remains ACCEPTED on56c81a3521c02502b65fd713aec890e5a30f038d, tree5c14497e239922c3712d0c3be12af7ee59e665f5, PR7 draft/unmerged. Prior final CI/review/package evidence retained in references/I1_C1_R5_REVIEW.md.
-- Queue: correct and accept I1-SRV.5 -> C2/joint integration; Health/P8.4 B5 remains NOT ACCEPTED, B6–B8 queued. General beta B1/B2 distinct.
-- After R1 terminal inspect its actual head/diff and all applicable CI; don't repeat unchanged C1 acceptance.
+- SA-I1-SRV5-R1-20260916-01: REWORK_REQUIRED on832b135f129154dae2a1ce726528fdb353e92292, tree53238b426990508d20cf277b8ffb9797861d2f54. Parent39478f0b4e28dd875111ce28670396531a8efc4d.
+- Branch feature/server-i1-srv5-acceptance-2026-09-16; PR8 draft/unmerged; canonical main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c. PR virtual merge4571212c3bed15c3a982561c77b41e8cea905212 has candidate-identical tree.
+- R1 signing fixture matches architect solution; original lifecycle assertions retained. Local reported regression RED/GREEN and E2E88/88 remain local evidence.
+- Current blocker: packages/server/db/src/health-persistence.integration.test.ts beforeAll lacks schema reset/migrations and shares adapter UUID with adapter-registry.integration.test.ts. Read both source paths, DB ready implementation and Vitest config. The ordered pair deterministically conflicts. Original local report: integration FAIL,1507 passed/20 skipped; exact original predecessor not supplied.
+- Next: SA-I1-SRV5-R2-20260916-01; tasks/I1_SRV5_R2_2026-09-16.md. Narrow test setup reset/migrate and exact RED/GREEN order regression; preserve all assertions, no production Health changes.
+- Review/evidence: references/I1_SRV5_R1_REVIEW.md, I1_SRV5_R1_CI.json.
+- Push35046791468/job104638266285 and PR35046795347/job104638309700 in progress, both integration steps PASS at latest read. Documentation35046795316/job104638241825 SUCCESS. Favorable order does not eliminate source-proven order dependency. No final Server CI PASS claimed.
+- R1 terminal complete; R2 PREPARED_FOR_SINGLE_FINAL_SUBMISSION. No parallel executor or duplicate prompt; delivery/start not asserted.
+- C1 remains ACCEPTED on56c81a3521c02502b65fd713aec890e5a30f038d, tree5c14497e239922c3712d0c3be12af7ee59e665f5, PR7 draft/unmerged.
+- Queue: I1-SRV.5 gate repair/acceptance -> unified accepted client/server integration base -> C2 offline/profile/joint integration. Health/P8.4 B5 NOT ACCEPTED, B6–B8 queued.
+- Client/server files changed since common ancestorbc0cd0088ca50ba06021ea602a46bdd90de91378 are disjoint; client is4 main commits behind. No merging performed.
+- Base SHA in R1 docs/terminal is still39 chars; R2 requires exact40-character Git readback. Historical accepted evidence remains unchanged.
 
 ## Результат R1
 
@@ -118,3 +118,7 @@ WAITING_REQUIRED_WB_CI на56c81a3521c02502b65fd713aec890e5a30f038d. Ревью 
 ## I1-SRV.5 review — 2026-09-16
 
 Terminal b0d93e3 обработан. REWORK_REQUIRED по независимо воспроизведённому расхождению runner/worker public keys. Architect создал draft PR8, прочитал remote refs/CI и подготовил единственный R1 prompt. Исторические prepared/WAITING записи выше не являются текущими командами. Push Server CI подтвердил FAIL нового reference test; точный лог прочитан. PR CI ещё выполняется; конкретное исправление уже доказано и готово.
+
+## I1-SRV.5 R1 review — 2026-09-16
+
+R1 terminal832b135 обработан: signing fixture соответствует решению; REWORK_REQUIRED из-за подтверждённой source-level зависимости integration setup от порядка файлов и повторно неисправленного SHA. Подготовлен один R2; I1-SRV.5 не закрыт. Исторические prepared/WAITING записи выше не разрешают повторную отправку. Health B5 остаётся отдельным незакрытым критерием.

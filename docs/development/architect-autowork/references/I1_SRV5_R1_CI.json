@@ -1,0 +1,386 @@
+{
+  "candidate": "832b135f129154dae2a1ce726528fdb353e92292",
+  "main": "5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+  "note": "Server jobs still running at observation; integration passed in both clean CI environments. No final Server CI success claimed. A separately demonstrated source-level order dependency and reported local failure still require correction.",
+  "pr8": {
+    "head": "832b135f129154dae2a1ce726528fdb353e92292",
+    "merge": "4571212c3bed15c3a982561c77b41e8cea905212",
+    "parents": [
+      "5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+      "832b135f129154dae2a1ce726528fdb353e92292"
+    ],
+    "tree": "53238b426990508d20cf277b8ffb9797861d2f54"
+  },
+  "runs": [
+    {
+      "event": "pull_request",
+      "id": 35046795316,
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 104638241825,
+          "logs_url": null,
+          "name": "documentation",
+          "run_id": 35046795316,
+          "status": "completed",
+          "steps": [
+            {
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 2,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+              "number": 3,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Check documentation and scaffold",
+              "number": 4,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+              "number": 7,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 8,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 9,
+              "status": "completed"
+            }
+          ]
+        }
+      ],
+      "name": "Documentation CI"
+    },
+    {
+      "event": "pull_request",
+      "id": 35046795347,
+      "jobs": [
+        {
+          "conclusion": null,
+          "id": 104638309700,
+          "logs_url": null,
+          "name": "server",
+          "run_id": 35046795347,
+          "status": "in_progress",
+          "steps": [
+            {
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Initialize containers",
+              "number": 2,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 3,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1",
+              "number": 4,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+              "number": 5,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Verify frozen server import",
+              "number": 6,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm install --frozen-lockfile",
+              "number": 7,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm lint",
+              "number": 8,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm format:check",
+              "number": 9,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm typecheck",
+              "number": 10,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm exec vitest run tests/e2e/server/playwright-config-regression.test.ts",
+              "number": 11,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm test",
+              "number": 12,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm test:integration",
+              "number": 13,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm db:migrate",
+              "number": 14,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm openapi:check",
+              "number": 15,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm bridge:guard",
+              "number": 16,
+              "status": "completed"
+            },
+            {
+              "conclusion": null,
+              "name": "Run pnpm build",
+              "number": 17,
+              "status": "in_progress"
+            },
+            {
+              "conclusion": null,
+              "name": "Run pnpm exec playwright install --with-deps chromium",
+              "number": 18,
+              "status": "pending"
+            },
+            {
+              "conclusion": null,
+              "name": "Run pnpm test:e2e",
+              "number": 19,
+              "status": "pending"
+            },
+            {
+              "conclusion": null,
+              "name": "Post Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+              "number": 35,
+              "status": "pending"
+            },
+            {
+              "conclusion": null,
+              "name": "Post Run pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1",
+              "number": 36,
+              "status": "pending"
+            },
+            {
+              "conclusion": null,
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 37,
+              "status": "pending"
+            },
+            {
+              "conclusion": null,
+              "name": "Stop containers",
+              "number": 38,
+              "status": "pending"
+            }
+          ]
+        }
+      ],
+      "name": "Server CI"
+    },
+    {
+      "event": "push",
+      "id": 35046791468,
+      "jobs": [
+        {
+          "conclusion": null,
+          "id": 104638266285,
+          "logs_url": null,
+          "name": "server",
+          "run_id": 35046791468,
+          "status": "in_progress",
+          "steps": [
+            {
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Initialize containers",
+              "number": 2,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 3,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1",
+              "number": 4,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+              "number": 5,
+              "status": "completed"
+            },
+            {
+              "conclusion": "skipped",
+              "name": "Verify frozen server import",
+              "number": 6,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm install --frozen-lockfile",
+              "number": 7,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm lint",
+              "number": 8,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm format:check",
+              "number": 9,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm typecheck",
+              "number": 10,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm exec vitest run tests/e2e/server/playwright-config-regression.test.ts",
+              "number": 11,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm test",
+              "number": 12,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm test:integration",
+              "number": 13,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm db:migrate",
+              "number": 14,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm openapi:check",
+              "number": 15,
+              "status": "completed"
+            },
+            {
+              "conclusion": "success",
+              "name": "Run pnpm bridge:guard",
+              "number": 16,
+              "status": "completed"
+            },
+            {
+              "conclusion": null,
+              "name": "Run pnpm build",
+              "number": 17,
+              "status": "in_progress"
+            },
+            {
+              "conclusion": null,
+              "name": "Run pnpm exec playwright install --with-deps chromium",
+              "number": 18,
+              "status": "pending"
+            },
+            {
+              "conclusion": null,
+              "name": "Run pnpm test:e2e",
+              "number": 19,
+              "status": "pending"
+            },
+            {
+              "conclusion": null,
+              "name": "Post Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+              "number": 35,
+              "status": "pending"
+            },
+            {
+              "conclusion": null,
+              "name": "Post Run pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1",
+              "number": 36,
+              "status": "pending"
+            },
+            {
+              "conclusion": null,
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 37,
+              "status": "pending"
+            },
+            {
+              "conclusion": null,
+              "name": "Stop containers",
+              "number": 38,
+              "status": "pending"
+            }
+          ]
+        }
+      ],
+      "name": "Server CI"
+    }
+  ],
+  "tree": "53238b426990508d20cf277b8ffb9797861d2f54"
+}
