@@ -2,7 +2,7 @@
 
 Дата: 2026-09-16.
 Branch: `seo/wordstat-batch-01-2026-09-16`.
-Status: `S02_COLLECTED__READY_EXPORT_S02`.
+Status: `S02_EVIDENCE_CLOSED__S03_RELEASED`.
 Master authority: `../SEO_MASTER_ROADMAP_2026-09-16.md`.
 
 ## Evidence rule
@@ -13,8 +13,9 @@ For every bridge/provider response:
 2. verify the GitHub write by reading it back;
 3. save lifecycle/query analysis separately under `serp/analysis/`;
 4. preserve the exported normalized SERP authority with source hash/provenance under `serp/exports/`;
-5. update progress;
-6. only then release the next provider action/query.
+5. update recurring competitor evidence when due;
+6. update progress;
+7. only then release the next provider action/query.
 
 Local admission errors, local `start`, local due-time guards and local export actions with `request_executed:false` do not count as Search provider calls.
 
@@ -30,17 +31,15 @@ Status: `CLOSED / 20 NORMALIZED RESULTS`.
 
 - job id: `octoport-serp-s01-20260916`;
 - operation id: `sprjotiech5gn23a4tq3`;
-- collect revision: `5`;
+- revision: `5`;
 - normalized result rows: `20`;
-- all successful: `true`;
 - normalized authority: `exports/S01_ИИ_АГЕНТЫ_ДЛЯ_МАРКЕТПЛЕЙСОВ_NORMALIZED_2026-09-16.json`;
-- source attachment hash-pinned; no model-byte reconstruction.
-
-S01 establishes a real marketplace AI-agent SERP layer, but final page ownership remains blocked until M7.
+- source attachment size: `88320` bytes;
+- source SHA-256: `6a669f140e0b1b0f4e697195d3eed74b44cab8139151970a7c1d3471c04566c6`.
 
 ## S02 — `ии агент для озон`
 
-Purpose: test whether Ozon-specific wording has distinct commercial/product intent, recurring Ozon-specific competitors/pages, and materially different page types versus generic S01.
+Status: `CLOSED / 20 NORMALIZED RESULTS`.
 
 ### Lifecycle
 
@@ -51,53 +50,60 @@ Purpose: test whether Ozon-specific wording has distinct commercial/product inte
 | S02-03 | `collectN` | `NO_DUE_OPERATIONS` | `false` | `raw/S02_03_COLLECT_NOT_DUE_2026-09-16.md` |
 | S02-04 | `collectN` | `SUCCEEDED` | `true` | `raw/S02_04_COLLECT_SUCCEEDED_2026-09-16.md` |
 
-### Current state
+### Closed export evidence
 
 - job id: `octoport-serp-s02-20260916`;
-- accepted/collected operation id: `sproisueh6ivih75sbu9`;
-- control: `RUNNING`;
-- total items: `1`;
-- `PENDING:0`;
-- `WAITING:0`;
-- `SUCCEEDED:1`;
-- `PARSE_FAILED:0`;
-- `FAILED:0`;
-- `UNKNOWN:0`;
-- requests started: `1`;
-- operations accepted: `1`;
-- polls started: `1`;
-- unresolved: `0`;
-- all successful: `true`;
+- operation id: `sproisueh6ivih75sbu9`;
 - revision: `5`;
-- provider submissions for S02: `1`;
-- provider-backed collects for S02: `1`;
-- local not-due collect guards for S02: `1`.
+- source attachment: `search-octoport-serp-s02-20260916-r5-0-0.json`;
+- source attachment size: `87159` bytes;
+- source SHA-256: `b67eaba22dc8b3a949ecddbcf87646ede7141ff5d2cf660d875084c88a3b3bf2`;
+- normalized authority: `exports/S02_ИИ_АГЕНТ_ДЛЯ_ОЗОН_NORMALIZED_2026-09-16.json`;
+- result rows: `20`;
+- `usable_for_url_comparison:true`;
+- `missing_url_ranks:[]`;
+- `unsafe_url_ranks:[]`;
+- intent analysis: `analysis/S02_EXPORT_AND_INTENT_2026-09-16.md`.
 
-### Interpretation
+### S02 finding
 
-The S02 deferred Search operation completed successfully and was normalized by the Bridge. `normalized:1` is an item count, not the number of organic SERP rows. The lifecycle envelope contains no URLs/titles/snippets, so S02 intent/competitor analysis remains blocked until export.
+Ozon-specific wording is strongly seller-side and agent/integration/data oriented. Dedicated Ozon pages rank materially alongside recurring generic category domains. This is positive provisional evidence for an Ozon-specific Page Job, but not a final page-ownership decision before S03 + later clustering/M7.
 
-No additional `start`, `submitN` or `collectN` is allowed for the completed item.
+## Preliminary recurring competitors after S01 + S02
 
-### Next allowed action
+Registry: `competitors/REGISTRY_2026-09-16.md`.
 
-Exactly one local export:
+Currently recurring across both query families:
 
-`SEARCH_ASYNC_BATCH_API_V1 {"action":"exportPage","jobId":"octoport-serp-s02-20260916","after":-1,"limit":1,"revision":5}`
+- `berkuz.ru`;
+- `jafo.ru`;
+- `marketaut.ru`;
+- `superintellect.ru`.
 
-The export must be persisted/hash-pinned and validated before S02 is considered evidence-closed or S03 is released.
+Exact recurring home URLs include Berkuz, JAFO and MarketAut. Dedicated marketplace-specific pages also appear in S02.
+
+## S03 — released next query
+
+Query: `ии агент для wildberries`.
+Purpose: paired Wildberries marketplace-specific control against S02 Ozon to resolve marketplace-specific symmetry/differences before any split/page-ownership conclusion.
+
+Next allowed action is local-only `start` for a new one-query job:
+
+`SEARCH_ASYNC_BATCH_API_V1 {"action":"start","jobId":"octoport-serp-s03-20260916","queries":["ии агент для wildberries"],"confirmBillable":true,"maxRequests":1,"maxCostRub":0.0305,"searchType":"SEARCH_TYPE_RU","region":"225","page":0,"groupsOnPage":20,"docsInGroup":1,"groupMode":"GROUP_MODE_FLAT","familyMode":"FAMILY_MODE_MODERATE","fixTypoMode":"FIX_TYPO_MODE_OFF","sortMode":"SORT_MODE_BY_RELEVANCE","sortOrder":"SORT_ORDER_DESC"}`
+
+Expected `start`: local-only, `request_executed:false`, `provider_calls:0`. Do not submit until start evidence is persisted/read back.
 
 ## Current totals
 
-- completed/exported M3 queries: `1`;
-- provider-completed but not yet exported M3 queries: `1` (`S02`);
-- successful provider submissions: `2` total (`S01` + `S02`);
-- successful provider-backed collects: `2` total (`S01` + `S02`);
+- completed/exported M3 query families: `2` (`S01`, `S02`);
+- released next query: `S03`;
+- successful provider submissions: `2` total;
+- successful provider-backed collects: `2` total;
 - local admission failures: `2`;
-- local not-due guards: `2` total (`S01` + `S02`);
+- local not-due guards: `2` total;
 - provider failures: `0`;
-- current master stage: `M3 Ordinary Yandex SERP collection`;
-- next action: local `S02 exportPage`, revision `5`.
+- recurring competitor registry updates: `1`;
+- current master stage: `M3 Ordinary Yandex SERP collection`.
 
 ## Bridge/UI observation
 
