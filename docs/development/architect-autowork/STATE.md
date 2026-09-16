@@ -1,5 +1,21 @@
 # Seller Agents — единый cursor
 
+Дата: 2026-09-16. Current: C2_1_ACCEPTED / C2_2A_REWORK_REQUIRED / C2_2A_R1_PREPARED_FOR_SINGLE_FINAL_SUBMISSION.
+
+## Текущая точка
+- Task SA-I1-C2-2A-20260916-01 terminal received and reviewed. Executor stopped per report; no new running job confirmed; no direct Bridge/process visibility.
+- Branch integration/i1-c1-srv5-2026-09-16, head ec9c23da45091255e0ba53914b3682539ef0b797/tree eeeb24dfea47f714b38d6997550073e468aad58c/parent a553d1f80769528544ee1c90d1305edb51d9d71f. Start4acc5fb3336e3e38fa30d6a7ec16c80730bcd7e1.
+- Verdict REWORK_REQUIRED: independently reproduced refresh503 wrongly returning CACHE without bootstrap; successful denial write followed by sequence obsolescence falsely reports persistence failure and removes AUTH. Missing assigned A–H cases and final public-consumer identity checks.
+- Exact clientblob026740435bdab9c07b826d231874b75aa6e6ece8. Review references/I1_C2_2A_REVIEW.md; probes references/I1_C2_2A_REVIEW_PROBE/; CI references/I1_C2_2A_CI.json.
+- Current main e5f302d2d0334a106fa046b8dee4e8df6e38e583, owner-authorized Octoport/site/ingress changes. Preserve them. PR9 draft/unmerged. CI merge bc3da6a062b1bdcd49badb3879ac2adc03f40a97/tree cec0617f7188d19d3bb718affa12972e5aea3470 has current main+candidate parents, additional site/docs/infra paths; not candidate-identical tree.
+- Current I1run35066457056 client104697816433/installed104697816751 SUCCESS. Native PRjob104697809040 in35066456987 SUCCESS source/extracted; installed/native completed logs read. Core/Ozon/WBnodes and Docs35066457014SUCCESS. Server35066457022/job104697802488 and WB-browser104697809313/104697789953 still running at snapshot; not all-green. No reruns. Ready correction proceeds on proven defects without waiting for old CI.
+- Reported current default ZIP1834181bytes/SHA25601927616ac7e500b6a872d9eca1416953b5af90bd5ea13e6097be726f32234b0 not independently downloaded for rejected candidate. Local UNKNOWN/not-run gates remain distinct from remote PASS.
+- Next SA-I1-C2-2A-R1-20260916-01 at tasks/I1_C2_2A_R1_2026-09-16.md: endpoint provenance, narrow persistence catches, final ownership fence and original acceptance completion. Prepared for ONE final submission. Saving does not mean delivered/running. After final task await terminal; do not resend on unknown delivery.
+- C1/SRV5/SYNC/C2.1 bounded acceptances remain. C2.2-A,offline Work/profile/fulljointC2,I1/D2,S1.2/D3,beta/release open. Health P8.4B5 NOT ACCEPTED/B6–8 queued. No merge/deploy/release; no owner manual testing needed now.
+- Continuous autowork authorized; one architect and one sequential server executor. Preserve owner Octoport migration and strict origin/auth boundaries.
+
+## Historical cursor — retained, not commands to repeat
+
 Дата: 2026-09-16. Current: I1_C1_ACCEPTED / I1_SRV5_ACCEPTED / I1_SYNC_ACCEPTED / C2_1_ACCEPTED / C2_2A_PREPARED_FOR_SINGLE_FINAL_SUBMISSION.
 
 ## Текущая точка

@@ -1,0 +1,137 @@
+{
+  "checkout": "bc3da6a062b1bdcd49badb3879ac2adc03f40a97",
+  "checkoutTree": "cec0617f7188d19d3bb718affa12972e5aea3470",
+  "completedLogsRead": [
+    104697809040,
+    104697816751
+  ],
+  "head": "ec9c23da45091255e0ba53914b3682539ef0b797",
+  "main": "e5f302d2d0334a106fa046b8dee4e8df6e38e583",
+  "runs": [
+    {
+      "event": "pull_request",
+      "head": "ec9c23da45091255e0ba53914b3682539ef0b797",
+      "id": 35066457014,
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 104697729787,
+          "name": "documentation",
+          "status": "completed"
+        }
+      ],
+      "name": "Documentation CI"
+    },
+    {
+      "event": "pull_request",
+      "head": "ec9c23da45091255e0ba53914b3682539ef0b797",
+      "id": 35066457022,
+      "jobs": [
+        {
+          "conclusion": null,
+          "id": 104697802488,
+          "name": "server",
+          "status": "in_progress"
+        }
+      ],
+      "name": "Server CI"
+    },
+    {
+      "event": "pull_request",
+      "head": "ec9c23da45091255e0ba53914b3682539ef0b797",
+      "id": 35066456987,
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 104697809040,
+          "name": "Common application / native Chromium fixture",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 104697809203,
+          "name": "Baseline / wb-nodes",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 104697809262,
+          "name": "Common core / source and package",
+          "status": "completed"
+        },
+        {
+          "conclusion": null,
+          "id": 104697809313,
+          "name": "Baseline / wb-browsers",
+          "status": "in_progress"
+        },
+        {
+          "conclusion": "success",
+          "id": 104697809452,
+          "name": "Baseline / ozon",
+          "status": "completed"
+        }
+      ],
+      "name": "Extension CI"
+    },
+    {
+      "event": "pull_request",
+      "head": "ec9c23da45091255e0ba53914b3682539ef0b797",
+      "id": 35066457056,
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 104697816433,
+          "name": "client-i1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 104697816751,
+          "name": "Installed local API / portal / PostgreSQL acceptance",
+          "status": "completed"
+        }
+      ],
+      "name": "Extension I1-C1 client"
+    },
+    {
+      "event": "push",
+      "head": "ec9c23da45091255e0ba53914b3682539ef0b797",
+      "id": 35066452300,
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 104697789679,
+          "name": "Common core / source and package",
+          "status": "completed"
+        },
+        {
+          "conclusion": null,
+          "id": 104697789953,
+          "name": "Baseline / wb-browsers",
+          "status": "in_progress"
+        },
+        {
+          "conclusion": "success",
+          "id": 104697789986,
+          "name": "Common application / native Chromium fixture",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 104697790008,
+          "name": "Baseline / ozon",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 104697790011,
+          "name": "Baseline / wb-nodes",
+          "status": "completed"
+        }
+      ],
+      "name": "Extension CI"
+    }
+  ],
+  "verdict": "REWORK_REQUIRED"
+}

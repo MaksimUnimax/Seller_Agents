@@ -1,0 +1,11 @@
+{
+  "case": "superseded_after_successful_denial_write",
+  "outcome": {
+    "error": "AUTH_DENIAL_PERSISTENCE_FAILED"
+  },
+  "writes": 2,
+  "removeAttempts": 1,
+  "durableAuthPresent": false,
+  "requests": 2,
+  "storageActuallyFailed": false
+}

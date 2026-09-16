@@ -1,0 +1,11 @@
+{
+  "case": "refresh503_must_not_be_bootstrap503",
+  "outcome": {
+    "source": "CACHE",
+    "freshness": "FRESH"
+  },
+  "paths": [
+    "/v1/auth/refresh"
+  ],
+  "clientGitBlob": "026740435bdab9c07b826d231874b75aa6e6ece8"
+}
