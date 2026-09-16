@@ -1,6 +1,6 @@
 # Карта документации
 
-Версия спецификации: 1.0. Дата: 2026-09-14.
+Версия спецификации: 1.0. Дата: 2026-09-16.
 Нормативная документация описывает целевое поведение. Реализацию и подтверждения смотреть отдельно в [STATUS](STATUS.md).
 
 ## Продукт
@@ -28,11 +28,8 @@
 ## Разработка и выпуск
 
 - [D2.3: WB adapter, зависимости и прикладные границы](development/EXTENSION_WB_ADAPTER.md), [квитанция](migration/evidence/extension-wb-adapter-d2-3-2026-09-14/README.md).
-
 - [D2.2: очередь и контекст пакета](migration/evidence/extension-context-d2-2-2026-09-14/README.md).
-
 - [Общее ядро D2.1/D2.2 и development-сборка](development/EXTENSION_CORE.md), [квитанция](migration/evidence/extension-core-d2-1-2026-09-14/README.md).
-
 - [WORKFLOW](development/WORKFLOW.md), [QUALITY](development/QUALITY.md).
 - [Расширения после импорта](development/EXTENSION_BASELINE.md), [приёмка D1.E1](migration/evidence/extension-import-2026-09-14/README.md).
 - [ACCEPTANCE_MATRIX](development/ACCEPTANCE_MATRIX.md): обязательные сценарии.
@@ -40,6 +37,8 @@
 - [RELEASE_AND_RECOVERY](operations/RELEASE_AND_RECOVERY.md).
 - [MONITORING](operations/MONITORING.md).
 - [CAPACITY](operations/CAPACITY.md): нагрузка, бюджеты и измерения.
+- [Octoport domain migration](operations/OCTOPORT_DOMAIN_MIGRATION.md): факты DOMAIN-D0, состояние перехода и границы этапов.
+- [Текущая production-доменная authority Octoport](server/DOMAIN_INGRESS_PLAN_2026-09-16.md): `octoport.ru`, `app.octoport.ru`, same-origin admin и `api.octoport.ru`.
 - [ROADMAP](ROADMAP.md), [STATUS](STATUS.md).
 
 ## Решения и происхождение
