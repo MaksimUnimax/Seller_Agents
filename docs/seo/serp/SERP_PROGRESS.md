@@ -2,7 +2,7 @@
 
 Дата: 2026-09-16.
 Branch: `seo/wordstat-batch-01-2026-09-16`.
-Status: `WAITING_S01_OPERATION`.
+Status: `READY_EXPORT_S01`.
 
 ## Evidence rule
 
@@ -43,33 +43,37 @@ Optional control after priorities: `нейросеть помощь для ма�
 | S01-03 | ии агенты для маркетплейсов | `start` | `START_ACCEPTED_PENDING` | `false` | `raw/S01_03_START_2026-09-16.md` | `analysis/S01_03_START_2026-09-16.md` |
 | S01-04 | ии агенты для маркетплейсов | `submitN` | `ACCEPTED_WAITING` | `true` | `raw/S01_04_SUBMIT_2026-09-16.md` | `analysis/S01_04_SUBMIT_2026-09-16.md` |
 | S01-05 | ии агенты для маркетплейсов | `collectN` | `NO_DUE_OPERATIONS` | `false` | `raw/S01_05_COLLECT_NOT_DUE_2026-09-16.md` | `analysis/S01_05_COLLECT_NOT_DUE_2026-09-16.md` |
+| S01-06 | ии агенты для маркетплейсов | `collectN` | `SUCCEEDED` | `true` | `raw/S01_06_COLLECT_SUCCEEDED_2026-09-16.md` | `analysis/S01_06_COLLECT_SUCCEEDED_2026-09-16.md` |
 
 ## Current job state
 
 - job id: `octoport-serp-s01-20260916`;
-- accepted operation id from submit: `sprjotiech5gn23a4tq3`;
+- accepted operation id: `sprjotiech5gn23a4tq3`;
 - control: `RUNNING`;
 - total items: `1`;
-- `WAITING: 1`;
+- `SUCCEEDED: 1`;
+- `WAITING: 0`;
 - requests started: `1`;
 - operations accepted: `1`;
-- polls started: `0`;
-- unresolved: `1`;
-- revision: `2`.
+- polls started: `1`;
+- unresolved: `0`;
+- all successful: `true`;
+- revision: `5`.
 
 ## Totals
 
-- actual Search provider calls observed so far: `1`;
+- actual Search provider calls observed so far: `2` (`submitN` + provider-backed `collectN`);
 - deferred search operations initiated: `1`;
-- completed priority SERP queries: `0/7`;
+- successful collected operations: `1`;
+- completed priority SERP queries with exported rows: `0/7`;
 - local admission failures: `2`;
 - local not-due collect guards: `1`;
 - provider failures: `0`;
 - current query: `ии агенты для маркетплейсов`;
-- next lifecycle action: repeat `collectN` with `count: 1` after the bridge due-time guard has elapsed;
-- do not resubmit;
-- after a provider-backed `collectN`: persist and verify its full returned envelope before any export or next query.
+- next lifecycle action: local `exportPage` for revision `5`, `after:-1`, `limit:1`;
+- `exportPage` must not trigger a provider request;
+- after export: persist and verify the full returned envelope and delivered JSON payload before SERP-intent classification or moving to query 2.
 
 ## UI observation
 
-The user reported that the Yandex AI Studio `Operations` page currently shows `Active operations: 0`. This UI observation is not treated as provider-state authority for the Search job. The authoritative evidence retained in this stream is the API/bridge lifecycle: accepted operation id on `submitN`, followed by local `NO_DUE_OPERATIONS` without a provider poll. The next due provider-backed `collectN` will determine the operation state directly.
+The user reported that the Yandex AI Studio `Operations` page showed `Active operations: 0` while the operation was pending. The accepted operation `sprjotiech5gn23a4tq3` was nevertheless later retrieved successfully through provider-backed `collectN`; therefore that UI screen is not treated as authoritative state for this bridge lifecycle.
