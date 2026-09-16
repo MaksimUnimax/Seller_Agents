@@ -1,0 +1,95 @@
+{
+  "taskId": "SA-HEALTH-B5-C11-R2-20260916-01",
+  "roadmap": "P8.4 / B5",
+  "worktree": "/root/worktrees/sa-health-b5-time-r1-20260916-01",
+  "initial": {
+    "branch": "feature/server-health-h3-p8-4",
+    "requiredRemoteHead": "f8b35fdec3212dedf0e186830e4af21c719d890d",
+    "observedRemoteHead": "f8b35fdec3212dedf0e186830e4af21c719d890d",
+    "baseTree": "e8ecb16f857fcdbafc29889ae4a4fd37d54c1b8c",
+    "main": "bc718cc5c677ad0eb4598e7de3ad766473ff0847",
+    "worktreeClean": true
+  },
+  "r1": {
+    "disposition": "invalid-trigger-only",
+    "changedFiles": 0,
+    "commits": 0,
+    "reason": "page-world Element.prototype.getAttribute did not observe the Playwright locator read"
+  },
+  "r2Red": {
+    "command": "pnpm exec playwright test tests/e2e/server/health-standard-h3.spec.ts tests/e2e/server/health-work-h3.spec.ts",
+    "environmentInvocation": "Node 24.20.0 with Corepack pnpm 10.34.5",
+    "standard": {
+      "canonicalHrefReads": 1,
+      "drifted": true,
+      "failure": "pre-fix bridge event observations were empty"
+    },
+    "work": {
+      "canonicalHrefReads": 3,
+      "drifted": true,
+      "failure": "pre-fix bridge event observations were empty"
+    }
+  },
+  "focusedGreen": {
+    "newH3Tests": "2/2",
+    "standardWorkH3Specs": "79/79",
+    "mapper": "31/31",
+    "postgresql": "18/18",
+    "postgresIsolation": "task-owned disposable PostgreSQL 18 container; removed after run"
+  },
+  "fullServerCycle": {
+    "status": "pass",
+    "unit": {
+      "testFiles": 74,
+      "tests": 1347,
+      "command": "pnpm test"
+    },
+    "integration": {
+      "testFiles": 39,
+      "tests": 1526,
+      "command": "pnpm test:integration",
+      "database": "task-owned disposable PostgreSQL 18 container"
+    },
+    "e2e": {
+      "tests": 164,
+      "passed": 164,
+      "command": "pnpm test:e2e",
+      "browser": "Chromium"
+    },
+    "gates": {
+      "lint": "PASS",
+      "formatCheck": "PASS",
+      "typecheck": "PASS",
+      "openapiCheck": "PASS",
+      "bridgeGuard": "PASS",
+      "build": "PASS",
+      "docsCheck": "PASS",
+      "playwrightConfigRegression": "PASS (1/1)"
+    },
+    "zeroLiveProviderCalls": true
+  },
+  "implementationCommit": {
+    "shortSha": "b4a8c17",
+    "fullSha": "b4a8c17f7ad1a1468a511a4fd793c439bfbd97c3",
+    "message": "fix(health): retain C11 bridge failure provenance"
+  },
+  "allowlist": {
+    "supportFixturesChanged": false,
+    "browserDriverChanged": false,
+    "migrationsChanged": false,
+    "productionFilesChanged": [
+      "apps/health-runner/src/standard-h3-strategy.ts",
+      "apps/health-runner/src/work-h3-strategy.ts"
+    ],
+    "testFilesChanged": [
+      "tests/e2e/server/health-standard-h3.spec.ts",
+      "tests/e2e/server/health-work-h3.spec.ts",
+      "apps/health-runner/src/h3-health-persistence.test.ts",
+      "tests/integration/server/h3-health-persistence.integration.test.ts"
+    ]
+  },
+  "acceptance": {
+    "architecturalB5": "pending",
+    "forceResetRebaseStashMainMergeDeployRelease": false
+  }
+}
