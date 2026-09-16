@@ -1,0 +1,43 @@
+# Wordstat Batch 02 — execution progress
+
+Дата: 2026-09-16.
+Branch: `seo/wordstat-batch-01-2026-09-16`.
+Status: `IN_PROGRESS`.
+
+## Persistence rule
+
+For every provider response, the raw evidence file MUST contain the **entire received `WORDSTAT_RESULT_V1` envelope**, including every top-level field and every nested object/array that was returned. A raw file must not be replaced by only a status note, extracted table, shortened payload, or analytical paraphrase.
+
+Required order:
+
+1. save full provider envelope under `wordstat/raw/`;
+2. verify the GitHub write;
+3. save analysis separately under `wordstat/analysis/`;
+4. update this progress file;
+5. only then issue the next command.
+
+If `result: {}` is returned, preserve that exact empty object and do not call it zero demand.
+
+## Parallel-development isolation
+
+SEO work remains isolated from parallel server development:
+
+- write only under `docs/seo/**` in this stream;
+- do not modify server/runtime/site implementation;
+- do not merge into moving `main` without a fresh overlap check.
+
+## Calls
+
+| Call | Seed | Status | totalCount | Request ID | Raw | Analysis |
+|---|---|---|---:|---|---|---|
+| B02-01 | ии агенты для маркетплейсов | SUCCESS | 134 | `wordstat-b0eb0733-6829-4df8-b57c-4f5d2c6b0662` | `raw/B02_01_2026-09-16.md` | `analysis/B02_01_2026-09-16.md` |
+
+## Totals
+
+- successful HTTP/provider calls: `1/15`;
+- calls with usable `totalCount`: `1/15`;
+- successful-empty result calls: `0`;
+- provider failures: `0`;
+- accumulated estimated cost: `0.02 ₽`;
+- current cursor: `B02-02`;
+- next seed: `ии для работы с маркетплейсами`.
