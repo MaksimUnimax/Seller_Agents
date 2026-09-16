@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Octoport — ИИ-сотрудник для Ozon и Wildberries</title>
+    <meta
+      name="description"
+      content="Octoport соединяет выбранный вами ИИ с Ozon и Wildberries через браузерное расширение. Готовим бесплатную закрытую бету."
+    />
+    <meta name="theme-color" content="#f4f1ea" />
+    <meta name="color-scheme" content="light" />
+    <link rel="canonical" href="https://octoport.ru/" />
+    <link rel="stylesheet" href="/styles.css" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="Octoport" />
+    <meta property="og:title" content="Octoport — ИИ-сотрудник для маркетплейсов" />
+    <meta
+      property="og:description"
+      content="Работа с Ozon и Wildberries из привычного диалога с ИИ — через локальное браузерное расширение."
+    />
+    <meta property="og:url" content="https://octoport.ru/" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Octoport — наверх">
+        <span class="brand-mark" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        </span>
+        <span>octoport</span>
+      </a>
+      <nav class="nav" aria-label="Основная навигация">
+        <a href="#how">Как работает</a>
+        <a href="#privacy">Данные</a>
+        <a class="nav-cta" href="#beta">Бета</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero section-shell">
+        <div class="hero-copy">
+          <p class="eyebrow">Ozon + Wildberries · один инструмент</p>
+          <h1>Ваш ИИ получает руки для работы с маркетплейсами.</h1>
+          <p class="lead">
+            Octoport соединяет выбранный вами ИИ с кабинетами Ozon и Wildberries через браузерное расширение. ИИ помогает получать данные и готовить отчёты, а вы сохраняете контроль над запуском действий.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#beta">Узнать о бете</a>
+            <a class="button button-secondary" href="#how">Посмотреть принцип работы</a>
+          </div>
+          <p class="microcopy">Сейчас готовим закрытую бесплатную бету. Публичный доступ ещё не открыт.</p>
+        </div>
+
+        <div class="hero-diagram" aria-label="Схема: маркетплейсы, Octoport и выбранный ИИ">
+          <div class="diagram-card marketplace-card">
+            <span class="diagram-kicker">Маркетплейсы</span>
+            <strong>Ozon</strong>
+            <strong>Wildberries</strong>
+          </div>
+          <div class="connector" aria-hidden="true"></div>
+          <div class="diagram-core">
+            <span class="core-orbit" aria-hidden="true"></span>
+            <span class="core-label">octoport</span>
+            <small>локальное расширение</small>
+          </div>
+          <div class="connector" aria-hidden="true"></div>
+          <div class="diagram-card ai-card">
+            <span class="diagram-kicker">Ваш выбор</span>
+            <strong>ИИ-диалог</strong>
+            <span>контекст → команды → результат</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="principles section-shell" aria-labelledby="principles-title">
+        <div class="section-heading">
+          <p class="eyebrow">Что меняется</p>
+          <h2 id="principles-title">Не ещё один кабинет. Связка между вами, ИИ и API маркетплейса.</h2>
+        </div>
+        <div class="card-grid">
+          <article class="feature-card">
+            <span class="card-number">01</span>
+            <h3>Работаете в привычном ИИ</h3>
+            <p>Octoport не заставляет переносить работу в отдельную командную консоль. Основной интерфейс остаётся вашим диалогом с ИИ.</p>
+          </article>
+          <article class="feature-card">
+            <span class="card-number">02</span>
+            <h3>Явный запуск действий</h3>
+            <p>Расширение исполняет подготовленные команды только после запуска пользователем. Текущую работу можно завершить явно.</p>
+          </article>
+          <article class="feature-card">
+            <span class="card-number">03</span>
+            <h3>Read-only на старте</h3>
+            <p>Первая версия сфокусирована на чтении данных, формировании и скачивании отчётов — без редактирования бизнес-состояния кабинета.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="flow section-shell" id="how" aria-labelledby="how-title">
+        <div class="section-heading split-heading">
+          <div>
+            <p class="eyebrow">Как работает</p>
+            <h2 id="how-title">Четыре понятных шага.</h2>
+          </div>
+          <p>Сервер нужен для учётной записи, активации и редкой служебной синхронизации. Обычная работа с маркетплейсом выполняется расширением в браузере.</p>
+        </div>
+        <ol class="steps">
+          <li>
+            <span>1</span>
+            <div><h3>Устанавливаете расширение</h3><p>Одна установка для Ozon и Wildberries.</p></div>
+          </li>
+          <li>
+            <span>2</span>
+            <div><h3>Подключаете нужный магазин</h3><p>Реквизиты маркетплейса сохраняются локально в расширении.</p></div>
+          </li>
+          <li>
+            <span>3</span>
+            <div><h3>Формулируете задачу ИИ</h3><p>ИИ может подготовить несколько явных команд для последовательного выполнения.</p></div>
+          </li>
+          <li>
+            <span>4</span>
+            <div><h3>Получаете результат в диалоге</h3><p>Данные и файлы возвращаются туда, где вы поставили задачу.</p></div>
+          </li>
+        </ol>
+      </section>
+
+      <section class="privacy section-shell" id="privacy" aria-labelledby="privacy-title">
+        <div class="privacy-panel">
+          <div>
+            <p class="eyebrow">Архитектура данных</p>
+            <h2 id="privacy-title">Ключи маркетплейсов остаются в браузере.</h2>
+          </div>
+          <div class="privacy-points">
+            <p><strong>Локальные ключи.</strong> Постоянное хранение API-ключей маркетплейсов на сервере не является частью обычной работы.</p>
+            <p><strong>Без архива отчётов.</strong> Сырые отчёты и история ваших диалогов не превращаются в серверное хранилище Octoport.</p>
+            <p><strong>Минимальный серверный контур.</strong> Сервер отвечает за авторизацию, устройства, безопасную служебную статистику и редкую синхронизацию.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="beta section-shell" id="beta" aria-labelledby="beta-title">
+        <div class="beta-panel">
+          <p class="eyebrow">Закрытая бета</p>
+          <h2 id="beta-title">Сначала — ограниченный бесплатный набор.</h2>
+          <p class="beta-copy">
+            Мы готовим единую бета-версию для Ozon и Wildberries. Новые регистрации будут открываться ограниченными волнами, чтобы проверять продукт на реальной работе и не обещать то, что ещё не принято.
+          </p>
+          <div class="beta-status" role="status">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span>Набор ещё не открыт</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>© 2026 Octoport</span>
+      <span>octoport.ru</span>
+    </footer>
+  </body>
+</html>

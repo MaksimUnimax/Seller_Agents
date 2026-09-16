@@ -1,0 +1,122 @@
+name: Site CI
+
+on:
+  pull_request:
+    paths:
+      - "apps/site/**"
+      - ".github/workflows/site-ci.yml"
+  push:
+    paths:
+      - "apps/site/**"
+      - ".github/workflows/site-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: site-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static-site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 2
+      - name: Validate repository whitespace
+        run: git diff --check HEAD^ HEAD
+      - name: Validate Octoport static site
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          import re
+          import xml.etree.ElementTree as ET
+
+          root = Path("apps/site/public")
+          index = (root / "index.html").read_text(encoding="utf-8")
+          css = (root / "styles.css").read_text(encoding="utf-8")
+          robots = (root / "robots.txt").read_text(encoding="utf-8")
+          sitemap_path = root / "sitemap.xml"
+
+          required_files = [
+              root / "index.html",
+              root / "styles.css",
+              root / "robots.txt",
+              sitemap_path,
+              Path("apps/site/README.md"),
+          ]
+          missing = [str(path) for path in required_files if not path.is_file()]
+          assert not missing, f"missing site files: {missing}"
+
+          class PageParser(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.ids = set()
+                  self.hrefs = []
+                  self.canonical = []
+                  self.html_lang = None
+                  self.scripts = 0
+                  self.stylesheets = []
+
+              def handle_starttag(self, tag, attrs):
+                  attrs = dict(attrs)
+                  if tag == "html":
+                      self.html_lang = attrs.get("lang")
+                  if "id" in attrs:
+                      self.ids.add(attrs["id"])
+                  if tag == "a" and "href" in attrs:
+                      self.hrefs.append(attrs["href"])
+                  if tag == "link" and attrs.get("rel") == "canonical":
+                      self.canonical.append(attrs.get("href"))
+                  if tag == "link" and attrs.get("rel") == "stylesheet":
+                      self.stylesheets.append(attrs.get("href"))
+                  if tag == "script":
+                      self.scripts += 1
+
+          parser = PageParser()
+          parser.feed(index)
+
+          assert parser.html_lang == "ru", f"html lang must be ru, got {parser.html_lang!r}"
+          assert parser.canonical == ["https://octoport.ru/"], parser.canonical
+          assert parser.stylesheets == ["/styles.css"], parser.stylesheets
+          assert parser.scripts == 0, "S0 must remain executable-JavaScript-free"
+
+          for href in parser.hrefs:
+              if href.startswith("#"):
+                  target = href[1:]
+                  assert target in parser.ids, f"broken internal anchor: {href}"
+              else:
+                  assert href.startswith("https://octoport.ru/"), f"unexpected external link: {href}"
+
+          lowered = index.lower()
+          for stale_domain in ("selleragents.ru", "openscript.ru"):
+              assert stale_domain not in lowered, f"stale domain leaked into public page: {stale_domain}"
+
+          assert not re.search(r"(?:^|\D)(?:199|299)\s*(?:₽|руб)", index, flags=re.I), \
+              "historical pricing leaked into public page"
+          assert "бесплат" in lowered and "бета" in lowered, "current free-beta state must be explicit"
+          assert "набор ещё не открыт" in lowered, "site must not imply registration is already live"
+          assert "read-only" in lowered, "initial read-only scope must be explicit"
+          assert "локаль" in lowered and "ключ" in lowered, "local-key boundary must be visible"
+
+          required_sections = {"top", "how", "privacy", "beta", "principles-title"}
+          assert required_sections.issubset(parser.ids), f"missing sections: {required_sections - parser.ids}"
+
+          assert "https://octoport.ru/sitemap.xml" in robots
+          assert "Disallow:" not in robots
+
+          tree = ET.parse(sitemap_path)
+          ns = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+          locations = [node.text for node in tree.findall("sm:url/sm:loc", ns)]
+          assert locations == ["https://octoport.ru/"], locations
+
+          assert len(index.encode("utf-8")) < 100_000, "homepage unexpectedly large"
+          assert len(css.encode("utf-8")) < 100_000, "stylesheet unexpectedly large"
+
+          print("SITE-S0 PASS: canonical, copy boundaries, anchors, robots and sitemap")
+          PY
