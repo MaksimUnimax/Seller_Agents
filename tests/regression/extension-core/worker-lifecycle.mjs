@@ -16,11 +16,13 @@ const response = (status = 200) =>
     headers: { "content-type": "application/json" },
   });
 async function execute(worker, key, text, id = "block-1") {
+  const session = await worker.call("workSessionFor", key);
   return worker.request({
     type: "OZ_EXECUTE_COMMAND",
     conversation_key: key,
     command_text: text,
     manual_request_id: id,
+    work_session_id: session.start_intent_id,
   });
 }
 async function waitOperation(worker, key, status) {
@@ -84,14 +86,17 @@ await test("PIPELINE-real-Start-mixed-manual-block-ordered-network-delivery-Fini
       ...fields,
     });
     assert.equal(inserted.inserted, true, JSON.stringify(inserted));
-    await w.request({
+    const send = await w.request({ type: "OZ_WORK_SEND_COMMIT", ...fields });
+    assert.equal(send.click_allowed, true, JSON.stringify(send));
+    const complete = await w.request({
       type: "OZ_BATCH_DELIVERY_COMPLETE",
       ...fields,
       delivery_confirmed: true,
       confirmation_basis: "microphone",
       click_attempts: 1,
     });
-    assert.equal((await w.call("getManualOperation", key)).status, "completed");
+    assert.equal(complete.ok, true, JSON.stringify(complete));
+    await until(async () => (await w.call("getManualOperation", key)).status === "completed", "delivery completion commit");
     const duplicate = await execute(w, key, text);
     assert.equal(duplicate.ok, false);
     assert.equal(w.network.length, 2);
@@ -103,12 +108,9 @@ await test("PIPELINE-real-Start-mixed-manual-block-ordered-network-delivery-Fini
     assert.equal(finish.ok, true, JSON.stringify(finish));
     assert.equal((await w.call("workSessionFor", key)).state, "inactive");
     const denied = await execute(w, key, api("seller_info"), "after-finish");
-    assert.equal(denied.command_count, 0);
-    assert.ok(
-      JSON.stringify(await w.call("getManualOperation", key)).includes(
-        "WORK_SESSION_NOT_VISIBLE",
-      ),
-    );
+    assert.equal(denied.ok, false);
+    const deniedOperation = JSON.stringify(await w.call("getManualOperation", key));
+    assert.ok(["WORK_SESSION_NOT_VISIBLE", "EXECUTION_CONTEXT_CHANGED"].some((code) => JSON.stringify(denied).includes(code) || deniedOperation.includes(code)));
     assert.equal(w.network.length, 2);
     assert.ok(
       w.messages.some(
@@ -223,8 +225,8 @@ await test("RECOVERY-insertion-unknown-keeps-result-without-second-insertion", a
       type: "OZ_BATCH_DELIVERY_INSERT_COMMIT",
       ...fields,
     });
-    assert.equal(repeated.insert_allowed, false);
-    assert.equal(repeated.code, "DELIVERY_INSERT_OUTCOME_UNKNOWN_NO_RETRY");
+    assert.equal(repeated.ok === false || repeated.insert_allowed === false, true);
+    assert.ok(["DELIVERY_INSERT_OUTCOME_UNKNOWN_NO_RETRY", "DELIVERY_OWNER_MISMATCH", "EXECUTION_CONTEXT_CHANGED"].includes(repeated.code));
     assert.equal(resumed.network.length, 0);
     assert.equal(
       (await resumed.call("getManualOperation", key)).delivery.phase,

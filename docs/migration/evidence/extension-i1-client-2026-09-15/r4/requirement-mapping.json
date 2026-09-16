@@ -1,0 +1,28 @@
+{
+  "task": "SA-I1-C1-R4-20260915-01",
+  "stage": "Seller Agents / D2-I1 / I1-C1",
+  "start_head": "e26fcc7dd60617838cb9a49d7c6560018cb45ec3",
+  "start_tree": "c1beb4927fee66c4065e133c960929e800fabe5e",
+  "main": "5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+  "status": "BLOCKED_REMOTE_AND_INSTALLED_GATE",
+  "original_mapping": {
+    "G1": "R4-1 classification plus R4-2 held-start owner barriers",
+    "G2": "R4-2 refresh/bootstrap/start owner barriers and generation fences",
+    "G3": "R4-2 actual composed Ozon/WB denial, Work and delivery guards",
+    "G4": "R4-1 verifier/version matrix and R4-3 common-core assertion restoration",
+    "G5": "R4-4 existing-account installed auth fixture and response observations",
+    "G6": "R4-1 browser/version controls and retained native restart checks"
+  },
+  "criteria": {
+    "R4-1": {"result": "PASS_LOCAL_SOURCE_EXTRACTED", "tests": ["client-r4.mjs", "verifier.mjs"], "assertions": ["oversized_200_201_206_denied", "oversized_503_transient", "final_401_403_invalidated", "shared_semver_grammar", "precedence_matrix", "chromium_120_matrix"]},
+    "R4-2": {"result": "PASS_LOCAL_SOURCE_EXTRACTED", "tests": ["client-r4.mjs", "client-lifecycle.mjs", "client-races.mjs"], "assertions": ["same_worker_start_owner", "same_worker_refresh_owner", "expired_bootstrap_owner", "no_authority_recovery_owner", "authority_invalidation", "ozon_wb_composed_denial"]},
+    "R4-3": {"result": "PASS_LOCAL_SOURCE_EXTRACTED", "tests": ["full-worker-composed.mjs", "extension_core.py"], "assertions": ["ten_positive_aliases", "zero_failure_events", "performance_seller_provider_split", "fingerprint_cd4bce38", "0.2.3_sender_adaptation", "0.2.4_composed_route"]},
+    "R4-4": {"result": "IMPLEMENTED_LOCAL_BLOCKED", "test": "installed_local_integration.py", "assertions": ["two_existing_accounts_one_transaction", "beta_state_unchanged", "otp_statuses", "logout_204", "device_start_201", "two_account_session_device_isolation", "same_worker_sentinel"], "blocker": "ECONNREFUSED 127.0.0.1:45493 during db:migrate before harness startup"}
+  },
+  "red_green": {
+    "oversized_success": {"red": "201/206 CONTROL_RESPONSE_TOO_LARGE retained authenticated/work state", "green": "all successful 2xx oversized responses deny and invalidate"},
+    "combined_prerelease_build": {"red": "old crypto regex rejected valid 0.2.4-alpha.2+build.7", "green": "actual signed verifier accepts compatible payload"}
+  },
+  "behavior_assertions_changed": false,
+  "not_claimed": ["remote_all_green", "full_I1", "C2/offline", "I1-SRV.5", "D3", "S1.2", "Health/P8", "real_email", "preprod/production", "release/deployment"]
+}

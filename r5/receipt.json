@@ -1,0 +1,17 @@
+{
+  "task_id": "SA-I1-C1-R5-20260915-01",
+  "package": "SELLER_AGENTS_I1_C1_v0.2.4_LOCAL_DEVELOPMENT.zip",
+  "sha256": "b98b87a176c8bed2a1550e4838ba1c563aae28a938a9d284436fe35e72e62e6e",
+  "bytes": 1801899,
+  "file_count": 39,
+  "repeat_archive_match": true,
+  "source_extracted_bytes_match": true,
+  "zip_byte_readback": {
+    "entries": 39,
+    "matched": 39,
+    "sha256_and_size_match": true
+  },
+  "development_version": "0.2.4",
+  "source_route": "PASS",
+  "extracted_route": "PASS"
+}
