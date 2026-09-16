@@ -1,14 +1,27 @@
 # Seller Agents — единый cursor
 
-Дата: 2026-09-16. Статус: I1_C1_ACCEPTED / I1_SRV5_ACCEPTED / I1_SYNC_ACCEPTED / C2_1_REWORK_REQUIRED / C2_1_R1_REWORK_REQUIRED / C2_1_R2_PREPARED_FOR_SINGLE_FINAL_SUBMISSION.
+Дата: 2026-09-16. Статус: I1_C1_ACCEPTED / I1_SRV5_ACCEPTED / I1_SYNC_ACCEPTED / C2_1_REWORK_REQUIRED / C2_1_R1_REWORK_REQUIRED / C2_1_R2_REWORK_REQUIRED / C2_1_R3_PREPARED_FOR_SINGLE_FINAL_SUBMISSION.
 
-Владелец разрешил непрерывный авторежим; один архитектор и один последовательный Codex. C2.1 R1 terminal проверен; прежние дефекты исправлены, но выявлена регрессия восстановления активации и недостающие проверки. Предыдущие bounded C1/SRV5/SYNC acceptance сохранены. Подготовлен один R2 prompt; сохранение задачи не означает её доставку или запуск Codex.
+Владелец разрешил непрерывный авторежим; один архитектор и один последовательный Codex. C2.1 R2 terminal проверен; восстановление активации исправлено. Подтверждён остаточный дефект отказоустойчивого удаления невалидной активации; отдельные назначенные race/guard assertions ещё отсутствуют. Предыдущие bounded C1/SRV5/SYNC acceptance сохранены. Подготовлен один R3 prompt; сохранение задачи не означает её доставку или запуск Codex.
 
 ## Роли
 
 Astra / очень высокая глубина рассуждения — главный разработчик, senior engineer, единственный архитектор. Вся архитектура, исследования, поиск причин, планирование, проектирование, управление разработкой и независимая приёмка на ней. Один серверный Codex / Luna Max реализует заданный код и тесты и выполняет назначенные проверки. Исследования, поиск решения и архитектуру ему не делегировать. Новые пользовательские ограничения сильнее исторической формулировки AGENTS о самостоятельных технических решениях исполнителя.
 
-## Текущая задача — C2.1 R1 review / R2
+## Текущая задача — C2.1 R2 review / R3
+
+- SA-I1-C2-1-R2-20260916-01 terminal проверен; executor stopped per report. Direct Bridge/process visibility отсутствует, новой running-задачи не подтверждено.
+- Branch integration/i1-c1-srv5-2026-09-16; head06e0eb79badc5e65ea972035a2968f72fdaae6a7; treee090b748a6a1aa8d35869f215c7846984e4f73f3; parentead575816dde5df2613a61cb8aa599e216c8066a; code790975c4879de41043d747485f4c957e7f51b003; start13068c24354e8ec61bab6cf05598a5bb6ced7b65.
+- Main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c unchanged at review. PR9 draft/unmerged; mergec8652fb156b4a14e67ecbf9de8c016176163e1bb has candidate-identical tree and main+candidate parents.
+- Verdict REWORK_REQUIRED. Valid pending restart independently confirmed corrected on clientblobcb3632414fbbce7aca678bc91a40d1120865cc41. Expired pending + failed AUTH set reproduces restore rejection,0removal attempts,old durable pending; required fallback missing. T6 queued checkpoint/same-session snapshot cases and T7 fresh denied dispatch/manual_recovery assertions remain incomplete.
+- Review/probes: references/I1_C2_1_R2_REVIEW.md, references/I1_C2_1_R2_REVIEW_PROBE/, references/I1_C2_1_R2_CI.json.
+- Current native CI35060667796/job104680101447 SUCCESS source/extracted; installed35060667782/job104680101417SUCCESS, completed logs read on exact merge checkout; client104680101221SUCCESS. Core/Ozon/WBnodes and docs35060667810SUCCESS by API. Server35060667790/job104680101324 and WB-browser104680101195 still running at snapshot, no all-green claim. Old35057935403 evidence belongs to R1.
+- Local native FAIL remains historical and its cause is unknown from published evidence; no speculative product/harness patch. Current CI native success is separate proof. Reported ZIP1822586bytes/SHA256d43b25e4ab7d981d3d0d93b759c8e1f7d44d0b21c92d6f7a03f6b1eed4ac22f4 not independently downloaded this review.
+- Next SA-I1-C2-1-R3-20260916-01, tasks/I1_C2_1_R3_2026-09-16.md: terminal invalid-attempt cleanup via existing fail-closed path, focused failure test and outstanding T6/T7 assertions. Prepared for ONE final submission; saved task is not delivered/running; no resubmit on unknown delivery.
+- Owner authorized parallel domain migration агентселлер.ру→октопорт.ру. Preserve these changes; do not revert them or relax exact origin checks. This executor is not assigned the migration.
+- C2.1 open; C2.2/offline/profile/joint offline not started. C1/SRV5/SYNC bounded accepted scopes preserved; Health B5 not accepted/B6–8 queued; S1.2/D3/full I1/beta/deploy/release open. Owner manual tests after joint installed C2 then Q1.
+
+## История C2.1 R1 review / R2 preparation — не повторять
 
 - Actual task SA-I1-C2-1-R1-20260916-01 terminal получен. В terminal/evidence ошибочно указан старый ID; точный base/diff подтверждает R1. Исполнитель остановлен на ревью по отчёту; direct Bridge/process visibility отсутствует.
 - Branch integration/i1-c1-srv5-2026-09-16; head13068c24354e8ec61bab6cf05598a5bb6ced7b65; tree035cbd5ee60919597ae29f56aa1ed4240950fb06; parent/code17d54dc3a8577ae6d46736608c0bbed909b70d1a; start981d7e422d45234674aeda84c762245be55ff493. Main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c unchanged.

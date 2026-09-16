@@ -1,0 +1,70 @@
+{
+  "head": "06e0eb79badc5e65ea972035a2968f72fdaae6a7",
+  "merge": "c8652fb156b4a14e67ecbf9de8c016176163e1bb",
+  "tree": "e090b748a6a1aa8d35869f215c7846984e4f73f3",
+  "jobs": [
+    {
+      "run": 35060667782,
+      "id": 104680101221,
+      "name": "client-i1",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 35060667782,
+      "id": 104680101417,
+      "name": "Installed local API / portal / PostgreSQL acceptance",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 35060667790,
+      "id": 104680101324,
+      "name": "server",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "run": 35060667796,
+      "id": 104680101195,
+      "name": "Baseline / wb-browsers",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "run": 35060667796,
+      "id": 104680101372,
+      "name": "Baseline / ozon",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 35060667796,
+      "id": 104680101386,
+      "name": "Common core / source and package",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 35060667796,
+      "id": 104680101447,
+      "name": "Common application / native Chromium fixture",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "run": 35060667796,
+      "id": 104680101568,
+      "name": "Baseline / wb-nodes",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "completedLogsRead": [
+    104680101447,
+    104680101417
+  ],
+  "verdict": "REWORK_REQUIRED",
+  "allGreenClaim": false,
+  "localNativeFailure": "preserved; cause not established"
+}

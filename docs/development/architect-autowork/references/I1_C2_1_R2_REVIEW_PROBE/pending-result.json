@@ -1,0 +1,23 @@
+{
+  "scope": "source VM, actual online start path with synthetic server; worker recreation at unchanged origin/context; no live provider",
+  "before": {
+    "phase": "pending",
+    "hasAuthContext": true,
+    "credentialsNull": true,
+    "exchangeCalls": 1
+  },
+  "after": {
+    "pending": {
+      "authorizationId": "66666666-6666-4666-8666-666666666666",
+      "userCode": "ABCD-EFGH",
+      "expiresAt": "2026-09-16T05:46:52.354Z",
+      "verificationUri": "http://127.0.0.1:43101/activate?authorizationId=66666666-6666-4666-8666-666666666666"
+    },
+    "exchangeCalls": 2,
+    "lastError": null
+  },
+  "expected": {
+    "pendingPreserved": true,
+    "exchangeResumed": true
+  }
+}

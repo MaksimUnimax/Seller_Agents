@@ -1,0 +1,8 @@
+{
+  "scope": "independent source VM; real start path with synthetic exchange and failed auth set; removal available",
+  "restoreError": "PROBE_AUTH_SET_FAILED",
+  "writeAttempts": 1,
+  "removeAttempts": 0,
+  "durablePendingRetained": true,
+  "clientGitBlob": "cb3632414fbbce7aca678bc91a40d1120865cc41"
+}
