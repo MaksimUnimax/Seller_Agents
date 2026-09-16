@@ -125,3 +125,58 @@ Endpoint authority находится в `reference-1.1.5/shared/wordstat_protoc
 3. Сохранить raw provenance без редактирования.
 4. Построить первую normalized table и определить новые vocabulary families.
 5. Только после этого расширять второй batch.
+
+## 2026-09-16 — SEO-S0 / Batch 01 preparation и current-site source audit
+
+### Batch 01
+
+Подготовлен `docs/seo/wordstat/BATCH_01_BROAD_DISCOVERY.md`.
+
+Состав: 15 broad `getTop` calls, РФ `225`, `DEVICE_ALL`, `numPhrases=2000`.
+
+Выбраны не подряд первые seeds, а независимые словари: общая AI category, нейросеть, seller-assistant language, analytics, Ozon/Озон, Wildberries/Вайлдберриз, ChatGPT pairings, sales analysis, integration language, adjacent analytics SaaS и informational how-to.
+
+Статус: `PREPARED / NOT EXECUTED`. Это важно: файл команд не считается Wordstat evidence.
+
+### Current public-site source audit
+
+Проверены на актуальном `main`:
+
+- `apps/site/public/index.html`;
+- `apps/site/public/robots.txt`;
+- `apps/site/public/sitemap.xml`.
+
+Создан `docs/seo/technical/CURRENT_SITE_BASELINE_2026-09-16.md`.
+
+Факты source:
+
+- `lang=ru`;
+- canonical = `https://octoport.ru/`;
+- robots разрешает crawl и указывает canonical sitemap;
+- sitemap содержит только главную, что соответствует текущему one-page source;
+- основной контент статический и не зависит от JS;
+- текущий Title: `Octoport — ИИ-сотрудник для Ozon и Wildberries`;
+- текущий H1: `Ваш ИИ получает руки для работы с маркетплейсами.`;
+- public copy аккуратно говорит о готовящейся закрытой бесплатной бете и read-only scope.
+
+### SEO findings по source
+
+`SEO_DECISION`: текущий site source не переписывать до первых Wordstat/SERP фактов.
+
+Причина: Title соответствует product truth, но ещё не доказано, что «ИИ-сотрудник» — основной поисковый язык. H1 хорошо работает как брендовая метафора, но не доказано, что он оптимален как primary search heading.
+
+Отдельный `SEO_REVIEW_REQUIRED`: в visible copy используется латинский `Octoport`, тогда как владелец зафиксировал русское продуктовое имя «Октопорт». После brand/search pass нужно естественно связать оба написания на странице, не создавая keyword stuffing или дубль URL.
+
+### Git/PR state
+
+Создан PR `#15` — `docs(seo): establish Octoport semantic SEO authority`.
+
+PR основан на main `16c0ac9b6aa9a72aa3100eb04f14bd74e4d6593a`. На момент повторной проверки main не сдвинулся. PR mergeable.
+
+Documentation CI запущен автоматически; до завершения CI PR не объявляется принятым.
+
+### Текущий cursor
+
+1. Дождаться Documentation CI для PR #15.
+2. Выполнить реальные Wordstat calls Batch 01 через локально авторизованный bridge.
+3. Сохранить raw outputs и перейти к normalization.
