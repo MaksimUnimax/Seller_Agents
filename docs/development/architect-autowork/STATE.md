@@ -1,102 +1,82 @@
 # Server / I1 / Health current cursor — 2026-09-16
 
-Current: HEALTH_P8_4_B8_NONLIVE_READINESS_ACCEPTED / HEALTH_B7A_DEDICATED_SESSION_PROVISIONING_PREPARED_FOR_SINGLE_FINAL_SUBMISSION / HEALTH_B7_LIVE_BLOCKED_INTERNAL_AND_EXTERNAL / P8_4_NOT_ACCEPTED / P8_5_NOT_STARTED / I1_C2_2A_OPEN_BLOCKED.
+Current: HEALTH_P8_4_B8_NONLIVE_READINESS_ACCEPTED / HEALTH_B7A_REWORK_REQUIRED_DIRECT_BINDING_BYPASS / HEALTH_B7A_R1_CAPABILITY_PROVENANCE_PREPARED_FOR_SINGLE_FINAL_SUBMISSION / HEALTH_B7_LIVE_NOT_RUN / P8_4_NOT_ACCEPTED / P8_5_NOT_STARTED / I1_C2_2A_OPEN_BLOCKED.
 
-Owner continuous autowork is active. One architect and one sequential Codex executor only. SA-HEALTH-B8-PROCESS-R1-20260916-01 / canonical B8 terminal has been received and independently reviewed. No implementation executor is claimed running at this snapshot. Saving B7A is preparation, not delivery/start evidence.
+Owner continuous autowork is active. One architect and one sequential Codex executor only. SA-HEALTH-B7A-SESSION-PROVISIONING-20260916-01 terminal has been received and independently reviewed. Executor stopped after terminal. No other implementation executor is claimed running at this snapshot. Saving R1 is preparation, not delivery/start evidence.
 
 ## Canonical refs
 
 - Repository: MaksimUnimax/runtime-fixtures, stable ID 1369117174.
 - Health branch: feature/server-health-h3-p8-4.
-- Accepted B8 non-live evidence head / required B7A base: 90c1e0c66a47692634eb652aa1392fdafc1f8f10.
-- B8 tree: 447d6515954e051a287011596fdd3154e11c2561.
-- B8 parent / accepted B6 head: 697eea7adc337e1f11def16818829c2e443efb15.
-- P8.4 pre-B1 comparison base: de41f33646d5dd61bcae66624225e16538fd8f3a.
-- Main remains bc718cc5c677ad0eb4598e7de3ad766473ff0847 at the latest architect check. Preserve parallel public-doc/site/SEO/domain changes.
-- I1 integration branch remains 076af64efbcdfdc67aec8713969c31c276a90b2d; PR9 remains open/draft/mergeable=false and C2.2-A remains OPEN/BLOCKED at its current gates plus reserved docs/README.md conflict.
-- Main roadmap records S1.1 merged/accepted. S1.2 remains deferred until I1-sync plus a new explicit owner decision, so this stream must not start S1.2 implicitly.
+- Rejected B7A candidate / required R1 base: 592b51da31ab5ecfd0e4d4b3e981897849731614.
+- Candidate tree: 1e4737933665a6ba6d02e491e7873d3f40e47e6f.
+- Candidate parent / accepted B8 non-live head: 90c1e0c66a47692634eb652aa1392fdafc1f8f10.
+- Main independently rechecked remains bc718cc5c677ad0eb4598e7de3ad766473ff0847.
+- I1 integration branch remains 076af64efbcdfdc67aec8713969c31c276a90b2d; PR9/C2.2-A remain open/blocked at their current gates and reserved docs/README.md conflict.
+- S1.1 is already merged/accepted. Main roadmap still requires a new explicit owner decision before S1.2, so S1.2 is not started implicitly.
 
-## Accepted B6
+## Preserved accepted Health state
 
-SA-HEALTH-B6-SPDR-R1-20260916-01 and P8.4/B6 are ACCEPTED on 697eea7adc337e1f11def16818829c2e443efb15.
+P8.4 B1-B6 remain accepted in their recorded bounded scopes.
 
-Exact-head Server CI run 35101822297 / job 104812875780 / SUCCESS. B6 changed exactly three evidence-only paths, SPDR-01..11 passed, focused 98/98 unit/security, 18/18 PostgreSQL and 92/92 local Chromium all passed with zero required skips, and zero live provider/customer-session calls occurred.
+B8 non-live final readiness is ACCEPTED in its explicitly bounded scope on 90c1e0c66a47692634eb652aa1392fdafc1f8f10. Exact-head B8 Server CI run 35105136595 / job 104824258928 completed SUCCESS. B8 established P8.4_NONLIVE_FINAL_READINESS=PASS for the pre-B7A source while retaining B7 live blocked/not-run, P8.4 NOT_ACCEPTED and P8.5 NOT_STARTED.
 
-Review: docs/development/architect-autowork/references/HEALTH_B6_FINAL_REVIEW.md.
+## B7A candidate facts
 
-## B8 non-live final-readiness verdict
+SA-HEALTH-B7A-SESSION-PROVISIONING-20260916-01 published normally fast-forward from B8 to:
 
-SA-HEALTH-B8-NONLIVE-FINAL-READINESS-20260916-01: ACCEPTED in its explicitly non-live scope.
+- head 592b51da31ab5ecfd0e4d4b3e981897849731614;
+- tree 1e4737933665a6ba6d02e491e7873d3f40e47e6f;
+- parent 90c1e0c66a47692634eb652aa1392fdafc1f8f10.
 
-- P8.4_NONLIVE_FINAL_READINESS = PASS for the pre-B7A source represented by 90c1e0c66a47692634eb652aa1392fdafc1f8f10.
-- B8_FULL_P8_4_ACCEPTANCE = BLOCKED_B7_LIVE.
-- P8.4 overall = NOT_ACCEPTED.
-- P8.5 = NOT_STARTED.
+Independent compare: ahead 1 / behind 0 / merge base exact parent. Exactly the eight authorized B7A paths changed; no unrelated scope changed.
 
-Independent B6->B8 compare is ahead by 1 / behind 0 / merge base B6. B8 changes exactly three evidence-only paths and no production/test/package/workflow/migration/schema/API/fixture/extension/reserved/private path.
+Candidate local evidence reports 119/119 Health unit, 11/11 registry, 5/5 dedicated Chromium, 18/18 focused H3 PostgreSQL, 1526/1526 full integration, 169/169 full E2E, and green lint/format/typecheck/migration/OpenAPI/bridge-guard/build/docs. All auth/session material was synthetic; zero live provider/customer-session calls were reported.
 
-The stale-host-process recovery was independently reviewable from sanitized evidence: exactly two >7-day unrelated process groups were separated from the current executor ancestry/session/process group, held no ambiguous Git lock and contained no active Codex/Bridge/git/ssh/docker/postgres/browser/deploy/release process. Both exact groups terminated on SIGTERM, no SIGKILL was needed, no respawn occurred, protected executor ancestry remained alive, and repository HEAD/tree/worktree were unchanged. No pkill/killall/pattern kill/reboot/service restart/lock deletion/reset/rebase/stash/cherry-pick/amend/force operation was used.
+Exact-head Server CI run 35111261064 / job 104845256371 exists on 592b51d... . At this cursor snapshot install/lint/format/typecheck/config-regression/unit/integration/migration/OpenAPI/bridge-guard/build/Chromium were green and E2E was still IN_PROGRESS. This CI is NON-GATING for the current verdict because the architect independently proved a security architecture defect that green CI cannot override.
 
-B8 evidence FR-01..FR-11 is internally consistent with the accepted B1-B6 state. It records the full pre-B1 de41f336... -> accepted B6 697eea7... chain as ahead 28 / behind 0 and a bounded Health/test/evidence changed-path set with no unrelated forbidden scope or actual secret/raw customer/provider data.
+## B7A verdict — REWORK_REQUIRED
 
-Exact-head B8 Server CI:
+The candidate is NOT accepted.
 
-- run 35105136595;
-- job 104824258928;
-- head 90c1e0c66a47692634eb652aa1392fdafc1f8f10;
-- conclusion SUCCESS;
-- install, lint, format, typecheck, Playwright-config regression, unit, PostgreSQL integration, db:migrate, openapi:check, bridge:guard, build, Chromium install, E2E, post steps and cleanup all SUCCESS;
-- frozen import is conditionally skipped on the feature branch and is not a failure.
+The strict file-backed loader is correct in isolation but is not runtime-authoritative:
 
-The self-referential B8 results.json publication fields that remained PENDING_COMMIT/PENDING_PUSH are not final authority; GitHub remote readback plus the exact-head CI above are authoritative.
+- apps/health-runner root API exports a constructible DedicatedHealthSessionRegistry runtime class and structural DedicatedHealthSessionBinding type;
+- public ChromeBrowserDriver accepts a third dedicatedBinding parameter;
+- createDedicatedHealthChromeBrowserDriver accepts a DedicatedHealthSessionBinding directly;
+- no runtime proof requires that binding to originate from loadDedicatedHealthSessionRegistry;
+- the candidate E2E itself fabricates plain standardBinding/workBinding objects and successfully consumes their synthetic storage-state cookie without loader authority;
+- launch() feeds binding.storageStatePath to browser.newContext before open() performs target/start-URL mismatch validation.
 
-Detailed review: docs/development/architect-autowork/references/HEALTH_B8_FINAL_REVIEW.md.
+Therefore a caller can bypass loader lstat/symlink/regular-file/size/POSIX-permission/distinct-state checks and can point the driver at any accessible storage-state file, including an owner/customer session. This violates the dedicated-Health-only/no-customer-session security boundary.
 
-## B7 architecture correction discovered after B8
+This defect originated in the architect-approved B7A design, which explicitly allowed direct binding construction for the loopback Work test. Codex implemented that design literally. R1 corrects the architecture rather than widening tests around the same bypass.
 
-The prior cursor described B7 as external-only. Independent post-B8 review proved that classification incomplete.
+Detailed review: docs/development/architect-autowork/references/HEALTH_B7A_R1_SECURITY_REVIEW.md.
 
-Normative docs/server/HEALTH_SYSTEM.md requires dedicated controlled test accounts/browser profiles, session/profile secrets outside Git and a reauthentication runbook. Current P8 roadmap scope includes the controlled Chrome runner and P8.4 specifically owns ChatGPT Standard/Work H3 + sanitized evidence.
+## Next exact task — B7A R1 capability provenance
 
-Current accepted product source lacks the sanctioned mechanism required for authenticated live H3:
+Task ID: SA-HEALTH-B7A-R1-CAPABILITY-PROVENANCE-20260916-01.
+Task file: docs/development/architect-autowork/tasks/HEALTH_B7A_R1_CAPABILITY_PROVENANCE_2026-09-16.md.
+Required exact base: 592b51da31ab5ecfd0e4d4b3e981897849731614.
 
-- ChromeBrowserDriver always launches a fresh empty browser.newContext() with no dedicated Health auth-state provisioning input;
-- Work identifyApprovedSurface requires a bound project/conversation route;
-- packaged Work target opens only https://chatgpt.com/;
-- there is no trusted local-only mechanism to supply dedicated Health auth state plus the dedicated Work start route without broadening remote/generic browser authority.
+Architect decision:
 
-Therefore current accurate state is:
+- loadDedicatedHealthSessionRegistry becomes the sole producer of dedicated-session authority;
+- loader-created registry is opaque and branded through module-private WeakMap state;
+- sensitive binding/path/startUrl is not exposed through the root API;
+- ChromeBrowserDriver public constructor returns to targets + optional launchTimeout only, with no direct session argument;
+- browser-driver keeps a module-private WeakMap associating a driver with a trusted hidden binding only when created by the dedicated factory;
+- createDedicatedHealthChromeBrowserDriver accepts targets + loader-created registry + target key (+ optional timeout), never binding/path/startUrl;
+- forged registry/direct binding/third constructor argument have zero authority;
+- Standard positive Chromium proof must use config -> loader -> registry -> factory; old direct loopback Work positive binding is removed because it is the bypass;
+- valid Work production route authority remains tested without live navigation; actual Work navigation stays B7 live acceptance.
 
-B7_CONTROLLED_LIVE_H3 = BLOCKED_INTERNAL_PROVISIONING_AND_EXTERNAL_DEDICATED_ACCOUNT.
+R1 must first add valid RED regressions proving on exact candidate 592b51d... that a forged factory object and third constructor argument currently inject the synthetic cookie. Only then may production code change. After fix run focused security matrix and one full server acceptance cycle.
 
-The internal portion is independently implementable now. It must be completed before asking the owner for final dedicated Health session files / Work route for the actual live run.
+Allowed R1 changes are ONLY the same eight B7A paths. No new path, package/dependency, target registry, H2/H3 schema, strategy/profile, contract/API/DB/migration, reserved public documentation, site/SEO/domain/private-control change.
 
-## Next exact task — B7A
-
-Task ID: SA-HEALTH-B7A-SESSION-PROVISIONING-20260916-01.
-Task file: docs/development/architect-autowork/tasks/HEALTH_B7A_DEDICATED_SESSION_PROVISIONING_2026-09-16.md.
-Required exact base: 90c1e0c66a47692634eb652aa1392fdafc1f8f10.
-
-Accepted architecture:
-
-- every run remains a fresh EPHEMERAL_CONTROLLED browser/newContext;
-- no persistent userDataDir and no customer/owner ordinary browser profile reuse;
-- an explicitly dedicated Health context may preload Playwright storageState from an owner-only local file outside Git;
-- configuration is a strict trusted local file, never H2/H3 plan/remote/API input;
-- Standard keeps packaged root start URL;
-- Work may receive one local-only start URL but only exact approved ChatGPT origin, no credentials/query/hash and a route accepted by the existing parseWorkRoute authority;
-- binding is target-specific and browser driver independently enforces target/origin/route rules before navigation;
-- no raw Page/Browser/Context/Locator/CDP exposure, selector/script/prompt/action expansion or login/CAPTCHA automation;
-- session/config paths, Work route and storage-state contents never enter Health results/evidence/logging;
-- reauthentication is an explicit out-of-band operator replacement of the dedicated Health state file; runtime never writes refreshed auth state.
-
-B7A adds the strict dedicated-session registry, browser-driver binding/factory, synthetic unit/security tests and a real Chromium local-only session-injection regression. It makes ZERO live ChatGPT/provider/marketplace calls.
-
-Because B7A changes the security attack surface after B6/B8, it must run B6-equivalent focused security/privacy regressions plus one full exact-source server cycle. Historical B6/B8 evidence remains valid for its original source but cannot substitute for acceptance of the new provisioning code.
-
-After B7A architect/exact-head CI acceptance, the remaining B7 external prerequisite will be owner-provisioned dedicated Health auth state/config for Standard and Work plus an approved dedicated Work project/conversation route, all outside Git. Only then may the actual controlled live B7 behavioral smoke run.
-
-P8.4 remains NOT_ACCEPTED and P8.5 remains NOT_STARTED throughout B7A.
+Zero live ChatGPT/provider/marketplace/customer-session calls. B7 live remains NOT RUN. P8.4 remains NOT_ACCEPTED. P8.5 remains NOT_STARTED.
 
 ## Broader boundaries
 
