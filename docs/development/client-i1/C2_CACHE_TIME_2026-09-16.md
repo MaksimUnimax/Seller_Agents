@@ -15,3 +15,7 @@ The focused suite is `tests/regression/extension-core/client-i1/client-cache-tim
 R2 restore rules distinguish signed-out activation state from malformed credential state. A null or absent credential value does not advance generation or report `STORED_CREDENTIALS_INVALID`; orphan authority, rotation and clock fields are removed without authorizing Work. Starting records retain only their attempt and start key until a response exists. Pending records retain their exchange key, device code and expiry only when their exact packaged API origin, portal origin and contract match the current configuration. No pending expiry is renewed during restore.
 
 Open boundaries: offline-grace eligibility, signed profile consumption and full joint offline command-result acceptance remain C2.2+; C2.1 is not C2 completion. Health B5/B6–B8, S1.2/D3, full I1/D2, beta, release and deployment remain open.
+
+## C2.1 bounded acceptance — 2026-09-16
+
+C2.1 is accepted only for durable cache context/time, activation restore and fresh-only Work guards on candidate `4acc5fb3336e3e38fa30d6a7ec16c80730bcd7e1`, tree `14e8e61d86b955b8a8f22b0c9e24f255654e92f7`, parent/code `6dc770ec30fe7c7165f4c14ff8b6356cd55937d6`, start `06e0eb79badc5e65ea972035a2968f72fdaae6a7`. The independent R3 review accepted that bounded scope; its historical R1/R2 outcomes remain unchanged. C2.2-A is the next candidate for verified cached-bootstrap acquisition only. It does not grant offline Work or accept signed profile/capability consumption.
