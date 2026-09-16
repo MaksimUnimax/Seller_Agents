@@ -1,0 +1,10 @@
+{
+  "artifact_id": 10433241137,
+  "zip_sha256": "ceede563a4869184f26d161875ce6ca39f12c37245ee49c2917302d3a4ea4e59",
+  "bytes": 1822450,
+  "files": 39,
+  "byte_mismatches": [],
+  "checker_status": "PASS",
+  "gate_processes": 98,
+  "scope": "independent CI default development ZIP readback; executor ephemeral key ZIP separate"
+}

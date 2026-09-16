@@ -1,0 +1,8 @@
+{
+  "scope": "independent source VM; real start path with synthetic exchange and failed auth set; removal available",
+  "restoreError": null,
+  "writeAttempts": 1,
+  "removeAttempts": 1,
+  "durablePendingRetained": false,
+  "clientGitBlob": "35497eac2582877e7851bcb27b3c5833bd060e79"
+}
