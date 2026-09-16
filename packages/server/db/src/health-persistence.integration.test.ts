@@ -10,6 +10,7 @@ import {
   createDatabaseRuntime,
   createHealthPersistenceRepository,
 } from "./index.js";
+import { runMigrations } from "./migrations.js";
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) throw new Error("DATABASE_URL is required");
@@ -126,6 +127,10 @@ async function countPersistedRowsForSuite(suite: HealthSuiteDefinition) {
 describe("P8.2 health persistence", () => {
   beforeAll(async () => {
     await runtime.ready();
+    await runtime.query(`DROP SCHEMA IF EXISTS public CASCADE`);
+    await runtime.query(`DROP SCHEMA IF EXISTS drizzle CASCADE`);
+    await runtime.query(`CREATE SCHEMA public`);
+    await runMigrations({ connectionString });
     await runtime.query(
       `INSERT INTO ai_adapters(id,machine_key,display_name) VALUES($1,'fixture-ai','Fixture AI')`,
       [IDS.adapter],
