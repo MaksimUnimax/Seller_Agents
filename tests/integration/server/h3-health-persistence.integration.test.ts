@@ -223,6 +223,57 @@ function context(suite: HealthSuiteDefinition): H3HealthPersistenceContext {
   };
 }
 
+const TIMESTAMP_CASES = [
+  {
+    name: "A",
+    startedAt: "2026-09-16T10:00:00+05:00",
+    completedAt: "2026-09-16T06:00:00Z",
+    deltaMs: 3_600_000,
+  },
+  {
+    name: "C",
+    startedAt: "2026-09-16T10:00:00.100+05:00",
+    completedAt: "2026-09-16T05:00:00.200Z",
+    deltaMs: 100,
+  },
+  {
+    name: "E",
+    startedAt: "2026-09-16T10:00:00+05:00",
+    completedAt: "2026-09-16T05:00:00Z",
+    deltaMs: 0,
+  },
+] as const;
+
+const REVERSE_TIMESTAMP_CASES = [
+  {
+    name: "B",
+    startedAt: "2026-09-16T06:00:00Z",
+    completedAt: "2026-09-16T10:00:00+05:00",
+  },
+  {
+    name: "D",
+    startedAt: "2026-09-16T05:00:00.200Z",
+    completedAt: "2026-09-16T10:00:00.100+05:00",
+  },
+] as const;
+
+async function healthCounts() {
+  const tables = [
+    "health_suite_revisions",
+    "health_runs",
+    "health_contour_results",
+    "health_evidence_references",
+  ] as const;
+  const result = {} as Record<(typeof tables)[number], number>;
+  for (const table of tables) {
+    const rows = await runtime.query<{ count: string }>(
+      `SELECT COUNT(*)::text AS count FROM ${table}`,
+    );
+    result[table] = Number(rows.rows[0]?.count ?? "0");
+  }
+  return result;
+}
+
 async function persist(
   surface: "standard" | "work",
   result: ReturnType<typeof H3ExecutionResultSchema.parse>,
@@ -280,6 +331,80 @@ describe("B5 durable Standard/Work H3 evidence", () => {
   });
 
   afterAll(async () => runtime.close());
+
+  for (const [surface, executionSurface] of [
+    ["standard", "CHATGPT_STANDARD"],
+    ["work", "CHATGPT_WORK"],
+  ] as const) {
+    it.each(TIMESTAMP_CASES)(
+      "$name persists $surface PASS at the parsed UTC moments",
+      async ({ startedAt, completedAt, deltaMs }) => {
+        const suite = suiteFor(surface);
+        const command = createH3HealthPersistenceCommand(
+          execution(executionSurface, "PASS", PASS_EVENTS, null, null, null),
+          {
+            ...context(suite),
+            startedAt,
+            completedAt,
+          },
+        );
+        const run = await repository.persistCompletedHealthRun(command);
+        const storedRows = await runtime.query<{
+          startedAt: Date;
+          completedAt: Date;
+          surfaceId: string;
+          profileId: string;
+          profileRevision: number;
+          healthLevel: string;
+          healthState: string;
+        }>(
+          `SELECT started_at AS "startedAt",completed_at AS "completedAt",surface_id AS "surfaceId",profile_id AS "profileId",profile_revision AS "profileRevision",health_level AS "healthLevel",health_state AS "healthState" FROM health_runs WHERE id=$1`,
+          [run.id],
+        );
+        const stored = storedRows.rows[0];
+        expect(stored).toBeDefined();
+        expect(stored?.startedAt.valueOf()).toBe(Date.parse(startedAt));
+        expect(stored?.completedAt.valueOf()).toBe(Date.parse(completedAt));
+        expect(
+          stored?.completedAt.valueOf() - stored?.startedAt.valueOf(),
+        ).toBe(deltaMs);
+        expect(run.healthLevel).toBe("H3");
+        expect(run.healthState).toBe("HEALTHY");
+        expect(run.surfaceId).toBe(suite.scope.surfaceId);
+        expect(run.profileId).toBe(suite.scope.profile.id);
+        expect(run.profileRevision).toBe(suite.scope.profile.revision);
+        expect(run.scope).toEqual(suite.scope);
+        expect(stored?.surfaceId).toBe(suite.scope.surfaceId);
+        expect(stored?.profileId).toBe(suite.scope.profile.id);
+        expect(stored?.profileRevision).toBe(suite.scope.profile.revision);
+        expect(stored?.healthLevel).toBe("H3");
+        expect(stored?.healthState).toBe("HEALTHY");
+        expect(await repository.listContourResults(run.id)).toHaveLength(13);
+        expect(await repository.listEvidenceReferences(run.id)).toHaveLength(
+          11,
+        );
+      },
+    );
+
+    it.each(REVERSE_TIMESTAMP_CASES)(
+      "$name rejects $surface before repository write",
+      async ({ startedAt, completedAt }) => {
+        const suite = suiteFor(surface);
+        const before = await healthCounts();
+        const build = () =>
+          createH3HealthPersistenceCommand(
+            execution(executionSurface, "PASS", PASS_EVENTS, null, null, null),
+            {
+              ...context(suite),
+              startedAt,
+              completedAt,
+            },
+          );
+        expect(build).toThrow("completedAt must not precede startedAt");
+        expect(await healthCounts()).toEqual(before);
+      },
+    );
+  }
 
   it.each([
     ["standard", "CHATGPT_STANDARD"],

@@ -36,7 +36,7 @@ export const H3HealthPersistenceContextSchema = z
   })
   .strict()
   .superRefine((value, context) => {
-    if (value.completedAt < value.startedAt) {
+    if (Date.parse(value.completedAt) < Date.parse(value.startedAt)) {
       context.addIssue({
         code: "custom",
         path: ["completedAt"],

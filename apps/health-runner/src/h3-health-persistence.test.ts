@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { ZodError } from "zod";
 import {
   BASELINE_HEALTH_SUITE,
   HealthSuiteDefinitionSchema,
@@ -219,6 +220,51 @@ function context(
   };
 }
 
+const TIMESTAMP_CASES = [
+  {
+    name: "A",
+    startedAt: "2026-09-16T10:00:00+05:00",
+    completedAt: "2026-09-16T06:00:00Z",
+    expected: "accept",
+    deltaMs: 3_600_000,
+  },
+  {
+    name: "B",
+    startedAt: "2026-09-16T06:00:00Z",
+    completedAt: "2026-09-16T10:00:00+05:00",
+    expected: "reject",
+    deltaMs: -3_600_000,
+  },
+  {
+    name: "C",
+    startedAt: "2026-09-16T10:00:00.100+05:00",
+    completedAt: "2026-09-16T05:00:00.200Z",
+    expected: "accept",
+    deltaMs: 100,
+  },
+  {
+    name: "D",
+    startedAt: "2026-09-16T05:00:00.200Z",
+    completedAt: "2026-09-16T10:00:00.100+05:00",
+    expected: "reject",
+    deltaMs: -100,
+  },
+  {
+    name: "E",
+    startedAt: "2026-09-16T10:00:00+05:00",
+    completedAt: "2026-09-16T05:00:00Z",
+    expected: "accept",
+    deltaMs: 0,
+  },
+  {
+    name: "F",
+    startedAt: "2026-09-16T06:00:00.000Z",
+    completedAt: "2026-09-16T06:00:01.000Z",
+    expected: "accept",
+    deltaMs: 1_000,
+  },
+] as const;
+
 const PASS_EVENTS = [
   event("IDENTIFY_SURFACE", "PASS"),
   event("IDENTIFY_COMPOSER", "PASS"),
@@ -262,6 +308,116 @@ function withObservations(
   );
   return execution("CHATGPT_STANDARD", "PASS", events, null, null, null);
 }
+
+for (const [surface, profileRevision] of [
+  ["standard", 2],
+  ["work", 1],
+] as const) {
+  describe(`B5 timestamp chronology ${surface}`, () => {
+    it.each(TIMESTAMP_CASES)(
+      "$name maps the real execution/context helpers",
+      ({ name, startedAt, completedAt, expected, deltaMs }) => {
+        const rawContext = {
+          ...context(surface, profileRevision),
+          startedAt,
+          completedAt,
+        };
+        const build = () =>
+          createH3HealthPersistenceCommand(
+            execution(
+              surface === "standard" ? "CHATGPT_STANDARD" : "CHATGPT_WORK",
+              "PASS",
+              PASS_EVENTS,
+              null,
+              null,
+              null,
+            ),
+            rawContext,
+          );
+
+        if (expected === "accept") {
+          const command = build();
+          expect(command.startedAt).toBeInstanceOf(Date);
+          expect(command.completedAt).toBeInstanceOf(Date);
+          expect(command.startedAt.valueOf()).toBe(Date.parse(startedAt));
+          expect(command.completedAt.valueOf()).toBe(Date.parse(completedAt));
+          expect(
+            command.completedAt.valueOf() - command.startedAt.valueOf(),
+          ).toBe(deltaMs);
+          return;
+        }
+
+        try {
+          build();
+          throw new Error(`timestamp case ${name} unexpectedly accepted`);
+        } catch (error) {
+          expect(error).toBeInstanceOf(ZodError);
+          expect((error as ZodError).issues).toContainEqual({
+            code: "custom",
+            path: ["completedAt"],
+            message: "completedAt must not precede startedAt",
+          });
+        }
+      },
+    );
+  });
+}
+
+describe("B5 timestamp validation preservation", () => {
+  it("still rejects invalid ISO and timestamps without a timezone", () => {
+    expect(() =>
+      createH3HealthPersistenceCommand(
+        execution("CHATGPT_STANDARD", "PASS", PASS_EVENTS, null, null, null),
+        {
+          ...context("standard", 2),
+          startedAt: "not-an-iso-timestamp",
+        },
+      ),
+    ).toThrow(ZodError);
+    expect(() =>
+      createH3HealthPersistenceCommand(
+        execution("CHATGPT_STANDARD", "PASS", PASS_EVENTS, null, null, null),
+        {
+          ...context("standard", 2),
+          startedAt: "2026-09-16T06:00:00.000",
+        },
+      ),
+    ).toThrow(ZodError);
+  });
+
+  it("allows identical UTC timestamps", () => {
+    const command = createH3HealthPersistenceCommand(
+      execution("CHATGPT_STANDARD", "PASS", PASS_EVENTS, null, null, null),
+      {
+        ...context("standard", 2),
+        startedAt: "2026-09-16T06:00:00.000Z",
+        completedAt: "2026-09-16T06:00:00.000Z",
+      },
+    );
+    expect(command.completedAt.valueOf()).toBe(command.startedAt.valueOf());
+  });
+
+  it("preserves the completedAt issue for an ordinary reverse UTC interval", () => {
+    try {
+      createH3HealthPersistenceCommand(
+        execution("CHATGPT_STANDARD", "PASS", PASS_EVENTS, null, null, null),
+        {
+          ...context("standard", 2),
+          startedAt: "2026-09-16T06:00:01.000Z",
+          completedAt: "2026-09-16T06:00:00.000Z",
+        },
+      );
+      throw new Error("reverse UTC interval unexpectedly accepted");
+    } catch (error) {
+      expect(error).toBeInstanceOf(ZodError);
+      expect((error as ZodError).issues).toContainEqual({
+        code: "custom",
+        path: ["completedAt"],
+        message: "completedAt must not precede startedAt",
+      });
+    }
+  });
+});
 
 describe("B5 H3 capture-boundary Health mapper", () => {
   it("accepts only the strict bounded observation vocabulary", () => {
