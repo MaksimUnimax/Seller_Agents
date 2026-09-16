@@ -36,6 +36,7 @@ require_command() {
 assert_source_files() {
   [[ -f "${SOURCE_BOOTSTRAP}" ]] || fail "missing ${SOURCE_BOOTSTRAP}"
   [[ -f "${SOURCE_FINAL}" ]] || fail "missing ${SOURCE_FINAL}"
+  [[ -f "${SCRIPT_DIR}/verify-octoport-ingress.sh" ]] || fail "missing ingress verifier"
 }
 
 assert_server_ipv4() {
@@ -142,7 +143,7 @@ install_final_config() {
 
 main() {
   require_root
-  for command_name in ip awk cut grep getent sort install cp rm nginx systemctl certbot find openssl curl; do
+  for command_name in bash ip awk cut grep getent sort install cp rm nginx systemctl certbot find openssl curl; do
     require_command "${command_name}"
   done
   assert_source_files
@@ -161,7 +162,7 @@ main() {
   install_final_config
 
   log "running post-deploy verification"
-  "${SCRIPT_DIR}/verify-octoport-ingress.sh"
+  bash "${SCRIPT_DIR}/verify-octoport-ingress.sh"
 
   SUCCESS=1
   log "deployment completed; backup: ${BACKUP_DIR}"
