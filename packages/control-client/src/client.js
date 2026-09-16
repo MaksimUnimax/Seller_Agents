@@ -19,6 +19,7 @@
   let runtimeClockOwner = null, runtimeAnchor = null, runtimeEffectiveHighWatermark = null, runtimeFloorNeedsPersistence = false, runtimeLastCheckpointAllowed = null;
   let bootstrapAttemptSequence = 0;
   const transportProvenance = new WeakMap();
+  const httpErrorProvenance = new WeakMap();
   function error(code, detail) { const value = Object.assign(new Error(code), { code }); if (detail !== undefined) value.detail = detail; return value; }
   function now() { return Date.now(); }
   function validMillis(value) { return typeof value === "number" && Number.isSafeInteger(value) && value >= 0 && value <= MAX_DATE_MS; }
@@ -200,15 +201,15 @@
     let response;
     try { response = await fetch(endpoint, requestOptions); }
     catch (_) { const failure = error("CONTROL_TRANSPORT_UNAVAILABLE"); transportProvenance.set(failure, endpoint); throw failure; }
-    let body = null;
+    let body = null, bodyFailure = false;
     try {
       const text = await readLimitedBody(response); body = text ? JSON.parse(text) : null;
     } catch (failure) {
+      bodyFailure = true;
       if (failure?.code === "CONTROL_RESPONSE_TOO_LARGE") { failure.status = response.status; failure.responseOk = response.ok; failure.retryAfterMs = parseRetryAfter(response); failure.body = null; }
-      else { failure = null; }
-      if (failure) throw failure;
+      if (failure?.code === "CONTROL_RESPONSE_TOO_LARGE") throw failure;
     }
-    if (!response.ok) { const failure = error(body?.error?.code || `CONTROL_HTTP_${response.status}`); failure.status = response.status; failure.retryAfterMs = parseRetryAfter(response); failure.body = body; throw failure; }
+    if (!response.ok) { const failure = error(body?.error?.code || `CONTROL_HTTP_${response.status}`); failure.status = response.status; failure.retryAfterMs = parseRetryAfter(response); failure.body = body; if (!bodyFailure) httpErrorProvenance.set(failure, endpoint); throw failure; }
     return { body, response };
   }
   function assertStart(body) { if (!body || body.status !== "pending" || !UUID.test(body.authorizationId) || !OPAQUE_TOKEN.test(body.deviceCode) || !/^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{4}-[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{4}$/.test(body.userCode) || !Number.isFinite(Date.parse(body.expiresAt))) throw error("INVALID_DEVICE_AUTH_RESPONSE"); return body; }
@@ -479,6 +480,7 @@
           await commit(next, current.authority, "bootstrap_verified");
           /* A requested-AI authority replacement intentionally advances generation. */
           attempt.context = { ...attempt.context, generation };
+          attempt.committedAuthorityIdentity = cacheIdentity(next.authority, generation);
           return bootstrapAttemptCurrent(attempt);
         });
       } catch (failure) { await invalidateBootstrapFailure(attempt, failure, false); throw failure; }
@@ -493,7 +495,7 @@
   async function persistCacheDenial(next, capture) {
     if (!policyCurrent(capture)) throw cacheFailure("CACHE_ACQUISITION_OBSOLETED");
     state = next;
-    try { await persist(next); runtimeFloorNeedsPersistence = false; if (!policyCurrent(capture)) throw cacheFailure("CACHE_ACQUISITION_OBSOLETED"); }
+    try { await persist(next); }
     catch (_) {
       runtimeFloorNeedsPersistence = true;
       state = { ...state, authority: state.authority ? { ...state.authority, workAllowed: false } : null };
@@ -502,6 +504,8 @@
       catch (removeFailure) { const failure = error("AUTH_DENIAL_PERSISTENCE_FAILED"); failure.detail = safeError(removeFailure); state = { ...state, lastError: safeError(failure) }; throw failure; }
       throw error("AUTH_DENIAL_PERSISTENCE_FAILED");
     }
+    runtimeFloorNeedsPersistence = false;
+    if (!policyCurrent(capture)) throw cacheFailure("CACHE_ACQUISITION_OBSOLETED");
   }
   async function cachedBootstrapCheckpoint(capture, payload) {
     return queueMutation(async () => {
@@ -519,14 +523,15 @@
       const next = floor === clock.effectiveTimeMs && !runtimeFloorNeedsPersistence ? state : { ...state, cacheClock: { ...clock, effectiveTimeMs: floor } };
       if (next !== state) {
         state = next;
-        try { await persist(next); runtimeFloorNeedsPersistence = false; if (!policyCurrent(capture)) throw cacheFailure("CACHE_ACQUISITION_OBSOLETED"); }
-        catch (failure) {
-          if (failure?.code === "CACHE_ACQUISITION_OBSOLETED") throw failure;
+        try { await persist(next); }
+        catch (_) {
           runtimeFloorNeedsPersistence = true; state = { ...state, authority: state.authority ? { ...state.authority, workAllowed: false } : null }; runtimeLastCheckpointAllowed = false;
           try { await chrome.storage.local.remove(STORAGE_KEY); }
           catch (removeFailure) { const denial = error("AUTH_DENIAL_PERSISTENCE_FAILED"); denial.detail = safeError(removeFailure); state = { ...state, lastError: safeError(denial) }; throw denial; }
           throw error("AUTH_DENIAL_PERSISTENCE_FAILED");
         }
+        runtimeFloorNeedsPersistence = false;
+        if (!policyCurrent(capture)) throw cacheFailure("CACHE_ACQUISITION_OBSOLETED");
       }
       if (!policyCurrent(capture)) throw cacheFailure("CACHE_ACQUISITION_OBSOLETED");
       if (!freshness) { await persistCacheDenial({ ...state, cacheClock: { ...state.cacheClock, effectiveTimeMs: floor }, authority: { ...authority, workAllowed: false } }, capture); throw cacheFailure("CACHE_EXPIRED"); }
@@ -555,11 +560,11 @@
       const capturedAuthority = clone(state.authority), capturedClock = clone(state.cacheClock);
       Object.assign(attempt, { requestedAi, authority: capturedAuthority, clock: capturedClock, authorityIdentity: cacheIdentity(capturedAuthority, attempt.context.generation) });
       const payload = await bootstrapOnline(options, attempt);
-      if (!bootstrapAttemptCurrent(attempt)) throw error("AUTH_GENERATION_CHANGED");
+      if (!bootstrapAttemptCurrent(attempt) || !attempt.committedAuthorityIdentity || cacheIdentity(state.authority, state.generation) !== attempt.committedAuthorityIdentity) throw error("AUTH_GENERATION_CHANGED");
       return { source: "ONLINE", freshness: "FRESH", payload: clone(payload) };
     } catch (onlineFailure) {
       const capture = typeof attempt.authorityIdentity === "string" || attempt.authorityIdentity === null ? attempt : null;
-      const eligible = capture && !attempt.observedBootstrap401 && (registeredTransport(onlineFailure, "/v1/bootstrap") || (attempt.preflightRefreshTransport === true && registeredTransport(onlineFailure, "/v1/auth/refresh")) || (onlineFailure.status === 503 && onlineFailure.code === "BOOTSTRAP_UNAVAILABLE" && !transportProvenance.has(onlineFailure)));
+      const eligible = capture && !attempt.observedBootstrap401 && (registeredTransport(onlineFailure, "/v1/bootstrap") || (attempt.preflightRefreshTransport === true && registeredTransport(onlineFailure, "/v1/auth/refresh")) || (httpErrorProvenance.get(onlineFailure) === endpointFor("/v1/bootstrap") && onlineFailure.status === 503 && onlineFailure.code === "BOOTSTRAP_UNAVAILABLE"));
       if (!eligible || !policyCurrent(capture)) throw onlineFailure;
       const authority = capture.authority, requestedAi = capture.requestedAi;
       if (!authority || authority.requestedAi !== requestedAi || !capture.clock || !validCacheBinding(authority.cacheBinding)) throw onlineFailure;
@@ -576,7 +581,9 @@
         if (verifier.canonicalJson(authority.cacheBinding) !== verifier.canonicalJson(expected) || !validCacheClock(capture.clock, state.credentials, verified.payload) || capture.clock.owner.contractVersion !== config.contractVersion) throw cacheFailure("CACHE_CONTEXT_MISMATCH");
         const currentAuthority = state.authority;
         if (!currentAuthority || cacheIdentity(currentAuthority, state.generation) !== capture.authorityIdentity) throw cacheFailure("CACHE_ACQUISITION_OBSOLETED");
-        return await cachedBootstrapCheckpoint(capture, verified.payload);
+        const result = await cachedBootstrapCheckpoint(capture, verified.payload);
+        if (!policyCurrent(capture)) throw cacheFailure("CACHE_ACQUISITION_OBSOLETED");
+        return result;
       } catch (cacheError) {
         if (cacheError?.code === "AUTH_DENIAL_PERSISTENCE_FAILED" || cacheError?.code === "CACHE_ACQUISITION_OBSOLETED" || cacheError?.code === "CACHE_CLOCK_INVALID" || cacheError?.code === "CACHE_EFFECTIVE_TIME_INVALID" || cacheError?.code === "CACHE_CONTEXT_MISMATCH" || cacheError?.code === "CACHE_VERIFICATION_FAILED" || cacheError?.code === "CACHE_EXPIRY_INVALID" || cacheError?.code === "CACHE_EXPIRED") throw cacheError;
         throw onlineFailure;
