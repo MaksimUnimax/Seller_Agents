@@ -8,6 +8,7 @@ const AUTH = "seller_agents_control_auth_v2";
 const CHATGPT = { family: "chatgpt", surface: "web", variant: null };
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
 const caseResults = [], caseFailures = [];
+const negativeControls = [];
 const T0 = 1700000000000;
 const clone = value => value === undefined ? undefined : structuredClone(value);
 const paths = worker => worker.network.map(row => new URL(row.url).pathname);
@@ -65,12 +66,15 @@ function fakeIDB() {
   } };
 }
 const idbRequest = request => new Promise((resolve, reject) => { request.onsuccess = () => resolve(request.result); request.onerror = () => reject(request.error || new Error("fixture IDB request failed")); });
-async function idbPutGet(idb, record) {
+async function idbPut(idb, record) {
   const database = await idbRequest(idb.open());
   const store = database.transaction("artifacts", "readwrite").objectStore("artifacts");
   await idbRequest(store.put(record));
-  const readStore = database.transaction("artifacts", "readonly").objectStore("artifacts");
-  return idbRequest(readStore.get(record.artifact_key));
+}
+async function idbGet(idb, artifactKey) {
+  const database = await idbRequest(idb.open());
+  const store = database.transaction("artifacts", "readonly").objectStore("artifacts");
+  return idbRequest(store.get(artifactKey));
 }
 const canonical = value => value === null ? "null" : typeof value === "boolean" ? (value ? "true" : "false") : typeof value === "string" ? JSON.stringify(value) : typeof value === "number" ? String(value) : Array.isArray(value) ? `[${value.map(canonical).join(",")}]` : `{${Object.keys(value).sort().map(key => `${JSON.stringify(key)}:${canonical(value[key])}`).join(",")}}`;
 function packagedConfig(backing, changes = {}) {
@@ -638,8 +642,12 @@ await namedCase("Q2-C-resolved-AI-fresh-cache-guards", async () => {
 await namedCase("Q2-D-rollback-consumed-grace-restart", async () => {
   const clock = { wall: T0, mono: 1000 }, fixture = await prepared({ clock, payload: fixedPayload(clock), fetch: async url => { assert.equal(new URL(url).pathname, "/v1/bootstrap"); return json({ error: { code: "BOOTSTRAP_UNAVAILABLE" } }, 503); } });
   try {
-    clock.wall = T0 + 500; clock.mono = 1500; await fixture.worker.call("SellerAgentsControlClient.canWork");
-    clock.wall = T0 - 500; clock.mono = 2500; await fixture.worker.call("SellerAgentsControlClient.canWork");
+    clock.wall = T0 + 500; clock.mono = 1500;
+    const first = await policy(fixture.worker, { detectedAi: CHATGPT });
+    assert.equal(first.source, "CACHE"); assert.equal(first.freshness, "FRESH");
+    clock.wall = T0 - 500; clock.mono = 2500;
+    const rolled = await policy(fixture.worker, { detectedAi: CHATGPT });
+    assert.equal(rolled.source, "CACHE"); assert.equal(rolled.freshness, "STALE_BUT_OFFLINE_GRACE_ELIGIBLE");
     const consumedFloor = fixture.backing.local[AUTH].cacheClock.effectiveTimeMs;
     assert.equal(consumedFloor, T0 + 1500);
     fixture.worker.close();
@@ -648,18 +656,20 @@ await namedCase("Q2-D-rollback-consumed-grace-restart", async () => {
     try {
       assert.equal(fixture.backing.local[AUTH].cacheClock.effectiveTimeMs, consumedFloor);
       const cached = await policy(restarted, { detectedAi: CHATGPT });
+      assert.equal(cached.source, "CACHE");
       assert.equal(cached.freshness, "STALE_BUT_OFFLINE_GRACE_ELIGIBLE");
-      restarted.backing.local[AUTH].cacheClock.effectiveTimeMs = consumedFloor;
       restartClock.wall = T0 + 3000; restartClock.mono = 1501;
       await exactFailure(() => policy(restarted, { detectedAi: CHATGPT }), "CACHE_EXPIRED", "Q2-D grace");
       assert.ok(restarted.backing.local[AUTH].cacheClock.effectiveTimeMs >= T0 + 3000);
+      assert.deepEqual(paths(restarted), ["/v1/bootstrap", "/v1/bootstrap"]);
       restarted.close();
-      const again = await makeWorker(runtime, { backing: fixture.backing, seedAuthority: false, wallClock: () => T0 - 10000, monotonicClock: () => 1 });
+      const again = await makeWorker(runtime, { backing: fixture.backing, seedAuthority: false, wallClock: () => T0 - 10000, monotonicClock: () => 1, fetch: async url => { assert.equal(new URL(url).pathname, "/v1/bootstrap"); return json({ error: { code: "BOOTSTRAP_UNAVAILABLE" } }, 503); } });
       try {
         assert.equal((await again.call("SellerAgentsControlClient.canWork")), false);
         assert.equal((await again.call("SellerAgentsControlClient.getAuthority")).workAllowed, false);
         assert.ok(again.backing.local[AUTH].cacheClock.effectiveTimeMs >= T0 + 3000);
         await exactFailure(() => policy(again, { detectedAi: CHATGPT }), "CACHE_EXPIRED", "Q2-D rollback denial");
+        assert.deepEqual(paths(again), ["/v1/bootstrap"]);
       } finally { again.close(); }
     } finally { if (restarted) restarted.close(); }
   } finally { fixture.worker.close(); }
@@ -669,28 +679,53 @@ await namedCase("Q3-A-first-floor-both-storage-fail-and-idb-retention", async ()
   const clock = { wall: T0, mono: 1000 }, idb = fakeIDB(), backing = { local: {}, session: {} };
   let fail = false, writes = 0, removes = 0;
   const fixture = await prepared({ clock, backing, indexedDB: idb, payload: fixedPayload(clock), fetch: async url => { assert.equal(new URL(url).pathname, "/v1/bootstrap"); return json({ error: { code: "BOOTSTRAP_UNAVAILABLE" } }, 503); }, mutateBacking: value => { value.local.r2_catalog_marker = { keep: "catalog-exact" }; }, onStorageWrite: async (kind, values) => { if (fail && kind === "local" && values[AUTH]) { writes++; throw Object.assign(new Error("first-floor set failed"), { status: 503, code: "BOOTSTRAP_UNAVAILABLE" }); } }, onStorageRemove: async (kind, key) => { if (fail && kind === "local" && key === AUTH) { removes++; throw new Error("first-floor remove failed"); } } });
-  const record = { artifact_key: "r2-retained-artifact", value: "idb-exact" };
+  const record = { artifact_key: "r3-retained-artifact", value: "idb-exact", created_at_ms: T0, expires_at_ms: T0 + 3600000 };
   try {
-    assert.deepEqual(await idbPutGet(idb, record), record);
+    await idbPut(idb, record);
+    const seedWriteCount = idb.stats.writes;
+    assert.equal(seedWriteCount, 1);
+    assert.deepEqual(await idbGet(idb, record.artifact_key), record);
     const oldBytes = clone(backing.local[AUTH]), oldFloor = oldBytes.cacheClock.effectiveTimeMs;
     fail = true; clock.wall = T0 + 100; clock.mono = 1100;
     await exactFailure(() => policy(fixture.worker, { detectedAi: CHATGPT }), "AUTH_DENIAL_PERSISTENCE_FAILED", "Q3-A");
     assert.equal(writes, 1); assert.equal(removes, 1);
     assert.deepEqual(backing.local[AUTH], oldBytes);
     assert.equal(backing.local.r2_catalog_marker.keep, "catalog-exact");
-    assert.deepEqual(await idbPutGet(idb, record), record);
+    assert.deepEqual(await idbGet(idb, record.artifact_key), record);
+    assert.equal(idb.stats.writes, seedWriteCount, "Q3 failed denial does not rewrite IDB");
+    const failedBacking = clone(backing);
+
+    const negativeControl = fakeIDB();
+    await idbPut(negativeControl, record);
+    negativeControl.records.clear();
+    let negativeFailure;
+    try { assert.deepEqual(await idbGet(negativeControl, record.artifact_key), record); }
+    catch (error) { negativeFailure = error; }
+    assert.ok(negativeFailure, "Q3 destructive readonly negative control must fail");
+    assert.equal(await idbGet(negativeControl, record.artifact_key), undefined);
+    negativeControls.push({ id: "Q3-readonly-get-after-destructive-clear", status: "EXPECTED_FAIL", failure_origin: negativeFailure.message, normal_control: "PASS" });
+
+    fail = false;
+    clock.wall = T0 - 100; clock.mono = 1100;
+    const recovered = await policy(fixture.worker, { detectedAi: CHATGPT });
+    assert.equal(recovered.source, "CACHE"); assert.equal(recovered.freshness, "FRESH");
+    assert.equal(backing.local[AUTH].cacheClock.effectiveTimeMs, T0 + 100);
+    assert.deepEqual(await idbGet(idb, record.artifact_key), record);
+    assert.equal(idb.stats.writes, seedWriteCount, "Q3 recovery does not rewrite IDB");
     fixture.worker.close();
     const restartClock = { wall: T0, mono: 1000 };
-    const restarted = await makeWorker(runtime, { backing, seedAuthority: false, indexedDB: idb, wallClock: () => restartClock.wall, monotonicClock: () => restartClock.mono, fetch: async url => { assert.equal(new URL(url).pathname, "/v1/bootstrap"); return json({ error: { code: "BOOTSTRAP_UNAVAILABLE" } }, 503); } });
+    const restarted = await makeWorker(runtime, { backing: failedBacking, seedAuthority: false, indexedDB: idb, wallClock: () => restartClock.wall, monotonicClock: () => restartClock.mono, fetch: async url => { assert.equal(new URL(url).pathname, "/v1/bootstrap"); return json({ error: { code: "BOOTSTRAP_UNAVAILABLE" } }, 503); } });
     try {
-      assert.equal(restarted.backing.local[AUTH].cacheClock.effectiveTimeMs, oldFloor);
+      assert.equal(restarted.backing.local[AUTH].cacheClock.effectiveTimeMs, oldFloor, "Q3 crash branch restores only failed-backing floor");
       assert.equal(restarted.backing.local.r2_catalog_marker.keep, "catalog-exact");
-      assert.deepEqual(await idbPutGet(idb, record), record);
+      assert.deepEqual(await idbGet(idb, record.artifact_key), record);
+      assert.equal(idb.stats.writes, seedWriteCount, "Q3 restart does not rewrite IDB");
       restartClock.wall = T0 + 100; restartClock.mono = 1100;
-      const recovered = await policy(restarted, { detectedAi: CHATGPT });
-      assert.equal(recovered.source, "CACHE"); assert.equal(recovered.freshness, "FRESH");
+      const restartedRecovery = await policy(restarted, { detectedAi: CHATGPT });
+      assert.equal(restartedRecovery.source, "CACHE"); assert.equal(restartedRecovery.freshness, "FRESH");
       assert.equal(restarted.backing.local[AUTH].cacheClock.effectiveTimeMs, T0 + 100);
-      assert.ok(idb.stats.reads >= 4 && idb.stats.writes >= 2);
+      assert.deepEqual(await idbGet(idb, record.artifact_key), record);
+      assert.equal(idb.stats.writes, seedWriteCount, "Q3 normal checkpoint does not rewrite IDB");
     } finally { restarted.close(); }
   } finally { if (fixture.worker) fixture.worker.close(); }
 });
@@ -718,7 +753,7 @@ await namedCase("Q4-C-account-only-online-positive", async () => {
   } finally { fixture.worker.close(); }
 });
 
-await namedCase("Q4-D-account-mismatch-signed-policy-processing", async () => {
+await namedCase("Q4-D-account-replacement-online-positive", async () => {
   let request = 0;
   const clock = { wall: T0, mono: 1000 }, fixture = await prepared({ clock, payload: fixedPayload(clock), fetch: async url => {
     assert.equal(new URL(url).pathname, "/v1/bootstrap");
@@ -734,7 +769,51 @@ await namedCase("Q4-D-account-mismatch-signed-policy-processing", async () => {
     assert.equal(result.payload.account.id, "99999999-9999-4999-8999-999999999999");
     assert.equal(fixture.backing.local[AUTH].authority.payload.account.id, result.payload.account.id);
   } finally { fixture.worker.close(); }
-}, "valid paired positive restores the original account; correctly signed mismatch is observed during policy processing (not restore)");
+}, "valid signed online account replacement is a positive policy case; legitimate server authority is accepted");
+
+await namedCase("Q4-D-account-replacement-obsoletes-held-cache", async () => {
+  const accountB = "99999999-9999-4999-8999-999999999999";
+  const clock = { wall: T0, mono: 1000 }, backing = { local: {}, session: {} };
+  const held = { armed: false, entered: false };
+  let releaseA, calls = 0;
+  const fixture = await prepared({ clock, backing, payload: fixedPayload(clock), beforeCryptoVerify: async () => {
+    if (!held.armed || held.entered) return;
+    held.entered = true;
+    await new Promise(resolve => { releaseA = resolve; });
+  }, fetch: async url => {
+    assert.equal(new URL(url).pathname, "/v1/bootstrap");
+    calls++;
+    if (calls === 1) return signed(backing, clone(backing.local[AUTH].authority.payload));
+    if (calls === 2) throw new TypeError("A policy transport");
+    const payload = { ...clone(backing.local[AUTH].authority.payload), account: { id: accountB, status: "ACTIVE" }, configVersion: 2, serverTime: new Date(T0 + 1).toISOString(), expiresAt: new Date(T0 + 3600000).toISOString(), offlineGraceUntil: new Date(T0 + 7200000).toISOString() };
+    return signed(backing, payload);
+  } });
+  try {
+    const sameAccount = await fixture.worker.call("SellerAgentsControlClient.bootstrap", { detectedAi: CHATGPT });
+    assert.equal(sameAccount.account.id, "11111111-1111-4111-8111-111111111111");
+    const aRecord = clone(backing.local[AUTH]);
+    const aDeviceId = aRecord.authority.deviceId, aSessionId = aRecord.authority.sessionId;
+    held.armed = true;
+    const old = policy(fixture.worker, { detectedAi: CHATGPT }); old.catch(() => {});
+    await until(() => held.entered, "Q4-D held cached-envelope verification");
+    const b = fixture.worker.call("SellerAgentsControlClient.bootstrap", { detectedAi: CHATGPT });
+    const bResult = await b;
+    const bSnapshot = clone(backing.local[AUTH]);
+    assert.equal(bResult.account.id, accountB);
+    assert.notEqual(bSnapshot.authority.payload.account.id, aRecord.authority.payload.account.id);
+    assert.equal(bSnapshot.authority.deviceId, aDeviceId);
+    assert.equal(bSnapshot.authority.sessionId, aSessionId);
+    assert.equal(bSnapshot.cacheClock.owner.deviceId, aRecord.cacheClock.owner.deviceId);
+    assert.equal(bSnapshot.cacheClock.owner.sessionId, aRecord.cacheClock.owner.sessionId);
+    releaseA();
+    await exactFailure(() => old, "CACHE_ACQUISITION_OBSOLETED", "Q4-D obsolete cached A");
+    assert.deepEqual(backing.local[AUTH], bSnapshot, "Q4-D B durable AUTH is exact after A settles");
+    assert.deepEqual(backing.local[AUTH].credentials, bSnapshot.credentials);
+    assert.deepEqual(backing.local[AUTH].authority.envelope, bSnapshot.authority.envelope);
+    assert.deepEqual(backing.local[AUTH].authority.cacheBinding, bSnapshot.authority.cacheBinding);
+    assert.deepEqual(backing.local[AUTH].cacheClock, bSnapshot.cacheClock);
+  } finally { releaseA?.(); fixture.worker.close(); }
+});
 
 async function activationResponse(n) {
   return { status: "pending", authorizationId: "44444444-4444-4444-8444-444444444444", deviceCode: "D".repeat(43), userCode: "ABCD-EFGH", expiresAt: new Date(T0 + 60000).toISOString() };
@@ -795,31 +874,50 @@ for (const later of ["replacement", "forbidden"]) await namedCase("Q5-B-held-cac
     held.armed = true;
     const old = policy(fixture.worker, { detectedAi: CHATGPT }); old.catch(() => {});
     await until(() => held.entered, "Q5-B held fallback verify");
-    const before = clone(backing.local[AUTH]);
     const b = fixture.worker.call("SellerAgentsControlClient.bootstrap", { detectedAi: CHATGPT }); b.catch(() => {});
     await until(() => calls === 2, "Q5-B B request");
-    if (later === "replacement") { await b; assert.equal(backing.local[AUTH].authority.payload.configVersion, 2); }
-    else await exactFailure(() => b, "B_FORBIDDEN", "Q5-B B");
+    let bSnapshot;
+    if (later === "replacement") {
+      await b;
+      bSnapshot = clone(backing.local[AUTH]);
+      assert.equal(bSnapshot.authority.payload.configVersion, 2);
+    } else {
+      await exactFailure(() => b, "B_FORBIDDEN", "Q5-B B");
+      bSnapshot = clone(backing.local[AUTH]);
+      assert.equal(bSnapshot.authority, null);
+      assert.ok(bSnapshot.credentials, "Q5-B denied B retains owned credentials");
+    }
     releaseVerify();
     await exactFailure(() => old, "CACHE_ACQUISITION_OBSOLETED", "Q5-B old");
-    if (later === "replacement") assert.equal(backing.local[AUTH].authority.payload.configVersion, 2);
-    else { assert.equal(backing.local[AUTH].authority, null); assert.ok(backing.local[AUTH].credentials); }
-    assert.notEqual(backing.local[AUTH], before);
+    assert.deepEqual(backing.local[AUTH], bSnapshot, "Q5-B A settle preserves exact durable B AUTH");
+    assert.deepEqual(backing.local[AUTH].generation, bSnapshot.generation);
+    assert.deepEqual(backing.local[AUTH].credentials, bSnapshot.credentials);
+    assert.deepEqual(backing.local[AUTH].cacheClock, bSnapshot.cacheClock);
+    if (later === "replacement") {
+      assert.ok(bSnapshot.authority);
+      assert.deepEqual(backing.local[AUTH].authority.payload, bSnapshot.authority.payload);
+      assert.deepEqual(backing.local[AUTH].authority.envelope, bSnapshot.authority.envelope);
+      assert.deepEqual(backing.local[AUTH].authority.cacheBinding, bSnapshot.authority.cacheBinding);
+    } else assert.equal(backing.local[AUTH].authority, null);
   } finally { releaseVerify?.(); fixture.worker.close(); }
 });
 
 for (const later of ["replacement", "forbidden"]) await namedCase("Q5-C-held-positive-write-" + later, async () => {
   const clock = { wall: T0, mono: 1000 }; let held = false, releaseWrite, calls = 0;
+  let bResponsePayload, bResponseEnvelope;
   const fixture = await prepared({ clock, payload: fixedPayload(clock), fetch: async url => {
     assert.equal(new URL(url).pathname, "/v1/bootstrap");
     if (++calls === 1) throw new TypeError("A policy transport");
     if (later === "forbidden") return json({ error: { code: "B_FORBIDDEN" } }, 403);
     const base = clone(fixture.backing.local[AUTH].authority.payload);
-    return signed(fixture.backing, { ...base, configVersion: 2, serverTime: new Date(T0 + 1).toISOString() });
+    bResponsePayload = { ...base, configVersion: 2, serverTime: new Date(T0 + 1).toISOString() };
+    bResponseEnvelope = await signFixtureBootstrap(fixture.backing, bResponsePayload);
+    return json(bResponseEnvelope);
   }, onStorageWrite: async (kind, values) => {
     if (kind === "local" && values[AUTH]?.authority?.workAllowed === true && values[AUTH].cacheClock.effectiveTimeMs === T0 + 100 && !held) { held = true; await new Promise(resolve => { releaseWrite = resolve; }); }
   } });
   try {
+    const expectedOwnedCredentials = clone(fixture.backing.local[AUTH].credentials);
     clock.wall = T0 + 100; clock.mono = 1100;
     const old = policy(fixture.worker, { detectedAi: CHATGPT }); old.catch(() => {});
     await until(() => held, "Q5-C held positive AUTH write");
@@ -829,8 +927,24 @@ for (const later of ["replacement", "forbidden"]) await namedCase("Q5-C-held-pos
     assert.equal(fixture.backing.local[AUTH].authority.payload.configVersion, 1);
     releaseWrite();
     await exactFailure(() => old, "CACHE_ACQUISITION_OBSOLETED", "Q5-C old");
-    if (later === "replacement") { await b; assert.equal(fixture.backing.local[AUTH].authority.payload.configVersion, 2); }
-    else { await exactFailure(() => b, "B_FORBIDDEN", "Q5-C B"); assert.equal(fixture.backing.local[AUTH].authority, null); }
+    if (later === "replacement") {
+      await b;
+      const bCommitted = clone(fixture.backing.local[AUTH]);
+      assert.deepEqual(bCommitted.authority.payload, bResponsePayload, "Q5-C durable B payload matches signed response");
+      assert.deepEqual(bCommitted.authority.envelope, bResponseEnvelope, "Q5-C durable B envelope matches signed response");
+      assert.deepEqual(bCommitted.credentials, expectedOwnedCredentials, "Q5-C B preserves owned credentials");
+      assert.ok(bCommitted.generation >= 1);
+      assert.ok(bCommitted.cacheClock.effectiveTimeMs >= T0 + 100);
+      assert.deepEqual(fixture.backing.local[AUTH], bCommitted, "Q5-C final replacement state is exact committed B");
+    } else {
+      await exactFailure(() => b, "B_FORBIDDEN", "Q5-C B");
+      const bDenied = clone(fixture.backing.local[AUTH]);
+      assert.equal(bDenied.authority, null);
+      assert.deepEqual(bDenied.credentials, expectedOwnedCredentials, "Q5-C denied B retains owned credentials");
+      assert.ok(bDenied.generation >= 1);
+      assert.ok(bDenied.cacheClock.effectiveTimeMs >= T0 + 100);
+      assert.deepEqual(fixture.backing.local[AUTH], bDenied, "Q5-C final denied state is exact committed B denial");
+    }
   } finally { releaseWrite?.(); fixture.worker.close(); }
 });
 
@@ -874,4 +988,4 @@ caseResults.push(
   { id: "Q7-no-offline-work-retained", status: "PASS", source: "retained-existing-case", failure_origin: null, actual_assertion: "stale cache does not authorize canWork/status/getAuthority" },
 );
 if (caseFailures.length) process.exitCode = 1;
-console.log(JSON.stringify({ status: caseFailures.length ? "FAIL" : "PASS", focused: "client-offline-policy", runtime: path.basename(runtime), cases: caseResults, retained_controls: { renewal: true, provider_replay: 0, offline_work: false }, groups: Object.fromEntries(["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7"].map(group => [group, caseResults.filter(row => row.id.startsWith(group + "-")).every(row => row.status === "PASS") ? "PASS" : "FAIL"]) ) }));
+console.log(JSON.stringify({ status: caseFailures.length ? "FAIL" : "PASS", focused: "client-offline-policy", runtime: path.basename(runtime), cases: caseResults, negative_controls: negativeControls, retained_controls: { renewal: true, provider_replay: 0, offline_work: false }, groups: Object.fromEntries(["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7"].map(group => [group, caseResults.filter(row => row.id.startsWith(group + "-")).every(row => row.status === "PASS") ? "PASS" : "FAIL"]) ) }));
