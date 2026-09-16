@@ -1,12 +1,33 @@
 # Wordstat Batch 01 — broad discovery
 
-Статус: **PREPARED / NOT EXECUTED**.
+Статус: **IN_PROGRESS — 2/15 SUCCESS, 0 FAIL**.
 Дата подготовки: 2026-09-16.
 Provider: Yandex Wordstat Bridge reference `1.1.5`.
 Method: `getTop`.
 Region: РФ `225`.
 Devices: `DEVICE_ALL`.
 `numPhrases`: `2000`.
+
+## Жёсткое правило сохранения результата
+
+После каждого provider response действует порядок:
+
+1. немедленно сохранить полный provider result и provenance в `docs/seo/wordstat/raw/`;
+2. убедиться, что GitHub write завершился успешно;
+3. обновить progress/worklog;
+4. только после этого анализировать результат и выдавать следующий Wordstat call.
+
+Нельзя держать единственную копию результата только в диалоге: связь может оборваться. Следующая provider-команда не выдаётся, пока предыдущий ответ не записан в репозиторий.
+
+## Текущий progress
+
+| Call | Seed | Status | Raw evidence |
+|---|---|---|---|
+| B01-01 | `ии для маркетплейсов` | SUCCESS | `raw/B01_01_2026-09-16.md` |
+| B01-02 | `нейросеть для маркетплейсов` | SUCCESS | `raw/B01_02_2026-09-16.md` |
+| B01-03 | `ии помощник селлера` | NEXT | — |
+
+Accumulated estimated provider cost after recorded success calls: `0.04 ₽`.
 
 ## Цель
 
