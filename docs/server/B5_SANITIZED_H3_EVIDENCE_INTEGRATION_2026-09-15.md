@@ -171,6 +171,35 @@ Full repository gates, exact corrected candidate SHA, exact-head Server CI, and
 remote readback are recorded in the terminal report after the final candidate
 is pushed. No live H3 acceptance is claimed.
 
+## Gate R1 — PostgreSQL integration-fixture isolation (2026-09-16)
+
+The exact-start RED reproduced the historical ordering defect on one
+task-owned PostgreSQL 18 database: adapter-registry `7/7` passed, then the
+unchanged H3 fixture failed in `beforeAll` with PostgreSQL `23505` on
+`ai_adapters_machine_key_unique` for `machine_key=chatgpt`; all six H3 cases
+were skipped. This RED is retained in the gate evidence and is not reclassified
+as a pass.
+
+The correction is limited to the two integration fixtures. After
+`runtime.ready()` and before their first fixture INSERT, each fixture now drops
+the task-owned `public` and `drizzle` schemas, recreates `public`, and invokes
+the existing migration runner. Runtime code, migrations, constraints, Health
+classification, fixture IDs/keys, assertions, and Vitest configuration remain
+unchanged. The H3 fixture imports `runMigrations` from `@product/db/migrations`;
+the DB fixture imports it from `./migrations.js`.
+
+The corrected focused H3 run passed `6/6` on a fresh task-owned database. The
+separate repeat matrix passed `7/7 → 6/6 → 21/21 → 6/6 → 21/21`, with every
+process exiting `0` and no skips. The full candidate integration composition
+passed `1514/1514` across `39` files, and the configured E2E composition passed
+`162/162`.
+
+This successful gate establishes fixture isolation only; it does not constitute
+architectural B5 acceptance. B5 remains `NOT ACCEPTED` pending independent
+architectural review. I1 C2.2-A remains open at its existing location because
+of the reserved `docs/README.md` PR9 conflict and missing current checks. No
+B6–B8, C2.2-B, or new architectural work is started.
+
 ## Boundary
 
 This document closes B5 only. B6 security/privacy/deterministic regression is

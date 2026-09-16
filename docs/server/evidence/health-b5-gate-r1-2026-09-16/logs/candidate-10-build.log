@@ -1,0 +1,125 @@
+
+> seller-agents@0.1.0 build /root/Seller_Agents
+> pnpm --filter @product/api build && pnpm --filter @product/worker build && pnpm --filter @product/health-runner build && pnpm --filter @product/portal build && pnpm --filter @product/admin build
+
+
+> @product/api@0.1.0 build /root/Seller_Agents/apps/api
+> tsup src/main.ts --format esm --target node24 --clean
+
+CLI Building entry: src/main.ts
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.0
+CLI Target: node24
+CLI Cleaning output folder
+ESM Build start
+ESM dist/main.js 123.50 KB
+ESM ⚡️ Build success in 67ms
+
+> @product/worker@0.1.0 build /root/Seller_Agents/apps/worker
+> tsup src/main.ts --format esm --target node24 --clean
+
+CLI Building entry: src/main.ts
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.0
+CLI Target: node24
+CLI Cleaning output folder
+ESM Build start
+ESM dist/main.js 7.07 KB
+ESM ⚡️ Build success in 32ms
+
+> @product/health-runner@0.1.0 build /root/Seller_Agents/apps/health-runner
+> tsup src/index.ts --format esm --target node24 --clean
+
+CLI Building entry: src/index.ts
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.0
+CLI Target: node24
+CLI Cleaning output folder
+ESM Build start
+ESM dist/index.js 119.56 KB
+ESM ⚡️ Build success in 50ms
+
+> @product/portal@0.1.0 build /root/Seller_Agents/apps/portal
+> next build
+
+   ▲ Next.js 15.5.21
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 2.5s
+   Linting and checking validity of types ...
+
+ ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config
+   Collecting page data ...
+   Generating static pages (0/8) ...
+   Generating static pages (2/8) 
+   Generating static pages (4/8) 
+   Generating static pages (6/8) 
+ ✓ Generating static pages (8/8)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                      131 B         102 kB
+├ ○ /_not-found                            985 B         103 kB
+├ ○ /activate                            1.52 kB         103 kB
+├ ƒ /api/control-plane/[...path]           131 B         102 kB
+├ ○ /billing                             1.37 kB         103 kB
+├ ○ /devices                             1.07 kB         103 kB
+└ ○ /login                               1.31 kB         103 kB
++ First Load JS shared by all             102 kB
+  ├ chunks/180-06a8942fb9f4420e.js       45.7 kB
+  ├ chunks/71bd89b6-b123fd411e845ad6.js  54.2 kB
+  └ other shared chunks (total)           1.9 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+> @product/admin@0.1.0 build /root/Seller_Agents/apps/admin
+> next build
+
+   ▲ Next.js 15.5.21
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 3.4s
+   Linting and checking validity of types ...
+
+ ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config
+   Collecting page data ...
+   Generating static pages (0/16) ...
+   Generating static pages (4/16) 
+   Generating static pages (8/16) 
+   Generating static pages (12/16) 
+ ✓ Generating static pages (16/16)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                      257 B         116 kB
+├ ○ /_not-found                            985 B         103 kB
+├ ○ /accounts                              257 B         116 kB
+├ ƒ /accounts/[accountId]                  257 B         116 kB
+├ ○ /ai/assignments                        219 B         123 kB
+├ ○ /ai/profiles                           217 B         123 kB
+├ ○ /ai/registry                           218 B         123 kB
+├ ƒ /api/control-plane/[...path]           123 B         102 kB
+├ ○ /audit                                 255 B         116 kB
+├ ○ /commercial/entitlements               259 B         116 kB
+├ ○ /commercial/plans                      255 B         116 kB
+├ ƒ /commercial/plans/[planId]             253 B         116 kB
+├ ○ /commercial/prices                     256 B         116 kB
+├ ƒ /commercial/prices/[priceId]           255 B         116 kB
+├ ○ /compatibility                         262 B         116 kB
+├ ○ /login                                 214 B         116 kB
+├ ○ /principals                            259 B         116 kB
+└ ○ /users                                 251 B         116 kB
++ First Load JS shared by all             102 kB
+  ├ chunks/180-06a8942fb9f4420e.js       45.7 kB
+  ├ chunks/71bd89b6-b123fd411e845ad6.js  54.2 kB
+  └ other shared chunks (total)          1.92 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

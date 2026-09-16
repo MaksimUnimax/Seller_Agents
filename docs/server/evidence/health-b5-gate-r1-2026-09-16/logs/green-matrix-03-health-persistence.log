@@ -1,0 +1,10 @@
+
+ RUN  v3.2.6 /root/Seller_Agents
+
+ ✓ packages/server/db/src/health-persistence.integration.test.ts (21 tests) 934ms
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  13:08:25
+   Duration  3.11s (transform 800ms, setup 0ms, collect 1.88s, tests 934ms, environment 0ms, prepare 97ms)
+

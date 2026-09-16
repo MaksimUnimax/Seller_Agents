@@ -1,0 +1,8 @@
+
+> seller-agents@0.1.0 openapi:check /root/Seller_Agents
+> pnpm --filter @product/api openapi:check
+
+
+> @product/api@0.1.0 openapi:check /root/Seller_Agents/apps/api
+> tsx src/openapi.ts check
+

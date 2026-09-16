@@ -1,0 +1,53 @@
+Installing dependencies...
+Hit:1 http://dl.google.com/linux/chrome/deb stable InRelease
+Hit:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease
+Hit:3 http://download.ispmanager.com/repo/ubuntu 6-5.369-jammy InRelease
+Hit:4 http://download.ispmanager.com/repo/ubuntu base-jammy InRelease
+Hit:5 http://ru.archive.ubuntu.com/ubuntu jammy InRelease
+Hit:6 http://download.ispmanager.com/repo/ubuntu 5.369-jammy InRelease
+Get:7 http://ru.archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+Hit:8 http://ru.archive.ubuntu.com/ubuntu jammy-backports InRelease
+Get:9 http://ru.archive.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+Get:10 http://ru.archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [3795 kB]
+Get:11 http://ru.archive.ubuntu.com/ubuntu jammy-security/main amd64 Packages [3526 kB]
+Fetched 7578 kB in 2s (3521 kB/s)
+Reading package lists...
+W: Download is performed unsandboxed as root as file '/var/lib/apt/lists/partial/ru.archive.ubuntu.com_ubuntu_dists_jammy_InRelease' couldn't be accessed by user '_apt'. - pkgAcquire::Run (13: Permission denied)
+Reading package lists...
+Building dependency tree...
+Reading state information...
+fonts-freefont-ttf is already the newest version (20120503-10build1).
+fonts-liberation is already the newest version (1:1.07.4-11).
+libatk-bridge2.0-0 is already the newest version (2.38.0-3).
+libatk1.0-0 is already the newest version (2.36.0-3build1).
+libatspi2.0-0 is already the newest version (2.44.0-3).
+libfontconfig1 is already the newest version (2.13.1-4.2ubuntu5).
+libxcb1 is already the newest version (1.14-3ubuntu3).
+libxcomposite1 is already the newest version (1:0.4.5-1build2).
+libxdamage1 is already the newest version (1:1.1.5-2build2).
+libxext6 is already the newest version (2:1.3.4-1build1).
+libxfixes3 is already the newest version (1:6.0.0-1).
+libxkbcommon0 is already the newest version (1.4.0-1).
+libxrandr2 is already the newest version (2:1.5.2-1build1).
+xfonts-scalable is already the newest version (1:1.0.3-1.2ubuntu1).
+fonts-ipafont-gothic is already the newest version (00303-21ubuntu1).
+fonts-tlwg-loma-otf is already the newest version (1:0.7.3-1).
+fonts-unifont is already the newest version (1:14.0.01-1).
+fonts-wqy-zenhei is already the newest version (0.9.45-8).
+xfonts-cyrillic is already the newest version (1:1.0.5).
+fonts-noto-color-emoji is already the newest version (2.047-0ubuntu0.22.04.1).
+libasound2 is already the newest version (1.2.6.1-1ubuntu1.2).
+libcairo2 is already the newest version (1.16.0-5ubuntu2.1).
+libcups2 is already the newest version (2.4.1op1-1ubuntu4.21).
+libdbus-1-3 is already the newest version (1.12.20-2ubuntu4.1).
+libdrm2 is already the newest version (2.4.113-2~ubuntu0.22.04.1).
+libfreetype6 is already the newest version (2.11.1+dfsg-1ubuntu0.3).
+libgbm1 is already the newest version (23.2.1-1ubuntu3.1~22.04.4).
+libglib2.0-0 is already the newest version (2.72.4-0ubuntu2.9).
+libnspr4 is already the newest version (2:4.35-0ubuntu0.22.04.1).
+libnss3 is already the newest version (2:3.98-0ubuntu0.22.04.4).
+libpango-1.0-0 is already the newest version (1.50.6+ds-2ubuntu1).
+libwayland-client0 is already the newest version (1.20.0-1ubuntu0.1).
+libx11-6 is already the newest version (2:1.7.5-1ubuntu0.3).
+xvfb is already the newest version (2:21.1.4-2ubuntu1.7~22.04.16).
+0 upgraded, 0 newly installed, 0 to remove and 137 not upgraded.

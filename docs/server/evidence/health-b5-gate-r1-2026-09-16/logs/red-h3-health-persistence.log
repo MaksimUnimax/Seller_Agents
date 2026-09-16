@@ -1,0 +1,32 @@
+
+ RUN  v3.2.6 /root/Seller_Agents
+
+ ❯ tests/integration/server/h3-health-persistence.integration.test.ts (6 tests | 6 skipped) 46ms
+   ↓ B5 durable Standard/Work H3 evidence > persists standard PASS with sanitized contour evidence
+   ↓ B5 durable Standard/Work H3 evidence > persists work PASS with sanitized contour evidence
+   ↓ B5 durable Standard/Work H3 evidence > persists standard post-Send FAIL without raw response/DOM
+   ↓ B5 durable Standard/Work H3 evidence > persists work post-Send FAIL without raw response/DOM
+   ↓ B5 durable Standard/Work H3 evidence > persists standard pre-Send UNCERTAIN as bounded environment state
+   ↓ B5 durable Standard/Work H3 evidence > persists work pre-Send UNCERTAIN as bounded environment state
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/server/h3-health-persistence.integration.test.ts > B5 durable Standard/Work H3 evidence
+error: duplicate key value violates unique constraint "ai_adapters_machine_key_unique"
+ ❯ node_modules/.pnpm/pg-pool@3.14.0_pg@8.16.3/node_modules/pg-pool/index.js:45:11
+ ❯ tests/integration/server/h3-health-persistence.integration.test.ts:244:5
+    242|   beforeAll(async () => {
+    243|     await runtime.ready();
+    244|     await runtime.query(
+       |     ^
+    245|       `INSERT INTO ai_adapters(id,machine_key,display_name) VALUES($1,…
+    246|       [IDS.adapter],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 skipped (6)
+   Start at  13:07:18
+   Duration  3.26s (transform 958ms, setup 0ms, collect 2.94s, tests 46ms, environment 0ms, prepare 91ms)
+

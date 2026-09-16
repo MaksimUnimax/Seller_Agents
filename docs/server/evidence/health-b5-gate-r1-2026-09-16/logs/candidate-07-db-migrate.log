@@ -1,0 +1,8 @@
+
+> seller-agents@0.1.0 db:migrate /root/Seller_Agents
+> pnpm --filter @product/db db:migrate
+
+
+> @product/db@0.1.0 db:migrate /root/Seller_Agents/packages/server/db
+> tsx src/migrate.ts
+

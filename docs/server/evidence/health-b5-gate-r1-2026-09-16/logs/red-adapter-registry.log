@@ -1,0 +1,10 @@
+
+ RUN  v3.2.6 /root/Seller_Agents
+
+ ✓ packages/server/db/src/adapter-registry.integration.test.ts (7 tests) 678ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  13:07:14
+   Duration  3.14s (transform 1.05s, setup 0ms, collect 2.17s, tests 678ms, environment 0ms, prepare 106ms)
+

@@ -1,0 +1,95 @@
+{
+  "task_id": "SA-HEALTH-B5-GATE-R1-20260916-01",
+  "repository": {
+    "name": "MaksimUnimax/runtime-fixtures",
+    "stable_id": "1369117174",
+    "branch": "feature/server-health-h3-p8-4",
+    "start_sha": "a80cd3706a10d25079fedb9553fc7f5b2fc21683",
+    "start_tree": "4569d243b0fedf239efaa36085375911b0507e82",
+    "start_parent": "3138966bb0d1cd66e060b43703169975f48e9265",
+    "code_test_sha": "3b3ba9f8cfdbb0fb431072029541f61c5863237e",
+    "code_test_tree": "aeef3c2bcb23aa0fb75ff1aac5666bacf748b765",
+    "latest_verified_main": "bc718cc5c677ad0eb4598e7de3ad766473ff0847",
+    "final_sha": "reported_after_evidence_publication",
+    "final_tree": "reported_after_evidence_publication"
+  },
+  "tool_versions": {
+    "node": "v24.20.0",
+    "pnpm": "10.34.5",
+    "vitest": "3.2.6",
+    "postgres": "18.0",
+    "playwright": "1.62.1"
+  },
+  "database": {
+    "ownership": "task-owned disposable databases only",
+    "host": "127.0.0.1",
+    "port": 55440,
+    "names": [
+      "health_b5_gate_r1_test",
+      "health_b5_gate_r1_h3_test",
+      "health_b5_gate_r1_matrix_test",
+      "health_b5_gate_r1_candidate_test"
+    ],
+    "secrets_logged": false,
+    "live_provider_calls": 0
+  },
+  "red": {
+    "adapter_registry": { "passed": 7, "skipped": 0, "exit": 0 },
+    "h3": {
+      "passed": 0,
+      "skipped": 6,
+      "exit": 1,
+      "postgres_code": "23505",
+      "constraint": "ai_adapters_machine_key_unique",
+      "machine_key": "chatgpt"
+    }
+  },
+  "green": {
+    "fresh_h3": { "passed": 6, "skipped": 0, "exit": 0 },
+    "repeat_matrix": [
+      { "file": "packages/server/db/src/adapter-registry.integration.test.ts", "passed": 7, "exit": 0 },
+      { "file": "tests/integration/server/h3-health-persistence.integration.test.ts", "passed": 6, "exit": 0 },
+      { "file": "packages/server/db/src/health-persistence.integration.test.ts", "passed": 21, "exit": 0 },
+      { "file": "tests/integration/server/h3-health-persistence.integration.test.ts", "passed": 6, "exit": 0 },
+      { "file": "packages/server/db/src/health-persistence.integration.test.ts", "passed": 21, "exit": 0 }
+    ],
+    "integration": { "files": 39, "passed": 1514, "skipped": 0, "exit": 0 },
+    "e2e": { "configured": 162, "passed": 162, "skipped": 0, "exit": 0 }
+  },
+  "gates": [
+    { "name": "lint", "command": "pnpm lint", "status": "PASS", "exit": 0 },
+    { "name": "format_check", "command": "pnpm format:check", "status": "PASS", "exit": 0 },
+    { "name": "typecheck", "command": "pnpm typecheck", "status": "PASS", "exit": 0 },
+    { "name": "playwright_config_regression", "command": "pnpm exec vitest run tests/e2e/server/playwright-config-regression.test.ts", "status": "PASS", "passed": 1, "exit": 0 },
+    { "name": "unit", "command": "pnpm test", "status": "PASS", "exit": 0, "no_test_packages": ["@product/admin-billing"] },
+    { "name": "integration", "command": "pnpm test:integration", "status": "PASS", "passed": 1514, "skipped": 0, "exit": 0 },
+    { "name": "db_migrate", "command": "pnpm db:migrate", "status": "PASS", "exit": 0 },
+    { "name": "openapi_check", "command": "pnpm openapi:check", "status": "PASS", "exit": 0 },
+    { "name": "bridge_guard", "command": "pnpm bridge:guard", "status": "PASS", "exit": 0 },
+    { "name": "build", "command": "pnpm build", "status": "PASS", "exit": 0 },
+    { "name": "chromium_install", "command": "pnpm exec playwright install --with-deps chromium", "status": "PASS", "exit": 0 },
+    { "name": "e2e", "command": "PRODUCT_CONTROL_PLANE_E2E=1 pnpm test:e2e", "status": "PASS", "passed": 162, "skipped": 0, "exit": 0 },
+    { "name": "docs_check", "command": "pnpm docs:check", "status": "PASS", "files": 403, "markdown_files": 221, "relative_links": 319, "requirements": 26, "acceptance_scenarios": 32, "exit": 0 }
+  ],
+  "changed_paths": [
+    "tests/integration/server/h3-health-persistence.integration.test.ts",
+    "packages/server/db/src/health-persistence.integration.test.ts",
+    "docs/server/B5_SANITIZED_H3_EVIDENCE_INTEGRATION_2026-09-15.md",
+    "docs/server/evidence/health-b5-gate-r1-2026-09-16/README.md",
+    "docs/server/evidence/health-b5-gate-r1-2026-09-16/results.json",
+    "docs/server/evidence/health-b5-gate-r1-2026-09-16/logs/"
+  ],
+  "acceptance": {
+    "b5": "NOT_ACCEPTED_PENDING_INDEPENDENT_ARCHITECT_REVIEW",
+    "i1_c2_2_a": "OPEN_PR9_RESERVED_DOCS_README_CONFLICT_AND_MISSING_CURRENT_CHECKS",
+    "b6_b8_started": false,
+    "c2_2_b_started": false,
+    "new_architecture_started": false,
+    "live_provider_calls": 0
+  },
+  "ci": {
+    "server": "reported_in_terminal_report_if_available",
+    "documentation": "reported_in_terminal_report_if_available",
+    "no_ci_retrigger_for_waiting": true
+  }
+}

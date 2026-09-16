@@ -1,0 +1,6 @@
+
+> seller-agents@0.1.0 format:check /root/Seller_Agents
+> prettier --check "{apps/api,apps/portal,apps/admin,apps/worker,apps/health-runner,packages/server,packages/contracts,packages/shared,tooling/server,infra/local,tests/integration/server}/**/*.{ts,tsx,js,mjs,cjs,json,css,scss,yml,yaml}" package.json pnpm-workspace.yaml tsconfig.base.json eslint.config.mjs .github/workflows/server-ci.yml
+
+Checking formatting...
+All matched files use Prettier code style!

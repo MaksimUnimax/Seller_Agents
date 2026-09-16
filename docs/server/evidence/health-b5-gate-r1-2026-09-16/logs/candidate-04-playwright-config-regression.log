@@ -1,0 +1,15 @@
+
+ RUN  v3.2.6 /root/Seller_Agents
+
+stdout | tests/e2e/server/playwright-config-regression.test.ts > keeps the shipped Playwright migration command at the workspace root
+PLAYWRIGHT_DB_MIGRATE_CWD_HAS_PACKAGE_MANIFEST = YES
+PLAYWRIGHT_DB_MIGRATE_SCRIPT_RESOLVES = YES
+TEMPORARY_CWD_CORRECTION_REQUIRED = NO
+
+ ✓ tests/e2e/server/playwright-config-regression.test.ts (1 test) 7ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  13:10:24
+   Duration  884ms (transform 74ms, setup 0ms, collect 563ms, tests 7ms, environment 0ms, prepare 105ms)
+

@@ -1,0 +1,5 @@
+
+> seller-agents@0.1.0 bridge:guard /root/Seller_Agents
+> node tooling/server/check-bridge-boundary.mjs
+
+Bridge boundary guard passed.

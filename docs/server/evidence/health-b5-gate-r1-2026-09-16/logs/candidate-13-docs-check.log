@@ -1,0 +1,6 @@
+
+> seller-agents@0.1.0 docs:check /root/Seller_Agents
+> node tooling/checks/docs-check.mjs
+
+Documentation check PASS: {"errors":[],"files":403,"markdownFiles":221,"relativeLinks":319,"requirements":26,"acceptanceScenarios":32}
+Scope: structure, relative file links and requirement coverage. No product tests executed.

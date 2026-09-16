@@ -1,0 +1,795 @@
+
+> seller-agents@0.1.0 test:e2e /root/Seller_Agents
+> PRODUCT_CONTROL_PLANE_E2E=1 playwright test --config tests/e2e/server/playwright.config.ts
+
+[WebServer] (node:528591) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:528604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:528617) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:528633) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:528633) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:528657) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:528669) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:528685) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:528685) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:528704) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:528716) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:528737) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:528766) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:528778) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:528799) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 162 tests using 1 worker
+
+(node:528878) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/162] tests/e2e/server/activation.spec.ts:7:5 › OTP browser smoke establishes strict portal cookies
+[WebServer] (node:528950) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:528961) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[2/162] tests/e2e/server/activation.spec.ts:16:5 › portal approval activates and refreshes a simulated extension
+[WebServer] (node:529000) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529008) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[3/162] tests/e2e/server/activation.spec.ts:43:5 › denial closes authorization without devices, sessions, or refresh credentials
+[WebServer] (node:529038) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[4/162] tests/e2e/server/activation.spec.ts:57:5 › limit reached authorization recovers after portal revocation
+[WebServer] (node:529077) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529101) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529119) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529137) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529148) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[5/162] tests/e2e/server/admin-ai.spec.ts:94:5 › owner sees all AI workspaces and support/billing permissions stay isolated
+[WebServer] (node:529158) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529196) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529204) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529217) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529225) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529237) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529253) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529261) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529297) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[6/162] tests/e2e/server/admin-ai.spec.ts:153:5 › owner completes registry, structured profile lifecycle, and assignment rollout UX
+[WebServer] (node:529307) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529337) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529345) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529354) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529373) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529386) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529394) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529403) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529413) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529421) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529431) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529450) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[7/162] tests/e2e/server/admin-ai.spec.ts:252:5 › stale registry review is invalidated without retry and logout remains safe
+[WebServer] (node:529482) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529491) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529500) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529508) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529517) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529525) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529534) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529543) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[8/162] tests/e2e/server/admin-safety.spec.ts:65:5 › shared mutation coordinator suppresses double confirmation before the first request resolves
+[WebServer] (node:529554) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529584) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[9/162] tests/e2e/server/admin-safety.spec.ts:102:5 › shared mutation coordinator suppresses keyboard/repeated activation and releases pending on error
+[WebServer] (node:529604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529639) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529647) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[10/162] tests/e2e/server/admin-safety.spec.ts:140:5 › stale mutation reloads the authoritative plan and requires a new review using R2
+[WebServer] (node:529655) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529687) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529696) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529705) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[11/162] tests/e2e/server/admin-safety.spec.ts:194:5 › draft entitlement follows the review lifecycle with zero pre-confirm writes
+[WebServer] (node:529735) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529743) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529753) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[12/162] tests/e2e/server/admin-safety.spec.ts:232:5 › entitlement override mutations use loaded revision, fail closed when missing, and use refreshed R8 after stale R7
+[WebServer] (node:529780) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529788) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529806) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529815) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529824) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529834) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529843) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[13/162] tests/e2e/server/admin-safety.spec.ts:348:5 › admin logout sends admin CSRF and invalidates the server session
+[WebServer] (node:529871) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[14/162] tests/e2e/server/admin.spec.ts:14:5 › admin OTP login and elevation use the dedicated admin origin
+[WebServer] (node:529879) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:529913) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[15/162] tests/e2e/server/admin.spec.ts:25:5 › non-admin OTP user is denied elevation
+[WebServer] (node:529938) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[16/162] tests/e2e/server/admin.spec.ts:39:5 › explicit admin logout returns to login and does not re-elevate
+[WebServer] (node:529966) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[17/162] tests/e2e/server/admin.spec.ts:52:5 › owner navigation is derived from server permissions
+[WebServer] (node:529998) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[18/162] tests/e2e/server/admin.spec.ts:73:5 › support navigation has lookup and operations without commercial mutation
+[WebServer] (node:530026) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[19/162] tests/e2e/server/admin.spec.ts:86:5 › billing readonly navigation excludes mutation controls
+[WebServer] (node:530065) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530075) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[20/162] tests/e2e/server/admin.spec.ts:103:5 › account lookup opens an operational workspace
+[WebServer] (node:530084) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530112) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[21/162] tests/e2e/server/admin.spec.ts:117:5 › device revoke is an explicit confirmed action
+[WebServer] (node:530121) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530129) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530159) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[22/162] tests/e2e/server/admin.spec.ts:125:5 › subscription grant form requires a published plan revision and reason
+[WebServer] (node:530179) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530212) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530220) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[23/162] tests/e2e/server/admin.spec.ts:136:5 › subscription extend uses loaded state revision
+[WebServer] (node:530230) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530258) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530266) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[24/162] tests/e2e/server/admin.spec.ts:146:5 › subscription suspend and restore controls are permission gated
+[WebServer] (node:530277) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530305) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530313) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[25/162] tests/e2e/server/admin.spec.ts:158:5 › billing safe reads exclude provider fields and expose pagination
+[WebServer] (node:530327) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530358) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530366) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[26/162] tests/e2e/server/admin.spec.ts:171:5 › entitlement override controls do not calculate effective precedence
+[WebServer] (node:530376) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530404) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530413) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[27/162] tests/e2e/server/admin.spec.ts:184:5 › principal creation exposes only accepted roles
+[WebServer] (node:530422) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530452) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[28/162] tests/e2e/server/admin.spec.ts:198:5 › role grant and revoke remain server-authorized
+[WebServer] (node:530464) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530495) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[29/162] tests/e2e/server/admin.spec.ts:208:5 › principal suspend and restore display optimistic revision
+[WebServer] (node:530503) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530531) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[30/162] tests/e2e/server/admin.spec.ts:220:5 › audit view uses the safe accepted projection
+[WebServer] (node:530541) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530574) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[31/162] tests/e2e/server/admin.spec.ts:229:5 › plan list uses the accepted commercial read
+[WebServer] (node:530583) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530612) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[32/162] tests/e2e/server/admin.spec.ts:237:5 › plan create is reasoned and confirmation-backed
+[WebServer] (node:530621) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530648) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[33/162] tests/e2e/server/admin.spec.ts:246:5 › plan detail reads current revision fingerprint
+[WebServer] (node:530658) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530697) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[34/162] tests/e2e/server/admin.spec.ts:261:5 › plan publish and entitlement removal require explicit high impact confirmation
+[WebServer] (node:530705) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530733) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530743) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[35/162] tests/e2e/server/admin.spec.ts:275:5 › price list and detail are separate operational pages
+[WebServer] (node:530753) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530784) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[36/162] tests/e2e/server/admin.spec.ts:285:5 › price publish and archive show safe confirmation targets
+[WebServer] (node:530792) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530820) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530829) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[37/162] tests/e2e/server/admin.spec.ts:299:5 › sale assignment has no mutation on dropdown or page load
+[WebServer] (node:530839) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530870) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[38/162] tests/e2e/server/admin.spec.ts:309:5 › entitlement definition page states packaged capability boundary
+[WebServer] (node:530884) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530912) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[39/162] tests/e2e/server/admin.spec.ts:323:5 › entitlement deprecation is presented as a confirmation action
+[WebServer] (node:530929) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530958) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[40/162] tests/e2e/server/admin.spec.ts:335:5 › compatibility publish shows revision-only non-activation warning
+[WebServer] (node:530966) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:530995) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[41/162] tests/e2e/server/admin.spec.ts:350:5 › permission loss after a forbidden read leaves a safe error state
+[WebServer] (node:531009) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531037) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531045) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[42/162] tests/e2e/server/admin.spec.ts:362:5 › stale-state copy instructs reload instead of replay
+[WebServer] (node:531053) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531083) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531091) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[43/162] tests/e2e/server/admin.spec.ts:374:5 › service failure UI has no raw upstream exception
+[WebServer] (node:531099) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531132) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[44/162] tests/e2e/server/admin.spec.ts:383:5 › admin layout remains keyboard-operable and responsive
+[WebServer] (node:531142) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531172) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[45/162] tests/e2e/server/bootstrap.spec.ts:105:5 › bootstrap rejects an unauthenticated HTTP request
+[46/162] tests/e2e/server/bootstrap.spec.ts:116:5 › bootstrap rejects a malformed authenticated request
+[WebServer] (node:531193) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[47/162] tests/e2e/server/bootstrap.spec.ts:128:5 › bootstrap rejects a body device that differs from the bearer principal
+[WebServer] (node:531213) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531234) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[48/162] tests/e2e/server/bootstrap.spec.ts:140:5 › bootstrap fails closed when no config is published
+[WebServer] (node:531257) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531279) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531302) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[49/162] tests/e2e/server/bootstrap.spec.ts:150:5 › bootstrap returns a cryptographically verified strict snapshot
+[WebServer] (node:531324) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531349) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[50/162] tests/e2e/server/bootstrap.spec.ts:181:5 › UPDATE_REQUIRED remains a signed successful bootstrap response
+[WebServer] (node:531374) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531431) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[51/162] tests/e2e/server/bootstrap.spec.ts:202:5 › packaged K1-only client verifies a K1 bootstrap
+[WebServer] (node:531454) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[52/162] tests/e2e/server/bootstrap.spec.ts:214:5 › overlap client verifies a bootstrap signed by newly active K2
+[WebServer] (node:531474) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531498) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531517) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[53/162] tests/e2e/server/bootstrap.spec.ts:228:5 › old K1-only client rejects a K2 bootstrap as UNKNOWN_SIGNING_KEY
+[WebServer] (node:531543) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531564) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[54/162] tests/e2e/server/bootstrap.spec.ts:243:5 › revoking the currently selected K1 makes the next bootstrap fail closed
+[WebServer] (node:531586) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531608) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[55/162] tests/e2e/server/bootstrap.spec.ts:262:5 › P3.6 uses a real signed fresh cache after bootstrap transport loss
+[WebServer] (node:531634) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[56/162] tests/e2e/server/bootstrap.spec.ts:288:5 › P3.6 permits a real signed cache during bounded offline grace
+[WebServer] (node:531654) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531674) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531695) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[57/162] tests/e2e/server/bootstrap.spec.ts:310:5 › P3.6 rejects a real cache exactly at offline grace end
+[WebServer] (node:531717) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[58/162] tests/e2e/server/bootstrap.spec.ts:331:5 › P3.6 rejects a tampered real cache while transport is unavailable
+[WebServer] (node:531736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531758) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[59/162] tests/e2e/server/bootstrap.spec.ts:359:5 › P3.6 invalidates the real device cache after online authorization denial
+[WebServer] (node:531779) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531801) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531823) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[60/162] tests/e2e/server/bootstrap.spec.ts:383:5 › P3.6 returns UPDATE_REQUIRED for signed live and cached policy
+[WebServer] (node:531835) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531868) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[61/162] tests/e2e/server/bootstrap.spec.ts:407:5 › P3.6 returns UNSUPPORTED_BROWSER for a signed real compatibility response
+[WebServer] (node:531889) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531912) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531931) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[62/162] tests/e2e/server/commercial.spec.ts:60:5 › billing redirects unauthenticated visitors to login with returnTo
+[63/162] tests/e2e/server/commercial.spec.ts:67:5 › billing provides the owned-account selector
+[WebServer] (node:531955) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:531976) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[64/162] tests/e2e/server/commercial.spec.ts:72:5 › billing displays an eligible subscription and exact plan
+[WebServer] (node:532003) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[65/162] tests/e2e/server/commercial.spec.ts:82:5 › billing displays an ineligible subscription without allowance
+[WebServer] (node:532031) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:532052) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[66/162] tests/e2e/server/commercial.spec.ts:95:5 › billing displays the commercial device allowance
+[WebServer] (node:532080) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:532102) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[67/162] tests/e2e/server/commercial.spec.ts:102:5 › billing displays safe payment history
+[WebServer] (node:532133) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:532154) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[68/162] tests/e2e/server/commercial.spec.ts:121:5 › billing supports a manual subscription without a price
+[WebServer] (node:532182) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:532204) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[69/162] tests/e2e/server/commercial.spec.ts:130:5 › billing purchase state is visibly unavailable and read-only
+[WebServer] (node:532230) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:532250) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[70/162] tests/e2e/server/health-h2.spec.ts:133:7 › P8.3 real Chromium loopback H2 › launches Chromium and observes the primary structural fixture
+[WebServer] (node:532276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[71/162] tests/e2e/server/health-h2.spec.ts:155:7 › P8.3 real Chromium loopback H2 › selects the approved fallback in deterministic order
+[72/162] tests/e2e/server/health-h2.spec.ts:173:7 › P8.3 real Chromium loopback H2 › reports a required structural miss without a final HealthState
+[73/162] tests/e2e/server/health-h2.spec.ts:191:7 › P8.3 real Chromium loopback H2 › maps a security checkpoint to environment uncertainty
+[74/162] tests/e2e/server/health-h2.spec.ts:207:7 › P8.3 real Chromium loopback H2 › rejects an unsafe top-level redirect
+[75/162] tests/e2e/server/health-h2.spec.ts:221:7 › P8.3 real Chromium loopback H2 › isolates cookies between separate ephemeral contexts
+[76/162] tests/e2e/server/health-h2.spec.ts:233:7 › P8.3 real Chromium loopback H2 › blocks an unapproved cross-origin popup before its document request
+[77/162] tests/e2e/server/health-h2.spec.ts:281:7 › P8.3 real Chromium loopback H2 › REDIRECT_301_PREBLOCKED
+[78/162] tests/e2e/server/health-h2.spec.ts:285:7 › P8.3 real Chromium loopback H2 › REDIRECT_302_PREBLOCKED
+[79/162] tests/e2e/server/health-h2.spec.ts:289:7 › P8.3 real Chromium loopback H2 › REDIRECT_303_PREBLOCKED
+[80/162] tests/e2e/server/health-h2.spec.ts:293:7 › P8.3 real Chromium loopback H2 › REDIRECT_307_PREBLOCKED
+[81/162] tests/e2e/server/health-h2.spec.ts:297:7 › P8.3 real Chromium loopback H2 › REDIRECT_308_PREBLOCKED
+[82/162] tests/e2e/server/health-h2.spec.ts:301:7 › P8.3 real Chromium loopback H2 › META_REFRESH_CROSS_ORIGIN_PREBLOCKED
+[83/162] tests/e2e/server/health-standard-h3.spec.ts:101:7 › B3 packaged ChatGPT Standard H3 › runs the real Standard strategy through the common B2 engine
+[84/162] tests/e2e/server/health-standard-h3.spec.ts:124:7 › B3 packaged ChatGPT Standard H3 › supports a fresh root with no pre-send conversation identity
+[85/162] tests/e2e/server/health-standard-h3.spec.ts:139:7 › B3 packaged ChatGPT Standard H3 › supports an existing bound conversation with stable identity
+[86/162] tests/e2e/server/health-standard-h3.spec.ts:153:7 › B3 packaged ChatGPT Standard H3 › bounds a fresh send when conversation identity never binds
+[87/162] tests/e2e/server/health-standard-h3.spec.ts:167:7 › B3 packaged ChatGPT Standard H3 › rejects a deterministic route/canonical identity conflict before Send
+[88/162] tests/e2e/server/health-standard-h3.spec.ts:174:7 › B3 packaged ChatGPT Standard H3 › fixture bookkeeping is irrelevant to production contour discovery
+[89/162] tests/e2e/server/health-standard-h3.spec.ts:188:7 › B3 packaged ChatGPT Standard H3 › fixture is built from the shipped Standard profile authority
+[90/162] tests/e2e/server/health-standard-h3.spec.ts:203:7 › B3 packaged ChatGPT Standard H3 › registers Standard only and rejects Work resolution
+[91/162] tests/e2e/server/health-standard-h3.spec.ts:231:7 › B3 packaged ChatGPT Standard H3 › does not confuse a visible Stop control with Send
+[92/162] tests/e2e/server/health-standard-h3.spec.ts:245:7 › B3 packaged ChatGPT Standard H3 › does not accept historical assistant content as the new response
+[93/162] tests/e2e/server/health-standard-h3.spec.ts:269:11 › B3 packaged ChatGPT Standard H3 › pre-send failures › WORK_SURFACE fails before physical Send
+[94/162] tests/e2e/server/health-standard-h3.spec.ts:269:11 › B3 packaged ChatGPT Standard H3 › pre-send failures › MISSING_SURFACE fails before physical Send
+[95/162] tests/e2e/server/health-standard-h3.spec.ts:269:11 › B3 packaged ChatGPT Standard H3 › pre-send failures › MISSING_COMPOSER fails before physical Send
+[96/162] tests/e2e/server/health-standard-h3.spec.ts:269:11 › B3 packaged ChatGPT Standard H3 › pre-send failures › AMBIGUOUS_COMPOSER fails before physical Send
+[97/162] tests/e2e/server/health-standard-h3.spec.ts:269:11 › B3 packaged ChatGPT Standard H3 › pre-send failures › DISABLED_INPUT fails before physical Send
+[98/162] tests/e2e/server/health-standard-h3.spec.ts:269:11 › B3 packaged ChatGPT Standard H3 › pre-send failures › MISSING_SEND fails before physical Send
+[99/162] tests/e2e/server/health-standard-h3.spec.ts:269:11 › B3 packaged ChatGPT Standard H3 › pre-send failures › SEND_AMBIGUOUS fails before physical Send
+[100/162] tests/e2e/server/health-standard-h3.spec.ts:282:11 › B3 packaged ChatGPT Standard H3 › environment blockers › LOGIN_EXPIRED is uncertain and cannot Send
+[101/162] tests/e2e/server/health-standard-h3.spec.ts:282:11 › B3 packaged ChatGPT Standard H3 › environment blockers › CAPTCHA_CHECKPOINT is uncertain and cannot Send
+[102/162] tests/e2e/server/health-standard-h3.spec.ts:282:11 › B3 packaged ChatGPT Standard H3 › environment blockers › VERIFICATION_CHECKPOINT is uncertain and cannot Send
+[103/162] tests/e2e/server/health-standard-h3.spec.ts:282:11 › B3 packaged ChatGPT Standard H3 › environment blockers › ACCOUNT_BLOCKED is uncertain and cannot Send
+[104/162] tests/e2e/server/health-standard-h3.spec.ts:311:11 › B3 packaged ChatGPT Standard H3 › post-send failures never retry › EXISTING_IDENTITY_CHANGES is bounded after one Send
+[105/162] tests/e2e/server/health-standard-h3.spec.ts:311:11 › B3 packaged ChatGPT Standard H3 › post-send failures never retry › FRESH_BOUND_IDENTITY_CHANGES is bounded after one Send
+[106/162] tests/e2e/server/health-standard-h3.spec.ts:338:11 › B3 packaged ChatGPT Standard H3 › post-send failures never retry › BUSY_TIMEOUT activates Send once
+[107/162] tests/e2e/server/health-standard-h3.spec.ts:338:11 › B3 packaged ChatGPT Standard H3 › post-send failures never retry › RESPONSE_MISSING activates Send once
+[108/162] tests/e2e/server/health-standard-h3.spec.ts:338:11 › B3 packaged ChatGPT Standard H3 › post-send failures never retry › COMPLETION_MISSING activates Send once
+[109/162] tests/e2e/server/health-standard-h3.spec.ts:338:11 › B3 packaged ChatGPT Standard H3 › post-send failures never retry › CODE_BLOCK_MISSING activates Send once
+[110/162] tests/e2e/server/health-standard-h3.spec.ts:338:11 › B3 packaged ChatGPT Standard H3 › post-send failures never retry › COPY_MISSING activates Send once
+[111/162] tests/e2e/server/health-standard-h3.spec.ts:338:11 › B3 packaged ChatGPT Standard H3 › post-send failures never retry › COPY_MISMATCHED activates Send once
+[112/162] tests/e2e/server/health-standard-h3.spec.ts:338:11 › B3 packaged ChatGPT Standard H3 › post-send failures never retry › CONVERSATION_CHANGED activates Send once
+[113/162] tests/e2e/server/health-standard-h3.spec.ts:338:11 › B3 packaged ChatGPT Standard H3 › post-send failures never retry › DELIVERY_MISSING activates Send once
+[114/162] tests/e2e/server/health-standard-h3.spec.ts:360:11 › B3 packaged ChatGPT Standard H3 › post-send failures never retry › RESPONSE_SELF_BUSY_STUCK fails at OBSERVE_COMPLETION without retry
+[115/162] tests/e2e/server/health-standard-h3.spec.ts:360:11 › B3 packaged ChatGPT Standard H3 › post-send failures never retry › STOP_CLEARS_BUT_OTHER_BUSY_REMAINS fails at OBSERVE_COMPLETION without retry
+[116/162] tests/e2e/server/health-standard-h3.spec.ts:360:11 › B3 packaged ChatGPT Standard H3 › post-send failures never retry › BUSY_CLEARS_BUT_STOP_REMAINS fails at OBSERVE_COMPLETION without retry
+[117/162] tests/e2e/server/health-standard-h3.spec.ts:360:11 › B3 packaged ChatGPT Standard H3 › post-send failures never retry › EMPTY_RESPONSE_AFTER_GENERATION fails at OBSERVE_COMPLETION without retry
+[118/162] tests/e2e/server/health-standard-h3.spec.ts:360:11 › B3 packaged ChatGPT Standard H3 › post-send failures never retry › IDENTITY_CHANGES_DURING_COMPLETION fails at OBSERVE_COMPLETION without retry
+[119/162] tests/e2e/server/health-work-h3.spec.ts:89:7 › B4 packaged ChatGPT Work H3 › runs Work through the single B2 engine with one physical Send
+[120/162] tests/e2e/server/health-work-h3.spec.ts:110:7 › B4 packaged ChatGPT Work H3 › keeps Send precedence when generation is already active
+[121/162] tests/e2e/server/health-work-h3.spec.ts:121:7 › B4 packaged ChatGPT Work H3 › accepts a semantic Work marker without header/banner markup
+[122/162] tests/e2e/server/health-work-h3.spec.ts:132:7 › B4 packaged ChatGPT Work H3 › does not let message text make a valid Work marker ambiguous
+[123/162] tests/e2e/server/health-work-h3.spec.ts:146:7 › B4 packaged ChatGPT Work H3 › accepts a mature code-local Copy control
+[124/162] tests/e2e/server/health-work-h3.spec.ts:157:7 › B4 packaged ChatGPT Work H3 › does not confuse the Stop state with Send
+[125/162] tests/e2e/server/health-work-h3.spec.ts:183:11 › B4 packaged ChatGPT Work H3 › surface and composer gates › MISSING_WORK_MARKER fails closed before Send
+[126/162] tests/e2e/server/health-work-h3.spec.ts:183:11 › B4 packaged ChatGPT Work H3 › surface and composer gates › WORK_MARKER_CONTENT_ONLY fails closed before Send
+[127/162] tests/e2e/server/health-work-h3.spec.ts:183:11 › B4 packaged ChatGPT Work H3 › surface and composer gates › AMBIGUOUS_WORK_MARKER fails closed before Send
+[128/162] tests/e2e/server/health-work-h3.spec.ts:183:11 › B4 packaged ChatGPT Work H3 › surface and composer gates › STANDARD_SURFACE fails closed before Send
+[129/162] tests/e2e/server/health-work-h3.spec.ts:183:11 › B4 packaged ChatGPT Work H3 › surface and composer gates › NO_ROUTE_SHAPE fails closed before Send
+[130/162] tests/e2e/server/health-work-h3.spec.ts:183:11 › B4 packaged ChatGPT Work H3 › surface and composer gates › ROUTE_CANONICAL_CONFLICT fails closed before Send
+[131/162] tests/e2e/server/health-work-h3.spec.ts:183:11 › B4 packaged ChatGPT Work H3 › surface and composer gates › MISSING_COMPOSER fails closed before Send
+[132/162] tests/e2e/server/health-work-h3.spec.ts:183:11 › B4 packaged ChatGPT Work H3 › surface and composer gates › AMBIGUOUS_COMPOSER fails closed before Send
+[133/162] tests/e2e/server/health-work-h3.spec.ts:183:11 › B4 packaged ChatGPT Work H3 › surface and composer gates › WRONG_COMPOSER_NAME fails closed before Send
+[134/162] tests/e2e/server/health-work-h3.spec.ts:183:11 › B4 packaged ChatGPT Work H3 › surface and composer gates › DISABLED_INPUT fails closed before Send
+[135/162] tests/e2e/server/health-work-h3.spec.ts:183:11 › B4 packaged ChatGPT Work H3 › surface and composer gates › MISSING_SEND fails closed before Send
+[136/162] tests/e2e/server/health-work-h3.spec.ts:183:11 › B4 packaged ChatGPT Work H3 › surface and composer gates › AMBIGUOUS_SEND fails closed before Send
+[137/162] tests/e2e/server/health-work-h3.spec.ts:189:7 › B4 packaged ChatGPT Work H3 › Work never falls back to Standard and Standard rejects Work
+[138/162] tests/e2e/server/health-work-h3.spec.ts:206:7 › B4 packaged ChatGPT Work H3 › Standard remains valid when Работа exists only in conversation content
+[139/162] tests/e2e/server/health-work-h3.spec.ts:241:11 › B4 packaged ChatGPT Work H3 › bounded post-Send failures never retry › BUSY_TIMEOUT has exactly one Send
+[140/162] tests/e2e/server/health-work-h3.spec.ts:241:11 › B4 packaged ChatGPT Work H3 › bounded post-Send failures never retry › RESPONSE_MISSING has exactly one Send
+[141/162] tests/e2e/server/health-work-h3.spec.ts:241:11 › B4 packaged ChatGPT Work H3 › bounded post-Send failures never retry › OLD_RESPONSE_ONLY has exactly one Send
+[142/162] tests/e2e/server/health-work-h3.spec.ts:241:11 › B4 packaged ChatGPT Work H3 › bounded post-Send failures never retry › COMPLETION_MISSING has exactly one Send
+[143/162] tests/e2e/server/health-work-h3.spec.ts:241:11 › B4 packaged ChatGPT Work H3 › bounded post-Send failures never retry › RESPONSE_SELF_BUSY_STUCK has exactly one Send
+[144/162] tests/e2e/server/health-work-h3.spec.ts:241:11 › B4 packaged ChatGPT Work H3 › bounded post-Send failures never retry › STOP_CLEARS_BUT_OTHER_BUSY_REMAINS has exactly one Send
+[145/162] tests/e2e/server/health-work-h3.spec.ts:241:11 › B4 packaged ChatGPT Work H3 › bounded post-Send failures never retry › BUSY_CLEARS_BUT_STOP_REMAINS has exactly one Send
+[146/162] tests/e2e/server/health-work-h3.spec.ts:241:11 › B4 packaged ChatGPT Work H3 › bounded post-Send failures never retry › EMPTY_RESPONSE_AFTER_GENERATION has exactly one Send
+[147/162] tests/e2e/server/health-work-h3.spec.ts:241:11 › B4 packaged ChatGPT Work H3 › bounded post-Send failures never retry › GENERATION_TEXT_IN_COMPLETED_RESPONSE has exactly one Send
+[148/162] tests/e2e/server/health-work-h3.spec.ts:241:11 › B4 packaged ChatGPT Work H3 › bounded post-Send failures never retry › PROJECT_ROUTE_MUTATION has exactly one Send
+[149/162] tests/e2e/server/health-work-h3.spec.ts:241:11 › B4 packaged ChatGPT Work H3 › bounded post-Send failures never retry › CONVERSATION_MUTATION has exactly one Send
+[150/162] tests/e2e/server/health-work-h3.spec.ts:241:11 › B4 packaged ChatGPT Work H3 › bounded post-Send failures never retry › CODE_BLOCK_MISSING has exactly one Send
+[151/162] tests/e2e/server/health-work-h3.spec.ts:241:11 › B4 packaged ChatGPT Work H3 › bounded post-Send failures never retry › NATIVE_COPY_MISSING has exactly one Send
+[152/162] tests/e2e/server/health-work-h3.spec.ts:241:11 › B4 packaged ChatGPT Work H3 › bounded post-Send failures never retry › NATIVE_COPY_MISMATCHED has exactly one Send
+[153/162] tests/e2e/server/health-work-h3.spec.ts:241:11 › B4 packaged ChatGPT Work H3 › bounded post-Send failures never retry › RESPONSE_COPY_ONLY_WITH_CODE has exactly one Send
+[154/162] tests/e2e/server/health-work-h3.spec.ts:241:11 › B4 packaged ChatGPT Work H3 › bounded post-Send failures never retry › TABLE_COPY_ONLY_WITH_CODE has exactly one Send
+[155/162] tests/e2e/server/health-work-h3.spec.ts:241:11 › B4 packaged ChatGPT Work H3 › bounded post-Send failures never retry › DELIVERY_MISSING has exactly one Send
+[156/162] tests/e2e/server/health-work-h3.spec.ts:265:11 › B4 packaged ChatGPT Work H3 › bounded environment blockers › LOGIN_EXPIRED is uncertain with no Send
+[157/162] tests/e2e/server/health-work-h3.spec.ts:265:11 › B4 packaged ChatGPT Work H3 › bounded environment blockers › CAPTCHA_CHECKPOINT is uncertain with no Send
+[158/162] tests/e2e/server/health-work-h3.spec.ts:265:11 › B4 packaged ChatGPT Work H3 › bounded environment blockers › VERIFICATION_CHECKPOINT is uncertain with no Send
+[159/162] tests/e2e/server/health-work-h3.spec.ts:265:11 › B4 packaged ChatGPT Work H3 › bounded environment blockers › ACCOUNT_BLOCKED is uncertain with no Send
+[160/162] tests/e2e/server/security.spec.ts:6:5 › unsafe return targets stay on the portal origin
+[WebServer] (node:537774) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:537786) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:537798) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:537807) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[161/162] tests/e2e/server/security.spec.ts:32:5 › activation leaves secrets out of browser URLs and storage
+[WebServer] (node:537833) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:537853) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[162/162] tests/e2e/server/security.spec.ts:51:5 › suspended accounts remain manageable but cannot approve
+[WebServer] (node:537878) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:537897) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:537908) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:537918) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+  162 passed (7.3m)

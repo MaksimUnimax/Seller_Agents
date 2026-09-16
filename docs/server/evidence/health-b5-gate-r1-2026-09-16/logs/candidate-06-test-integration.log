@@ -1,0 +1,79 @@
+
+> seller-agents@0.1.0 test:integration /root/Seller_Agents
+> vitest run --config tests/integration/server/vitest.config.ts
+
+
+ RUN  v3.2.6 /root/Seller_Agents
+
+ ✓ packages/server/db/src/p7.2-correction.integration.test.ts (10 tests) 14637ms
+   ✓ P7.2 correction permanent PostgreSQL coverage > rejects every non-DRAFT physical initial revision insert  567ms
+   ✓ P7.2 correction permanent PostgreSQL coverage > generates stable-scope seeds on the server and reuses the persisted seed for P3 selection  543ms
+   ✓ P7.2 correction permanent PostgreSQL coverage > rejects all combined DRAFT-to-CANDIDATE mutations  617ms
+   ✓ P7.2 correction permanent PostgreSQL coverage > rejects candidate self-rewrites and combined publish payload mutations  706ms
+   ✓ P7.2 correction permanent PostgreSQL coverage > normal candidate promotion rejects malformed and forged DRAFT rows  683ms
+   ✓ P7.2 correction permanent PostgreSQL coverage > rejects direct SQL non-published and cross-hierarchy assignment targets  770ms
+   ✓ P7.2 correction permanent PostgreSQL coverage > rejects every invalid assignment shape through direct SQL  717ms
+   ✓ P7.2 correction permanent PostgreSQL coverage > serializes retirement against every current-target assignment command with real transactions  6587ms
+   ✓ P7.2 correction permanent PostgreSQL coverage > proves both shared-lock winner orders and rolls back orphan scopes  1802ms
+   ✓ P7.2 correction permanent PostgreSQL coverage > allows retirement when a target is historical-only  1042ms
+{"level":50,"time":1789553489717,"pid":525264,"hostname":"Easyscript","reqId":"a53a1f7e-92c2-428b-96d9-9f8bbefdca07","err":{"type":"Error","message":"body/ recommended version precedes minimum","stack":"Error: body/ recommended version precedes minimum\n    at defaultSchemaErrorFormatter (/root/Seller_Agents/node_modules/.pnpm/fastify@5.8.5/node_modules/fastify/lib/context.js:95:10)\n    at wrapValidationError (/root/Seller_Agents/node_modules/.pnpm/fastify@5.8.5/node_modules/fastify/lib/validation.js:257:17)\n    at validate (/root/Seller_Agents/node_modules/.pnpm/fastify@5.8.5/node_modules/fastify/lib/validation.js:175:16)\n    at preValidationCallback (/root/Seller_Agents/node_modules/.pnpm/fastify@5.8.5/node_modules/fastify/lib/handle-request.js:94:25)\n    at handler (/root/Seller_Agents/node_modules/.pnpm/fastify@5.8.5/node_modules/fastify/lib/handle-request.js:78:7)\n    at onDone (/root/Seller_Agents/node_modules/.pnpm/fastify@5.8.5/node_modules/fastify/lib/content-type-parser.js:229:5)\n    at AsyncResource.runInAsyncScope (node:async_hooks:227:14)\n    at bound (node:async_hooks:258:16)\n    at Parser.defaultJsonParser [as fn] (/root/Seller_Agents/node_modules/.pnpm/fastify@5.8.5/node_modules/fastify/lib/content-type-parser.js:317:7)\n    at Request.onEnd (/root/Seller_Agents/node_modules/.pnpm/fastify@5.8.5/node_modules/fastify/lib/content-type-parser.js:299:27)","statusCode":400,"code":"FST_ERR_VALIDATION","validation":[{"keyword":"custom","instancePath":"/","schemaPath":"#//custom","message":"recommended version precedes minimum","params":{}}],"validationContext":"body"},"correlationId":"a53a1f7e-92c2-428b-96d9-9f8bbefdca07","msg":"Unhandled API error"}
+{"level":50,"time":1789553489868,"pid":525264,"hostname":"Easyscript","reqId":"4c7480b1-776c-4731-b387-e3619f572018","err":{"type":"Error","message":"body/ maintenance code invariant","stack":"Error: body/ maintenance code invariant\n    at defaultSchemaErrorFormatter (/root/Seller_Agents/node_modules/.pnpm/fastify@5.8.5/node_modules/fastify/lib/context.js:95:10)\n    at wrapValidationError (/root/Seller_Agents/node_modules/.pnpm/fastify@5.8.5/node_modules/fastify/lib/validation.js:257:17)\n    at validate (/root/Seller_Agents/node_modules/.pnpm/fastify@5.8.5/node_modules/fastify/lib/validation.js:175:16)\n    at preValidationCallback (/root/Seller_Agents/node_modules/.pnpm/fastify@5.8.5/node_modules/fastify/lib/handle-request.js:94:25)\n    at handler (/root/Seller_Agents/node_modules/.pnpm/fastify@5.8.5/node_modules/fastify/lib/handle-request.js:78:7)\n    at onDone (/root/Seller_Agents/node_modules/.pnpm/fastify@5.8.5/node_modules/fastify/lib/content-type-parser.js:229:5)\n    at AsyncResource.runInAsyncScope (node:async_hooks:227:14)\n    at bound (node:async_hooks:258:16)\n    at Parser.defaultJsonParser [as fn] (/root/Seller_Agents/node_modules/.pnpm/fastify@5.8.5/node_modules/fastify/lib/content-type-parser.js:317:7)\n    at Request.onEnd (/root/Seller_Agents/node_modules/.pnpm/fastify@5.8.5/node_modules/fastify/lib/content-type-parser.js:299:27)","statusCode":400,"code":"FST_ERR_VALIDATION","validation":[{"keyword":"custom","instancePath":"/","schemaPath":"#//custom","message":"maintenance code invariant","params":{}}],"validationContext":"body"},"correlationId":"4c7480b1-776c-4731-b387-e3619f572018","msg":"Unhandled API error"}
+ ✓ tests/integration/server/p6-4-admin-commercial.integration.test.ts (113 tests) 14079ms
+ ✓ tests/integration/server/p5-4-simulated-billing-events.integration.test.ts (116 tests) 10886ms
+ ✓ tests/integration/server/p5-6-commercial-production-integration.integration.test.ts (152 tests) 13661ms
+ ✓ tests/integration/server/p5-3-simulated-checkout.integration.test.ts (102 tests) 9120ms
+ ✓ tests/integration/server/p5-5-reconciliation-lifecycle.integration.test.ts (120 tests) 9350ms
+ ✓ tests/integration/server/p5-7-p5-final-acceptance.integration.test.ts (80 tests) 7554ms
+ ✓ tests/integration/server/p4-5-commercial-catalog.integration.test.ts (52 tests) 4804ms
+ ✓ tests/integration/server/p6-3-admin-billing.integration.test.ts (72 tests) 5444ms
+ ✓ tests/integration/server/p6-2-admin-operations.integration.test.ts (106 tests) 5364ms
+ ✓ tests/integration/server/p4-3-price-commands.integration.test.ts (52 tests) 4387ms
+ ✓ packages/server/db/src/p7.3-bootstrap-ai.integration.test.ts (6 tests) 3867ms
+   ✓ P7.3 bootstrap AI resolution with PostgreSQL > resolves Standard and Work independently, and uses exact then default precedence  805ms
+   ✓ P7.3 bootstrap AI resolution with PostgreSQL > uses the surface default when exact scope is absent or has no revision  702ms
+   ✓ P7.3 bootstrap AI resolution with PostgreSQL > returns safe unavailable states for unknown and disabled hierarchy or absent assignment  538ms
+   ✓ P7.3 bootstrap AI resolution with PostgreSQL > reuses P7.2 DIRECT, PAUSED and ROLLOUT selection with authenticated subject kind  588ms
+   ✓ P7.3 bootstrap AI resolution with PostgreSQL > returns PROFILE_INCOMPATIBLE for a valid profile outside request compatibility  586ms
+   ✓ P7.3 bootstrap AI resolution with PostgreSQL > proves one-statement coherence during a competing PostgreSQL mutation  618ms
+ ✓ tests/integration/server/p6-1-admin-security.integration.test.ts (77 tests) 4423ms
+ ✓ tests/integration/server/p5-1-subscription-billing-persistence.integration.test.ts (94 tests) 4111ms
+ ✓ tests/integration/server/p5-2-subscription-lifecycle.integration.test.ts (90 tests) 3815ms
+ ✓ tests/integration/server/p4-6-commercial-final-audit.integration.test.ts (38 tests) 3340ms
+ ✓ tests/integration/server/p4-4-entitlement-resolution.integration.test.ts (48 tests) 2494ms
+ ✓ tests/integration/server/p4-1-commercial-persistence.integration.test.ts (30 tests) 1937ms
+ ✓ tests/integration/server/p2-3-device-authorization.integration.test.ts (9 tests) 1149ms
+ ✓ packages/server/db/src/postgres.integration.test.ts (3 tests) 1140ms
+   ✓ P2.1 PostgreSQL persistence integration > migrates empty through P3.3, leaves no P1 probe, and is idempotent  496ms
+   ✓ P2.1 PostgreSQL persistence integration > migrates the accepted P1 state forward to P2.1  479ms
+ ✓ tests/integration/server/p3-5-signing-key-lifecycle.integration.test.ts (12 tests) 808ms
+ ✓ tests/integration/server/p2-auth.integration.test.ts (11 tests) 1165ms
+ ✓ tests/integration/server/p2-5-device-management.integration.test.ts (7 tests) 1163ms
+   ✓ P2.5 real PostgreSQL device-management A-J > I/J rate-limits every schema-valid request and persists only safe audit/pseudonymous data  479ms
+ ✓ packages/server/db/src/p7.4-admin-ai.integration.test.ts (6 tests) 1142ms
+ ✓ tests/integration/server/p3-4-bootstrap.integration.test.ts (9 tests) 1094ms
+ ✓ tests/integration/server/p4-2-plan-commands.integration.test.ts (21 tests) 1106ms
+ ✓ packages/server/db/src/health-persistence.integration.test.ts (21 tests) 895ms
+ ✓ tests/integration/server/p2-4-token-core.integration.test.ts (7 tests) 864ms
+ ✓ packages/server/db/src/p7-profile-lifecycle.integration.test.ts (2 tests) 1087ms
+ ✓ tests/integration/server/p3-3-resolution.integration.test.ts (7 tests) 633ms
+ ✓ tests/integration/server/h3-health-persistence.integration.test.ts (6 tests) 761ms
+ ✓ tests/integration/server/p3-3-config-source-validation.integration.test.ts (10 tests) 754ms
+ ✓ packages/server/db/src/adapter-registry.integration.test.ts (7 tests) 1012ms
+ ✓ tests/integration/server/p3-2-persistence.integration.test.ts (5 tests) 511ms
+ ✓ tests/integration/server/p3-3-publication.integration.test.ts (4 tests) 312ms
+ ✓ tests/integration/server/p3-3-catalog-corruption.integration.test.ts (4 tests) 281ms
+ ✓ tests/integration/server/p3-3-audit-rollback.integration.test.ts (3 tests) 277ms
+{"level":30,"time":1789553651665,"pid":526820,"hostname":"Easyscript","reqId":"73716a1e-9706-4daa-8d8e-a03c3399c028","req":{"method":"GET","url":"/health/ready","host":"localhost:80","remoteAddress":"[REDACTED]"},"msg":"incoming request"}
+{"level":30,"time":1789553651699,"pid":526820,"hostname":"Easyscript","reqId":"73716a1e-9706-4daa-8d8e-a03c3399c028","res":{"statusCode":200},"responseTime":32.23379302024841,"msg":"request completed"}
+{"level":30,"time":1789553651701,"pid":526820,"hostname":"Easyscript","reqId":"12c8e07e-592b-4e7e-8c63-b42f0d837d77","req":{"method":"GET","url":"/health/ready","host":"localhost:80","remoteAddress":"[REDACTED]"},"msg":"incoming request"}
+{"level":30,"time":1789553651703,"pid":526820,"hostname":"Easyscript","reqId":"12c8e07e-592b-4e7e-8c63-b42f0d837d77","res":{"statusCode":503},"responseTime":1.502600908279419,"msg":"request completed"}
+{"level":30,"time":1789553651704,"pid":526820,"hostname":"Easyscript","reqId":"ebe8d93e-b69a-489d-9f50-0ffb33f55758","req":{"method":"GET","url":"/health/live","host":"localhost:80","remoteAddress":"[REDACTED]"},"msg":"incoming request"}
+{"level":30,"time":1789553651705,"pid":526820,"hostname":"Easyscript","reqId":"ebe8d93e-b69a-489d-9f50-0ffb33f55758","res":{"statusCode":200},"responseTime":0.7192959785461426,"msg":"request completed"}
+ ✓ tests/integration/server/api-readiness.integration.test.ts (1 test) 193ms
+ ✓ tests/integration/server/p2-7-security-audit.integration.test.ts (1 test) 119ms
+
+ Test Files  39 passed (39)
+      Tests  1514 passed (1514)
+   Start at  13:10:59
+   Duration  193.31s (transform 2.22s, setup 0ms, collect 43.40s, tests 139.74s, environment 10ms, prepare 3.39s)
+

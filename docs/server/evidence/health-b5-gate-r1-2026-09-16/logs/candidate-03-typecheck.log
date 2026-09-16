@@ -1,0 +1,71 @@
+
+> seller-agents@0.1.0 typecheck /root/Seller_Agents
+> pnpm -r typecheck
+
+Scope: 33 of 34 workspace projects
+apps/admin typecheck$ tsc --noEmit
+apps/portal typecheck$ tsc --noEmit
+packages/server/extension-auth typecheck$ tsc --noEmit
+packages/server/observability typecheck$ tsc --noEmit
+packages/server/observability typecheck: Done
+packages/shared typecheck$ tsc --noEmit
+apps/portal typecheck: Done
+packages/server/extension-auth typecheck: Done
+apps/admin typecheck: Done
+packages/shared typecheck: Done
+packages/contracts typecheck$ tsc --noEmit
+packages/server/compatibility typecheck$ tsc --noEmit
+packages/server/device-auth typecheck$ tsc --noEmit
+packages/server/plans typecheck$ tsc --noEmit
+packages/server/device-auth typecheck: Done
+packages/server/compatibility typecheck: Done
+packages/server/plans typecheck: Done
+packages/contracts typecheck: Done
+packages/server/auth typecheck$ tsc --noEmit
+packages/server/entitlements typecheck$ tsc --noEmit
+packages/server/pricing typecheck$ tsc --noEmit
+packages/server/remote-config typecheck$ tsc --noEmit
+packages/server/auth typecheck: Done
+packages/server/subscriptions typecheck$ tsc --noEmit
+packages/server/entitlements typecheck: Done
+packages/server/pricing typecheck: Done
+packages/server/remote-config typecheck: Done
+packages/server/subscriptions typecheck: Done
+packages/server/adapter-registry typecheck$ tsc --noEmit
+packages/server/admin-auth typecheck$ tsc --noEmit
+packages/server/commercial-access typecheck$ tsc --noEmit
+packages/server/commercial-catalog typecheck$ tsc --noEmit
+packages/server/commercial-catalog typecheck: Done
+packages/server/email typecheck$ tsc --noEmit
+packages/server/admin-auth typecheck: Done
+packages/server/commercial-access typecheck: Done
+packages/server/adapter-registry typecheck: Done
+packages/server/email typecheck: Done
+packages/server/admin-ai typecheck$ tsc --noEmit
+packages/server/admin-commercial typecheck$ tsc --noEmit
+packages/server/admin-ops typecheck$ tsc --noEmit
+packages/server/billing typecheck$ tsc --noEmit
+packages/server/admin-commercial typecheck: Done
+packages/server/bootstrap typecheck$ tsc --noEmit
+packages/server/admin-ops typecheck: Done
+packages/server/device-management typecheck$ tsc --noEmit
+packages/server/billing typecheck: Done
+packages/server/health typecheck$ tsc --noEmit
+packages/server/admin-ai typecheck: Done
+.../server/simulated-extension-client typecheck$ tsc --noEmit
+packages/server/device-management typecheck: Done
+packages/server/bootstrap typecheck: Done
+packages/server/health typecheck: Done
+.../server/simulated-extension-client typecheck: Done
+apps/health-runner typecheck$ tsc --noEmit
+packages/server/admin-billing typecheck$ tsc --noEmit
+packages/server/billing-simulator typecheck$ tsc --noEmit
+packages/server/admin-billing typecheck: Done
+packages/server/billing-simulator typecheck: Done
+apps/health-runner typecheck: Done
+packages/server/db typecheck$ tsc --noEmit
+packages/server/db typecheck: Done
+apps/api typecheck$ tsc --noEmit
+apps/worker typecheck$ tsc --noEmit
+apps/worker typecheck: Done
+apps/api typecheck: Done
