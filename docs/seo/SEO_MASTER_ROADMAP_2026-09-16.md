@@ -4,9 +4,9 @@ Date: 2026-09-16.
 Status: **CURRENT EXECUTION AUTHORITY**.
 Branch: `seo/wordstat-batch-01-2026-09-16`.
 
-This roadmap supersedes the earlier coarse SEO-S0..S10 plan.
+This roadmap supersedes the earlier coarse `SEO_ROADMAP.md`.
 
-Mandatory companion process authorities:
+Mandatory companion authorities:
 
 - `EXECUTION_RULES.md`;
 - `WORK_HANDOFF_RULE.md`;
@@ -15,15 +15,15 @@ Mandatory companion process authorities:
 - `EXTERNAL_METHOD_RESEARCH_2026-09-16.md`;
 - `KW002_METHOD_AUDIT_2026-09-16.md`.
 
-No roadmap stage may bypass those rules.
+No stage may bypass those rules.
 
-## 0. End goal
+## End goal
 
 Deliver a complete production-ready organic-search product for **Octoport / Октопорт**:
 
 ```text
 truthful product scope
--> durable search evidence
+-> durable demand/search/competitor/Alice evidence
 -> governed semantic core
 -> intent/SERP clusters
 -> evidence-backed page architecture
@@ -33,14 +33,14 @@ truthful product scope
 -> Yandex Search + Alice AI + Google measurement loop
 ```
 
-The final product is not a keyword spreadsheet. It is a correctly structured, useful, technically sound, measurable website whose public promises match the real product.
+The final product is not a keyword spreadsheet. It is a correctly structured, useful, technically sound, measurable public site whose promises match the real product.
 
-## 1. Global execution order
+## Global execution order
 
 ```text
 COLLECT COMPLETE NEEDED EVIDENCE
 -> M7 COLLECTION FREEZE
--> HAND LARGE CROSS-SOURCE DATA TO CHATGPT WORK
+-> HAND LARGE FROZEN CROSS-SOURCE DATA TO CHATGPT WORK
 -> MAIN CHAT RETURN QA / ACCEPTANCE
 -> SEMANTIC MASTER
 -> CLUSTERING
@@ -53,116 +53,115 @@ COLLECT COMPLETE NEEDED EVIDENCE
 -> MEASUREMENT / ITERATION
 ```
 
-Owner instruction is explicit: **first collect and durably save the evidence needed for correct SEO/semantics/landings/optimization; then analyze and design the final architecture.**
+Owner instruction is explicit: first collect and durably save the evidence needed for correct semantics/landings/optimization; only after M7 design final semantic architecture.
 
-## 2. Large-data operating model
+## Large-data operating model
 
 ```text
 MAIN CHAT
-= collects evidence, controls method, writes provider commands, persists/readbacks evidence, writes Work prompts, QA's Work return
+= architect/controller
+= evidence collection and provider-command author
+= durable persistence/readback
+= exact Work prompt author
+= Work-return QA and acceptance
 
 CHATGPT WORK
-= complete large-data analysis/systematization/transformation/artifact creation under the exact frozen prompt
+= complete large-data analysis/systematization/transformation
+= full-volume joins/dedup/reconciliation/clustering/artifact generation
+= no independent method mutation
 ```
 
-When Work trigger conditions in `WORK_HANDOFF_RULE.md` are met, ordinary chat must not replace full-volume analysis with sampling or first-N rows.
+When the Work trigger in `WORK_HANDOFF_RULE.md` fires, sampling/first-N/truncation as a substitute is forbidden.
 
-Expected Work stages:
+Expected Work points:
 
-- `W1` after M7: full cross-source semantic master;
-- `W2` M9 when complete SERP-overlap/task clustering is large;
-- `W3` M11/M12 if query→page/coverage matrices become large;
-- additional earlier Work handoff if M3–M5 corpus grows beyond reliable complete ordinary-chat analysis.
+- `W1` after M7: complete cross-source semantic master;
+- `W2` M9: full SERP-overlap/task clustering if matrix size/complexity requires it;
+- `W3` M11/M12: query→page/coverage matrix if large;
+- `W4` final large workbook/report/artifact package if needed;
+- earlier Work may trigger in M3–M5 if the complete corpus becomes unsafe to analyze here without sampling.
 
-## 3. Global hard rules
+## Global hard rules
 
 1. `PRODUCT_TRUTH > SEO COPY`.
-2. `RAW/EXPORT -> DURABLE PERSIST -> REMOTE READBACK -> ANALYZE -> NEXT PROVIDER ACTION`.
+2. `FULL RESPONSE/EXPORT -> DURABLE PERSIST -> REMOTE READBACK -> ANALYZE -> NEXT PROVIDER ACTION`.
 3. No blind retry of paid/asynchronous provider actions.
 4. `DEMAND != INTENT`.
-5. `SEED != FINAL KEYWORD/CLUSTER/PAGE`.
+5. `SEED != FINAL KEYWORD/INTENT/CLUSTER/PAGE`.
 6. `QUERY != PAGE`.
 7. `SEARCH COMPETITOR != BUSINESS RIVAL`.
 8. `AMBIGUITY -> HOLD`.
 9. Mechanical accounting QA never replaces semantic QA.
-10. Search baseline is preserved before Alice reconciliation.
+10. Ordinary Search baseline remains independently recoverable before Alice reconciliation.
 11. No fake CREATE/thin/doorway pages.
-12. SEO stream changes only `docs/seo/**` until explicit implementation handoff.
-13. Fresh external method/provider research is required before every major stage.
-14. Every major stage receives quality scoring and hard-gate QA per `EXECUTION_RULES.md`.
-15. A later authority/evidence correction may invalidate dependent downstream PASS states.
+12. Fresh external method/provider research before each major stage.
+13. Every major stage gets hard-gate QA + ten-dimension quality scoring.
+14. Later evidence/authority correction may invalidate affected downstream PASS states.
+15. SEO stream changes only `docs/seo/**` until explicit implementation handoff.
 
 # M0 — Governance + product truth
 
-Status: `PASS`.
+Status: **PASS**.
 
-Freeze:
+Freeze brand/domain, current capabilities, Ozon/Wildberries scope, read-only launch promise, chosen external LLM model, credential/storage truth, beta/public availability, unsupported actions, evidence authorities and parallel-work isolation.
 
-- public brand/domain;
-- real launch capabilities;
-- Ozon/Wildberries boundary;
-- read-only launch promise;
-- chosen external LLM/web-AI model;
-- local credential/data-storage claims;
-- beta/public availability truth;
-- unsupported mutations/actions;
-- allowed evidence sources;
-- SEO/server/site isolation boundary.
+Output: `PRODUCT_TRUTH.md` and current authority chain.
 
-Output: `PRODUCT_TRUTH.md` + source/method authorities.
-
-Reopen only on explicit product truth change.
+Reopen only after explicit product/source change.
 
 # M1 — Current-site + measurement baseline
 
-Status: `OPEN / SOURCE BASELINE PARTIAL PASS`.
+Status: **OPEN / SOURCE BASELINE PARTIAL PASS**.
 
-Collect read-only current state:
+Collect read-only:
 
-- current public/source URLs;
+- current source/live URLs;
 - Title/H1/meta/canonical;
-- visible product claims;
+- visible claims;
 - robots/sitemap;
-- internal links/navigation;
+- links/navigation;
 - rendering/indexable content;
 - structured data;
-- live HTTP/redirect/indexability state;
-- Yandex Webmaster ownership/readiness;
-- Google Search Console ownership/readiness;
-- Metrika/approved conversion-measurement state;
-- current indexed/branded visibility if any.
+- HTTP/redirect/indexability state;
+- Yandex Webmaster readiness/ownership;
+- Google Search Console readiness/ownership;
+- Metrika/approved conversion measurement;
+- indexed/branded visibility baseline when available.
 
-Existing source baseline: `technical/CURRENT_SITE_BASELINE_2026-09-16.md`.
+Existing source authority: `technical/CURRENT_SITE_BASELINE_2026-09-16.md`.
 
-No site modifications in M1.
+No site edits in M1.
 
-# M2 — Demand acquisition / Wordstat baseline
+# M2 — Demand acquisition / Wordstat
 
-Status: `B01+B02 EXECUTED / RETROSPECTIVE KW002 GATE AUDIT OPEN`.
+Status: **PASS WITH EXPLICIT HISTORICAL PERSISTENCE LIMITATION**.
 
-Completed factual acquisition:
+Completed:
 
-- Wordstat Batch 01 broad discovery;
-- Wordstat Batch 02 targeted product-fit expansion.
+- B01 broad Wordstat discovery;
+- B02 targeted product-fit expansion;
+- strict retrospective seed/depth/persistence audit under transferred KW-002 gates.
 
-Do not launch another broad Wordstat batch by default.
+Authority: `wordstat/M2_WORDSTAT_RETRO_GATE_AUDIT_2026-09-16.md`.
 
-Before M7, mandatory retrospective migration under `STAGE_GATES_M0_M7.md`:
+Historical limitation:
 
-- seed/probe quality audit;
-- depth/coverage audit;
-- B01 raw-persistence inventory;
-- B02/full-envelope verification;
-- explicit evidence-limitations register;
-- decision whether any limitation actually requires new provider acquisition.
+- B01-01..14 retain durable factual result body + request/provenance but are structured transcriptions, not exact complete top-level bridge envelopes;
+- B01-15 is full-envelope evidence;
+- B02-01..15 were executed under the strict full-envelope + readback process.
 
-Important: earlier B01 evidence remains useful, but do not claim every pre-B01-15 file is an exact full envelope until verified.
+Current decision:
 
-Any new Wordstat acquisition must be named-gap/information-gain driven and pass current provider-depth + raw-persistence gates before execution.
+```text
+KNOWN CURRENT SEMANTIC BODY LOSS = 0 identified
+REPLAY B01-01..14 FOR WRAPPER FORM ONLY = NOT AUTHORIZED
+```
+
+New Wordstat acquisition is allowed only for a named evidence gap discovered later and requires a fresh information-gain/depth/persistence contract.
 
 # M3 — Ordinary Yandex SERP collection
 
-Status: `IN PROGRESS`.
+Status: **IN PROGRESS**.
 
 Authorities:
 
@@ -172,21 +171,29 @@ Authorities:
 
 Purpose:
 
-- determine real intent/page types;
-- discover recurring search competitors;
-- test marketplace-specific split;
+- determine current intent/result/page types;
+- find recurring search competitors;
+- test Ozon/WB split;
 - resolve category/agent/assistant/task/analytics/integration ambiguity;
-- discover new vocabulary only when it changes a decision.
+- expose genuinely new lexical gaps.
 
-Current S01 `ии агенты для маркетплейсов`:
+### Current S01
 
-- deferred Search completed successfully;
-- 20 normalized results;
-- normalized export authority saved;
-- exact source attachment hash-pinned and being durably archived;
-- S01 proves that marketplace AI-agent language has a real product/service/integration/information SERP, not only card-generation content.
+Query: `ии агенты для маркетплейсов`.
 
-Execution shape while current YMB popup/state/batch behavior is under repair:
+Closed facts:
+
+- deferred lifecycle completed;
+- provider operation collected successfully;
+- 20 normalized SERP rows;
+- source attachment `search-octoport-serp-s01-20260916-r5-0-0.json` hash-pinned (`SHA-256 6a669f140e0b1b0f4e697195d3eed74b44cab8139151970a7c1d3471c04566c6`);
+- complete normalized top-20 SEO authority persisted under `serp/exports/`;
+- exact-byte attachment remains original conversation/file evidence; if exact-byte Git publication becomes necessary, use native file/owner relay and remote readback — never giant model/base64 transport;
+- S01 demonstrates a real marketplace AI-agent SERP with product/service landings, integrations and informational/comparison sources, not only card-generation content.
+
+### Current execution shape
+
+Until the current YMB popup/state and batch-semantics repairs are independently accepted:
 
 ```text
 ONE QUERY JOB
@@ -196,144 +203,106 @@ ONE QUERY JOB
 -> persist/readback operation identity
 -> due collectN
 -> persist/readback
--> local export
--> persist/hash/readback
+-> export
+-> persist/hash/readback required evidence
 -> close query
 -> release next
 ```
 
-No burst/batch provider submissions merely for speed.
-
-M3 stops by information saturation, not arbitrary query count.
+M3 stops by information saturation, not query count.
 
 # M4 — Search competitor + landing corpus
 
-Status: `OPEN`.
+Status: **OPEN**.
 
-Build recurring competitor registry from M3 SERPs.
+Build the recurring competitor registry from M3, not from preselected business rivals.
 
-For materially recurring/relevant ranking pages capture:
+For materially recurring/relevant ranking pages preserve URL/query/rank lineage and collect:
 
-- URL/query/rank lineage;
-- page type and intent;
-- title/H1/category framing;
+- page type/intent;
+- Title/H1/category language;
 - marketplace/LLM specificity;
-- tasks/capabilities promised;
+- tasks/capabilities/promises;
 - read-only vs mutation/automation framing;
 - proof/trust/cases/screenshots/integrations;
-- pricing/beta/availability framing where public;
-- CTA pattern;
+- pricing/beta/availability where public;
+- CTA;
 - FAQ/subtopics;
-- freshness/author/expertise signals;
-- internal-link/content-hub pattern;
+- author/freshness/expertise signals;
+- internal-link/content-hub patterns;
 - observable structured-data/content architecture;
-- gaps/overlap against Octoport product truth.
+- gaps/overlap against Octoport truth.
 
-Competitor text is evidence, not copy source.
-
-If the page corpus becomes large enough that full comparison is unsafe here, trigger Work rather than sampling.
+Competitor content is evidence, not copy source. Large corpus -> Work, not sampling.
 
 # M5 — Alice AI / generative-search evidence
 
-Status: `OPEN / NOT STARTED`.
+Status: **OPEN / NOT STARTED**.
 
-Preserve ordinary Search baseline first.
+Select cases from M3/M4 while preserving Search-only baseline. Likely families include category definition/choice, Ozon, Wildberries, connection of AI/ChatGPT to store data, marketplace analytics/seller data, comparison, and security/API questions discovered by Search/competitors.
 
-Representative cases are selected from M3/M4 and should cover, where evidence warrants:
-
-- what an AI agent for marketplaces is;
-- which AI to use for marketplaces;
-- Ozon agent;
-- Wildberries agent;
-- connecting AI/ChatGPT to Ozon/WB/store data;
-- AI for marketplace analytics/seller data;
-- comparison/choice;
-- security/data/API questions surfaced by Search/competitors.
-
-For each case save:
+For every case preserve:
 
 - exact prompt/query/date;
-- complete allowed answer evidence;
+- allowed answer evidence;
 - cited source URLs/pages/domains;
 - follow-up/subquestion decomposition;
-- source/page type mix;
-- repeated entities/category terms;
-- contradictions/gaps;
-- variability/repeat-snapshot notes where useful.
+- product/article/source mix;
+- repeated entities/category language;
+- gaps/contradictions;
+- variability/repeat snapshots when material.
 
-Alice is evidence, not a deterministic ranking list.
-
-Post-launch, Yandex Webmaster Alice visibility/Share of Voice becomes the longitudinal measurement authority when available.
+Alice is not a deterministic ranking list. After launch, Yandex Webmaster Alice visibility/Share of Voice becomes longitudinal evidence when available.
 
 # M6 — Incremental gap acquisition
 
-Status: `BLOCKED ON M3–M5 EVIDENCE`.
+Status: **BLOCKED ON M3–M5**.
 
-Create one explicit gap register from Search, competitors and Alice.
+Create one explicit gap register. Every gap closes by existing evidence reuse, targeted Wordstat, targeted Search, targeted Alice, owner/product fact, or HOLD.
 
-Each gap is resolved through exactly one justified route:
-
-- existing evidence reuse;
-- targeted Wordstat;
-- targeted Search;
-- targeted Alice/AI-search;
-- owner/product fact;
-- HOLD.
-
-Every provider candidate must state:
+Every new provider candidate requires:
 
 ```text
-open question
+exact open question
 why existing evidence is insufficient
 expected information gain
-positive/valid-zero/failure/unknown meaning
+positive / valid-zero / failure / unknown meaning
 request/depth/cost/stop contract
 persistence/readback path
-what downstream decision uses it
+downstream decision using it
 ```
 
-No recursive related-query exploration without decision value.
+No recursive “related query” collection without decision value.
 
 # M7 — Collection Freeze
 
-Status: `BLOCKED`.
+Status: **BLOCKED**.
 
-This is the hard boundary requested by the owner: final semantic/page architecture does not begin until evidence is sufficient.
-
-Required gate:
+Final semantic/page architecture cannot begin until:
 
 ```text
 PRODUCT_SCOPE_CURRENT = PASS
-M1 BASELINE ENOUGH FOR LATER IMPLEMENTATION = PASS
-WORDSTAT SEED/DEPTH/PERSISTENCE RETRO AUDIT = PASS OR EXPLICIT ACCEPTED LIMITATION
+M1 BASELINE SUFFICIENT FOR IMPLEMENTATION = PASS
+M2 WORDSTAT RETRO GATE = PASS WITH ACCEPTED LIMITATION
 REPRESENTATIVE SERP MATRIX = COMPLETE FOR DECISIONS
 SEARCH COMPETITOR REGISTRY = STABLE ENOUGH
-RELEVANT COMPETITOR PAGE CORPUS = CAPTURED
+RELEVANT COMPETITOR CORPUS = CAPTURED
 ALICE CORE CASES = CAPTURED
 OPEN HIGH-VALUE ACQUISITION GAPS = 0
 OUTCOME_UNKNOWN PROVIDER ACTIONS = 0
-REQUIRED EVIDENCE DURABLE/READBACK = PASS
+DOWNSTREAM-REQUIRED EVIDENCE DURABLE/READBACK = PASS
 WORK W1 PRE-HANDOFF MANIFEST = READY
 ```
 
-Then set:
-
-`EVIDENCE_COLLECTION_COMPLETE = true`.
+Only then set `EVIDENCE_COLLECTION_COMPLETE = true` and release M8.
 
 # M8 — Full semantic master
 
-Status: `BLOCKED UNTIL M7`.
+Status: **BLOCKED UNTIL M7**.
 
-Default execution: `ChatGPT Work W1` under Main Chat canonical prompt.
+Default large-data execution: **ChatGPT Work W1** under an exact Main Chat prompt.
 
-Inputs:
-
-- complete authorized Wordstat evidence;
-- M3 SERPs;
-- M4 competitor corpus;
-- M5 Alice evidence;
-- product truth;
-- exclusion/HOLD boundaries.
+Inputs: all authorized Wordstat, Search, competitor, Alice and product-truth evidence.
 
 Outputs:
 
@@ -344,204 +313,108 @@ Outputs:
 - `BRAND_DEFENSE`;
 - raw→normalized→decision lineage;
 - reason-code accounting;
-- independent semantic QA / known-failure regression matrix.
+- known-failure regressions;
+- independent semantic QA.
 
-Rules:
+Rules: no substring-only destructive verdict, no frequency-only decision, no silent row loss, uncertainty remains explicit.
 
-- no substring-only destructive verdict;
-- no frequency-only KEEP/EXCLUDE;
-- no silent row loss;
-- all uncertainty explicit.
-
-Main Chat independently QA's Work return before M9.
+Main Chat performs return QA before M9.
 
 # M9 — SERP + user-task clustering
 
-Status: `BLOCKED`.
+Status: **BLOCKED**.
 
-Combine:
+Combine user task, product answer, current SERP URL/domain overlap, dominant page/content type, marketplace specificity, funnel stage and cannibalization risk.
 
-- user task;
-- product answer similarity;
-- ordinary Yandex SERP URL/domain overlap;
-- dominant content/page type;
-- marketplace specificity;
-- funnel stage;
-- cannibalization risk.
+Use Work W2 when full overlap/cluster matrix requires large-data processing.
 
-Use Work W2 if pairwise/full-matrix analysis is large.
-
-Output: cluster authority with explicit merge/split/HOLD rationale.
+Output: cluster authority + explicit merge/split/HOLD rationale.
 
 # M10 — Search vs Alice reconciliation
 
-Status: `BLOCKED`.
+Status: **BLOCKED**.
 
-For high-value clusters classify Alice effect as:
+For high-value clusters classify Alice effect as `CHANGE | ENRICH | DE-RISK | NO-CHANGE | HOLD`.
 
-```text
-CHANGE
-ENRICH
-DE-RISK
-NO-CHANGE
-HOLD
-```
+Determine whether the same commercial page needs richer explanatory/source-ready coverage, a supporting guide, clearer entity/API/security material, or no structural change.
 
-Ask whether Alice needs:
-
-- more complete explanatory blocks on the same commercial page;
-- a supporting guide;
-- clearer entity/API/security explanation;
-- no structural change.
-
-Do not create AI-only pages without evidence.
+No AI-specific page merely to manufacture AI value.
 
 # M11 — Page ownership + information architecture
 
-Status: `BLOCKED`.
+Status: **BLOCKED**.
 
-Assign one primary owner per cluster unless a split is explicitly justified.
+Assign one primary page owner per cluster unless evidence justifies a split.
 
-Possible page roles:
+Possible roles: HOME/category, Ozon, Wildberries, capability/use-case, LLM/integration, how-it-works/security/privacy/support, comparison/discovery guide, educational guide/article, brand/about/trust, or `NO_PAGE / COVER_ELSEWHERE / HOLD`.
 
-- HOME/category;
-- Ozon landing;
-- Wildberries landing;
-- capability/use-case;
-- LLM/integration;
-- how-it-works/security/privacy/support;
-- comparison/discovery guide;
-- educational guide/article;
-- brand/about/trust;
-- `NO_PAGE / COVER_ELSEWHERE / HOLD`.
-
-Physical action:
-
-```text
-KEEP
-OPTIMIZE
-CREATE
-ROUTE_INTERNAL_LINK
-RECHECK/HOLD
-```
+Physical action: `KEEP | OPTIMIZE | CREATE | ROUTE_INTERNAL_LINK | RECHECK/HOLD`.
 
 No fake CREATE.
 
 # M12 — Page specs + content system
 
-Status: `BLOCKED`.
+Status: **BLOCKED**.
 
-Every indexable target page gets:
+Each target page receives:
 
 - URL/page role;
 - primary query + observed demand;
-- secondary queries + individual observed metrics;
+- secondary queries + individual metrics;
 - intent/user job;
 - product promise boundary;
-- own coverage vs `covered_elsewhere`;
-- H1 and Title target state;
-- description guidance;
-- page angle and expected content type;
+- own coverage / `covered_elsewhere`;
+- H1/Title/description target state;
+- page angle/content type;
 - required semantic blocks;
-- product proof/demos/trust;
-- FAQ only when evidence supports real user need;
+- product proof/trust/demos;
+- evidence-based FAQ only;
 - internal links in/out;
-- canonical/indexing state;
+- canonical/indexing;
 - schema eligibility;
 - Alice/source-readiness requirements;
-- SEO priority with explicit basis;
+- SEO priority + basis;
 - implementation state.
 
-Every page must pass product-truth + Yandex EPOS usefulness/expertise/originality/completeness gate.
+Every target page must pass product truth + Yandex EPOS usefulness/expertise/originality/completeness gate.
 
 # M13 — Technical SEO specification
 
-Status: `READ-ONLY AUDIT ALLOWED / IMPLEMENTATION BLOCKED`.
+Status: **READ-ONLY AUDIT ALLOWED / IMPLEMENTATION BLOCKED**.
 
-Specify/verify:
-
-- canonical origin;
-- status codes/redirects;
-- robots;
-- sitemap;
-- `YandexAdditionalBot` policy for Alice visibility;
-- crawlable links/no orphans;
-- static/indexable primary content;
-- unique Title/H1/description boundaries;
-- canonical duplicates;
-- mobile usability;
-- performance/Core Web Vitals;
-- Open Graph;
-- truthful `SoftwareApplication` / `WebApplication` structured data where eligible;
-- no fake ratings/prices/availability;
-- Yandex + Google compatibility.
+Specify canonical origin, HTTP/redirect behavior, robots, sitemap, YandexAdditionalBot policy, crawlable links/no orphans, indexable primary content, unique Title/H1 boundaries, duplicate canonicalization, mobile/performance, Open Graph, truthful SoftwareApplication/WebApplication schema and Yandex+Google compatibility.
 
 # M14 — Bounded production implementation
 
-Status: `BLOCKED`.
+Status: **BLOCKED**.
 
-Only after M11–M13 acceptance does SEO issue a bounded site patch/handoff.
-
-The implementation task states:
-
-- exact URLs/files;
-- content/page specs;
-- technical requirements;
-- links/canonical/indexing;
-- acceptance tests;
-- explicit do-not-change boundary.
-
-Refresh current `main` and parallel site/server work before implementation. No blind merge.
+Only after M11–M13 acceptance. Refresh current main and parallel site/server work before patch. Handoff exact files/URLs, page specs, technical requirements, internal links, indexing/canonical states, tests and do-not-change boundary.
 
 # M15 — Source/pre-deploy/live QA
 
-Status: `BLOCKED`.
+Status: **BLOCKED**.
 
-Verify source and deployed behavior:
-
-- page content vs spec;
-- H1/Title/meta/canonical;
-- status codes/redirects;
-- robots/sitemap;
-- rendering;
-- crawlable internal links;
-- schema validity/truthfulness;
-- mobile/performance baseline;
-- no duplicate/thin/orphan target pages.
+Verify page/spec parity, Title/H1/meta/canonical, HTTP/redirects, robots/sitemap, rendering, crawlable links, schema truthfulness, mobile/performance and absence of duplicate/thin/orphan target pages.
 
 # M16 — Launch + indexing verification
 
-Status: `BLOCKED`.
+Status: **BLOCKED**.
 
-Verify production:
-
-- canonical URLs live;
-- robots/sitemap live;
-- Webmaster/GSC ownership;
-- index/discovery state;
-- crawl/coverage errors;
-- brand/non-brand baseline.
+Verify canonical URLs live, robots/sitemap live, Webmaster/GSC ownership, index/discovery state, crawl/coverage errors and brand/non-brand baseline.
 
 # M17 — Measurement + controlled iteration
 
-Status: `BLOCKED`.
+Status: **BLOCKED**.
 
-Track:
+Track Yandex queries/impressions/clicks/pages, Webmaster market/query data, Alice Share of Voice/source examples when available, Google Search Console, approved product conversions, and bounded recurring SERP controls.
 
-- Yandex impressions/clicks/queries/pages;
-- Webmaster query-selection/market data;
-- Alice AI Share of Voice/source examples when available;
-- Google Search Console;
-- approved product conversion signals;
-- selected recurring SERP checks for critical category queries.
-
-Every material optimization should record hypothesis → change → measured evidence.
+Material optimization records hypothesis → change → measured result.
 
 # M18 — Finished-product acceptance
 
-Status: `BLOCKED`.
+Status: **BLOCKED**.
 
-Initial SEO product is accepted when:
+Initial SEO product is complete when:
 
 ```text
 M0-M13 AUTHORITIES PASS
@@ -555,15 +428,15 @@ OWNER-FACING FINAL PACKAGE COMPLETE
 MEASUREMENT/REOPEN LOOP DOCUMENTED
 ```
 
-SEO remains measurable and reopenable after launch; “finished” means the launch product and control loop are complete, not that search demand can never change.
+“Finished” means the launch SEO product and measurement/reopen loop are complete, not that search demand can never change.
 
 ## Current cursor
 
 ```text
 M0 = PASS
 M1 = OPEN / SOURCE BASELINE PARTIAL PASS
-M2 = B01+B02 EXECUTED / RETRO GATE AUDIT OPEN
-M3 = IN PROGRESS / S01 CLOSED / S02 RELEASE PREPARED
+M2 = PASS WITH EXPLICIT HISTORICAL PERSISTENCE LIMITATION / NO REPLAY REQUIRED
+M3 = IN PROGRESS / S01 CLOSED / S02 RELEASED FOR LOCAL START
 M4 = OPEN
 M5 = NOT STARTED
 M6 = BLOCKED ON M3-M5
@@ -571,13 +444,15 @@ M7 = BLOCKED
 M8+ = BLOCKED UNTIL COLLECTION FREEZE
 ```
 
-Next physical execution sequence:
+## Next physical sequence
 
-1. finish durability/identity closure of S01 exact export archive;
-2. complete `M2_WORDSTAT_RETRO_GATE_AUDIT_2026-09-16.md` without provider replay by default;
-3. release S02 `ии агент для озон` under the M3 pre-step gate;
-4. continue representative SERP collection with persistence/readback after every lifecycle action;
-5. start recurring competitor registry once multiple query families are available;
-6. select and collect Alice cases;
-7. close gaps and freeze M7;
-8. hand the full frozen large evidence set to Work W1.
+1. execute S02 `ии агент для озон` as one bounded Deferred Search job;
+2. persist/readback every lifecycle response before the next action;
+3. continue M3 matrix while information gain remains;
+4. build recurring M4 competitor registry/corpus as multiple query families accumulate;
+5. select/collect M5 Alice cases;
+6. close M6 gaps;
+7. freeze M7;
+8. write exact W1 prompt and hand the complete frozen evidence corpus to ChatGPT Work;
+9. Main Chat QA/accepts Work semantic master;
+10. proceed M9–M18.
