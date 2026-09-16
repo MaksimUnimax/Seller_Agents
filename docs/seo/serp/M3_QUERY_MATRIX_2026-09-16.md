@@ -19,8 +19,8 @@ No blind retry and no parallel duplicate submission of the same query. Until the
 | ID | Query | Evidence purpose | Wordstat context | State |
 |---|---|---|---:|---|
 | S01 | `ии агенты для маркетплейсов` | prove/deny core AI-agent category and discover recurring SERP competitors/page types | 134 | `CLOSED / 20 RESULTS` |
-| S02 | `ии агент для озон` | test Ozon-specific commercial/product intent and whether Ozon warrants distinct ownership | 40 | `RELEASED` |
-| S03 | `ии агент для wildberries` | test WB-specific commercial/product intent and compare with Ozon | 20 | `QUEUED` |
+| S02 | `ии агент для озон` | test Ozon-specific commercial/product intent and whether Ozon warrants distinct ownership | 40 | `CLOSED / 20 RESULTS` |
+| S03 | `ии агент для wildberries` | test WB-specific commercial/product intent and compare with Ozon | 20 | `RELEASED` |
 | S04 | `какой ии для маркетплейсов` | comparison/discovery intent and expected page format | 128 | `QUEUED` |
 | S05 | `ии для работы с маркетплейсами` | broader task-oriented wording; resolve product vs education/training intent | 39 | `QUEUED` |
 | S06 | `ии для аналитики маркетплейсов` | AI analytics task wording | 15 | `QUEUED` |
@@ -35,6 +35,16 @@ No blind retry and no parallel duplicate submission of the same query. Until the
 | S15 | evidence-backed `подключить ИИ/ChatGPT к Ozon/WB` formulation | integration/natural-language-to-store-data job | not yet fixed | `CONDITIONAL AFTER S02/S03/M4` |
 | S16 | `нейросети для менеджеров маркетплейсов` | persona/tool vs course/training control | 19 | `CONDITIONAL` |
 | S17 | `нейросеть помощь для маркетплейсов` | explicit noise/control confirmation | 517, card/infographic-heavy Wordstat expansion | `OPTIONAL CONTROL` |
+
+## Evidence after S01 + S02
+
+- S01 confirms a real marketplace AI-agent category surface.
+- S02 confirms that Ozon-specific wording returns many dedicated Ozon documents/pages in addition to recurring generic category domains.
+- recurring domains after two query families include `berkuz.ru`, `jafo.ru`, `marketaut.ru`, `superintellect.ru`;
+- S02 introduces Ozon-specific integration/data/API vocabulary and dedicated Ozon URLs;
+- this is positive but still provisional evidence for an Ozon-specific Page Job.
+
+S03 is mandatory paired evidence before any Ozon-vs-Wildberries split conclusion.
 
 ## Release/stop logic
 
