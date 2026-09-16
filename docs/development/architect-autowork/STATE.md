@@ -1,5 +1,23 @@
 # Seller Agents — единый cursor
 
+Дата: 2026-09-16. Current: C2_1_ACCEPTED / C2_2A_R1_REWORK_REQUIRED / C2_2A_R2_PREPARED_FOR_SINGLE_FINAL_SUBMISSION.
+
+## Текущая точка
+- SA-I1-C2-2A-R1-20260916-01 terminal received and independently reviewed. Executor stopped per report. No other running executor confirmed; no direct Bridge/process visibility.
+- Branch integration/i1-c1-srv5-2026-09-16; head90f3f5ab4787d1ed4b782bff4f97181dd9fe3772/tree835ce56a1fd235196f7010936817485bf7347eb5; parent/code65596c5f1b5189c60de64d72a80773d43f1a203f; startec9c23da45091255e0ba53914b3682539ef0b797. PR9 draft/unmerged.
+- Verdict REWORK_REQUIRED: prescribed policy acceptance remains incomplete and broad R1 PASS unsupported. Production P1/P2 and final public fence independently verified corrected on exact clientblob5f6a195048e257304c16fb92a25c4ff772d98fe0. Next task tests/evidence only; runtime unchanged.
+- Review references/I1_C2_2A_R1_REVIEW.md; probes references/I1_C2_2A_R1_REVIEW_PROBE/; CI references/I1_C2_2A_R1_CI.json.
+- Current maincfd63e5c2227a52ccff6cbb5bb2da4580ec3bb3a. OWNER explicitly authorizes parallel Octoport/domain migration AND SEO. Preserve both. Extra32 paths in PR merge are site/SEO/ingress/docs, not client changes.
+- Tested PR merge0c66a4fc0d98a7702d28f3301af2aa97d8b07d2b/treeeb42f95e850fa0dd0b31643b23eb0f4d869da02e has current main+candidate parents; not candidate-identical tree.
+- I1run35069793516 client104708353296/installed104708353496 SUCCESS; native35069793510/job104708353281 SUCCESS source/extracted, completed logs read. Core/Ozon/WBnodes/Docs35069793460 SUCCESS. Server35069793457/job104708352831 and WBbrowser104708353036/104708342236 still running at snapshot; no all-green/rerun. Ready correction proceeds on incomplete acceptance, not waiting for CI.
+- Local default ZIP1834654/SHA2562c1f5765b0eb382d9387e3ea1a59e71bd549344f10c107a39069d92719f341de reported. Native CI log receipt1835439/d3aa2c954b483d6d7b22ddea5bd2e4d09e1adb91738c7e399c0d6f5afb5e5352 separately recorded; not independently downloaded.
+- Next SA-I1-C2-2A-R2-20260916-01 at tasks/I1_C2_2A_R2_2026-09-16.md prepared for ONE final submission. Saving is not delivery/start. After final await its actual terminal; no duplicate submission.
+- C1/SRV5/SYNC/C2.1 bounded acceptances retained. C2.2-A/full C2/I1/D2/S1.2/D3/beta/release open. Health P8.4B5 NOT ACCEPTED/B6–8 queued. No merge/deploy/release. Owner manual testing after joint installed C2 then Q1, not needed now.
+
+## Historical cursor — retained, not commands to repeat
+
+# Seller Agents — единый cursor
+
 Дата: 2026-09-16. Current: C2_1_ACCEPTED / C2_2A_REWORK_REQUIRED / C2_2A_R1_PREPARED_FOR_SINGLE_FINAL_SUBMISSION.
 
 ## Текущая точка

@@ -1,0 +1,9 @@
+{
+  "case": "final_public_cache_fence",
+  "outcome": {
+    "error": "CACHE_ACQUISITION_OBSOLETED"
+  },
+  "scheduled": true,
+  "calls": 2,
+  "authPresent": true
+}

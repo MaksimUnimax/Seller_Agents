@@ -1,0 +1,209 @@
+{
+  "candidate": "90f3f5ab4787d1ed4b782bff4f97181dd9fe3772",
+  "merge": {
+    "author": {
+      "date": "2026-09-16T07:41:09Z",
+      "email": "36834459+MaksimUnimax@users.noreply.github.com",
+      "name": "MaksimUnimax"
+    },
+    "committer": {
+      "date": "2026-09-16T07:41:09Z",
+      "email": "noreply@github.com",
+      "name": "GitHub"
+    },
+    "html_url": "https://github.com/MaksimUnimax/Seller_Agents/commit/0c66a4fc0d98a7702d28f3301af2aa97d8b07d2b",
+    "message": "Merge 90f3f5ab4787d1ed4b782bff4f97181dd9fe3772 into cfd63e5c2227a52ccff6cbb5bb2da4580ec3bb3a",
+    "node_id": "C_kwDOUZsR9toAKDBjNjZhNGZjMGQ5OGE3NzAyZDI4ZjMzMDFhZjJhYTk3ZDhiMDdkMmI",
+    "parents": [
+      {
+        "html_url": "https://github.com/MaksimUnimax/Seller_Agents/commit/cfd63e5c2227a52ccff6cbb5bb2da4580ec3bb3a",
+        "sha": "cfd63e5c2227a52ccff6cbb5bb2da4580ec3bb3a",
+        "url": "https://api.github.com/repos/MaksimUnimax/Seller_Agents/git/commits/cfd63e5c2227a52ccff6cbb5bb2da4580ec3bb3a"
+      },
+      {
+        "html_url": "https://github.com/MaksimUnimax/Seller_Agents/commit/90f3f5ab4787d1ed4b782bff4f97181dd9fe3772",
+        "sha": "90f3f5ab4787d1ed4b782bff4f97181dd9fe3772",
+        "url": "https://api.github.com/repos/MaksimUnimax/Seller_Agents/git/commits/90f3f5ab4787d1ed4b782bff4f97181dd9fe3772"
+      }
+    ],
+    "sha": "0c66a4fc0d98a7702d28f3301af2aa97d8b07d2b",
+    "tree": {
+      "sha": "eb42f95e850fa0dd0b31643b23eb0f4d869da02e",
+      "url": "https://api.github.com/repos/MaksimUnimax/Seller_Agents/git/trees/eb42f95e850fa0dd0b31643b23eb0f4d869da02e"
+    },
+    "url": "https://api.github.com/repos/MaksimUnimax/Seller_Agents/git/commits/0c66a4fc0d98a7702d28f3301af2aa97d8b07d2b",
+    "verification": {
+      "payload": "tree eb42f95e850fa0dd0b31643b23eb0f4d869da02e\nparent cfd63e5c2227a52ccff6cbb5bb2da4580ec3bb3a\nparent 90f3f5ab4787d1ed4b782bff4f97181dd9fe3772\nauthor MaksimUnimax <36834459+MaksimUnimax@users.noreply.github.com> 1789544469 +0000\ncommitter GitHub <noreply@github.com> 1789544469 +0000\n\nMerge 90f3f5ab4787d1ed4b782bff4f97181dd9fe3772 into cfd63e5c2227a52ccff6cbb5bb2da4580ec3bb3a\n",
+      "reason": "valid",
+      "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqqkgVCRC1aQ7uu5UhlAAAaWoQAG6PN2ebaSE3Za5YtxM1EfMV\nnJqQm9LKSQx+jCbpf/OSh4oyRyd6biYMxGOmTDXr7IJWiMuU1NW38IS7lTM2spig\nW04wkZfE8g72EaVUgNDS37jV0dDevPXP5ilJmTSOgs6s2NBrealTCBeHQnvmhMV4\nzHkq+OwQVeVRe64tQCLvHLmVwwKmtAP9fxyjZZL7M/asWv5BGAnxaFp+LG7HSyTg\n7I+fU11JqlTe/gX6F3i0mWnzW5tslUUbrT+morw9ezF9merdgmgm6AFQbArX+HLL\nM3eggRjqU75mJ++QSb4h+IuEp6XtJyAm/ClfOdZ1K/iBvPfVGO/1BDsLev53CUWm\nI0Wty29Dui1/CxYid+VkmhvR1rvFr5Zg/7xfwQeymNdUF/OT/aQ5uVqZcOlRgfCJ\n4XCVAyksHGJY+50/SbL3IZW2Cye/v8xtRmuKrmhpVYxqGu8P06jASq0V+Lrr8Syc\nFJTwTlifctWA0nNUrZO3aY2EEMGHYk1HMYV+e71qE6/Dqruv98QsodRNMqM1XjaX\n56Z9E4jtWB+5d8PoN70WZkK6kudXDPfu5qSSD6L0lYj9ARB5grFFduhve6BROEZq\nkFdJKII9qzqtwpXVui/i1E7BVpBUbk9Vz1QFuzWNJJ/6LBDoKYdgVlG2Dzg+Ycwt\nvnnOwI87KtEPIPMvl4/V\n=Ynrx\n-----END PGP SIGNATURE-----\n",
+      "verified": true,
+      "verified_at": "2026-09-16T07:41:10Z"
+    }
+  },
+  "additionalMainPaths": [
+    ".github/workflows/site-ci.yml",
+    ".github/workflows/site-deploy-ci.yml",
+    "apps/site/README.md",
+    "apps/site/public/index.html",
+    "apps/site/public/robots.txt",
+    "apps/site/public/sitemap.xml",
+    "apps/site/public/styles.css",
+    "docs/README.md",
+    "docs/decisions/DECISIONS.md",
+    "docs/development/WORKFLOW.md",
+    "docs/operations/OCTOPORT_DOMAIN_MIGRATION.md",
+    "docs/product/site/SITE_S1_DEPLOYMENT.md",
+    "docs/seo/METHODOLOGY.md",
+    "docs/seo/PRODUCT_TRUTH.md",
+    "docs/seo/README.md",
+    "docs/seo/SEED_UNIVERSE.md",
+    "docs/seo/SEO_ROADMAP.md",
+    "docs/seo/WORKLOG.md",
+    "docs/seo/technical/CURRENT_SITE_BASELINE_2026-09-16.md",
+    "docs/seo/wordstat/BATCH_01_BROAD_DISCOVERY.md",
+    "docs/server/DOMAIN_INGRESS_PLAN_2026-09-09.md",
+    "docs/server/DOMAIN_INGRESS_PLAN_2026-09-16.md",
+    "docs/server/OCTOPORT_DOMAIN_D2_ACCEPTANCE_2026-09-16.md",
+    "docs/server/README.md",
+    "infra/production/README.md",
+    "infra/production/nginx/octoport-bootstrap.conf",
+    "infra/production/nginx/octoport-predeploy.conf",
+    "infra/production/nginx/octoport-site.conf",
+    "infra/production/scripts/deploy-octoport-ingress.sh",
+    "infra/production/scripts/deploy-octoport-site.sh",
+    "infra/production/scripts/verify-octoport-ingress.sh",
+    "infra/production/scripts/verify-octoport-site.sh"
+  ],
+  "runs": [
+    {
+      "id": 35069793457,
+      "name": "Server CI",
+      "event": "pull_request",
+      "jobs": [
+        {
+          "id": 104708352831,
+          "name": "server",
+          "status": "in_progress",
+          "conclusion": null
+        }
+      ]
+    },
+    {
+      "id": 35069793510,
+      "name": "Extension CI",
+      "event": "pull_request",
+      "jobs": [
+        {
+          "id": 104708353036,
+          "name": "Baseline / wb-browsers",
+          "status": "in_progress",
+          "conclusion": null
+        },
+        {
+          "id": 104708353139,
+          "name": "Common core / source and package",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 104708353175,
+          "name": "Baseline / ozon",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 104708353271,
+          "name": "Baseline / wb-nodes",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 104708353281,
+          "name": "Common application / native Chromium fixture",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 35069793460,
+      "name": "Documentation CI",
+      "event": "pull_request",
+      "jobs": [
+        {
+          "id": 104708352933,
+          "name": "documentation",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 35069793516,
+      "name": "Extension I1-C1 client",
+      "event": "pull_request",
+      "jobs": [
+        {
+          "id": 104708353296,
+          "name": "client-i1",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 104708353496,
+          "name": "Installed local API / portal / PostgreSQL acceptance",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 35069790113,
+      "name": "Extension CI",
+      "event": "push",
+      "jobs": [
+        {
+          "id": 104708341960,
+          "name": "Common core / source and package",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 104708342168,
+          "name": "Common application / native Chromium fixture",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 104708342236,
+          "name": "Baseline / wb-browsers",
+          "status": "in_progress",
+          "conclusion": null
+        },
+        {
+          "id": 104708342273,
+          "name": "Baseline / wb-nodes",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 104708342290,
+          "name": "Baseline / ozon",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "logsRead": [
+    104708353281,
+    104708353496
+  ],
+  "allGreen": false,
+  "nativeReceipt": {
+    "bytes": 1835439,
+    "sha256": "d3aa2c954b483d6d7b22ddea5bd2e4d09e1adb91738c7e399c0d6f5afb5e5352",
+    "source": "completed native job log",
+    "independentlyDownloaded": false
+  }
+}

@@ -1,0 +1,15 @@
+import {fixture,open,AUTH} from './fixture.mjs';
+import fs from 'node:fs';
+const f=await fixture();f.suppressTimers=true;
+let requests=0;f.fetch=async()=>++requests===1?new Response(JSON.stringify({error:{code:'BOOTSTRAP_UNAVAILABLE'}}),{status:503}):new Promise(()=>{});
+const grace=Date.parse(f.backing.local[AUTH].authority.payload.offlineGraceUntil);f.backing.local[AUTH].credentials.accessTokenExpiresAt=new Date(grace+3600000).toISOString();
+const call=await open(f);f.clock.wall=grace;f.clock.mono+=100;
+let writes=0,release;f.writeHook=async()=>{if(++writes===2)await new Promise(r=>release=r);};
+const old=call('bootstrapWithPolicy',{detectedAi:{family:'chatgpt',surface:'web',variant:null}}).then(r=>({source:r.source}),e=>({error:e.code||e.message}));
+for(let i=0;!release&&i<1000;i++)await new Promise(r=>setImmediate(r));
+if(!release)throw Error('denial write not reached');
+const newer=call('bootstrap',{detectedAi:{family:'chatgpt',surface:'web',variant:null}});newer.catch(()=>{});
+for(let i=0;requests<2&&i<1000;i++)await new Promise(r=>setImmediate(r));
+release();const outcome=await old;
+const result={case:'superseded_after_successful_denial_write',outcome,writes,removeAttempts:f.removes||0,durableAuthPresent:Boolean(f.backing.local[AUTH]),requests,storageActuallyFailed:false};
+fs.writeFileSync(new URL('./denial-result.json',import.meta.url),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result,null,2));

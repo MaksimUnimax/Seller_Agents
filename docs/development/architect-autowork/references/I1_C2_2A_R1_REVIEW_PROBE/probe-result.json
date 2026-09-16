@@ -1,0 +1,10 @@
+{
+  "case": "refresh503_must_not_be_bootstrap503",
+  "outcome": {
+    "error": "BOOTSTRAP_UNAVAILABLE"
+  },
+  "paths": [
+    "/v1/auth/refresh"
+  ],
+  "clientGitBlob": "5f6a195048e257304c16fb92a25c4ff772d98fe0"
+}

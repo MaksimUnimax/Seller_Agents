@@ -1,0 +1,11 @@
+{
+  "case": "superseded_after_successful_denial_write",
+  "outcome": {
+    "error": "CACHE_ACQUISITION_OBSOLETED"
+  },
+  "writes": 2,
+  "removeAttempts": 0,
+  "durableAuthPresent": true,
+  "requests": 2,
+  "storageActuallyFailed": false
+}
