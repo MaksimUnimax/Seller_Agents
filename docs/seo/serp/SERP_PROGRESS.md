@@ -2,7 +2,7 @@
 
 Дата: 2026-09-16.
 Branch: `seo/wordstat-batch-01-2026-09-16`.
-Status: `S02_WAITING__EARLY_COLLECT_GUARDED`.
+Status: `S02_COLLECTED__READY_EXPORT_S02`.
 Master authority: `../SEO_MASTER_ROADMAP_2026-09-16.md`.
 
 ## Evidence rule
@@ -16,7 +16,7 @@ For every bridge/provider response:
 5. update progress;
 6. only then release the next provider action/query.
 
-Local admission errors, local `start`, and local due-time guards with `request_executed:false` do not count as provider calls.
+Local admission errors, local `start`, local due-time guards and local export actions with `request_executed:false` do not count as Search provider calls.
 
 ## Isolation
 
@@ -49,54 +49,55 @@ Purpose: test whether Ozon-specific wording has distinct commercial/product inte
 | S02-01 | `start` | `START_ACCEPTED_PENDING` | `false` | `raw/S02_01_START_2026-09-16.md` |
 | S02-02 | `submitN` | `ACCEPTED_WAITING` | `true` | `raw/S02_02_SUBMIT_2026-09-16.md` |
 | S02-03 | `collectN` | `NO_DUE_OPERATIONS` | `false` | `raw/S02_03_COLLECT_NOT_DUE_2026-09-16.md` |
+| S02-04 | `collectN` | `SUCCEEDED` | `true` | `raw/S02_04_COLLECT_SUCCEEDED_2026-09-16.md` |
 
 ### Current state
 
 - job id: `octoport-serp-s02-20260916`;
-- accepted operation id: `sproisueh6ivih75sbu9`;
+- accepted/collected operation id: `sproisueh6ivih75sbu9`;
 - control: `RUNNING`;
 - total items: `1`;
 - `PENDING:0`;
-- `WAITING:1`;
+- `WAITING:0`;
+- `SUCCEEDED:1`;
+- `PARSE_FAILED:0`;
+- `FAILED:0`;
+- `UNKNOWN:0`;
 - requests started: `1`;
 - operations accepted: `1`;
-- polls started: `0`;
-- unresolved: `1`;
-- all successful: `false`;
-- revision: `2`;
+- polls started: `1`;
+- unresolved: `0`;
+- all successful: `true`;
+- revision: `5`;
 - provider submissions for S02: `1`;
-- provider-backed collects for S02: `0`;
+- provider-backed collects for S02: `1`;
 - local not-due collect guards for S02: `1`.
 
-### Interpretation of S02-03
+### Interpretation
 
-`S02-03` was local-only:
+The S02 deferred Search operation completed successfully and was normalized by the Bridge. `normalized:1` is an item count, not the number of organic SERP rows. The lifecycle envelope contains no URLs/titles/snippets, so S02 intent/competitor analysis remains blocked until export.
 
-- `request_executed:false`;
-- `provider_calls:0`;
-- `last.code:NO_DUE_OPERATIONS`.
-
-It is not a failed provider request, not a zero-result observation and not permission to resubmit. `normalized:0` means no result was collected in this local guard step; it does not mean Yandex returned zero SERP rows.
+No additional `start`, `submitN` or `collectN` is allowed for the completed item.
 
 ### Next allowed action
 
-After more waiting, exactly one:
+Exactly one local export:
 
-`SEARCH_ASYNC_BATCH_API_V1 {"action":"collectN","jobId":"octoport-serp-s02-20260916","count":1}`
+`SEARCH_ASYNC_BATCH_API_V1 {"action":"exportPage","jobId":"octoport-serp-s02-20260916","after":-1,"limit":1,"revision":5}`
 
-Do not issue another `start` or `submitN` for S02. If another local `NO_DUE_OPERATIONS` appears, preserve/read back it and wait again. If provider-backed collection succeeds, preserve/read back before export.
+The export must be persisted/hash-pinned and validated before S02 is considered evidence-closed or S03 is released.
 
 ## Current totals
 
 - completed/exported M3 queries: `1`;
-- active M3 queries: `1`;
+- provider-completed but not yet exported M3 queries: `1` (`S02`);
 - successful provider submissions: `2` total (`S01` + `S02`);
-- successful provider-backed collects: `1` total (`S01`);
+- successful provider-backed collects: `2` total (`S01` + `S02`);
 - local admission failures: `2`;
 - local not-due guards: `2` total (`S01` + `S02`);
 - provider failures: `0`;
 - current master stage: `M3 Ordinary Yandex SERP collection`;
-- next action: same S02 `collectN count=1` later; no resubmit.
+- next action: local `S02 exportPage`, revision `5`.
 
 ## Bridge/UI observation
 
