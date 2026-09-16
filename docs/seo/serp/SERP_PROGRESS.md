@@ -2,7 +2,7 @@
 
 Дата: 2026-09-16.
 Branch: `seo/wordstat-batch-01-2026-09-16`.
-Status: `RETRY_READY_USER_REPORTS_SEARCH_SELECTED`.
+Status: `READY_SUBMIT_S01`.
 
 ## Evidence rule
 
@@ -40,6 +40,19 @@ Optional control after priorities: `нейросеть помощь для ма�
 |---|---|---|---|---|---|---|
 | S01-01 | ии агенты для маркетплейсов | `MANUAL_ADMISSION` | `SERVICE_NOT_ACTIVE` | `false` | `raw/S01_01_ADMISSION_ERROR_2026-09-16.md` | `analysis/S01_01_ADMISSION_ERROR_2026-09-16.md` |
 | S01-02 | ии агенты для маркетплейсов | `MANUAL_ADMISSION` | `SERVICE_NOT_ACTIVE` | `false` | `raw/S01_02_ADMISSION_ERROR_2026-09-16.md` | `analysis/S01_02_ADMISSION_ERROR_2026-09-16.md` |
+| S01-03 | ии агенты для маркетплейсов | `start` | `START_ACCEPTED_PENDING` | `false` | `raw/S01_03_START_2026-09-16.md` | `analysis/S01_03_START_2026-09-16.md` |
+
+## Current job state
+
+- job id: `octoport-serp-s01-20260916`;
+- control: `RUNNING`;
+- total items: `1`;
+- `PENDING: 1`;
+- requests started: `0`;
+- operations accepted: `0`;
+- provider calls: `0`;
+- unresolved: `1`;
+- revision: `0`.
 
 ## Totals
 
@@ -49,7 +62,5 @@ Optional control after priorities: `нейросеть помощь для ма�
 - provider failures: `0`;
 - Search provider cost incurred in this pass: `0 ₽`;
 - current query: `ии агенты для маркетплейсов`;
-- previous blocker: bridge reported active service `wordstat` on S01-02;
-- user now reports active service has been changed to Search;
-- next action: repeat the same deferred Search `start` exactly once;
-- after successful `start`: persist and verify the returned envelope before issuing any `submitN`.
+- next lifecycle action: exactly one `submitN` with `count: 1` for the current job;
+- after `submitN`: persist and verify its full returned envelope before any `collectN`.
