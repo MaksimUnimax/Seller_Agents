@@ -37,13 +37,14 @@ SEO work remains isolated from parallel server development:
 | B02-05 | ии ассистент для маркетплейсов | SUCCESS | 13 | `wordstat-57120cb9-82d5-417a-a541-78a8cdde3ca8` | `raw/B02_05_2026-09-16.md` | `analysis/B02_05_2026-09-16.md` |
 | B02-06 | нейросети для менеджеров маркетплейсов | SUCCESS | 19 | `wordstat-03995393-bb9c-4518-8a56-ea923d78a3b9` | `raw/B02_06_2026-09-16.md` | `analysis/B02_06_2026-09-16.md` |
 | B02-07 | ии агент для озон | SUCCESS | 40 | `wordstat-a6650845-14a6-48ef-bcf2-b83787463913` | `raw/B02_07_2026-09-16.md` | `analysis/B02_07_2026-09-16.md` |
+| B02-08 | ии ассистент для озон | SUCCESS | 10 | `wordstat-35e7a754-b1ef-47e9-88cf-31c86820ab84` | `raw/B02_08_2026-09-16.md` | `analysis/B02_08_2026-09-16.md` |
 
 ## Totals
 
-- successful HTTP/provider calls: `7/15`;
-- calls with usable `totalCount`: `7/15`;
+- successful HTTP/provider calls: `8/15`;
+- calls with usable `totalCount`: `8/15`;
 - successful-empty result calls: `0`;
 - provider failures: `0`;
-- accumulated estimated cost: `0.14 ₽`;
-- current cursor: `B02-08`;
-- next seed: `ии ассистент для озон`.
+- accumulated estimated cost: `0.16 ₽`;
+- current cursor: `B02-09`;
+- next seed: `ии агент для wildberries`.
