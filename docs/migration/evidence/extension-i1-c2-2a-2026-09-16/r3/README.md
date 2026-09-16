@@ -56,6 +56,6 @@ Default development archive: `1834654` bytes, SHA-256 `2c1f5765b0eb382d9387e3ea1
 
 ## Remote/publication facts
 
-After fetch, `origin/integration/i1-c1-srv5-2026-09-16` was `ec9c23da45091255e0ba53914b3682539ef0b797`, an ancestor of the local R3 start; no advanced remote ref was overwritten. Current fetched `origin/main` was `e5f302d2d0334a106fa046b8dee4e8df6e38e583`, distinct from the historical observed-main value and untouched. Existing draft PR9 is reused; no merge, rebase, force push, CI rerun/cancellation, deployment, or release is claimed.
+Before edits, canonical integration `ec9c23da45091255e0ba53914b3682539ef0b797` was an ancestor of the local R3 start; no advanced remote ref was overwritten. After publication, canonical integration is `af5487e462d2a8239efb2bb9e56b576d710f8036` and canonical main remains `bc718cc5c677ad0eb4598e7de3ad766473ff0847`, untouched. Existing draft PR9 is reused; no merge, rebase, force push, CI rerun/cancellation, deployment, or release is claimed.
 
 Machine-readable route/probe and package receipts are in `probes/policy-routes.json`, `receipts/extension-i1.json`, and `results.json`. Stop here for architect review.
