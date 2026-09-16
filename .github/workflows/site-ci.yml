@@ -4,10 +4,18 @@ on:
   pull_request:
     paths:
       - "apps/site/**"
+      - "infra/production/nginx/octoport-site.conf"
+      - "infra/production/scripts/deploy-octoport-site.sh"
+      - "infra/production/scripts/verify-octoport-site.sh"
+      - "infra/production/README.md"
       - ".github/workflows/site-ci.yml"
   push:
     paths:
       - "apps/site/**"
+      - "infra/production/nginx/octoport-site.conf"
+      - "infra/production/scripts/deploy-octoport-site.sh"
+      - "infra/production/scripts/verify-octoport-site.sh"
+      - "infra/production/README.md"
       - ".github/workflows/site-ci.yml"
   workflow_dispatch:
 
@@ -26,8 +34,10 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 2
+
       - name: Validate repository whitespace
         run: git diff --check HEAD^ HEAD
+
       - name: Validate Octoport static site
         shell: bash
         run: |
@@ -120,3 +130,48 @@ jobs:
 
           print("SITE-S0 PASS: canonical, copy boundaries, anchors, robots and sitemap")
           PY
+
+      - name: Validate SITE-S1 deployment source
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          nginx_conf="infra/production/nginx/octoport-site.conf"
+          deploy_script="infra/production/scripts/deploy-octoport-site.sh"
+          verify_script="infra/production/scripts/verify-octoport-site.sh"
+
+          bash -n "${deploy_script}"
+          bash -n "${verify_script}"
+
+          grep -Fq 'server_name octoport.ru;' "${nginx_conf}"
+          grep -Fq 'server_name www.octoport.ru;' "${nginx_conf}"
+          grep -Fq 'server_name app.octoport.ru;' "${nginx_conf}"
+          grep -Fq 'server_name api.octoport.ru;' "${nginx_conf}"
+          grep -Fq 'root /var/www/octoport-site/current;' "${nginx_conf}"
+          grep -Fq 'return 308 https://octoport.ru$request_uri;' "${nginx_conf}"
+          grep -Fq 'expires -1;' "${nginx_conf}"
+          grep -Fq 'expires 5m;' "${nginx_conf}"
+          grep -Fq 'Content-Security-Policy' "${nginx_conf}"
+          grep -Fq 'default-src '\''none'\''' "${nginx_conf}"
+
+          if grep -Fq 'add_header Cache-Control' "${nginx_conf}"; then
+            echo 'location-level add_header Cache-Control would break security-header inheritance' >&2
+            exit 1
+          fi
+
+          if grep -Eq 'server_name[^;]*admin\.octoport\.ru' "${nginx_conf}"; then
+            echo 'admin.octoport.ru must remain disabled as an application hostname' >&2
+            exit 1
+          fi
+
+          grep -Fq 'systemctl reload nginx' "${deploy_script}"
+          grep -Fq 'verify-octoport-site.sh' "${deploy_script}"
+          grep -Fq 'styles.css lost the inherited CSP' "${verify_script}"
+          grep -Fq 'styles.css lost X-Frame-Options' "${verify_script}"
+
+          if grep -Eq 'rm[[:space:]]+-rf' "${deploy_script}"; then
+            echo 'recursive forced deletion is not allowed in the site deploy script' >&2
+            exit 1
+          fi
+
+          echo 'SITE-S1 PASS: deploy scripts parse and ingress safety invariants are present'
