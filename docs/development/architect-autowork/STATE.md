@@ -1,3 +1,13 @@
+# Owner handoff directive — 2026-09-16
+
+LATEST OWNER INSTRUCTION OVERRIDES AUTOWORK CONTINUATION: after the next terminal report, stop automatic task issuance, save the exact received/reviewed state, and provide a complete new-dialogue handoff prompt as plain text (never a Bridge code block). Do not issue another Codex task before the handoff.
+Current task SA-HEALTH-B5-TIME-R1-20260916-01 was issued as the complete final prompt in this dialogue. Delivery/start cannot be independently confirmed from Bridge; no terminal report for it has been received in this dialogue. Do not resubmit it or run a parallel executor. Owner requests transfer of architectural responsibility to Sol because of session limits.
+The PREPARED labels below are historical: prompt issuance happened after that snapshot; executor execution remains unconfirmed. On recovery distinguish issued/delivered/running/completed by actual evidence.
+Use tasks/HEALTH_B5_TIME_R1_2026-09-16.md and the actual forthcoming terminal report. A published branch head alone is not a terminal report or acceptance. No TIME-R1 PASS/acceptance is claimed.
+
+Recovery essentials: current Health gate accepted on d8f5157696d137750176d1aa44aedf9c2116404e; wholeB5 remains unaccepted. Chronology fix is assigned. C11 strategy failure-provenance investigation remains architect-owned and unassigned. C2.2-A remains open at PR9 reserved documentation conflict/current acceptance gates. Exact refs, reviews, probes and CI are retained below. Preserve parallel owner files and historical acceptance. Do not restart the project or infer progress from generic public README files.
+
+## Previous current cursor and historical snapshots
 # Server/I1/Health cursor — 2026-09-16
 
 Current: HEALTH_B5_GATE_R1_ACCEPTED / HEALTH_B5_REWORK_REQUIRED / HEALTH_B5_TIME_R1_PREPARED_FOR_SINGLE_FINAL_SUBMISSION.
