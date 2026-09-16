@@ -6,7 +6,7 @@ Branch target: `integration/i1-c1-srv5-2026-09-16`
 Exact start: `4acc5fb3336e3e38fa30d6a7ec16c80730bcd7e1`  
 Start tree: `14e8e61d86b955b8a8f22b0c9e24f255654e92f7`  
 Parent/code: `6dc770ec30fe7c7165f4c14ff8b6356cd55937d6`  
-Candidate code commit: `7f4be0caa93dd3380b31822da572feb97e47fbc2`. Evidence/docs commit: this evidence commit, identified by the terminal.
+Candidate code commits: `7f4be0caa93dd3380b31822da572feb97e47fbc2`, `a553d1f80769528544ee1c90d1305edb51d9d71f`. Evidence/docs commits: `49df2ebd6f12188920476f916b1130bc889bb4f6`, `5fe77ff98a37257507dc77c6d9ffc4c120086c9c`, plus this final correction commit.
 
 The candidate adds private transport provenance, sequence-fenced shared online bootstrap, exact signed cache re-verification, and one existing-record/mutation-queue grace checkpoint. It returns verified configuration only. Existing raw bootstrap and Work-facing methods remain online/fresh-only; no capability/profile execution, offline Work grant, provider replay, server change, or domain migration is included.
 
