@@ -75,9 +75,9 @@
   },
   "publication": {
     "targetBranch": "feature/server-health-h3-p8-4",
-    "candidateHead": "acd430e57ec118880e061f3977e2b072c1da02a2",
+    "candidateHead": "668877ecda66d73f7046339393226309b966c7a3",
     "implementationParent": "b4a8c17f7ad1a1468a511a4fd793c439bfbd97c3",
-    "evidenceCommit": "acd430e57ec118880e061f3977e2b072c1da02a2",
+    "evidenceCommit": "668877ecda66d73f7046339393226309b966c7a3",
     "remoteHeadAfterAttempt": "f8b35fdec3212dedf0e186830e4af21c719d890d",
     "push": "blocked: GitHub HTTPS credentials unavailable",
     "remoteCi": "unknown: GitHub CLI unavailable and candidate not published"
