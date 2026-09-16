@@ -1,8 +1,8 @@
 # Seller Agents — единый cursor
 
-Дата: 2026-09-16. Статус: I1_C1_ACCEPTED / I1_SRV5_R1_REWORK_REQUIRED / I1_SRV5_R2_PREPARED.
+Дата: 2026-09-16. Статус: I1_C1_ACCEPTED / I1_SRV5_ACCEPTED / I1_SYNC_PREPARED.
 
-Владелец разрешил непрерывный авторежим; один архитектор и один последовательный Codex. R1 terminal получен и проверен. Коррекция Playwright соответствует решению, но обязательная integration-suite зависит от остаточных данных; готово точное R2 исправление setup. Прямого наблюдения Bridge/process нет; сохранение задачи не доказывает запуск. История и очередь сохранены.
+Владелец разрешил непрерывный авторежим; один архитектор и один последовательный Codex. R2 terminal проверен; обязательные CI завершились SUCCESS в активном цикле. I1-SRV.5 принят в ограниченном server/reference scope. Подготовлено одно объединение принятых server/client кандидатов. Прямого наблюдения Bridge/process нет; сохранение задачи не доказывает запуск. История и очередь сохранены.
 
 ## Роли
 
@@ -10,18 +10,17 @@ Astra / очень высокая глубина рассуждения — гл
 
 ## Текущая задача
 
-- SA-I1-SRV5-R1-20260916-01: REWORK_REQUIRED on832b135f129154dae2a1ce726528fdb353e92292, tree53238b426990508d20cf277b8ffb9797861d2f54. Parent39478f0b4e28dd875111ce28670396531a8efc4d.
-- Branch feature/server-i1-srv5-acceptance-2026-09-16; PR8 draft/unmerged; canonical main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c. PR virtual merge4571212c3bed15c3a982561c77b41e8cea905212 has candidate-identical tree.
-- R1 signing fixture matches architect solution; original lifecycle assertions retained. Local reported regression RED/GREEN and E2E88/88 remain local evidence.
-- Current blocker: packages/server/db/src/health-persistence.integration.test.ts beforeAll lacks schema reset/migrations and shares adapter UUID with adapter-registry.integration.test.ts. Read both source paths, DB ready implementation and Vitest config. The ordered pair deterministically conflicts. Original local report: integration FAIL,1507 passed/20 skipped; exact original predecessor not supplied.
-- Next: SA-I1-SRV5-R2-20260916-01; tasks/I1_SRV5_R2_2026-09-16.md. Narrow test setup reset/migrate and exact RED/GREEN order regression; preserve all assertions, no production Health changes.
-- Review/evidence: references/I1_SRV5_R1_REVIEW.md, I1_SRV5_R1_CI.json.
-- Push35046791468/job104638266285 and PR35046795347/job104638309700 in progress, both integration steps PASS at latest read. Documentation35046795316/job104638241825 SUCCESS. Favorable order does not eliminate source-proven order dependency. No final Server CI PASS claimed.
-- R1 terminal complete; R2 PREPARED_FOR_SINGLE_FINAL_SUBMISSION. No parallel executor or duplicate prompt; delivery/start not asserted.
-- C1 remains ACCEPTED on56c81a3521c02502b65fd713aec890e5a30f038d, tree5c14497e239922c3712d0c3be12af7ee59e665f5, PR7 draft/unmerged.
-- Queue: I1-SRV.5 gate repair/acceptance -> unified accepted client/server integration base -> C2 offline/profile/joint integration. Health/P8.4 B5 NOT ACCEPTED, B6–B8 queued.
-- Client/server files changed since common ancestorbc0cd0088ca50ba06021ea602a46bdd90de91378 are disjoint; client is4 main commits behind. No merging performed.
-- Base SHA in R1 docs/terminal is still39 chars; R2 requires exact40-character Git readback. Historical accepted evidence remains unchanged.
+- SA-I1-SRV5-R2-20260916-01: ACCEPTED в server/reference scope на086ae20c2858849ec13b1ab67c2f7661259022c3, treeea17da20acb01ae3c03a14d5b18128c8040e27e7. Parent/code1822e861b70ade3326d12f37d655467db53a1b05; predecessor832b135f129154dae2a1ce726528fdb353e92292.
+- Branch feature/server-i1-srv5-acceptance-2026-09-16; PR8 draft/unmerged. Canonical main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c unchanged. PR merge8be4f8a3fc4b95bd67bc9900b97dc650c4ea81cb has identical candidate tree and verified main/candidate parents.
+- Exact-head Server push35049731202/job104647274595 SUCCESS; Server PR35049733772/job104647282357 SUCCESS; Documentation PR35049733775/job104647282143 SUCCESS. Completed logs independently read; both Server jobs integration39files/1527tests including health20; E2E88 including both I1 reference tests. Documentation419files/0errors.
+- Reviewed exactly seven allowlisted changed paths. Five code lines implement canonical reset/migrate before seeding; assertions and production behavior unchanged. Ordered local RED/GREEN/repeat are executor-reported evidence; remote full-cycle results independently observed.
+- Review/evidence: references/I1_SRV5_R2_REVIEW.md and references/I1_SRV5_R2_CI.json. All prior BLOCKED/FAIL history retained.
+- R2 terminal complete; no server executor currently reported running. Direct Bridge/process visibility is unavailable; absence of all server processes is not asserted.
+- C1 remains ACCEPTED on56c81a3521c02502b65fd713aec890e5a30f038d, tree5c14497e239922c3712d0c3be12af7ee59e665f5; PR7 draft/unmerged.
+- Next SA-I1-SYNC-20260916-01: tasks/I1_SYNC_2026-09-16.md; PREPARED_FOR_SINGLE_FINAL_SUBMISSION. Saving this task is not delivery or start evidence. Issue exactly once in the final Bridge block, then await its actual terminal; do not resubmit on a duplicate R2 report.
+- Target integration/i1-c1-srv5-2026-09-16 from server086ae20, normal no-ff merge of client56c81a3. Target branch/PR absent at preparation. Compared against common ancestorbc0cd0088ca50ba06021ea602a46bdd90de91378: client54 changed paths, server19, no overlap. Preserve runtime blobs; factual docs only after merge.
+- Queue: combined candidate acceptance -> C2 offline/profile/joint integration. Health/P8.4 B5 NOT ACCEPTED; B6–B8 queued. S1.2 real email/preprod and D3 not started. No full I1/D2, live or release acceptance.
+- Ручная приёмка владельцем понадобится после C2/совместной установленной I1-проверки и в Q1 перед бетой; текущие серверные/сборочные проверки выполняет инженерный цикл.
 
 ## Результат R1
 
@@ -41,7 +40,7 @@ Reported ZIP SHA-256 2580015cdf174c909e6733197d3b609ba10c3fe35008090df13ebc17a83
 
 Принята передача результатов S1.1 / I1-SRV.0–4 от предыдущего архитектора. Main 5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c. Merge PR #6 и corrected candidate f2f7be25393f2d6b3794b8423d7a2701a7c37bdc имеют одинаковое дерево 4dfcf1c3d3537091d741a7784f99ebee995e76cc. Exact-head Server CI 34951442143 и Documentation CI 34951442176 SUCCESS подтверждены. Старое pending-review wording требует factual closeout, но не повторной разработки принятого.
 
-Осталось: I1-SRV.5 reference-client acceptance. S1.2 real OTP/preprod и D3 не начаты. Сохраняется разграничение live/email/browser/fixture доказательств.
+I1-SRV.5 reference-client acceptance принят на086ae20c2858849ec13b1ab67c2f7661259022c3; см. текущий cursor и R2 review. S1.2 real OTP/preprod и D3 не начаты. Сохраняется разграничение live/email/browser/fixture доказательств.
 
 ## Сервер B
 
@@ -122,3 +121,24 @@ Terminal b0d93e3 обработан. REWORK_REQUIRED по независимо �
 ## I1-SRV.5 R1 review — 2026-09-16
 
 R1 terminal832b135 обработан: signing fixture соответствует решению; REWORK_REQUIRED из-за подтверждённой source-level зависимости integration setup от порядка файлов и повторно неисправленного SHA. Подготовлен один R2; I1-SRV.5 не закрыт. Исторические prepared/WAITING записи выше не разрешают повторную отправку. Health B5 остаётся отдельным незакрытым критерием.
+
+
+## Исторический cursor перед получением R2 terminal
+
+- SA-I1-SRV5-R1-20260916-01: REWORK_REQUIRED on832b135f129154dae2a1ce726528fdb353e92292, tree53238b426990508d20cf277b8ffb9797861d2f54. Parent39478f0b4e28dd875111ce28670396531a8efc4d.
+- Branch feature/server-i1-srv5-acceptance-2026-09-16; PR8 draft/unmerged; canonical main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c. PR virtual merge4571212c3bed15c3a982561c77b41e8cea905212 has candidate-identical tree.
+- R1 signing fixture matches architect solution; original lifecycle assertions retained. Local reported regression RED/GREEN and E2E88/88 remain local evidence.
+- Current blocker: packages/server/db/src/health-persistence.integration.test.ts beforeAll lacks schema reset/migrations and shares adapter UUID with adapter-registry.integration.test.ts. Read both source paths, DB ready implementation and Vitest config. The ordered pair deterministically conflicts. Original local report: integration FAIL,1507 passed/20 skipped; exact original predecessor not supplied.
+- Next: SA-I1-SRV5-R2-20260916-01; tasks/I1_SRV5_R2_2026-09-16.md. Narrow test setup reset/migrate and exact RED/GREEN order regression; preserve all assertions, no production Health changes.
+- Review/evidence: references/I1_SRV5_R1_REVIEW.md, I1_SRV5_R1_CI.json.
+- Push35046791468/job104638266285 and PR35046795347/job104638309700 in progress, both integration steps PASS at latest read. Documentation35046795316/job104638241825 SUCCESS. Favorable order does not eliminate source-proven order dependency. No final Server CI PASS claimed.
+- R1 terminal complete; R2 PREPARED_FOR_SINGLE_FINAL_SUBMISSION. No parallel executor or duplicate prompt; delivery/start not asserted.
+- C1 remains ACCEPTED on56c81a3521c02502b65fd713aec890e5a30f038d, tree5c14497e239922c3712d0c3be12af7ee59e665f5, PR7 draft/unmerged.
+- Queue: I1-SRV.5 gate repair/acceptance -> unified accepted client/server integration base -> C2 offline/profile/joint integration. Health/P8.4 B5 NOT ACCEPTED, B6–B8 queued.
+- Client/server files changed since common ancestorbc0cd0088ca50ba06021ea602a46bdd90de91378 are disjoint; client is4 main commits behind. No merging performed.
+- Base SHA in R1 docs/terminal is still39 chars; R2 requires exact40-character Git readback. Historical accepted evidence remains unchanged.
+
+
+## I1-SRV.5 R2 acceptance / I1 synchronization — 2026-09-16
+
+R2 terminal обработан; source correction и exact-head remote gates проверены, ACCEPTED в bounded server/reference scope. Следующий SA-I1-SYNC-20260916-01 подготовлен для единственной финальной передачи. Ни один исторический prepared/WAITING блок не является разрешением повторить старую задачу. Полный I1/C2 и Health B5 остаются открыты.

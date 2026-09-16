@@ -1,0 +1,392 @@
+{
+  "candidate": "086ae20c2858849ec13b1ab67c2f7661259022c3",
+  "tree": "ea17da20acb01ae3c03a14d5b18128c8040e27e7",
+  "base": "5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+  "virtual_merge": {
+    "sha": "8be4f8a3fc4b95bd67bc9900b97dc650c4ea81cb",
+    "tree": "ea17da20acb01ae3c03a14d5b18128c8040e27e7",
+    "parents": [
+      "5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+      "086ae20c2858849ec13b1ab67c2f7661259022c3"
+    ]
+  },
+  "runs": [
+    {
+      "conclusion": "success",
+      "event": "pull_request",
+      "head_sha": "086ae20c2858849ec13b1ab67c2f7661259022c3",
+      "id": 35049733775,
+      "name": "Documentation CI",
+      "status": "completed",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/35049733775"
+    },
+    {
+      "conclusion": "success",
+      "event": "pull_request",
+      "head_sha": "086ae20c2858849ec13b1ab67c2f7661259022c3",
+      "id": 35049733772,
+      "name": "Server CI",
+      "status": "completed",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/35049733772"
+    },
+    {
+      "conclusion": "success",
+      "event": "push",
+      "head_sha": "086ae20c2858849ec13b1ab67c2f7661259022c3",
+      "id": 35049731202,
+      "name": "Server CI",
+      "status": "completed",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/35049731202"
+    }
+  ],
+  "jobs": [
+    {
+      "conclusion": "success",
+      "id": 104647274595,
+      "logs_url": null,
+      "name": "server",
+      "run_id": 35049731202,
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Initialize containers",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+          "number": 5,
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Verify frozen server import",
+          "number": 6,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm install --frozen-lockfile",
+          "number": 7,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm lint",
+          "number": 8,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm format:check",
+          "number": 9,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm typecheck",
+          "number": 10,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm exec vitest run tests/e2e/server/playwright-config-regression.test.ts",
+          "number": 11,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm test",
+          "number": 12,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm test:integration",
+          "number": 13,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm db:migrate",
+          "number": 14,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm openapi:check",
+          "number": 15,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm bridge:guard",
+          "number": 16,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm build",
+          "number": 17,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm exec playwright install --with-deps chromium",
+          "number": 18,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm test:e2e",
+          "number": 19,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+          "number": 35,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1",
+          "number": 36,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 37,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Stop containers",
+          "number": 38,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 39,
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "success",
+      "id": 104647282357,
+      "logs_url": null,
+      "name": "server",
+      "run_id": 35049733772,
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Initialize containers",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+          "number": 5,
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Verify frozen server import",
+          "number": 6,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm install --frozen-lockfile",
+          "number": 7,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm lint",
+          "number": 8,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm format:check",
+          "number": 9,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm typecheck",
+          "number": 10,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm exec vitest run tests/e2e/server/playwright-config-regression.test.ts",
+          "number": 11,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm test",
+          "number": 12,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm test:integration",
+          "number": 13,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm db:migrate",
+          "number": 14,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm openapi:check",
+          "number": 15,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm bridge:guard",
+          "number": 16,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm build",
+          "number": 17,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm exec playwright install --with-deps chromium",
+          "number": 18,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run pnpm test:e2e",
+          "number": 19,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+          "number": 35,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1",
+          "number": 36,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 37,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Stop containers",
+          "number": 38,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 39,
+          "status": "completed"
+        }
+      ]
+    }
+  ],
+  "decisive_logs": [
+    {
+      "job": 104647274595,
+      "lines": [
+        "2026-09-16T02:54:07.3777916Z [command]/usr/bin/git log -1 --format=%H",
+        "2026-09-16T02:54:07.3811648Z 086ae20c2858849ec13b1ab67c2f7661259022c3",
+        "2026-09-16T02:58:39.0756122Z  ✓ packages/server/db/src/health-persistence.integration.test.ts (20 tests) 602ms",
+        "2026-09-16T02:59:01.2020141Z  Test Files  39 passed (39)",
+        "2026-09-16T02:59:01.2049901Z       Tests  1527 passed (1527)",
+        "2026-09-16T03:04:59.5364703Z [84/88] tests/e2e/server/i1-reference-acceptance.spec.ts:69:5 › I1-SRV.5 worker preserves runner public trust without private signing material",
+        "2026-09-16T03:04:59.6172539Z [85/88] tests/e2e/server/i1-reference-acceptance.spec.ts:88:5 › I1-SRV.5 reference activation, V2 bootstrap, rotation, continuity, and revoke",
+        "2026-09-16T03:05:15.3639765Z   88 passed (4.8m)"
+      ]
+    },
+    {
+      "job": 104647282357,
+      "lines": [
+        "2026-09-16T02:54:12.8811288Z HEAD is now at 8be4f8a Merge 086ae20c2858849ec13b1ab67c2f7661259022c3 into 5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+        "2026-09-16T02:54:12.8843748Z [command]/usr/bin/git log -1 --format=%H",
+        "2026-09-16T02:54:12.8866811Z 8be4f8a3fc4b95bd67bc9900b97dc650c4ea81cb",
+        "2026-09-16T02:57:39.6047292Z  ✓ packages/server/db/src/health-persistence.integration.test.ts (20 tests) 413ms",
+        "2026-09-16T02:57:55.3288739Z  Test Files  39 passed (39)",
+        "2026-09-16T02:57:55.3314564Z       Tests  1527 passed (1527)",
+        "2026-09-16T03:01:53.9576070Z [84/88] tests/e2e/server/i1-reference-acceptance.spec.ts:69:5 › I1-SRV.5 worker preserves runner public trust without private signing material",
+        "2026-09-16T03:01:54.0138185Z [85/88] tests/e2e/server/i1-reference-acceptance.spec.ts:88:5 › I1-SRV.5 reference activation, V2 bootstrap, rotation, continuity, and revoke",
+        "2026-09-16T03:02:06.4432608Z   88 passed (3.2m)"
+      ]
+    },
+    {
+      "job": 104647282143,
+      "lines": [
+        "2026-09-16T02:53:51.1548284Z HEAD is now at 8be4f8a Merge 086ae20c2858849ec13b1ab67c2f7661259022c3 into 5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+        "2026-09-16T02:53:51.9948061Z Documentation check PASS: {\"errors\":[],\"files\":419,\"markdownFiles\":228,\"relativeLinks\":357,\"requirements\":26,\"acceptanceScenarios\":32}"
+      ]
+    }
+  ],
+  "verdict": "ACCEPTED_BOUNDED_SERVER_REFERENCE",
+  "local_proof": "Executor reported deterministic RED/GREEN/repeat; architect did not rerun local database tests.",
+  "next_task": "SA-I1-SYNC-20260916-01",
+  "delivery": "PREPARED_FOR_SINGLE_FINAL_SUBMISSION; not observed"
+}
