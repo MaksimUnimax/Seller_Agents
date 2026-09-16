@@ -1,3 +1,17 @@
+# Server/I1 cursor — R3 review in progress, 2026-09-16
+
+Current: SA-I1-C2-2A-R3-20260916-01 terminal received; ARCHITECT_REVIEW_IN_PROGRESS. No new Codex task issued or executor start confirmed.
+Candidate076af64efbcdfdc67aec8713969c31c276a90b2d/tree3c35d4a619af1cde362939c94ebc4b367fe9e25e, branch integration/i1-c1-srv5-2026-09-16, PR9 draft/dirty. Start edc70704cec965b9e7bc58ca4d3c961834573517.
+Canonical repository MaksimUnimax/runtime-fixtures ID1369117174; mainbc718cc5c677ad0eb4598e7de3ad766473ff0847 unchanged.
+Reviewed source delta implements policy-floor checkpoints, readonly artifact retention with TTL, old-durable restart branch, signed account replacement race and stronger B snapshot assertions. Independently executed exact R3 focused tests against unchanged composed source/extracted:37/37 PASS each, Node24.19.0. No final acceptance verdict yet.
+R3 evidence contains a truncated start-tree string and stale intermediate publication SHA; compare with exact Git before final evidence verdict. Negative control in submitted test is an isolated fakeIDB instance; normal retention assertions now readonly. Prior architect destructive-scenario proof preserved.
+Current Extension pushrun35079055286 tests af5487e462d2a8239efb2bb9e56b576d710f8036; final two commits evidence-only, needs explicit inventory attribution. Core104738350074/Ozon104738350173/WBnodes104738350184/native104738350435 SUCCESS; WBbrowser104738350257 IN_PROGRESS at snapshot. No run on final076af64 observed. Required I1/Server/Docs current candidate CI absent. Existing workflows support workflow_dispatch, but exposed connector has no dispatch action; do not invent launch.
+PR9 conflict docs/README.md remains reserved to parallel presentation stream. No protected file edit/main merge/rebase/CI rerun performed. Existing independent Health/B5 queue remains available for architect assessment; no Health task started.
+User requested complete revised control prefix during review. Delivered as a private user file/plain text, not a Codex prompt, not an installation into Bridge. Resume unfinished R3 review with current refs/CI and retained evidence; do not reissue R3 or reset cursor.
+Historical accepted facts, broader queues and constraints below remain intact.
+
+## Previous cursor snapshots — retained history
+
 # Server/I1 current cursor — 2026-09-16
 
 Current: C2_1_ACCEPTED / C2_2A_R2_REWORK_REQUIRED / C2_2A_R3_PREPARED_FOR_SINGLE_FINAL_SUBMISSION.
