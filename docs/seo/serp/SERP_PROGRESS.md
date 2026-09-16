@@ -2,109 +2,106 @@
 
 Дата: 2026-09-16.
 Branch: `seo/wordstat-batch-01-2026-09-16`.
-Status: `S02_EVIDENCE_CLOSED__S03_RELEASED`.
+Status: `S03_PRESTEP_PREPARED__OWNER_DISCLOSURE_REQUIRED_BEFORE_SUBMIT`.
 Master authority: `../SEO_MASTER_ROADMAP_2026-09-16.md`.
+Provider-query hard gate: `../PROVIDER_QUERY_RELEASE_RULE.md`.
 
 ## Evidence rule
 
-For every bridge/provider response:
+For every provider-backed query, a query-specific fresh-research/release gate must pass before the first Bridge lifecycle command. After every Bridge/provider response:
 
-1. save the complete received lifecycle envelope under `serp/raw/`;
-2. verify the GitHub write by reading it back;
-3. save lifecycle/query analysis separately under `serp/analysis/`;
-4. preserve the exported normalized SERP authority with source hash/provenance under `serp/exports/`;
-5. update recurring competitor evidence when due;
-6. update progress;
-7. only then release the next provider action/query.
+`FULL RESPONSE -> DURABLE PERSIST -> REMOTE READBACK -> ANALYSIS/PROGRESS -> NEXT ACTION`.
 
-Local admission errors, local `start`, local due-time guards and local export actions with `request_executed:false` do not count as Search provider calls.
-
-## Isolation
-
-- write only under `docs/seo/**`;
-- do not touch server/runtime/site implementation;
-- do not merge into moving `main` without a fresh overlap check.
+No blind retry. Pending/no-due is not zero/failure. Provider docs and Bridge capability are separate evidence layers.
 
 ## S01 — `ии агенты для маркетплейсов`
 
 Status: `CLOSED / 20 NORMALIZED RESULTS`.
 
-- job id: `octoport-serp-s01-20260916`;
-- operation id: `sprjotiech5gn23a4tq3`;
-- revision: `5`;
-- normalized result rows: `20`;
+- job: `octoport-serp-s01-20260916`;
+- operation: `sprjotiech5gn23a4tq3`;
 - normalized authority: `exports/S01_ИИ_АГЕНТЫ_ДЛЯ_МАРКЕТПЛЕЙСОВ_NORMALIZED_2026-09-16.json`;
-- source attachment size: `88320` bytes;
+- source size: `88320` bytes;
 - source SHA-256: `6a669f140e0b1b0f4e697195d3eed74b44cab8139151970a7c1d3471c04566c6`.
 
 ## S02 — `ии агент для озон`
 
 Status: `CLOSED / 20 NORMALIZED RESULTS`.
 
-### Lifecycle
-
-| Attempt | Stage | Status | Provider request executed | Evidence |
-|---|---|---|---|---|
-| S02-01 | `start` | `START_ACCEPTED_PENDING` | `false` | `raw/S02_01_START_2026-09-16.md` |
-| S02-02 | `submitN` | `ACCEPTED_WAITING` | `true` | `raw/S02_02_SUBMIT_2026-09-16.md` |
-| S02-03 | `collectN` | `NO_DUE_OPERATIONS` | `false` | `raw/S02_03_COLLECT_NOT_DUE_2026-09-16.md` |
-| S02-04 | `collectN` | `SUCCEEDED` | `true` | `raw/S02_04_COLLECT_SUCCEEDED_2026-09-16.md` |
-
-### Closed export evidence
-
-- job id: `octoport-serp-s02-20260916`;
-- operation id: `sproisueh6ivih75sbu9`;
-- revision: `5`;
-- source attachment: `search-octoport-serp-s02-20260916-r5-0-0.json`;
-- source attachment size: `87159` bytes;
-- source SHA-256: `b67eaba22dc8b3a949ecddbcf87646ede7141ff5d2cf660d875084c88a3b3bf2`;
+- job: `octoport-serp-s02-20260916`;
+- operation: `sproisueh6ivih75sbu9`;
 - normalized authority: `exports/S02_ИИ_АГЕНТ_ДЛЯ_ОЗОН_NORMALIZED_2026-09-16.json`;
+- source size: `87159` bytes;
+- source SHA-256: `b67eaba22dc8b3a949ecddbcf87646ede7141ff5d2cf660d875084c88a3b3bf2`;
 - result rows: `20`;
-- `usable_for_url_comparison:true`;
-- `missing_url_ranks:[]`;
-- `unsafe_url_ranks:[]`;
-- intent analysis: `analysis/S02_EXPORT_AND_INTENT_2026-09-16.md`.
+- URL-comparison validation: PASS.
 
-### S02 finding
-
-Ozon-specific wording is strongly seller-side and agent/integration/data oriented. Dedicated Ozon pages rank materially alongside recurring generic category domains. This is positive provisional evidence for an Ozon-specific Page Job, but not a final page-ownership decision before S03 + later clustering/M7.
+Preliminary S02 finding: Ozon-specific wording is strongly seller/API/data/agent oriented and contains dedicated Ozon pages; final page ownership remains blocked until broader evidence/M7.
 
 ## Preliminary recurring competitors after S01 + S02
 
 Registry: `competitors/REGISTRY_2026-09-16.md`.
 
-Currently recurring across both query families:
+Recurring across both query families currently include:
 
 - `berkuz.ru`;
 - `jafo.ru`;
 - `marketaut.ru`;
 - `superintellect.ru`.
 
-Exact recurring home URLs include Berkuz, JAFO and MarketAut. Dedicated marketplace-specific pages also appear in S02.
+## S03 — `ии агент для wildberries`
 
-## S03 — released next query
+Purpose: paired Wildberries-specific control against S02 Ozon before any marketplace split/merge/page-job conclusion.
 
-Query: `ии агент для wildberries`.
-Purpose: paired Wildberries marketplace-specific control against S02 Ozon to resolve marketplace-specific symmetry/differences before any split/page-ownership conclusion.
+### Process defect and recovery
 
-Next allowed action is local-only `start` for a new one-query job:
+The local-only S03 `start` was issued before the mandatory per-query pre-step/release. This is recorded as `OSEO-F01` in `../FAILURE_LEDGER.md`.
 
-`SEARCH_ASYNC_BATCH_API_V1 {"action":"start","jobId":"octoport-serp-s03-20260916","queries":["ии агент для wildberries"],"confirmBillable":true,"maxRequests":1,"maxCostRub":0.0305,"searchType":"SEARCH_TYPE_RU","region":"225","page":0,"groupsOnPage":20,"docsInGroup":1,"groupMode":"GROUP_MODE_FLAT","familyMode":"FAMILY_MODE_MODERATE","fixTypoMode":"FIX_TYPO_MODE_OFF","sortMode":"SORT_MODE_BY_RELEVANCE","sortOrder":"SORT_ORDER_DESC"}`
+Observed local start:
 
-Expected `start`: local-only, `request_executed:false`, `provider_calls:0`. Do not submit until start evidence is persisted/read back.
+- job: `octoport-serp-s03-20260916`;
+- `request_executed:false`;
+- `provider_calls:0`;
+- `PENDING:1`;
+- `revision:0`;
+- raw evidence: `raw/S03_01_START_2026-09-16.md`;
+- remote readback: PASS.
+
+No Yandex provider request or cost occurred. Do not recreate the local job merely to hide the process defect.
+
+### Query-specific pre-step/release
+
+Authority: `S03_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-16.md`.
+Remote readback: PASS.
+
+It contains:
+
+- whole-goal/roadmap/cursor;
+- exact S03 decision question;
+- prior failure controls;
+- fresh official Yandex + industry research;
+- source-to-method trace;
+- information-gain/outcome contract;
+- provider settings/cost bound;
+- Bridge capability reconciliation;
+- Work-trigger evaluation;
+- hard gates;
+- 10-dimension quality score `94.5/100 = 9.45/10`.
+
+### Current hard gate
+
+`submitN` remains blocked until the required owner-facing clickable source disclosure and step analysis are delivered in the current chat.
+
+After that disclosure, the existing S03 local job may continue with exactly one `submitN count=1`; no second `start` is needed.
 
 ## Current totals
 
-- completed/exported M3 query families: `2` (`S01`, `S02`);
-- released next query: `S03`;
-- successful provider submissions: `2` total;
-- successful provider-backed collects: `2` total;
+- completed/exported M3 query families: `2`;
+- current query: `S03`;
+- S03 provider submissions: `0`;
+- successful provider submissions total: `2`;
+- successful provider-backed collects total: `2`;
 - local admission failures: `2`;
-- local not-due guards: `2` total;
+- local not-due guards: `2`;
 - provider failures: `0`;
-- recurring competitor registry updates: `1`;
 - current master stage: `M3 Ordinary Yandex SERP collection`.
-
-## Bridge/UI observation
-
-The S01 popup could show `Нет локального deferred Search job` while command lifecycle retained and later successfully collected the job. Lifecycle/export evidence remains authority while that UI bug is repaired separately.
