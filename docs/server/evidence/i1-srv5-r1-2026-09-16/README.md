@@ -3,7 +3,7 @@
 Date: 2026-09-16
 Repository: `MaksimUnimax/Seller_Agents`
 Branch: `feature/server-i1-srv5-acceptance-2026-09-16`
-Base: `5d7c8853cc69dd95bc6e713cac3fb2aa0a63383`
+Base: `5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c`
 Status: `I1-SRV.5 IMPLEMENTED_CANDIDATE / ARCHITECT_REVIEW_PENDING`
 
 ## Fixture correction

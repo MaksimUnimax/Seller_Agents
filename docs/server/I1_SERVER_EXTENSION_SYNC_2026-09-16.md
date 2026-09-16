@@ -15,12 +15,12 @@ HTTP contract, migration, or extension runtime implementation.
 The reference scenario covers/asserts the intended sequence with real development OTP,
 portal approval, disposable PostgreSQL/API/portal harness, V2 account identity,
 K1 trust verification, account tamper/unknown-key/device-mismatch negatives,
-refresh rotation continuity, and portal revoke fail-closed behavior. Its local
 refresh rotation continuity, and portal revoke fail-closed behavior. The added
 worker consistency regression covers/asserts runner-owned K1/K2 generation,
 worker absence of private signing material, and equality between inherited K1
-trust and disposable database metadata. Focused execution passed `2/2`, and
-the full server E2E passed `88/88` on the task-owned disposable harness.
+trust and disposable database metadata. Focused execution passed `2/2`, the
+R2 database fixture proof passed its ordered pair and repeated health suite,
+and the full server E2E passed `88/88` on the task-owned disposable harness.
 
 The prior full-host PostgreSQL disk-exhaustion outcome remains historical
 `BLOCKED` evidence and is not relabeled PASS. The architect-selected repair

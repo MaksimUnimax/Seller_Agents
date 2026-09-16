@@ -6,12 +6,12 @@ Status: `I1-SRV.5 IMPLEMENTED_CANDIDATE / ARCHITECT_REVIEW_PENDING`
 ## Scope and exact authority
 
 - Repository: `MaksimUnimax/Seller_Agents`
-- Verified base: `5d7c8853cc69dd95bc6e713cac3fb2aa0a63383`
+- Verified base: `5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c`
 - Candidate branch: `feature/server-i1-srv5-acceptance-2026-09-16`
-- Allowed implementation files: the Playwright fixture correction and new
-  reference E2E consistency test; no
-  production, shared fixture, workflow, dependency, migration, contract, or
-  extension runtime code changed.
+- Allowed implementation files: the R1 Playwright fixture correction and new
+  reference E2E consistency test, plus the R2 health-persistence integration
+  fixture isolation correction; no production, shared fixture, workflow,
+  dependency, migration, contract, or extension runtime code changed.
 - The scenario is server/reference plus browser portal acceptance. It is not
   installed-extension, marketplace, email-delivery, or offline-V2 acceptance.
 
@@ -42,9 +42,9 @@ assertions and does not retrofit V2/offline behavior into that client.
 | --- | --- | --- | --- |
 | Integrated V2 activation → account bootstrap → rotation → V2 identity continuity → revoke | `tests/e2e/server/i1-reference-acceptance.spec.ts` — `I1-SRV.5 reference activation, V2 bootstrap, rotation, continuity, and revoke` | Focused lifecycle passed `2/2`; full server E2E passed `88/88` with the task-owned PostgreSQL/API/portal harness. | Local reference acceptance; architect review remains pending |
 | Runner/worker signing-fixture consistency | `tests/e2e/server/i1-reference-acceptance.spec.ts` — `I1-SRV.5 worker preserves runner public trust without private signing material` | RED on reviewed `b0d93e36b2c7f37a4758ea4b33dbfa9cf2c688bb`: equality `false`; GREEN after correction: `1/1` passed. | Local regression |
-| Pending, deny, device limit, rotation, revoke | `tests/e2e/server/activation.spec.ts` — `portal approval activates and refreshes a simulated extension`; `denial closes authorization without devices, sessions, or refresh credentials`; `limit reached authorization recovers after portal revocation`; `packages/server/simulated-extension-client/src/index.test.ts` — `keeps codes out of the verification URL`; `tests/integration/server/p2-3-device-authorization.integration.test.ts` — T2 terminal/approval and limit suites; `p2-4-token-core.integration.test.ts` — T2-C/D and T2-H; `p2-5-device-management.integration.test.ts` — E/F and G | Existing evidence retained from accepted server history; current full E2E passed. | Historical accepted server evidence on `5d7c8853cc69dd95bc6e713cac3fb2aa0a63383` / PR6 |
+| Pending, deny, device limit, rotation, revoke | `tests/e2e/server/activation.spec.ts` — `portal approval activates and refreshes a simulated extension`; `denial closes authorization without devices, sessions, or refresh credentials`; `limit reached authorization recovers after portal revocation`; `packages/server/simulated-extension-client/src/index.test.ts` — `keeps codes out of the verification URL`; `tests/integration/server/p2-3-device-authorization.integration.test.ts` — T2 terminal/approval and limit suites; `p2-4-token-core.integration.test.ts` — T2-C/D and T2-H; `p2-5-device-management.integration.test.ts` — E/F and G | Existing evidence retained from accepted server history; current full E2E passed. | Historical accepted server evidence on `5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c` / PR6 |
 | V1 compatibility and V2 signed identity/tamper | `tests/e2e/server/bootstrap.spec.ts` — `bootstrap returns a cryptographically verified strict snapshot`; `a real device exchange obtains a signed V2 bootstrap bound to its account`; `tests/integration/server/p3-4-bootstrap.integration.test.ts` — `returns a verified complete signed snapshot`, `rejects mismatched device before resolution`, `fails closed when config key differs from signer` | Existing evidence retained; current unit and full E2E gates passed. | Historical integrated evidence plus current local PASS |
-| Exact packaged trust, unknown key, and rotation | `tests/e2e/server/bootstrap.spec.ts` — `packaged K1-only client verifies a K1 bootstrap`; `overlap client verifies a bootstrap signed by newly active K2`; `old K1-only client rejects a K2 bootstrap as UNKNOWN_SIGNING_KEY`; `revoking the currently selected K1 makes the next bootstrap fail closed`; `tests/integration/server/p3-5-signing-key-lifecycle.integration.test.ts` — `signs both sides of a real PostgreSQL two-key bootstrap rollout`, `exports registry public material deterministically and excludes revoked keys` | Existing I1-SRV.3 trust evidence retained; current remote-config unit and integration tests passed. | Historical I1-SRV.3 acceptance on `5d7c8853cc69dd95bc6e713cac3fb2aa0a63383` / PR6 plus current local PASS |
+| Exact packaged trust, unknown key, and rotation | `tests/e2e/server/bootstrap.spec.ts` — `packaged K1-only client verifies a K1 bootstrap`; `overlap client verifies a bootstrap signed by newly active K2`; `old K1-only client rejects a K2 bootstrap as UNKNOWN_SIGNING_KEY`; `revoking the currently selected K1 makes the next bootstrap fail closed`; `tests/integration/server/p3-5-signing-key-lifecycle.integration.test.ts` — `signs both sides of a real PostgreSQL two-key bootstrap rollout`, `exports registry public material deterministically and excludes revoked keys` | Existing I1-SRV.3 trust evidence retained; current remote-config unit and integration tests passed. | Historical I1-SRV.3 acceptance on `5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c` / PR6 plus current local PASS |
 | Signed compatibility denial; eligible transport/503 fallback; half-open expiry/grace; persisted time floor/restart; terminal invalidation/storage failure | `packages/server/simulated-extension-client/src/policy.test.ts` — `uses a previously verified cache for an audited transient bootstrap 503`; `preserves the advanced floor across restart and wall-clock rollback`; `keeps a cache expired after restart when the durable floor reaches grace end`; `fails closed when advancing the offline floor cannot be persisted`; `packages/server/simulated-extension-client/src/offline-policy.test.ts` — `preserves strict V1/V2 and signed account identity verification`; `allows only network transport and audited transient server triggers` | Current `pnpm test` passed the simulated-client suites: policy 36 tests and offline-policy 11 tests. | Unit/reference evidence only. The simulated policy path is V1; direct V2 verifier tests do not establish V2 cached browser behavior. |
 
 No copied scenario or inflated process count is used as evidence. The matrix
@@ -54,7 +54,7 @@ trust, integration, and reference-policy authorities.
 ## Historical and synchronized scope
 
 S1.1 and I1-SRV.0–I1-SRV.4 are historically accepted on
-`5d7c8853cc69dd95bc6e713cac3fb2aa0a63383` through PR6, with their
+`5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c` through PR6, with their
 original evidence and candidate history preserved. Stale pending wording in
 older candidate documents does not reopen their implementation.
 
@@ -73,36 +73,48 @@ outside this synchronization handoff. I1-SRV.5 remains
 
 ## Verification record
 
-With Node `24.20.0` and pnpm `10.34.5`, the frozen install completed. The
-following local gates passed: `pnpm lint`, `pnpm format:check`,
-`pnpm typecheck`, `pnpm test`, `pnpm openapi:check`, `pnpm bridge:guard`,
-`pnpm build`, the Playwright config regression, the focused new regression,
-the two-test reference file, `pnpm db:migrate`, and full `pnpm test:e2e`
-(`88/88`); `pnpm docs:check` also passed (`418` files, `0` errors).
-`pnpm test:integration` ran against the task-owned database and
-reported `1507 passed / 20 skipped`, then failed in the unrelated
-`health-persistence.integration.test.ts` setup on a duplicate fixed
-`ai_adapters` primary key. No allowed file was changed for that collision.
+With Node `24.20.0` and pnpm `10.34.5`, the frozen install completed. The R2
+focused proof used one task-owned loopback database: adapter registry first
+passed `7/7`, then the unchanged health suite failed with PostgreSQL
+`23505`, constraint `ai_adapters_pkey`, at the fixture INSERT in
+`health-persistence.integration.test.ts:129`; all `20` health tests were
+skipped and the invocation exited `1`. After the exact schema reset and
+canonical migration correction, the ordered pair passed (`7/7`, then
+`20/20`), and a third health invocation on the same database passed `20/20`.
 
-The prior local disk-exhaustion outcomes remain historical `BLOCKED` records
-from the reviewed candidate; they are not retroactively relabeled PASS. The
-architect-selected repair is runner-only fresh K1/K2 generation and
-private-ring injection, with workers retaining inherited public JSON. The
-focused regression is RED on reviewed `b0d93e3` and GREEN after that repair.
-Secret/raw-envelope logging, traces, screenshots, and video remain disabled.
+The complete acceptance cycle then ran once on a separate fresh task-owned
+loopback E2E database. `pnpm lint`, `pnpm format:check`, `pnpm typecheck`,
+the Playwright config regression (`1/1`), `pnpm test`, `pnpm test:integration`
+(`39` files, `1527/1527` tests, including all `20` health tests),
+`pnpm db:migrate`, `pnpm openapi:check`, `pnpm bridge:guard`, `pnpm build`,
+and `pnpm test:e2e` (`88/88`) all passed. `pnpm docs:check` is the final gate
+after this documentation update.
 
-No policy, storage, contract, production, or test-bypass change was made to
-turn a blocked database gate into a pass.
+The first full-cycle attempt was blocked only by the local E2E safety
+interlock because its disposable database name did not contain `e2e` or
+`test`; no test ran in that attempt. A correctly named fresh task-owned
+database was then used for the recorded clean cycle. The prior local
+disk-exhaustion outcomes remain historical `BLOCKED` records; they are not
+retroactively relabeled PASS. Secret/raw-envelope logging, traces,
+screenshots, and video remain disabled.
+
+The R1 runner-only fresh K1/K2 generation and private-ring injection remain
+unchanged. No policy, production, contract, migration, or test-bypass change
+was made.
 
 ## Publication record
 
-- Parent/base: `5d7c8853cc69dd95bc6e713cac3fb2aa0a63383`.
+- Parent/base: `5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c`.
 - Reviewed pre-repair candidate: `b0d93e36b2c7f37a4758ea4b33dbfa9cf2c688bb`,
   tree `9ebcf18e4d0c24d7058a8b730a7e18a74ff950b6`.
 - Prior implementation parent: `3710aeeef82314fff37e914833ca280ad5f56ab7`,
   tree `81be89e3133b774860a7fb1ab35e217bf502e08a`.
 - R1 correction commit: `39478f0b4e28dd875111ce28670396531a8efc4d`,
   tree `37fc3eea2c37060cb3599d7380df7623bad95229`.
+- R2 health-persistence fixture isolation is the follow-up correction in the
+  published candidate. Code commit: `1822e861b70ade3326d12f37d655467db53a1b05`,
+  tree `fde0f3ad158ed89e54d28f1396b6ea7d3b39c15b`; the later evidence commit
+  is distinguished in the R2 evidence handoff and terminal report.
 - Remote branch: [feature/server-i1-srv5-acceptance-2026-09-16](https://github.com/MaksimUnimax/Seller_Agents/tree/feature/server-i1-srv5-acceptance-2026-09-16).
 - Historical publication blocker: PR creation was previously unavailable
   because `gh` was absent and an unauthenticated GitHub REST create-PR request
