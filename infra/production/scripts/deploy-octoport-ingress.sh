@@ -69,6 +69,26 @@ backup_existing_octoport_configs() {
   shopt -u nullglob
 }
 
+capture_failure_diagnostics() {
+  local diagnostics_dir="${BACKUP_DIR}/failure-diagnostics"
+  local host
+
+  install -d -m 0700 "${diagnostics_dir}" || true
+  nginx -T >"${diagnostics_dir}/nginx-T.txt" 2>&1 || true
+  ls -la "${NGINX_CONF_DIR}" >"${diagnostics_dir}/conf.d-listing.txt" 2>&1 || true
+  systemctl status nginx --no-pager >"${diagnostics_dir}/nginx-status.txt" 2>&1 || true
+
+  {
+    for host in "${DOMAINS[@]}" docs.selleragents.ru; do
+      printf '%s\n' "--- ${host} ---"
+      openssl s_client -connect 127.0.0.1:443 -servername "${host}" </dev/null 2>/dev/null \
+        | openssl x509 -noout -subject -issuer -fingerprint -sha256 -ext subjectAltName 2>/dev/null || true
+    done
+  } >"${diagnostics_dir}/served-certificates.txt" 2>&1
+
+  log "failure diagnostics captured in ${diagnostics_dir}"
+}
+
 restore_previous_configs() {
   log "rolling back Octoport nginx config"
   rm -f "${NGINX_CONF_DIR}/${BOOTSTRAP_NAME}" "${NGINX_CONF_DIR}/${FINAL_NAME}"
@@ -88,6 +108,7 @@ restore_previous_configs() {
 on_exit() {
   local status=$?
   if [[ ${status} -ne 0 && ${SUCCESS} -ne 1 ]]; then
+    capture_failure_diagnostics
     restore_previous_configs
   fi
   exit "${status}"
@@ -143,7 +164,7 @@ install_final_config() {
 
 main() {
   require_root
-  for command_name in bash ip awk cut grep getent sort install cp rm nginx systemctl certbot find openssl curl; do
+  for command_name in bash ip awk cut grep getent sort install cp rm nginx systemctl certbot find openssl curl ls; do
     require_command "${command_name}"
   done
   assert_source_files
