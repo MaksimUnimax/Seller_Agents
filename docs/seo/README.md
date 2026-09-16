@@ -2,180 +2,182 @@
 
 Статус: **MASTER ROADMAP ACTIVE / EVIDENCE COLLECTION IN PROGRESS**.
 Дата начала: 2026-09-16.
-Текущая рабочая ветка evidence/research: `seo/wordstat-batch-01-2026-09-16`.
+Текущая рабочая ветка: `seo/wordstat-batch-01-2026-09-16`.
 
-Этот каталог — постоянная authority для органического поиска, семантического ядра, поисковой архитектуры, Алисы AI и технического SEO публичного продукта **Октопорт / Octoport**. Техническое имя репозитория не используется как целевой публичный бренд.
+Этот каталог — постоянная authority для органического поиска, семантики, поисковой архитектуры, Алисы AI и технического SEO публичного продукта **Октопорт / Octoport**.
 
-## Текущая execution authority
+## Текущие обязательные authority
 
-Главный исполняемый roadmap:
+### Roadmap
 
-- [SEO_MASTER_ROADMAP_2026-09-16](SEO_MASTER_ROADMAP_2026-09-16.md) — текущий путь от evidence collection до готового production SEO-продукта.
+- [SEO_MASTER_ROADMAP_2026-09-16](SEO_MASTER_ROADMAP_2026-09-16.md) — текущий исполняемый путь до готового production SEO-продукта.
 
-Методические authority:
+### Execution/process rules
 
-- [PRODUCT_TRUTH](PRODUCT_TRUTH.md) — реальные продуктовые границы и допустимые обещания;
-- [METHODOLOGY](METHODOLOGY.md) — базовый evidence-first semantic/SEO pipeline;
-- [EXTERNAL_METHOD_RESEARCH_2026-09-16](EXTERNAL_METHOD_RESEARCH_2026-09-16.md) — актуальные внешние методические опоры Yandex/Google + industry corroboration;
-- [KW002_METHOD_AUDIT_2026-09-16](KW002_METHOD_AUDIT_2026-09-16.md) — что переносим из текущего KW-002, что адаптируем и что сознательно не копируем.
+- [EXECUTION_RULES](EXECUTION_RULES.md) — обязательные правила сбора, evidence, provider lifecycle, QA, ambiguity, anti-regression и stage closure;
+- [WORK_HANDOFF_RULE](WORK_HANDOFF_RULE.md) — обязательный large-data contract: когда и как полный массив отдаётся ChatGPT Work;
+- [STAGE_GATES_M0_M7](STAGE_GATES_M0_M7.md) — перенесённые и адаптированные KW-002 Step00–06 gates для текущей стадии сбора.
 
-Старый [SEO_ROADMAP](SEO_ROADMAP.md) сохранён только как исторический coarse roadmap и **не является текущей execution authority**.
+### Method/product authorities
+
+- [PRODUCT_TRUTH](PRODUCT_TRUTH.md) — что продукт реально представляет собой и что допустимо обещать;
+- [METHODOLOGY](METHODOLOGY.md) — базовый evidence-first SEO/semantic pipeline;
+- [EXTERNAL_METHOD_RESEARCH_2026-09-16](EXTERNAL_METHOD_RESEARCH_2026-09-16.md) — свежая внешняя методическая база Yandex/Google + industry corroboration;
+- [KW002_METHOD_AUDIT_2026-09-16](KW002_METHOD_AUDIT_2026-09-16.md) — что именно перенесено из живого KW-002 и что сознательно не копируется.
+
+Старый `SEO_ROADMAP.md` сохранён как исторический coarse roadmap и не является текущей execution authority.
+
+## Operating model
+
+Прямое решение владельца:
+
+```text
+ЭТОТ ДИАЛОГ
+= собирает evidence
+= управляет bridge/provider действиями
+= сохраняет/проверяет результаты
+= формирует точный Work prompt
+= принимает/отклоняет Work return
+
+CHATGPT WORK
+= анализирует, систематизирует и преобразует большие данные
+= работает с полным разрешённым массивом
+= создаёт большие таблицы/артефакты
+```
+
+Если полный анализ большого массива небезопасен в обычном чате, **sampling запрещён**. Срабатывает `WORK_HANDOFF_RULE.md`.
 
 ## Цель
 
-Построить не набор «SEO-текстов» и не просто таблицу ключей, а доказуемый поисковый продукт:
+Построить не «SEO-тексты» и не просто список ключей, а доказуемый поисковый продукт:
 
-`product truth → demand evidence → live Yandex SERP → search competitors → Alice AI evidence → evidence freeze → semantic master → SERP/task clustering → target page ownership → page specs → technical SEO → implementation → launch/indexing → Yandex/Google/Alice measurement`.
+`product truth → demand evidence → Yandex SERP → search competitors → Alice AI evidence → M7 Collection Freeze → Work semantic master → SERP/task clustering → page ownership → page specs → technical SEO → implementation → live/indexing → Yandex/Google/Alice measurement`.
 
-Финальная структура сайта не принимается до `M7 Collection Freeze` из master-roadmap. До этого собираем и сохраняем все evidence, нужные для честного решения о семантике, посадочных и оптимизации.
+Финальная структура сайта заблокирована до `M7 Collection Freeze`.
 
-## Границы исследования
+## Evidence classes
 
-Основной рынок текущего прохода — русскоязычный спрос вокруг продавцов Ozon/Wildberries и использования ИИ/AI-агентов/нейросетей/LLM для работы с данными и задачами маркетплейсов.
+- `PRODUCT_TRUTH`;
+- `SEARCH_HYPOTHESIS`;
+- `WORDSTAT_OBSERVED`;
+- `SERP_OBSERVED`;
+- `COMPETITOR_OBSERVED`;
+- `ALICE_OBSERVED`;
+- `SEO_DECISION`;
+- `IMPLEMENTED`;
+- `MEASURED`;
+- `UNKNOWN/HOLD`.
 
-Основные evidence surfaces:
+Эти классы не подменяют друг друга.
 
-1. Yandex Wordstat — спрос и лексические семьи;
-2. обычный Yandex Search — интент, типы страниц, поисковые конкуренты, SERP overlap;
-3. конкурентные landing/product/content pages — реальный язык категории, Page Jobs, proof/trust и coverage gaps;
-4. Алиса AI / generative search — структура ответов, источники и follow-up decomposition;
-5. Yandex Webmaster — после подключения: queries/market analysis, indexability, search query analytics, Alice AI visibility;
-6. Google Search Console — cross-engine index/query baseline после запуска;
-7. current Octoport site/source — техническая и контентная исходная точка.
+## Неподвижный provider/evidence порядок
 
-Текущая цель — органический поиск и информационная архитектура. Платная семантика Директа может использовать результат позже, но не определяет текущую архитектуру.
-
-## Уровни доказательности
-
-Каждый важный вывод получает один из статусов:
-
-- `PRODUCT_TRUTH` — подтверждено действующей продуктовой документацией/решением владельца;
-- `SEARCH_HYPOTHESIS` — рабочая гипотеза до внешней проверки;
-- `WORDSTAT_OBSERVED` — получено из Wordstat с параметрами/provenance;
-- `SERP_OBSERVED` — подтверждено текущей обычной выдачей Yandex;
-- `ALICE_OBSERVED` — подтверждено контролируемым ответом/источниками Алисы AI с датой;
-- `COMPETITOR_OBSERVED` — подтверждено конкретной конкурентной страницей/URL;
-- `SEO_DECISION` — принятое решение о кластере, page ownership, приоритете, split/merge или internal-link route с основанием;
-- `IMPLEMENTED` — реально внесено в публичный сайт;
-- `MEASURED` — подтверждено post-launch Webmaster/GSC/Alice/product analytics.
-
-Нельзя повышать гипотезу до решения без нужного evidence слоя.
-
-## Неподвижные правила provider/evidence
-
-Для платных/асинхронных bridge/provider действий:
-
-`FULL RESPONSE/EXPORT → DURABLE PERSIST → READBACK/VERIFY → ANALYSIS/PROGRESS → NEXT ACTION`.
+```text
+FULL RESPONSE / EXPORT
+-> DURABLE PERSIST
+-> REMOTE READBACK / VERIFY
+-> ANALYSIS / PROGRESS
+-> NEXT PROVIDER ACTION
+```
 
 Дополнительно:
 
 - no blind retry;
+- pending/waiting/unknown не превращаются в отрицательное search evidence;
 - operation/job identity сохраняется;
-- local lifecycle action не считается provider call;
-- provider success в чате не считается downstream authority без durable evidence;
-- raw evidence не заменяется аналитическим пересказом;
-- неизвестный исход не превращается в ноль/отсутствие спроса.
+- chat не является единственным raw-хранилищем;
+- large evidence не урезается из-за контекста;
+- Work output не является truth до Main Chat return QA.
 
-## Текущий фактический cursor
+## Текущий cursor
 
-### M0 — Governance + product truth
+### M0
 
-`PASS`.
+`PASS` — product truth/governance frozen.
 
-### M1 — Current-site + measurement baseline
+### M1
 
-`OPEN` — read-only baseline должен быть завершён до production SEO implementation.
+`OPEN / SOURCE BASELINE PARTIAL PASS` — source audit есть, live/indexing/measurement surface ещё должен быть закрыт.
 
-### M2 — Demand acquisition
+### M2
 
-`B01 + B02 PASS`.
+`B01+B02 EXECUTED / RETROSPECTIVE KW002 GATE AUDIT OPEN`.
 
-Wordstat broad/targeted discovery завершён. Новый широкий Wordstat batch **не разрешён по умолчанию**. Reopen — только по конкретному information gap из Search/competitors/Alice.
+Фактический Wordstat сбор завершён, но после переноса более строгих KW-002 rules обязателен ретро-аудит:
 
-### M3 — Ordinary Yandex SERP collection
+- seed/probe quality;
+- depth/coverage;
+- B01 raw persistence;
+- B02 exact-envelope verification;
+- evidence limitation register.
+
+Исторические запросы не переигрываются автоматически только ради оформления.
+
+### M3
 
 `IN PROGRESS`.
 
-S01 `ии агенты для маркетплейсов`:
+S01 `ии агенты для маркетплейсов` закрыт: 20 нормализованных результатов, source export hash-pinned, normalized authority сохранена. S02 `ии агент для озон` подготовлен к bounded execution после завершения текущих durability/rule migration checks.
 
-- Deferred Search lifecycle завершён `SUCCEEDED`;
-- 20 нормализованных результатов;
-- validation usable for URL comparison;
-- normalized authority сохранена в `serp/exports/`;
-- S01 подтверждает самостоятельный search-intent/category слой AI-агентов для маркетплейсов: product/service landings + integrations + informational/comparison pages, а не только генерацию карточек.
+Основные M3 authority:
 
-### M4 — Search competitor + landing corpus
+- `serp/M3_QUERY_MATRIX_2026-09-16.md`;
+- `serp/M3_PRE_STEP_RESEARCH_AND_EXECUTION_GATE_2026-09-16.md`;
+- `serp/SERP_PROGRESS.md`.
 
-`OPEN`.
+### M4
 
-S01 уже дал первый candidate registry, но стабильный конкурентный корпус принимается только после нескольких разных query families.
+`OPEN` — search-competitor/landing corpus будет строиться из recurring live SERP evidence.
 
-### M5 — Alice AI / generative-search evidence
+### M5
 
-`OPEN / NOT STARTED`.
+`OPEN / NOT STARTED` — Alice AI collection.
 
 ### M6–M7
 
-Gap acquisition и Collection Freeze заблокированы до достаточного M3–M5 evidence.
+Blocked until M3–M5 evidence and retro gates are sufficient.
 
 ### M8+
 
-Финальная семантика, clusters, page ownership, посадочные и site implementation **сознательно заблокированы до Collection Freeze**, по прямому решению владельца: сначала собираем и сохраняем всё нужное, потом проектируем.
+Blocked until Collection Freeze; затем full cross-source semantic pass идёт через Work W1 при large-data trigger.
 
-## Каталоги evidence/artifacts
+## Каталоги
 
-- `wordstat/` — raw provider evidence, analysis, progress, synthesis;
-- `serp/raw/` — lifecycle envelopes/errors/collect evidence;
-- `serp/exports/` — нормализованные экспортные Search authorities + source hashes/provenance;
-- `serp/analysis/` — query/lifecycle/intent analysis;
-- `serp/competitors/` — recurring search competitor registry и page-level observations;
-- `alice/` — будущие Alice/AI-search evidence/analysis;
-- `semantic/` — будущий governed universe после Collection Freeze;
-- `clusters/` — будущие SERP/task-first clusters;
-- `pages/` — будущие final page specifications;
-- `technical/` — baseline/technical SEO spec и QA;
-- `evidence/` — acceptance receipts/closure artifacts;
-- `WORKLOG.md` — append-only фактический ход работы.
+- `wordstat/` — Wordstat raw/analysis/progress/synthesis;
+- `serp/raw/` — Search lifecycle evidence;
+- `serp/exports/` — normalized Search exports + exact archive/provenance where available;
+- `serp/analysis/` — query/lifecycle/intent notes;
+- `serp/competitors/` — recurring competitor registry/page corpus;
+- `alice/` — Alice/AI-search evidence;
+- `semantic/` — post-freeze semantic master;
+- `clusters/` — post-freeze SERP/task clusters;
+- `pages/` — final page specs;
+- `technical/` — technical SEO baseline/spec/QA;
+- `evidence/` — acceptance/closure/QA artifacts;
+- `WORKLOG.md` — append-only execution log.
 
-## Критерий полноты
+## Полнота
 
-Полнота не измеряется числом фраз.
+Готовность к финальной семантике определяется не числом фраз, а закрытием нужных решений:
 
-До перехода к финальной семантике должны быть закрыты:
-
-- Wordstat baseline;
+- Wordstat baseline + retro gates;
 - representative ordinary Yandex SERP matrix;
-- recurring search competitor set;
+- stable-enough recurring search competitor set;
 - relevant competitor page corpus;
-- representative Alice AI cases;
-- high-value evidence gaps;
-- provider outcome ambiguity;
-- durable evidence required for final decisions.
+- representative Alice cases;
+- zero unresolved high-value acquisition gaps;
+- no unknown provider outcomes;
+- durable/read-back evidence required for downstream work.
 
-После этого master roadmap ведёт проект через semantic master → clusters → page ownership → page specs → technical implementation → production verification → measurement.
+Только затем M7 закрывается и разрешается Work/full semantic analysis.
 
-## Ключевые правила качества
+## Isolation
 
-- Частотность хранится рядом с конкретной фразой, не как выдуманный агрегат кластера.
-- Высокая частотность не делает запрос релевантным; низкая не делает его бесполезным.
-- Кластеры строятся по user job + intent + SERP compatibility, а не только по словам.
-- `AMBIGUITY -> HOLD` до доказательства.
-- Каждая target page имеет собственную coverage boundary и `covered_elsewhere`.
-- Нет fake CREATE / thin pages / doorway pages.
-- Конкурентный текст — evidence, а не материал для копирования.
-- Каждая финальная страница проходит product-truth + Yandex ЭПОС gate.
-- Техническое SEO не заменяет релевантность/контент, но canonical/indexability/robots/sitemap/internal links/schema/mobile/performance являются acceptance gates.
-- Маскот и бренд не подменяют язык реального search intent.
+До отдельного implementation handoff этот поток изменяет только `docs/seo/**`.
 
-## Взаимодействие с параллельной разработкой
-
-SEO research до отдельного synchronization handoff изменяет только `docs/seo/**`.
-
-Не трогать из этого потока:
+Не трогать отсюда:
 
 - server/runtime contracts;
 - extension implementation;
-- текущую site implementation;
+- site implementation;
 - moving `main`.
-
-Production site patch появится только как отдельная bounded задача после принятия page map/page specs/technical spec.
