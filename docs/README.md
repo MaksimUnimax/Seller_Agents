@@ -25,6 +25,17 @@
 - [Ozon](integrations/ozon/README.md), [WB](integrations/wildberries/README.md).
 - [ИИ](integrations/ai/README.md), [браузеры](integrations/browsers/README.md).
 
+## SEO и семантика Октопорта
+
+- [Точка входа SEO](seo/README.md): authority, границы, evidence levels и текущий cursor.
+- [Product truth для SEO](seo/PRODUCT_TRUTH.md): публичный бренд, допустимые обещания и запреты.
+- [Методика](seo/METHODOLOGY.md): Wordstat → semantic universe → intent clusters → target pages → technical SEO.
+- [SEO roadmap](seo/SEO_ROADMAP.md): этапы SEO-S0…SEO-S10 и критерии завершения.
+- [Initial seed universe](seo/SEED_UNIVERSE.md): гипотезы первого discovery-прохода без выдуманных частотностей.
+- [SEO worklog](seo/WORKLOG.md): append-only ход работы, факты, решения, ошибки и blockers.
+- [Wordstat Batch 01](seo/wordstat/BATCH_01_BROAD_DISCOVERY.md): первый bounded provider batch, подготовлен к исполнению.
+- [Current site SEO baseline](seo/technical/CURRENT_SITE_BASELINE_2026-09-16.md): source-аудит текущей статической страницы без утверждения о production crawl.
+
 ## Разработка и выпуск
 
 - [D2.3: WB adapter, зависимости и прикладные границы](development/EXTENSION_WB_ADAPTER.md), [квитанция](migration/evidence/extension-wb-adapter-d2-3-2026-09-14/README.md).
