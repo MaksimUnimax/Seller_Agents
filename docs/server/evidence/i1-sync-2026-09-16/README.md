@@ -1,18 +1,18 @@
 # I1 C1 + I1-SRV.5 synchronization evidence
 
-Task: `SA-I1-SYNC-20260916-01`  
-Date: 2026-09-16  
+Task: `SA-I1-SYNC-20260916-01`
+Date: 2026-09-16
 Status: `IMPLEMENTED_CANDIDATE / ARCHITECT_REVIEW_PENDING`
 
 ## Immutable history and provenance
 
-Repository: `MaksimUnimax/Seller_Agents`  
-Canonical main: `5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c`  
-Common ancestor: `bc0cd0088ca50ba06021ea602a46bdd90de91378`  
-Accepted server: `086ae20c2858849ec13b1ab67c2f7661259022c3`, tree `ea17da20acb01ae3c03a14d5b18128c8040e27e7`  
-Accepted client: `56c81a3521c02502b65fd713aec890e5a30f038d`, tree `5c14497e239922c3712d0c3be12af7ee59e665f5`  
-Integration branch: `integration/i1-c1-srv5-2026-09-16`  
-Merge: `9d3407bc248e935860c5d7d3a50536c6a08d92f4`, tree `e834d3af55bb102e0378218dff731dd15b124d02`  
+Repository: `MaksimUnimax/Seller_Agents`
+Canonical main: `5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c`
+Common ancestor: `bc0cd0088ca50ba06021ea602a46bdd90de91378`
+Accepted server: `086ae20c2858849ec13b1ab67c2f7661259022c3`, tree `ea17da20acb01ae3c03a14d5b18128c8040e27e7`
+Accepted client: `56c81a3521c02502b65fd713aec890e5a30f038d`, tree `5c14497e239922c3712d0c3be12af7ee59e665f5`
+Integration branch: `integration/i1-c1-srv5-2026-09-16`
+Merge: `9d3407bc248e935860c5d7d3a50536c6a08d92f4`, tree `e834d3af55bb102e0378218dff731dd15b124d02`
 Parents: server first `086ae20c2858849ec13b1ab67c2f7661259022c3`; client second `56c81a3521c02502b65fd713aec890e5a30f038d`.
 
 All three required ancestry checks passed. Relative to the common ancestor,
