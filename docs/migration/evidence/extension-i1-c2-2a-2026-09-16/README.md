@@ -37,3 +37,9 @@ The candidate adds private transport provenance, sequence-fenced shared online b
 No C2.2-A CI package was independently downloaded in this workspace. The historical C2.1 R3 default-development artifact receipt remains separate: artifact `10433241137`, ZIP `1822450` bytes, SHA-256 `ceede563a4869184f26d161875ce6ca39f12c37245ee49c2917302d3a4ea4e59`, 39/39 byte parity. The historical executor-reported local ZIP `1823235` bytes / SHA-256 `03ed7c22618cbb9b49c83e0c2b6a4735b314c0a30480258550b02492cc8dab65` is not transferred to that default archive. C2.2-A default-development and ephemeral-key native receipts are `UNKNOWN` until a package-producing gate supplies them.
 
 See `results.json` for the machine-readable local ledger. Architect review is required; no merge, deploy or release is claimed.
+
+## R1 correction addendum
+
+The initial receipt above was written before the independent review and its broad A–H summary was incomplete: the published test did not prove endpoint-bound audited 503 eligibility or the denial-write obsolescence race. The current receipt was terminal in the executor workspace while the initial evidence file still said `UNKNOWN`; that historical wording is preserved here rather than rewritten.
+
+The corrected source/extracted receipt and explicit case ledger are in `r1/README.md` and `r1/results.json`. No historical result JSON was changed.

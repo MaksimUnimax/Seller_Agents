@@ -11,3 +11,7 @@ The policy invocation captures generation, device/session, authority envelope, p
 The existing mutation queue and `seller_agents_control_auth_v2` record provide the only durable checkpoint. Effective time is advanced in memory before persistence; `effective < expiresAt` is `FRESH`, `expiresAt <= effective < offlineGraceUntil` is `STALE_BUT_OFFLINE_GRACE_ELIGIBLE`, and grace equality or later is `CACHE_EXPIRED`. Completion sampling can veto or reclassify a result but is not claimed durable until a later checkpoint. Failed denied writes attempt existing AUTH removal and return `AUTH_DENIAL_PERSISTENCE_FAILED` when durability cannot be made honest.
 
 This API returns verified configuration only. It does not set `authority.workAllowed`, `runtimeLastCheckpointAllowed`, or an authority-change grant, and is not wired into Work consumers or dispatch. Signed capability/profile consumption, offline Work, command/result completion and scheduler integration remain subsequent C2 work. The focused test uses real Ed25519 fixture signatures and test-only barriers on both source and extracted routes.
+
+## R1 correction ledger
+
+The initial candidate receipt’s broad A–H declaration was incomplete. R1 records the endpoint-bound 503 provenance control, successful-write obsolescence control, public-return fence, local/body-failure control, both AUTH set/remove outcomes, and context dimensions in `docs/migration/evidence/extension-i1-c2-2a-2026-09-16/r1/README.md`. The original result JSON remains historical evidence and is not rewritten.

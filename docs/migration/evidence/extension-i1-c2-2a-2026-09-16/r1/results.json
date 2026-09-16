@@ -1,0 +1,62 @@
+{
+  "task_id": "SA-I1-C2-2A-R1-20260916-01",
+  "status": "IMPLEMENTED_CANDIDATE_ARCHITECT_REVIEW_PENDING",
+  "refs": {
+    "start": "ec9c23da45091255e0ba53914b3682539ef0b797",
+    "start_tree": "eeeb24dfea47f714b38d6997550073e468aad58c",
+    "parent": "a553d1f80769528544ee1c90d1305edb51d9d71f",
+    "target_branch": "integration/i1-c1-srv5-2026-09-16"
+  },
+  "focused": {
+    "source": "PASS",
+    "extracted": "PASS",
+    "node": "v22.22.2",
+    "gate_processes": 100,
+    "A": "PASS",
+    "B": "PASS",
+    "C": "PASS",
+    "D": "PASS",
+    "E": "PASS",
+    "F": "PASS",
+    "G": "PASS",
+    "H": "PASS",
+    "live_provider_calls": 0,
+    "real_signed_fixtures": true,
+    "test_only_barriers": true
+  },
+  "ledger": [
+    { "label": "R1-1", "source": "PASS", "extracted": "PASS", "exact_start_red": "PROVEN_BY_INDEPENDENT_PROBE", "assertion": "HTTP endpoint-bound audited 503 and local/body failure exclusion" },
+    { "label": "R1-2", "source": "PASS", "extracted": "PASS", "assertion": "Denial AUTH write held after floor write and later raw owner" },
+    { "label": "R1-3", "source": "PASS", "extracted": "PASS", "assertion": "HTTP/transport/parser/signature/profile/context classification matrix" },
+    { "label": "R1-4", "source": "PASS", "extracted": "PASS", "assertion": "Expiry/grace and fresh-only guard controls" },
+    { "label": "R1-5", "source": "PASS", "extracted": "PASS", "assertion": "AUTH set/remove failure and recovery controls" },
+    { "label": "R1-6", "source": "PASS", "extracted": "PASS", "assertion": "Origin/browser/extension/contract/trust/device/session/AI/envelope controls" },
+    { "label": "R1-7", "source": "PASS", "extracted": "PASS", "assertion": "Checkpoint/public-return and later raw ownership fences" },
+    { "label": "R1-8", "source": "PASS", "extracted": "PASS", "assertion": "Online renewal and zero replay/network guard controls" }
+  ],
+  "gates": {
+    "complete_i1_source_extracted": "PASS",
+    "native_source_extracted": "UNKNOWN",
+    "installed_local_api_portal_postgresql": "UNKNOWN",
+    "docs_check": "UNKNOWN",
+    "bridge_guard": "UNKNOWN",
+    "openapi_check": "UNKNOWN",
+    "current_task_remote_ci": "UNKNOWN"
+  },
+  "packages": {
+    "default_development": {
+      "bytes": 1834654,
+      "sha256": "2c1f5765b0eb382d9387e3ea1a59e71bd549344f10c107a39069d92719f341de",
+      "repeat_archive_match": true,
+      "source_extracted_byte_parity": true
+    },
+    "ephemeral_key_native": "UNKNOWN"
+  },
+  "scope": {
+    "offline_work_grant": "NOT_IMPLEMENTED",
+    "server_contracts": "UNCHANGED",
+    "site_ingress_migration": "PRESERVED_OUT_OF_SCOPE",
+    "main_merge": "NOT_PERFORMED",
+    "architect_review": "REQUIRED"
+  }
+}
