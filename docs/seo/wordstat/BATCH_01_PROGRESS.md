@@ -40,11 +40,12 @@ Until a separate synchronization/review step:
 | B01-06 | ии для озон | SUCCESS | 972 | `wordstat-101b03ff-b998-457c-b9c0-d1a78c68d62c` | `raw/B01_06_2026-09-16.md` | `analysis/B01_06_2026-09-16.md` |
 | B01-07 | ии для wildberries | SUCCESS | 225 | `wordstat-06614787-cd5e-4b68-a155-69c03ff700c2` | `raw/B01_07_2026-09-16.md` | `analysis/B01_07_2026-09-16.md` |
 | B01-08 | ии для вайлдберриз | SUCCESS | 76 | `wordstat-a3e5829b-d04d-4061-9c66-96e1197f80af` | `raw/B01_08_2026-09-16.md` | `analysis/B01_08_2026-09-16.md` |
+| B01-09 | chatgpt для маркетплейсов | SUCCESS | 67 | `wordstat-d76dd883-9acd-4ed7-b693-7a847722fb13` | `raw/B01_09_2026-09-16.md` | `analysis/B01_09_2026-09-16.md` |
 
 ## Totals
 
-- successful calls: `8/15`;
+- successful calls: `9/15`;
 - provider failures: `0`;
-- accumulated estimated cost: `0.16 ₽`;
-- current cursor: `B01-09`;
-- next seed: `chatgpt для маркетплейсов`.
+- accumulated estimated cost: `0.18 ₽`;
+- current cursor: `B01-10`;
+- next seed: `chatgpt для ozon`.
