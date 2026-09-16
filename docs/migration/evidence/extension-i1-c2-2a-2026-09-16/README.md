@@ -49,3 +49,13 @@ The corrected source/extracted receipt and explicit case ledger are in `r1/READM
 The historical R1 receipt above is preserved. R2 is the tests/evidence-only continuation from exact start `90f3f5ab4787d1ed4b782bff4f97181dd9fe3772`, tree `835ce56a1fd235196f7010936817485bf7347eb5`, and parent/code `65596c5f1b5189c60de64d72a80773d43f1a203f`. It adds only the allowlisted policy test, deterministic worker-harness hook, and append-only/current R2 evidence.
 
 The stable per-case ledger, source/extracted results, gate provenance, package receipt, remote-CI status, and production byte-identity comparison are recorded in `r2/README.md` and `r2/results.json`. The older root and R1 result JSON files remain unchanged.
+
+## R3 factual correction addendum
+
+R2 retention proof was invalid: `Q3-A` wrote the fixture artifact again before each retention assertion, and its seed did not carry explicit `created_at_ms`/`expires_at_ms`. The R3 case puts the stable artifact once, uses readonly gets thereafter, keeps the artifact inside its TTL, checks the IDB write count, and records a disposable destructive-clear negative control separately. Production cleanup remains unchanged.
+
+R2 `Q4-D` was a legitimate correctly signed online account replacement. It was a positive authority-processing case, not evidence that a valid server replacement should be rejected; R3 names it accordingly and adds the separate held-cache obsolescence case for the stale account-A fallback.
+
+R2 `Q5-B` used cloned-object reference inequality, which did not prove preservation of exact durable B state. R3 captures durable AUTH after B success/403 and compares the complete record after A settles. R3 also expands Q5-C to compare the signed B payload/envelope and committed credentials, generation, and clock or the exact denied state.
+
+The historical R2 `results.json` and R2 ledger remain unchanged. Current R3 source/extracted assertions and gate/package provenance are in `r3/README.md` and `r3/results.json`.
