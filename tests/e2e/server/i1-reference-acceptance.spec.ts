@@ -9,6 +9,7 @@ import {
   credentials,
   reset,
   seedBootstrapConfig,
+  sql,
 } from "./support/fixtures.js";
 
 const v2Request = (deviceId: string) => ({
@@ -64,6 +65,25 @@ function errorCode(body: unknown): string | undefined {
 }
 
 test.beforeEach(async () => reset());
+
+test("I1-SRV.5 worker preserves runner public trust without private signing material", async () => {
+  expect(process.env.TEST_WORKER_INDEX !== undefined).toBe(true);
+  expect(process.env.CONFIG_SIGNING_KEY_RING_JSON === undefined).toBe(true);
+
+  const trustMap = packagedK1TrustMap();
+  const trustedKey = trustMap.get("e2e-config-k1");
+  if (!trustedKey) throw new Error("e2e-config-k1 trusted key is absent");
+  const rows = await sql<{ public_key_spki_der: Buffer }>(
+    "SELECT public_key_spki_der FROM signing_keys WHERE key_id=$1",
+    ["e2e-config-k1"],
+  );
+  expect(rows).toHaveLength(1);
+  expect(
+    trustedKey
+      .export({ format: "der", type: "spki" })
+      .equals(rows[0]?.public_key_spki_der ?? Buffer.alloc(0)),
+  ).toBe(true);
+});
 
 test("I1-SRV.5 reference activation, V2 bootstrap, rotation, continuity, and revoke", async ({
   page,
