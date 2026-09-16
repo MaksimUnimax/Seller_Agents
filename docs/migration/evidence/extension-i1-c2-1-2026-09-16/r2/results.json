@@ -14,7 +14,8 @@
     "canonical_main": "5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
     "code_commit": "790975c4879de41043d747485f4c957e7f51b003",
     "code_tree": "fafc0fa6fda3b612fa341ef90fb747ad200b02cd",
-    "code_parent": "13068c24354e8ec61bab6cf05598a5bb6ced7b65"
+    "code_parent": "13068c24354e8ec61bab6cf05598a5bb6ced7b65",
+    "test_receipt_commit": "ead575816dde5df2613a61cb8aa599e216c8066a"
   },
   "focused": {
     "source": "PASS",
