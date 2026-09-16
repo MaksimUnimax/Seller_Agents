@@ -14,7 +14,7 @@ For every bridge/provider response:
 4. update this progress file;
 5. only then issue the next executable bridge command.
 
-Local admission errors with `request_executed: false` do not count as provider calls and must be preserved separately from actual SERP evidence.
+Local admission errors and local due-time guard responses with `request_executed: false` do not count as provider calls and must be preserved separately from actual SERP evidence.
 
 ## Isolation
 
@@ -42,18 +42,18 @@ Optional control after priorities: `нейросеть помощь для ма�
 | S01-02 | ии агенты для маркетплейсов | `MANUAL_ADMISSION` | `SERVICE_NOT_ACTIVE` | `false` | `raw/S01_02_ADMISSION_ERROR_2026-09-16.md` | `analysis/S01_02_ADMISSION_ERROR_2026-09-16.md` |
 | S01-03 | ии агенты для маркетплейсов | `start` | `START_ACCEPTED_PENDING` | `false` | `raw/S01_03_START_2026-09-16.md` | `analysis/S01_03_START_2026-09-16.md` |
 | S01-04 | ии агенты для маркетплейсов | `submitN` | `ACCEPTED_WAITING` | `true` | `raw/S01_04_SUBMIT_2026-09-16.md` | `analysis/S01_04_SUBMIT_2026-09-16.md` |
+| S01-05 | ии агенты для маркетплейсов | `collectN` | `NO_DUE_OPERATIONS` | `false` | `raw/S01_05_COLLECT_NOT_DUE_2026-09-16.md` | `analysis/S01_05_COLLECT_NOT_DUE_2026-09-16.md` |
 
 ## Current job state
 
 - job id: `octoport-serp-s01-20260916`;
-- operation id: `sprjotiech5gn23a4tq3`;
+- accepted operation id from submit: `sprjotiech5gn23a4tq3`;
 - control: `RUNNING`;
 - total items: `1`;
 - `WAITING: 1`;
 - requests started: `1`;
 - operations accepted: `1`;
 - polls started: `0`;
-- provider calls observed at submit: `1`;
 - unresolved: `1`;
 - revision: `2`.
 
@@ -63,9 +63,13 @@ Optional control after priorities: `нейросеть помощь для ма�
 - deferred search operations initiated: `1`;
 - completed priority SERP queries: `0/7`;
 - local admission failures: `2`;
+- local not-due collect guards: `1`;
 - provider failures: `0`;
-- estimated tariff cost of the initiated daytime deferred search: `0.0305 ₽`;
 - current query: `ии агенты для маркетплейсов`;
-- next lifecycle action: `collectN` with `count: 1` after the documented minimum deferred-processing guard of 5 minutes;
+- next lifecycle action: repeat `collectN` with `count: 1` after the bridge due-time guard has elapsed;
 - do not resubmit;
-- after `collectN`: persist and verify its full returned envelope before any export or next query.
+- after a provider-backed `collectN`: persist and verify its full returned envelope before any export or next query.
+
+## UI observation
+
+The user reported that the Yandex AI Studio `Operations` page currently shows `Active operations: 0`. This UI observation is not treated as provider-state authority for the Search job. The authoritative evidence retained in this stream is the API/bridge lifecycle: accepted operation id on `submitN`, followed by local `NO_DUE_OPERATIONS` without a provider poll. The next due provider-backed `collectN` will determine the operation state directly.
