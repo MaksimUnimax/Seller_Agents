@@ -1,8 +1,8 @@
 # Seller Agents — единый cursor
 
-Дата: 2026-09-16. Статус: I1_C1_ACCEPTED / I1_SRV5_ACCEPTED / I1_SYNC_REVIEW_ACTIVE / C2_1_DESIGNED_NOT_SUBMITTED.
+Дата: 2026-09-16. Статус: I1_C1_ACCEPTED / I1_SRV5_ACCEPTED / I1_SYNC_ACCEPTED / C2_1_PREPARED_FOR_SINGLE_FINAL_SUBMISSION.
 
-Владелец разрешил непрерывный авторежим; один архитектор и один последовательный Codex. SYNC terminal получен; source/package/installed-local review завершён, обязательные оставшиеся CI контролируются в активном цикле. Следующий C2.1 спроектирован, но не выдан. Сохранение checkpoint не означает остановку или запуск Codex.
+Владелец разрешил непрерывный авторежим; один архитектор и один последовательный Codex. SYNC terminal проверен; все обязательные CI завершились SUCCESS в активном цикле, bounded SYNC принят. C2.1 готов к единственной финальной передаче. Сохранение задачи не означает её доставку или запуск Codex.
 
 ## Роли
 
@@ -15,10 +15,10 @@ Astra / очень высокая глубина рассуждения — гл
 - Main5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c unchanged. Architect created draft PR9 once after deduplication; virtual mergefd3949e26ae10dfbd40d7527e2981b607a4b5837 has candidate-identical tree and verified parents. PR7/8 unchanged.
 - Independent Git-tree provenance PASS:54client/19server/0overlap/922unchanged, no blob/mode mismatches; exactly8allowed docs follow-up changes. Actual non-doc759 unchanged; receipt990 label is inaccurate and needs only factual correction.
 - Independent CI ZIP readback PASS: artifact10428733930,39/39files,1801114bytes, SHA2562f364316986187db50251dc4708317ca612ce51dd7106138106f64239605ba43. Separate local ephemeral fixture ZIP remains reported.
-- Verdict at checkpoint: WAITING_REQUIRED_REMOTE_GATES; architect remains active. Server push35052294338/job104655147186 SUCCESS; PR Server35052418502/job104655465041 and WB-browser104655465480/run35052418514 still monitored. Other Extension/I1/Documentation gates SUCCESS. See references/I1_SYNC_REVIEW.md and references/I1_SYNC_CI.json.
-- Current incomplete operation: finish monitoring those existing jobs; read their completed logs; accept bounded sync or diagnose exact failure. No workflow rerun or duplicate executor task.
-- Next task SA-I1-C2-1-20260916-01 fully designed at tasks/I1_C2_1_2026-09-16.md, NOT_SUBMITTED. C2.1 covers durable context/time before offline grace. Independent source VM found rollback reauthorization and changed-origin/browser cache acceptance; references/I1_C2_1_DESIGN.md and probe files. C2.2+ offline/profile/joint Work remains open.
-- Previous executor stopped for review per terminal. No confirmed executor running; direct Bridge/process visibility unavailable. Saving task is not delivery/start. Do not repeat SYNC on duplicate terminal or issue C2 before gate acceptance.
+- Verdict: ACCEPTED bounded SYNC on1ff322b3. Server push35052294338/job104655147186 SUCCESS; Server PR35052418502/job104655465041 SUCCESS; Extension35052418514 all5jobsSUCCESS including WB-browser104655465480; I1run35052418530 bothjobsSUCCESS including installed104655465207; Documentation35052418500/job104655466012 SUCCESS. Completed logs independently read; reference/server1527integration/88E2E, WB321source+321package, docs454files/0errors. See references/I1_SYNC_REVIEW.md and references/I1_SYNC_CI.json.
+- Current next operation: issue SA-I1-C2-1-20260916-01 exactly once in final, then process its actual terminal. SYNC is complete; a duplicate SYNC terminal must not trigger another submission. No workflow rerun or duplicate executor task.
+- Next task SA-I1-C2-1-20260916-01 fully designed at tasks/I1_C2_1_2026-09-16.md, PREPARED_FOR_SINGLE_FINAL_SUBMISSION. C2.1 covers durable context/time before offline grace. Independent source VM found rollback reauthorization and changed-origin/browser cache acceptance; references/I1_C2_1_DESIGN.md and probe files. C2.2+ offline/profile/joint Work remains open.
+- Previous executor stopped for review per terminal. No confirmed executor running; direct Bridge/process visibility unavailable. Saving task is not delivery/start. Do not repeat SYNC or resend C2 when delivery is unknown.
 - C1 and I1-SRV.5 remain accepted in their recorded scopes. Health/P8.4 B5 NOT ACCEPTED, B6–B8 queued. S1.2 real email/preprod and D3 deferred; no main merge, deployment, release, full I1/D2 or beta completion.
 - Ручные тесты владельца — после C2/совместной установленной I1-приёмки и в Q1 перед бетой; сейчас инженерные проверки продолжаются.
 
@@ -158,3 +158,8 @@ R2 terminal обработан; source correction и exact-head remote gates п�
 - Queue: combined candidate acceptance -> C2 offline/profile/joint integration. Health/P8.4 B5 NOT ACCEPTED; B6–B8 queued. S1.2 real email/preprod and D3 not started. No full I1/D2, live or release acceptance.
 - Ручная приёмка владельцем понадобится после C2/совместной установленной I1-проверки и в Q1 перед бетой; текущие серверные/сборочные проверки выполняет инженерный цикл.
 
+
+
+## SYNC accepted / C2.1 handoff — 2026-09-16
+
+Все обязательные exact-head/PR CI завершены SUCCESS без повторного запуска; independent tree and ZIP proof завершены. SYNC принят в bounded development scope, PR9 draft/unmerged. Next SA-I1-C2-1-20260916-01 готов для одной финальной передачи. Предыдущий WAITING checkpoint — история, не текущий blocker. C2.1 закрывает cache context/time; offline grace и signed-profile/joint acceptance остаются следующими критериями. Health/S1.2/D3 очередь сохранена.

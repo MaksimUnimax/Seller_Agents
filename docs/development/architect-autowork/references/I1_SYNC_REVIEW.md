@@ -19,17 +19,17 @@ docs/STATUS.md retains old REAL_ACCOUNT_AUTH_NOT_CONNECTED wording alongside bou
 
 ## Remote checks
 Server push35052294338/job104655147186 SUCCESS; log checkout1ff322b3, integration39files/1527 including health20, E2E88 including both reference tests.
-PR Server35052418502/job104655465041 and Extension35052418514/WB-browser104655465480 remain under active monitoring at this checkpoint.
+PR Server35052418502/job104655465041 SUCCESS: exact virtual merge checkout, integration39files/1527 including health20 and E2E88. Extension35052418514/WB-browser104655465480 SUCCESS:17suites/321passed for source and17suites/321passed for extracted package, zero failures. Completed logs independently read.
 PR Extension I1 run35052418530: client104655465372 SUCCESS; installed-local104655465207 SUCCESS. Exact virtual-merge checkout independently read. Installed log confirms real local API/portal/PG, two distinct accounts/devices/authorizations, same worker, logout clear, development OTP, Chromium151.0.7922.34, zero live calls.
 PR Extension35052418514: core104655465517, Ozon104655465635, WB-nodes104655465586 and native104655465353 SUCCESS. Native source/extracted logs include actual popup, Work prompt, text and binary delivery/IDB, Finish and UI checks; synthetic provider and AI.
 Documentation35052418500/job104655466012 SUCCESS.
-See I1_SYNC_CI.json for final readback when completed.
+All five applicable runs are completed/SUCCESS on head1ff322b3. Documentation454files/0errors. See I1_SYNC_CI.json for final readback.
 
 ## Current decision
-WAITING_REQUIRED_REMOTE_GATES at this checkpoint; no implementation rework identified for the prescribed synchronization scope. Active architect cycle continues; no duplicate task or workflow rerun.
-Acceptance, when all required gates complete, is bounded to the combined source/package/native/installed-local development candidate. It is not C2/full I1, live-provider, email, preprod, merge, release or Health acceptance.
+ACCEPTED on1ff322b3dd2b68c4f02e5390850cd2f1b9548186 for the prescribed synchronization scope after every required remote gate completed successfully. No implementation rework required. The990 count-label correction is factual evidence maintenance and does not invalidate the independently verified unchanged759 non-doc blobs.
+Acceptance is bounded to the combined source/package/native/installed-local development candidate. It is not C2/full I1, live-provider, email, preprod, merge, release or Health acceptance.
 
 ## Next architect-designed step
 C2.1 cache context/time before offline grace and profile consumption. Exact source-VM probe on verified Git blobs reproduced expiry rollback reauthorization and changed origin/browser cache acceptance. This is explicitly deferred C2 scope, not a synchronization regression. Probe uses real Ed25519 verification and synthetic clock/storage, not installed/live evidence.
-See I1_C2_1_DESIGN.md and tasks/I1_C2_1_2026-09-16.md. No next prompt has been submitted at this checkpoint.
+See I1_C2_1_DESIGN.md and tasks/I1_C2_1_2026-09-16.md. Next prompt is PREPARED_FOR_SINGLE_FINAL_SUBMISSION. Saving it is not delivery or start evidence; issue once in the final Bridge block.
 Health/P8.4 B5 stays NOT ACCEPTED; B6–B8 queued; S1.2/D3 deferred.

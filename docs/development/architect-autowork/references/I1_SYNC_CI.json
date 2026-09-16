@@ -3,11 +3,11 @@
   "candidate": "1ff322b3dd2b68c4f02e5390850cd2f1b9548186",
   "jobs": [
     {
+      "run": 35052294338,
       "conclusion": "success",
       "id": 104655147186,
       "logs_url": null,
       "name": "server",
-      "run": 35052294338,
       "run_id": 35052294338,
       "status": "completed",
       "steps": [
@@ -158,11 +158,11 @@
       ]
     },
     {
+      "run": 35052418502,
       "conclusion": null,
       "id": 104655465041,
       "logs_url": null,
       "name": "server",
-      "run": 35052418502,
       "run_id": 35052418502,
       "status": "in_progress",
       "steps": [
@@ -307,11 +307,11 @@
       ]
     },
     {
+      "run": 35052418514,
       "conclusion": "success",
       "id": 104655465353,
       "logs_url": null,
       "name": "Common application / native Chromium fixture",
-      "run": 35052418514,
       "run_id": 35052418514,
       "status": "completed",
       "steps": [
@@ -384,11 +384,11 @@
       ]
     },
     {
+      "run": 35052418514,
       "conclusion": null,
       "id": 104655465480,
       "logs_url": null,
       "name": "Baseline / wb-browsers",
-      "run": 35052418514,
       "run_id": 35052418514,
       "status": "in_progress",
       "steps": [
@@ -461,11 +461,11 @@
       ]
     },
     {
+      "run": 35052418514,
       "conclusion": "success",
       "id": 104655465517,
       "logs_url": null,
       "name": "Common core / source and package",
-      "run": 35052418514,
       "run_id": 35052418514,
       "status": "completed",
       "steps": [
@@ -532,11 +532,11 @@
       ]
     },
     {
+      "run": 35052418514,
       "conclusion": "success",
       "id": 104655465586,
       "logs_url": null,
       "name": "Baseline / wb-nodes",
-      "run": 35052418514,
       "run_id": 35052418514,
       "status": "completed",
       "steps": [
@@ -615,11 +615,11 @@
       ]
     },
     {
+      "run": 35052418514,
       "conclusion": "success",
       "id": 104655465635,
       "logs_url": null,
       "name": "Baseline / ozon",
-      "run": 35052418514,
       "run_id": 35052418514,
       "status": "completed",
       "steps": [
@@ -698,11 +698,11 @@
       ]
     },
     {
+      "run": 35052418530,
       "conclusion": "success",
       "id": 104655465207,
       "logs_url": null,
       "name": "Installed local API / portal / PostgreSQL acceptance",
-      "run": 35052418530,
       "run_id": 35052418530,
       "status": "completed",
       "steps": [
@@ -817,11 +817,11 @@
       ]
     },
     {
+      "run": 35052418530,
       "conclusion": "success",
       "id": 104655465372,
       "logs_url": null,
       "name": "client-i1",
-      "run": 35052418530,
       "run_id": 35052418530,
       "status": "completed",
       "steps": [
@@ -930,11 +930,11 @@
       ]
     },
     {
+      "run": 35052418500,
       "conclusion": "success",
       "id": 104655466012,
       "logs_url": null,
       "name": "documentation",
-      "run": 35052418500,
       "run_id": 35052418500,
       "status": "completed",
       "steps": [
@@ -994,6 +994,39 @@
         "2026-09-16T03:45:29.7742767Z [84/88] tests/e2e/server/i1-reference-acceptance.spec.ts:69:5 › I1-SRV.5 worker preserves runner public trust without private signing material",
         "2026-09-16T03:45:29.8499512Z [85/88] tests/e2e/server/i1-reference-acceptance.spec.ts:88:5 › I1-SRV.5 reference activation, V2 bootstrap, rotation, continuity, and revoke",
         "2026-09-16T03:45:45.9981378Z   88 passed (4.7m)"
+      ]
+    },
+    {
+      "job": 104655465041,
+      "lines": [
+        "2026-09-16T03:36:37.2280113Z HEAD is now at fd3949e Merge 1ff322b3dd2b68c4f02e5390850cd2f1b9548186 into 5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+        "2026-09-16T03:36:37.2375062Z fd3949e26ae10dfbd40d7527e2981b607a4b5837",
+        "2026-09-16T03:41:24.2928751Z  ✓ packages/server/db/src/health-persistence.integration.test.ts (20 tests) 602ms",
+        "2026-09-16T03:41:46.6723412Z  Test Files  39 passed (39)",
+        "2026-09-16T03:41:46.6724959Z       Tests  1527 passed (1527)",
+        "2026-09-16T03:48:10.0711810Z [84/88] tests/e2e/server/i1-reference-acceptance.spec.ts:69:5 › I1-SRV.5 worker preserves runner public trust without private signing material",
+        "2026-09-16T03:48:10.1637798Z [85/88] tests/e2e/server/i1-reference-acceptance.spec.ts:88:5 › I1-SRV.5 reference activation, V2 bootstrap, rotation, continuity, and revoke",
+        "2026-09-16T03:48:28.0074790Z   88 passed (5.1m)"
+      ]
+    },
+    {
+      "job": 104655465480,
+      "lines": [
+        "2026-09-16T03:36:15.0442141Z HEAD is now at fd3949e Merge 1ff322b3dd2b68c4f02e5390850cd2f1b9548186 into 5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+        "2026-09-16T03:36:15.0531482Z fd3949e26ae10dfbd40d7527e2981b607a4b5837",
+        "2026-09-16T03:42:44.6901828Z wb-source browsers: {\"status\": \"PASS\", \"suites\": 17, \"passed\": 321, \"failed\": 0, \"suite_failures\": 0, \"mode\": \"browsers\", \"source_manifest\": \"source_manifest.json\", \"installed_acceptance\": false}",
+        "2026-09-16T03:49:05.1973206Z wb-package browsers: {\"status\": \"PASS\", \"suites\": 17, \"passed\": 321, \"failed\": 0, \"suite_failures\": 0, \"mode\": \"browsers\", \"source_manifest\": \"source_manifest.json\", \"installed_acceptance\": false}",
+        "2026-09-16T03:49:05.1975248Z   \"status\": \"PASS\",",
+        "2026-09-16T03:49:05.1978825Z     \"status\": \"PASS\",",
+        "2026-09-16T03:49:05.1993454Z   \"gate_processes\": 2"
+      ]
+    },
+    {
+      "job": 104655466012,
+      "lines": [
+        "2026-09-16T03:36:14.9487657Z HEAD is now at fd3949e Merge 1ff322b3dd2b68c4f02e5390850cd2f1b9548186 into 5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+        "2026-09-16T03:36:14.9547449Z fd3949e26ae10dfbd40d7527e2981b607a4b5837",
+        "2026-09-16T03:36:15.6817429Z Documentation check PASS: {\"errors\":[],\"files\":454,\"markdownFiles\":238,\"relativeLinks\":362,\"requirements\":26,\"acceptanceScenarios\":32}"
       ]
     },
     {
@@ -1164,5 +1197,53 @@
       "verified": true,
       "verified_at": "2026-09-16T03:36:08Z"
     }
-  }
+  },
+  "verdict": "ACCEPTED_BOUNDED_COMBINED_DEVELOPMENT",
+  "runs": [
+    {
+      "conclusion": "success",
+      "event": "pull_request",
+      "head_sha": "1ff322b3dd2b68c4f02e5390850cd2f1b9548186",
+      "id": 35052418500,
+      "name": "Documentation CI",
+      "status": "completed",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/35052418500"
+    },
+    {
+      "conclusion": "success",
+      "event": "pull_request",
+      "head_sha": "1ff322b3dd2b68c4f02e5390850cd2f1b9548186",
+      "id": 35052418530,
+      "name": "Extension I1-C1 client",
+      "status": "completed",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/35052418530"
+    },
+    {
+      "conclusion": "success",
+      "event": "pull_request",
+      "head_sha": "1ff322b3dd2b68c4f02e5390850cd2f1b9548186",
+      "id": 35052418502,
+      "name": "Server CI",
+      "status": "completed",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/35052418502"
+    },
+    {
+      "conclusion": "success",
+      "event": "pull_request",
+      "head_sha": "1ff322b3dd2b68c4f02e5390850cd2f1b9548186",
+      "id": 35052418514,
+      "name": "Extension CI",
+      "status": "completed",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/35052418514"
+    },
+    {
+      "conclusion": "success",
+      "event": "push",
+      "head_sha": "1ff322b3dd2b68c4f02e5390850cd2f1b9548186",
+      "id": 35052294338,
+      "name": "Server CI",
+      "status": "completed",
+      "url": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/35052294338"
+    }
+  ]
 }
