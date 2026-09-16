@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import path from "node:path";
-import { makeWorker, signFixtureBootstrap } from "../worker-harness.mjs";
+import { makeWorker, signFixtureBootstrap, until } from "../worker-harness.mjs";
 
 const runtime = path.resolve(process.argv[2]);
 const AUTH = "seller_agents_control_auth_v2";
@@ -11,6 +11,7 @@ const clone = value => structuredClone(value);
 const same = (left, right) => JSON.stringify(left) === JSON.stringify(right);
 const canonical = value => value === null ? "null" : typeof value === "boolean" ? (value ? "true" : "false") : typeof value === "string" ? JSON.stringify(value) : typeof value === "number" ? String(value) : Array.isArray(value) ? `[${value.map(canonical).join(",")}]` : `{${Object.keys(value).sort().map(key => `${JSON.stringify(key)}:${canonical(value[key])}`).join(",")}}`;
 const fixtureTrustBundle = backing => { const key = backing.local.__seller_agents_fixture_signing_key; const publicKey = Buffer.from(key.publicKey, "base64"); return { trustBundleVersion: "bootstrap_trust_bundle_v1", algorithm: "Ed25519", publicKeyFormat: "spki_der", publicKeyEncoding: "base64", fingerprintAlgorithm: "sha256", fingerprintEncoding: "lowercase_hex", keys: [{ keyId: "fixture-key", publicKey: key.publicKey, fingerprintSha256: createHash("sha256").update(publicKey).digest("hex"), lifecycle: "ACTIVE", trustEligibility: "SIGNING_AND_VERIFICATION" }] }; };
+const signed = async (backing, payload) => json(await signFixtureBootstrap(backing, payload));
 
 async function fixture(options = {}) {
   const backing = options.backing || { local: {}, session: {} };
@@ -153,4 +154,24 @@ async function fixture(options = {}) {
   try { await accountOnly.worker.call("SellerAgentsControlClient.bootstrap"); const status = await accountOnly.worker.call("SellerAgentsControlClient.status"); assert.equal(status.authenticated, true); assert.equal(status.workAllowed, false); assert.equal(accountOnly.backing.local[AUTH].authority.cacheBinding.detectedAi, null); } finally { accountOnly.worker.close(); }
 }
 
-console.log(JSON.stringify({ status: "PASS", focused: "client-cache-time", fresh_boundary: true, effective_floor: true, restart_floor: true, context_matrix: 11, legacy_closed: true, no_live_provider_calls: true }));
+// C2.1-R10: a held A verification cannot publish after reset and completed B
+// activation; B owns the resulting authority, account and cache floor.
+{
+  const clock = { wall: baseWall, mono: 1000 }, backing = { local: {}, session: {} };
+  let releaseA, bootstraps = 0, basePayload;
+  const owned = await fixture({ backing, clock, fetch: async (url) => {
+    if (url.endsWith("/v1/device-authorizations")) return json({ status: "pending", authorizationId: "66666666-6666-4666-8666-666666666666", deviceCode: "D".repeat(43), userCode: "ABCD-EFGH", expiresAt: new Date(clock.wall + 60000).toISOString() });
+    if (url.endsWith("/v1/device-authorizations/token")) return json({ status: "activated", deviceId: "77777777-7777-4777-8777-777777777777", sessionId: "88888888-8888-4888-8888-888888888888", tokenType: "Bearer", accessToken: "B".repeat(24), accessTokenExpiresAt: new Date(clock.wall + 3600000).toISOString(), refreshToken: "C".repeat(43), refreshTokenExpiresAt: new Date(clock.wall + 7200000).toISOString() });
+    if (url.endsWith("/v1/bootstrap")) { bootstraps++; const base = basePayload; if (bootstraps === 1) return new Promise(resolve => { releaseA = () => resolve(signed(backing, base)); }); return signed(backing, { ...base, account: { id: "99999999-9999-4999-8999-999999999999", status: "ACTIVE" }, serverTime: new Date(clock.wall + 100).toISOString(), ai: { status: "UNCONFIGURED" } }); }
+    return json({ error: { code: "UNEXPECTED" } }, 500);
+  } });
+  basePayload = clone(backing.local[AUTH].authority.payload);
+  try {
+    const oldBootstrap = owned.worker.call("SellerAgentsControlClient.bootstrap"); await until(() => releaseA, "held A verification");
+    await owned.worker.call("SellerAgentsControlClient.localReset"); await owned.worker.call("SellerAgentsControlClient.startActivation");
+    await until(async () => (await owned.worker.call("SellerAgentsControlClient.status")).authenticated, "B activation"); releaseA();
+    await assert.rejects(oldBootstrap, /AUTH_GENERATION_CHANGED/); assert.equal(await owned.worker.call("SellerAgentsControlClient.currentAccount"), "99999999-9999-4999-8999-999999999999"); assert.equal((await owned.worker.call("SellerAgentsControlClient.status")).workAllowed, false);
+  } finally { releaseA?.(); owned.worker.close(); }
+}
+
+console.log(JSON.stringify({ status: "PASS", focused: "client-cache-time", fresh_boundary: true, effective_floor: true, restart_floor: true, context_matrix: 11, legacy_closed: true, ownership_reset_race: true, no_live_provider_calls: true }));
