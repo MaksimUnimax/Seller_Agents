@@ -2,7 +2,7 @@
 
 Дата: 2026-09-16.
 Branch: `seo/wordstat-batch-01-2026-09-16`.
-Status: `BLOCKED_LOCAL_SERVICE_SELECTION`.
+Status: `RETRY_READY_USER_REPORTS_SEARCH_SELECTED`.
 
 ## Evidence rule
 
@@ -39,15 +39,17 @@ Optional control after priorities: `нейросеть помощь для ма�
 | Attempt | Query | Stage | Status | Provider request executed | Raw | Analysis |
 |---|---|---|---|---|---|---|
 | S01-01 | ии агенты для маркетплейсов | `MANUAL_ADMISSION` | `SERVICE_NOT_ACTIVE` | `false` | `raw/S01_01_ADMISSION_ERROR_2026-09-16.md` | `analysis/S01_01_ADMISSION_ERROR_2026-09-16.md` |
+| S01-02 | ии агенты для маркетплейсов | `MANUAL_ADMISSION` | `SERVICE_NOT_ACTIVE` | `false` | `raw/S01_02_ADMISSION_ERROR_2026-09-16.md` | `analysis/S01_02_ADMISSION_ERROR_2026-09-16.md` |
 
 ## Totals
 
 - actual Search provider calls: `0`;
 - completed priority SERP queries: `0/7`;
-- local admission failures: `1`;
+- local admission failures: `2`;
 - provider failures: `0`;
 - Search provider cost incurred in this pass: `0 ₽`;
 - current query: `ии агенты для маркетплейсов`;
-- current blocker: active extension service is `wordstat`;
-- required action: manually switch active service to `Search`, then repeat the same deferred Search `start` command;
-- next provider action after successful `start`: none until the returned start envelope is persisted and verified; only then may `submitN` be issued.
+- previous blocker: bridge reported active service `wordstat` on S01-02;
+- user now reports active service has been changed to Search;
+- next action: repeat the same deferred Search `start` exactly once;
+- after successful `start`: persist and verify the returned envelope before issuing any `submitN`.
