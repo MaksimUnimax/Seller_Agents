@@ -202,5 +202,7 @@ B6–B8, C2.2-B, or new architectural work is started.
 
 ## Boundary
 
-This document closes B5 only. B6 security/privacy/deterministic regression is
-the next step and is not started by this candidate.
+This document records the B5 implementation candidate only; it is not
+architectural acceptance. B5 remains `NOT ACCEPTED` pending the architect's
+independent decision. B6 security/privacy/deterministic regression is the next
+step and is not started by this candidate.

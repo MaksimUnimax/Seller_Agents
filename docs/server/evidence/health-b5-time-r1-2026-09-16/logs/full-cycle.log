@@ -1,0 +1,7 @@
+commands: pnpm lint; pnpm format:check; pnpm typecheck; pnpm exec vitest run tests/e2e/server/playwright-config-regression.test.ts; pnpm test; pnpm test:integration; pnpm db:migrate; pnpm openapi:check; pnpm bridge:guard; pnpm build; pnpm exec playwright install --with-deps chromium; PRODUCT_CONTROL_PLANE_E2E=1 pnpm test:e2e
+all exits: 0
+integration: 39 files, 1524/1524 passed, 0 skipped
+e2e: 162/162 passed, 0 skipped
+admin-billing: existing passWithNoTests reported no test files; not counted as tests
+live-provider-calls: 0
+docs:check: exit 0; 405 files, 222 Markdown files, 319 relative links, 26 requirements, 32 acceptance scenarios

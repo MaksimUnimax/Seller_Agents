@@ -1,0 +1,72 @@
+{
+  "task_id": "SA-HEALTH-B5-TIME-R1-20260916-01",
+  "repository": {
+    "name": "MaksimUnimax/runtime-fixtures",
+    "stable_id": "1369117174",
+    "branch": "feature/server-health-h3-p8-4",
+    "start_sha": "d8f5157696d137750176d1aa44aedf9c2116404e",
+    "start_tree": "6612db9fbc1cd370a2882c7e5add696329413316",
+    "start_parent": "0d42223331ec936a671179fba4f59a0bcbe07214",
+    "code_test_sha": "63bd01b60449658ca56beffd4ffd4e0bda03f969",
+    "code_test_tree": "b96c97debb4d8cf646ad76795a119791f0e20e8e",
+    "latest_verified_main": "bc718cc5c677ad0eb4598e7de3ad766473ff0847",
+    "final_sha": "reported_after_evidence_publication",
+    "final_tree": "reported_after_evidence_publication"
+  },
+  "tool_versions": {
+    "node": "v24.20.0",
+    "pnpm": "10.34.5",
+    "vitest": "3.2.6",
+    "postgres": "18.0",
+    "playwright": "1.62.1"
+  },
+  "mapper": {
+    "red": { "tests": 29, "failed": 10, "exit": 1, "surfaces": ["Standard revision2", "Work revision1"], "cases": ["A false reject", "B false accept", "C false reject", "D false accept", "E false reject", "F green"] },
+    "green": { "tests": 29, "passed": 29, "skipped": 0, "exit": 0, "surfaces": ["Standard revision2", "Work revision1"] }
+  },
+  "postgres": {
+    "image": "postgres:18.0",
+    "host": "127.0.0.1",
+    "ownership": "task-owned disposable database only",
+    "focused_h3": { "tests": 16, "passed": 16, "skipped": 0, "exit": 0 },
+    "roundtrip_cases": 6,
+    "no_write_cases": 4,
+    "counts_checked": ["health_suite_revisions", "health_runs", "health_contour_results", "health_evidence_references"],
+    "secrets_logged": false
+  },
+  "gates": [
+    { "name": "lint", "status": "PASS", "exit": 0 },
+    { "name": "format_check", "status": "PASS", "exit": 0 },
+    { "name": "typecheck", "status": "PASS", "exit": 0 },
+    { "name": "playwright_config_regression", "status": "PASS", "passed": 1, "exit": 0 },
+    { "name": "unit", "status": "PASS", "exit": 0, "no_test_packages": ["@product/admin-billing"] },
+    { "name": "integration", "status": "PASS", "files": 39, "passed": 1524, "skipped": 0, "exit": 0 },
+    { "name": "db_migrate", "status": "PASS", "exit": 0 },
+    { "name": "openapi_check", "status": "PASS", "exit": 0 },
+    { "name": "bridge_guard", "status": "PASS", "exit": 0 },
+    { "name": "build", "status": "PASS", "exit": 0 },
+    { "name": "chromium_install", "status": "PASS", "exit": 0 },
+    { "name": "e2e", "status": "PASS", "passed": 162, "skipped": 0, "exit": 0 },
+    { "name": "docs_check", "status": "PASS", "files": 405, "markdown_files": 222, "relative_links": 319, "requirements": 26, "acceptance_scenarios": 32, "exit": 0 }
+  ],
+  "changed_paths": [
+    "apps/health-runner/src/h3-health-persistence.ts",
+    "apps/health-runner/src/h3-health-persistence.test.ts",
+    "tests/integration/server/h3-health-persistence.integration.test.ts",
+    "docs/server/B5_SANITIZED_H3_EVIDENCE_INTEGRATION_2026-09-15.md",
+    "docs/server/evidence/health-b5-time-r1-2026-09-16/README.md",
+    "docs/server/evidence/health-b5-time-r1-2026-09-16/results.json",
+    "docs/server/evidence/health-b5-time-r1-2026-09-16/logs/"
+  ],
+  "acceptance": {
+    "b5": "NOT_ACCEPTED_PENDING_INDEPENDENT_ARCHITECT_REVIEW",
+    "b6_b8_started": false,
+    "c2_2_b_started": false,
+    "live_provider_calls": 0,
+    "owner_changes_preserved": true
+  },
+  "ci": {
+    "server": { "status": "UNKNOWN_UNTIL_AFTER_PUSH" },
+    "documentation": { "status": "LOCAL_DOCS_CHECK_AFTER_EVIDENCE_COMMIT" }
+  }
+}

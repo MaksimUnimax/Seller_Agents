@@ -1,0 +1,6 @@
+command: pnpm --filter @product/health-runner exec vitest run src/h3-health-persistence.test.ts
+ref: d8f5157696d137750176d1aa44aedf9c2116404e (unchanged production mapper)
+exit: 1
+result: 29 tests; 10 failed; 19 passed; 0 skipped
+named RED on Standard revision2 and Work revision1: A false reject, B false accept, C false reject, D false accept, E false reject; F remained green.
+historical callback probe only: not reported as full unit RED.

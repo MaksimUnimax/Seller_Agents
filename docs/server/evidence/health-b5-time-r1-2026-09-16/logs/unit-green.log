@@ -1,0 +1,6 @@
+command: pnpm --filter @product/health-runner exec vitest run src/h3-health-persistence.test.ts
+code_test_sha: 63bd01b60449658ca56beffd4ffd4e0bda03f969
+exit: 0
+result: 29 tests passed; 0 failed; 0 skipped
+surfaces: Standard revision2, Work revision1
+named cases: A +3600000, B reject -3600000, C +100, D reject -100, E +0, F +1000
