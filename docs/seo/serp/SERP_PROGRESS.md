@@ -2,7 +2,7 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M3 / R04 CLOSED / R05 NEXT CANDIDATE / R05 PRE-STEP REQUIRED**.
+Status: **M3 / R04 CLOSED / R05 PRE-STEP PASS / R05 LOCAL START RELEASED**.
 
 ## Closed Search evidence
 
@@ -16,67 +16,67 @@ R03 chatgpt для wildberries = CLOSED / 20
 R04 аналитика маркетплейсов для селлеров = CLOSED / 20
 ```
 
-## R04 closure authority
+## R04 accepted closure
 
-Original R04 job `octoport-serp-r04-20260917` remains frozen as immutable transport-UNKNOWN history and has no semantic use.
+Accepted recovery job `octoport-serp-r04r1-20260917`, operation `sprqtqegnppne4lqbf2t`, revision 5.
 
-Accepted recovery job:
+Authorities:
 
-```text
-JOB_ID = octoport-serp-r04r1-20260917
-OPERATION_ID = sprqtqegnppne4lqbf2t
-REVISION = 5
-SUCCEEDED = 1
-UNRESOLVED = 0
-ALL_SUCCESSFUL = true
-RESULT_COUNT = 20
-```
-
-Export persistence authority:
-
-- `raw/R04R1_07_EXPORT_MANIFEST_2026-09-17.md` — full source identity plus seven verified lossless chunks;
+- `raw/R04R1_07_EXPORT_MANIFEST_2026-09-17.md` — complete 20-result export persisted losslessly as seven verified remote chunks;
 - `analysis/R04R1_07_EXPORT_ANALYSIS_2026-09-17.md` — all 20 results reviewed.
 
-R04 aggregate:
-
 ```text
-SELLER_OWNED_INTERNAL_ANALYTICS = 10/20
-EXTERNAL_MARKET_INTELLIGENCE = 4/20
-MIXED_INTERNAL_EXTERNAL_ANALYTICS_SAAS = 4/20
-ANALYTICS_SERVICE_OR_CONSULTING = 1/20
-GENERIC_SELLER_ANALYTICS_CONTENT = 1/20
-EDUCATION_PROFESSION = 0/20
-NOISE = 0/20
-TOP10_INTERNAL = 4/10
-TOP10_EXTERNAL_OR_MIXED = 6/10
-```
-
-Verdict:
-
-```text
+R04_INTERNAL = 10/20
+R04_EXTERNAL_ONLY = 4/20
+R04_MIXED_INTERNAL_EXTERNAL = 4/20
+R04_SERVICE_CONSULTING = 1/20
+R04_EDITORIAL = 1/20
+R04_TOP10_INTERNAL = 4/10
+R04_TOP10_EXTERNAL_OR_MIXED = 6/10
 R04_VERDICT = MIXED_SELLER_ANALYTICS_SERP_INTERNAL_PLURALITY_WITH_STRONG_EXTERNAL_MIXED_COMPETITION
 R04_MORE_SEARCH_NOW = NO
-R04_INFORMATION_SATURATED_FOR_CURRENT_DECISION = YES
-R04_PAGE_OWNERSHIP_DECISION = DEFERRED TO M9/M11
+R04 = CLOSED
 ```
 
-Product boundary: seller-owned operational/financial analytics is a real and major Search intent, but broad analytics language also strongly implies external market/niche/competitor intelligence. Octoport may use seller-analytics language only with its seller-authorized-data boundary intact; Search does not authorize unsupported market-wide competitor/niche claims.
+The original R04 job remains frozen transport-UNKNOWN history and is not semantic evidence.
 
-## Current cursor
+## R05 release
 
-R05 remains necessary because it tests a separate ambiguity: seller operational reports versus accounting/1C/tax/statutory reporting.
+Query:
+
+```text
+R05 = отчеты для селлеров маркетплейсов
+JOB_ID = octoport-serp-r05-20260917
+```
+
+Query-specific authority:
+
+`R05_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-17.md`
+
+The pre-step passed remote readback after fresh Yandex provider research, official WB seller-report research, current Ozon seller-report research, official 1C accounting-boundary research, current Bridge-head verification and existing-job conflict check.
+
+R05 will measure the live Search split between seller operational/business reports, marketplace financial/realization reports, accounting/1C commission workflows, tax/statutory reporting, reporting integrations/SaaS and generic reporting content.
+
+## Current hard gate
 
 ```text
 CURRENT_STAGE = M3 ORDINARY YANDEX SERP COLLECTION
-CURRENT_QUERY = R05 PREPARATION
-NEXT_CANDIDATE = R05
-R05_QUERY = отчеты для селлеров маркетплейсов
-R05_INFORMATION_GAIN = HIGH
-R05_PROVIDER_ACTION = NOT YET RELEASED
-R05_REQUIRES_QUERY_SPECIFIC_PRE_STEP = true
-R05_START = BLOCKED UNTIL R05 PRE-STEP PERSISTENCE + REMOTE READBACK
+CURRENT_QUERY = R05
+R05_PRE_STEP = PASS / PERSISTED / REMOTE READBACK
+R05_JOB_ID = octoport-serp-r05-20260917
+R05_EXISTING_START_CONFLICT = NONE
+R05_START = RELEASED EXACTLY ONCE
+R05_SUBMIT = BLOCKED UNTIL START PERSISTENCE + READBACK + ANALYSIS
+R05_COLLECT = BLOCKED
+R05_EXPORT = BLOCKED
+R06 = BLOCKED UNTIL R05 QUERY CLOSURE
 M7_COLLECTION_FREEZE = BLOCKED
 M8_SEMANTIC_MASTER = BLOCKED
+NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE LOCAL START FOR R05 AND RETURN COMPLETE SEARCH_ASYNC_BATCH_RESULT_V1
 ```
 
-No provider command is currently released.
+## Exact released command
+
+```text
+SEARCH_ASYNC_BATCH_API_V1 {"action":"start","jobId":"octoport-serp-r05-20260917","queries":["отчеты для селлеров маркетплейсов"],"confirmBillable":true,"maxRequests":1,"maxCostRub":0.0305,"searchType":"SEARCH_TYPE_RU","region":"225","page":0,"groupsOnPage":20,"docsInGroup":1,"groupMode":"GROUP_MODE_FLAT","familyMode":"FAMILY_MODE_MODERATE","fixTypoMode":"FIX_TYPO_MODE_OFF","sortMode":"SORT_MODE_BY_RELEVANCE","sortOrder":"SORT_ORDER_DESC"}
+```
