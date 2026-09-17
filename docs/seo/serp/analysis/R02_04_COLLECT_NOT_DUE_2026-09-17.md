@@ -1,0 +1,51 @@
+# R02 lifecycle analysis — second collect not due
+
+Date: 2026-09-17.  
+Query: `chatgpt для ozon`.  
+Job: `octoport-serp-r02-20260917`.  
+Status: **SECOND LOCAL TIMING GUARD / NO PROVIDER CALL / WAITING PRESERVED**.
+
+Lossless raw transport:
+
+- path: `../raw/R02_04_COLLECT_NOT_DUE_2026-09-17.b64`;
+- decoded UTF-8 bytes: `634`;
+- decoded SHA-256: `69ef6eba46c122b4249106b66898bd2d189fb985229a9a91bb06fc4595dfb8f1`.
+
+Observed facts:
+
+```text
+action = collectN
+ok = true
+request_executed = false
+provider_calls = 0
+processed = 1
+normalized = 0
+bounded_stop = false
+last.code = NO_DUE_OPERATIONS
+control = RUNNING
+total = 1
+PENDING = 0
+WAITING = 1
+SUCCEEDED = 0
+FAILED = 0
+UNKNOWN = 0
+requests_started = 1
+operations_accepted = 1
+polls_started = 0
+unresolved = 1
+all_successful = false
+busy = false
+revision = 2
+```
+
+Interpretation:
+
+- this second collect attempt again terminated locally before any provider-backed poll;
+- Yandex was not contacted and provider call count remained zero;
+- the accepted operation `sprg1vmblbk160ogsha3` remains the same authoritative unresolved operation;
+- state remains `WAITING=1` and revision remains `2`;
+- the second timing guard is byte-identical to the first not-due envelope, which is expected because lifecycle state did not change;
+- this is not a zero-result, provider failure, parse failure, or semantic result;
+- another start or submit is forbidden.
+
+After remote readback of this raw artifact and analysis, exactly one further bounded `collectN count=1` may be released for the same R02 job. Export and R03 remain blocked until provider-backed collection succeeds or a different terminal state is durably observed.
