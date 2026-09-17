@@ -2,7 +2,7 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M3 / R04 CLOSED / R05 WAITING / THREE LOCAL NO_DUE COLLECTS / FOURTH COLLECT RELEASED**.
+Status: **M3 / R04 CLOSED / R05 TERMINAL SUCCESS / EXPORT REVISION 5 RELEASED**.
 
 ## Closed Search evidence
 
@@ -28,45 +28,39 @@ R05_SUBMIT = PASS / PERSISTED / READBACK
 R05_COLLECT_1 = LOCAL NO_DUE / PERSISTED / READBACK
 R05_COLLECT_2 = LOCAL NO_DUE / PERSISTED / READBACK
 R05_COLLECT_3 = LOCAL NO_DUE / PERSISTED / READBACK
-R05_WAITING = 1
+R05_COLLECT_4 = PROVIDER-BACKED SUCCESS / PERSISTED / READBACK
+R05_WAITING = 0
+R05_SUCCEEDED = 1
 R05_UNKNOWN = 0
-R05_POLLS_STARTED = 0
-R05_REVISION = 2
+R05_POLLS_STARTED = 1
+R05_UNRESOLVED = 0
+R05_ALL_SUCCESSFUL = true
+R05_REVISION = 5
 ```
 
-All three bounded collects returned the same local `NO_DUE_OPERATIONS` envelope with `request_executed=false`, `provider_calls=0`. None contacted Yandex. The accepted operation remains unchanged and waiting.
+Terminal authorities:
 
-Raw authorities:
+- `raw/R05_06_COLLECT_SUCCEEDED_2026-09-17.md`;
+- `analysis/R05_06_COLLECT_SUCCEEDED_2026-09-17.md`.
 
-- `raw/R05_03_COLLECT_NO_DUE_2026-09-17.b64`;
-- `raw/R05_04_COLLECT_NO_DUE_2026-09-17.b64`;
-- `raw/R05_05_COLLECT_NO_DUE_2026-09-17.b64`.
-
-Each decodes to the same exact 634-byte envelope with SHA256 `112b8445b3797482dee304aa2410eacd524834da993dda7bfe6118cec6baacc0`.
-
-Analysis authorities:
-
-- `analysis/R05_03_COLLECT_NO_DUE_2026-09-17.md`;
-- `analysis/R05_04_COLLECT_NO_DUE_2026-09-17.md`;
-- `analysis/R05_05_COLLECT_NO_DUE_2026-09-17.md`.
+The same accepted operation `sprsofoaue000d4c9epd` completed successfully. No further start, submit or collect is permitted. Semantic R05 closure still requires the complete revision-5 export to be persisted losslessly and reviewed in full.
 
 ## Current hard gate
 
 ```text
 CURRENT_STAGE = M3 ORDINARY YANDEX SERP COLLECTION
 CURRENT_QUERY = R05
-R05_SECOND_START = FORBIDDEN
-R05_SECOND_SUBMIT = FORBIDDEN
-R05_COLLECT_4 = RELEASED EXACTLY ONCE
-R05_EXPORT = BLOCKED UNTIL TERMINAL COLLECT + PERSISTENCE + READBACK
+R05_FURTHER_START_SUBMIT_COLLECT = FORBIDDEN
+R05_EXPORT_PAGE_REV5 = RELEASED EXACTLY ONCE
+R05_SEMANTIC_RESULT = BLOCKED UNTIL COMPLETE EXPORT PERSISTENCE + READBACK + FULL ANALYSIS
 R06 = BLOCKED UNTIL R05 QUERY CLOSURE
 M7_COLLECTION_FREEZE = BLOCKED
 M8_SEMANTIC_MASTER = BLOCKED
-NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE collectN count=1 ON R05 AND RETURN COMPLETE SEARCH_ASYNC_BATCH_RESULT_V1
+NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE exportPage PINNED TO REVISION 5 AND RETURN COMPLETE EXPORT
 ```
 
 ## Exact released command
 
 ```text
-SEARCH_ASYNC_BATCH_API_V1 {"action":"collectN","jobId":"octoport-serp-r05-20260917","count":1}
+SEARCH_ASYNC_BATCH_API_V1 {"action":"exportPage","jobId":"octoport-serp-r05-20260917","after":-1,"limit":25,"revision":5}
 ```
