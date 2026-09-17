@@ -2,7 +2,7 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M2R RECONCILED / S01-S03 CLOSED / R01-R03 F2 BLOCK CLOSED / F2 SEARCH SATURATED / R04 OLD JOB FROZEN UNKNOWN / R04-R1 START PASS / ONE SUBMIT RELEASED**.
+Status: **M2R RECONCILED / S01-S03 CLOSED / R01-R03 F2 BLOCK CLOSED / R04 OLD JOB FROZEN UNKNOWN / R04-R1 SUBMIT PASS / ONE COLLECT RELEASED**.
 
 ## Authorities
 
@@ -11,12 +11,10 @@ Status: **M2R RECONCILED / S01-S03 CLOSED / R01-R03 F2 BLOCK CLOSED / F2 SEARCH 
 - provider release hard gate: `../PROVIDER_QUERY_RELEASE_RULE.md`;
 - current M3 matrix: `M3_QUERY_MATRIX_2026-09-17.md`;
 - original R04 release: `R04_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-17.md`;
-- current R04 recovery authority: `R04_UNKNOWN_RECOVERY_DECISION_AND_RELEASE_2026-09-17.md`;
-- R04 old-job start: `raw/R04_01_START_2026-09-17.md`, `analysis/R04_01_START_2026-09-17.md`;
-- R04 old-job timeout submit: `raw/R04_02_SUBMIT_UNKNOWN_ASYNC_TIMEOUT_2026-09-17.md`, `analysis/R04_02_SUBMIT_UNKNOWN_ASYNC_TIMEOUT_2026-09-17.md`;
-- R04 old-job local inspection: `raw/R04_03_ITEMS_PAGE_UNKNOWN_2026-09-17.md`, `analysis/R04_03_ITEMS_PAGE_UNKNOWN_ANALYSIS_2026-09-17.md`;
-- R04 old-job no-due collect: `raw/R04_04_COLLECT_NO_DUE_AFTER_UNKNOWN_2026-09-17.md`, `analysis/R04_04_COLLECT_NO_DUE_AFTER_UNKNOWN_2026-09-17.md`;
-- R04-R1 recovery start: `raw/R04R1_01_START_2026-09-17.md`, `analysis/R04R1_01_START_2026-09-17.md`.
+- R04 recovery authority: `R04_UNKNOWN_RECOVERY_DECISION_AND_RELEASE_2026-09-17.md`;
+- old R04 technical history: `raw/R04_01_START_2026-09-17.md`, `raw/R04_02_SUBMIT_UNKNOWN_ASYNC_TIMEOUT_2026-09-17.md`, `raw/R04_03_ITEMS_PAGE_UNKNOWN_2026-09-17.md`, `raw/R04_04_COLLECT_NO_DUE_AFTER_UNKNOWN_2026-09-17.md`;
+- recovery start: `raw/R04R1_01_START_2026-09-17.md`, `analysis/R04R1_01_START_2026-09-17.md`;
+- recovery submit: `raw/R04R1_02_SUBMIT_2026-09-17.b64`, `analysis/R04R1_02_SUBMIT_2026-09-17.md`.
 
 Evidence rule:
 
@@ -37,107 +35,90 @@ F2_ORDINARY_SEARCH_INFORMATION_SATURATED = YES
 
 ## Current query — R04 `аналитика маркетплейсов для селлеров`
 
-### Original job disposition
+Original job `octoport-serp-r04-20260917` remains frozen as `FROZEN_TRANSPORT_UNKNOWN`, preserved only as technical history. It has no semantic use and receives no further submit/collect/export actions.
 
-Original job:
-
-```text
-jobId = octoport-serp-r04-20260917
-```
-
-Start passed normally. The first and only provider submit timed out ambiguously and became durable `UNKNOWN` without an operation id:
-
-```text
-request_executed = UNKNOWN
-last.operation_id = null
-UNKNOWN = 1
-requests_started = 1
-operations_accepted = 0
-polls_started = 0
-unresolved = 1
-revision = 2
-```
-
-A local `itemsPage` confirmed `UNKNOWN`, `operation_id=null`, `poll_count=0`. One separately released bounded `collectN` then returned `NO_DUE_OPERATIONS`, `request_executed=false`, `provider_calls=0`, with the item still `UNKNOWN` and no operation id.
-
-Complete recovery investigation established that the current Bridge public async protocol has no explicit UNKNOWN-reconciliation action, submit on durable `UNKNOWN` requires reconciliation, collect operates on `WAITING` with an operation id, and Yandex's documented deferred Search retrieval requires the returned `Operation.id`.
-
-Current old-job status:
-
-```text
-R04_OLD_JOB = octoport-serp-r04-20260917
-R04_OLD_JOB_STATUS = FROZEN_TRANSPORT_UNKNOWN
-R04_OLD_JOB_RESUBMIT = FORBIDDEN
-R04_OLD_JOB_COLLECT = STOPPED_NO_DUE
-R04_OLD_JOB_EXPORT = FORBIDDEN
-R04_OLD_JOB_SEMANTIC_USE = FORBIDDEN
-R04_OLD_JOB_HISTORY = PRESERVE
-```
-
-No zero-demand or negative-intent conclusion is permitted from this incident.
-
-### Controlled R04 recovery acquisition
-
-Recovery job:
+Controlled recovery job:
 
 ```text
 QUERY_ID = R04-R1
-QUERY_TEXT = аналитика маркетплейсов для селлеров
 JOB_ID = octoport-serp-r04r1-20260917
-maxRequests = 1
-maxCostRub = 0.0305
+QUERY = аналитика маркетплейсов для селлеров
 ```
 
-The local start returned and has been durably persisted and remotely read back:
+Recovery start passed and was persisted/read back.
+
+The one released provider submit returned:
 
 ```text
-action = start
+action = submitN
 ok = true
-request_executed = false
-provider_calls = 0
+request_executed = true
+provider_calls = 1
+processed = 1
+normalized = 0
+bounded_stop = false
+last.outcome = accepted
+last.code = null
+last.index = 0
+last.operation_id = sprqtqegnppne4lqbf2t
 control = RUNNING
 total = 1
-PENDING = 1
+PENDING = 0
+SUBMITTING = 0
+WAITING = 1
+COLLECTING = 0
+RESULT_SAVED = 0
+SUCCEEDED = 0
+PARSE_FAILED = 0
+FAILED = 0
 UNKNOWN = 0
-requests_started = 0
-operations_accepted = 0
+CANCELLED = 0
+requests_started = 1
+operations_accepted = 1
 polls_started = 0
 unresolved = 1
-revision = 0
+all_successful = false
+busy = false
+revision = 2
 ```
 
-Interpretation: clean local job creation only. No provider request, no accepted operation, no poll, no ambiguity. Exactly one item is pending.
+The connector blocked direct raw Markdown persistence, so the exact envelope is preserved losslessly as Base64 at:
 
-Raw authority:
+`raw/R04R1_02_SUBMIT_2026-09-17.b64`
 
-`raw/R04R1_01_START_2026-09-17.md`
+Decoded identity:
 
-Analysis authority:
+```text
+UTF8_BYTES = 642
+SHA256 = 9fe964233e17c10438ba0ba620460d9a4ef6d0cd1045e56d6f23d81521c50150
+```
 
-`analysis/R04R1_01_START_2026-09-17.md`
+Remote readback of both lossless raw and submit analysis passed.
 
-The second local start is forbidden. Exactly one provider submission is now released for the recovery job. No collect/export is released yet.
+Interpretation: the new recovery job is now in the normal deferred lifecycle with an accepted, durable operation identity `sprqtqegnppne4lqbf2t` and `WAITING=1`. There is no `UNKNOWN` state on this job.
+
+Exactly one bounded collect is now released. A local `NO_DUE_OPERATIONS` response remains possible and must be persisted/read back before any further collect. A provider-backed terminal response must likewise be persisted/read back before export.
 
 ## Current hard gate
 
 ```text
 CURRENT_STAGE = M3 ORDINARY YANDEX SERP COLLECTION
 CURRENT_QUERY = R04
-R04_QUERY = аналитика маркетплейсов для селлеров
 R04_OLD_JOB = FROZEN_TRANSPORT_UNKNOWN / PRESERVED
-R04_OLD_JOB_SECOND_SUBMIT = FORBIDDEN
-R04_OLD_JOB_FURTHER_COLLECT = FORBIDDEN
-R04_QUERY_SEMANTIC_RESULT = NOT YET OBTAINED
-R04_CONTROLLED_RECOVERY = PASS / RELEASED
+R04_OLD_JOB_FURTHER_ACTIONS = FORBIDDEN
 R04_R1_JOB_ID = octoport-serp-r04r1-20260917
-R04_R1_START = PASS / PERSISTED / REMOTE READBACK PASS
+R04_R1_START = PASS / PERSISTED / READBACK
+R04_R1_SUBMIT = PASS / PERSISTED / READBACK
+R04_R1_OPERATION_ID = sprqtqegnppne4lqbf2t
+R04_R1_WAITING = 1
+R04_R1_UNKNOWN = 0
+R04_R1_REVISION = 2
 R04_R1_SECOND_START = FORBIDDEN
-R04_R1_SUBMITN_COUNT_1 = RELEASED EXACTLY ONCE
-R04_R1_SECOND_SUBMIT = BLOCKED
-R04_R1_COLLECT = BLOCKED UNTIL SUBMIT RESULT PERSISTENCE + READBACK + ANALYSIS
-R04_R1_EXPORT = BLOCKED
+R04_R1_SECOND_SUBMIT = FORBIDDEN
+R04_R1_COLLECTN_COUNT_1 = RELEASED EXACTLY ONCE
+R04_R1_EXPORT = BLOCKED UNTIL TERMINAL COLLECT PERSISTENCE + READBACK
 R05 = BLOCKED UNTIL R04 QUERY CLOSURE
-NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE submitN count=1 ON R04-R1 AND RETURN COMPLETE SEARCH_ASYNC_BATCH_RESULT_V1
+NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE collectN count=1 ON R04-R1 AND RETURN COMPLETE SEARCH_ASYNC_BATCH_RESULT_V1
 M7_COLLECTION_FREEZE = BLOCKED
 M8_SEMANTIC_MASTER = BLOCKED
 ```
@@ -145,5 +126,5 @@ M8_SEMANTIC_MASTER = BLOCKED
 ## Exact currently released command
 
 ```text
-SEARCH_ASYNC_BATCH_API_V1 {"action":"submitN","jobId":"octoport-serp-r04r1-20260917","count":1}
+SEARCH_ASYNC_BATCH_API_V1 {"action":"collectN","jobId":"octoport-serp-r04r1-20260917","count":1}
 ```
