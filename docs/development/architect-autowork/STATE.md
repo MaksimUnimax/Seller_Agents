@@ -43,13 +43,15 @@ Verdict:
 
 ## Owner B7 account-safety constraints — 2026-09-17
 
+Owner explicitly designated the CURRENT ChatGPT account being prepared in this work as the dedicated Health test account. There is no second Health test account to create or obtain, and no separate-account prerequisite. This current account is the controlled test account for B7.
+
 Before live B7, implement one bounded internal hardening step: SA-HEALTH-B7B-ACCOUNT-SCOPE-LUNA-FENCE-20260917-01.
 
-Owner requirements are stricter than the earlier provisioning boundary:
+Owner requirements:
 - Health B7 must create zero ChatGPT conversations and zero Projects.
 - Health B7 must delete/archive/rename/move zero conversations and zero Projects.
-- Standard must use one owner-precreated dedicated test conversation; root/new-chat execution is forbidden for live B7.
-- Work must use one owner-precreated dedicated Project + conversation route; route drift to another project/conversation is fail-closed.
+- Standard must use one owner-precreated test conversation in this current Health test account; root/new-chat execution is forbidden for live B7.
+- Work must use one owner-precreated Project + conversation route in this same current Health test account; route drift to another project/conversation is fail-closed.
 - Dedicated browser navigation must remain locked to the configured conversation identity, not merely to the allowed origin.
 - Work live Health may execute only when the currently displayed model is positively identified as GPT-5.6 Luna.
 - Health must never open the model picker or switch/fallback models. Missing, ambiguous or different model identity blocks before prompt insertion/Send.
@@ -59,7 +61,7 @@ Architect decision: implement the stronger zero-mutation account policy rather t
 
 ## Remaining Health blocker
 
-B7 live behavioral acceptance has not been run. After B7B code hardening is accepted, the external prerequisite remains owner-provisioned dedicated Health authentication state/config for both Standard and Work plus the exact precreated Standard conversation URL and approved dedicated Work project/conversation route. The Work conversation must already have GPT-5.6 Luna selected. It must use a dedicated controlled Health account/profile, not owner/customer production sessions. No live auth/provider behavior may be invented or claimed without that prerequisite.
+B7 live behavioral acceptance has not been run. After B7B code hardening is accepted, the external prerequisite is only provisioning the dedicated Health authentication state/config from THIS CURRENT owner-designated Health test account plus the exact precreated Standard conversation URL and the approved precreated Work project/conversation URL. The Work conversation must already have GPT-5.6 Luna selected. No second account is required or expected. Do not ask the owner to create another account. Do not record credentials, cookies, passwords or raw storage-state contents in Git.
 
 ## Other open roadmap gates
 
