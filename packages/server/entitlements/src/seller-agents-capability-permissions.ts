@@ -1,11 +1,11 @@
 import { EntitlementKeySchema } from "@product/plans";
 
-export const SELLER_AGENTS_CAPABILITY_PERMISSION_KEYS = [
+export const SELLER_AGENTS_CAPABILITY_PERMISSION_KEYS = Object.freeze([
   "source.ozon",
   "source.wildberries",
   "ai.chatgpt",
   "ai.alice",
-] as const;
+] as const);
 
 export type SellerAgentsCapabilityPermissionKey =
   (typeof SELLER_AGENTS_CAPABILITY_PERMISSION_KEYS)[number];
@@ -62,7 +62,9 @@ export const SELLER_AGENTS_CAPABILITY_PERMISSION_DEFINITIONS = Object.freeze(
   definitions,
 ) as readonly SellerAgentsCapabilityPermissionDefinition[];
 
-const permissionKeys = new Set<string>(SELLER_AGENTS_CAPABILITY_PERMISSION_KEYS);
+const permissionKeys = new Set<string>(
+  SELLER_AGENTS_CAPABILITY_PERMISSION_KEYS,
+);
 
 export function isSellerAgentsCapabilityPermissionKey(
   value: unknown,
