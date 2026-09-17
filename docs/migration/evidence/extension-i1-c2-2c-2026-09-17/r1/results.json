@@ -1,0 +1,141 @@
+{
+  "task_id": "SA-I1-C2-2C-ARCHITECT-ACCEPTANCE-20260917-01",
+  "status": "ACCEPTED_REMOTE_VERIFIED",
+  "repository": "MaksimUnimax/runtime-fixtures",
+  "source_branch": "feature/extension-i1-c2-2c-packaged-capabilities-2026-09-17",
+  "base_branch": "integration/i1-c1-srv5-2026-09-16",
+  "base_head": "27d1b1a1ec1fac15d284d20a42a27f95e1514924",
+  "tested_head": "a1d0a9dc83daf80536f58bf56d498206da8a1eb3",
+  "tested_tree": "1f7a54c0ac0c1c95b680071f7036f084715bac4c",
+  "pr": 19,
+  "implementation_changed_paths": [
+    "apps/extension/composition.json",
+    "docs/development/client-i1/C2_PACKAGED_CAPABILITIES_2026-09-17.md",
+    "packages/control-client/src/packaged-capabilities.js",
+    "tests/regression/extension-core/client-i1/client-packaged-capabilities.mjs",
+    "tooling/checks/extension_i1.py"
+  ],
+  "packaged_authority": {
+    "schema_version": "packaged_capability_manifest_v1",
+    "authority": "PACKAGED_LOCAL_ONLY",
+    "execution_authority": false,
+    "signed_permission_bindings": [],
+    "capabilities": [
+      "marketplace.ozon.adapter",
+      "marketplace.wildberries.adapter",
+      "ai.chatgpt.web.adapter",
+      "ai.alice.web.adapter"
+    ],
+    "global_writable": false,
+    "global_configurable": false
+  },
+  "focused_gate": {
+    "source": {"status": "PASS", "cases": 5},
+    "extracted": {"status": "PASS", "cases": 5},
+    "capabilities": 4,
+    "signed_permission_bindings": 0,
+    "execution_authority": false,
+    "offline_work": false,
+    "live_provider_calls": 0
+  },
+  "extension_i1": {
+    "run": 35190621200,
+    "status": "SUCCESS",
+    "gate_processes": 104,
+    "browser_verifier": {
+      "status": "PASS",
+      "browser": "Chromium 151.0.7922.34",
+      "valid": true,
+      "tamper_rejected": true
+    }
+  },
+  "installed_local": {
+    "status": "PASS",
+    "installed_acceptance": true,
+    "same_worker": true,
+    "distinct_accounts": true,
+    "distinct_device_sessions": true,
+    "distinct_authorizations": true,
+    "device_start": 2,
+    "exchange": 2,
+    "bootstrap": 2,
+    "otp_request_202": 2,
+    "otp_verify_200": 2,
+    "logout_204": 1,
+    "logout_cleared": true,
+    "fixture_accounts_prepared": 2,
+    "beta_unchanged": true,
+    "live_provider_calls": 0,
+    "real_email_delivery_proven": false
+  },
+  "package": {
+    "name": "SELLER_AGENTS_I1_C1_v0.2.4_LOCAL_DEVELOPMENT.zip",
+    "bytes": 1839269,
+    "sha256": "61e992cc28323c68bb2f448d88bb2d9ecc7ce2e0f1c9ced5de82b4ac2d123057",
+    "runtime_files": 39,
+    "extracted_files": 39,
+    "zip_files": 39,
+    "source_extracted_bytes_match": true,
+    "zip_extracted_bytes_match": true,
+    "byte_mismatches": 0,
+    "packaged_authority_input": {
+      "path": "packages/control-client/src/packaged-capabilities.js",
+      "bytes": 2072,
+      "sha256": "17783d63479ab5282b0414fd83bfcecbb8d0ed86f272c5e2f2005a081466e927"
+    }
+  },
+  "artifacts": [
+    {
+      "id": 10483534436,
+      "name": "extension-i1-a1d0a9dc83daf80536f58bf56d498206da8a1eb3",
+      "bytes": 1071324,
+      "sha256": "94c2a3258eb9d274ede315ea5df5574eac12cd661372252db1f82abfaa421f22"
+    },
+    {
+      "id": 10483293247,
+      "name": "extension-installed-local-a1d0a9dc83daf80536f58bf56d498206da8a1eb3",
+      "bytes": 517,
+      "sha256": "92998818c8c3a62cc70378f7272e23c45a216b1bf0385d21f506a756748134d3"
+    }
+  ],
+  "ci": {
+    "documentation": {"run": 35190625142, "status": "SUCCESS"},
+    "extension_i1": {"run": 35190621200, "status": "SUCCESS"},
+    "extension_push": {"run": 35190621221, "status": "SUCCESS"},
+    "extension_pr": {"run": 35190625256, "status": "SUCCESS"},
+    "server": {
+      "status": "NOT_TRIGGERED_PATH_FILTERED",
+      "reason": "No server/contracts/schema/migration/OpenAPI/server-doc path changed; accepted base server authority is unchanged and exact-head installed-local API/portal/PostgreSQL acceptance passed."
+    }
+  },
+  "scope": {
+    "accepted": [
+      "independent immutable packaged-local adapter capability presence authority",
+      "exact Ozon/Wildberries/ChatGPT web/Alice web packaged presence facts",
+      "zero signed permission bindings",
+      "executionAuthority=false",
+      "non-writable non-configurable global authority slot"
+    ],
+    "not_accepted": [
+      "signed permission to local capability mapping",
+      "effective capability computation",
+      "offline Work",
+      "canWork changes",
+      "Work Start/Resume or provider dispatch/replay changes",
+      "delivery/recovery/quota/file/scheduler changes",
+      "independent packaged AI-profile fingerprint authority",
+      "server/contracts/schema/migration/OpenAPI changes",
+      "real email delivery",
+      "preprod/production",
+      "live marketplace/AI/provider acceptance",
+      "full C2/I1/D2",
+      "D3/S2",
+      "beta/release/deployment"
+    ]
+  },
+  "manual_testing": {
+    "required_for_this_bounded_step": false,
+    "reason": "The accepted authority is deterministic package-local data and its boundaries are covered by exact-tree source/package/browser/installed-local/remote evidence."
+  },
+  "next_boundary": "Identify explicit reviewed signed server permission keys and define a separate fail-closed non-executing mapping/intersection with packaged local capabilities before any Work integration."
+}
