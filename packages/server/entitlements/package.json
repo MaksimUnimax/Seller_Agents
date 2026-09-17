@@ -7,6 +7,10 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./seller-agents-capability-permissions": {
+      "types": "./src/seller-agents-capability-permissions.ts",
+      "default": "./src/seller-agents-capability-permissions.ts"
     }
   },
   "scripts": {
