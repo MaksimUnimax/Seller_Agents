@@ -1,103 +1,120 @@
 # SEO SERP collection — execution progress
 
-Дата: 2026-09-16.
-Branch: `seo/wordstat-batch-01-2026-09-16`.
-Status: `S03_PRESTEP_PASS__READY_SUBMIT_S03`.
-Master authority: `../SEO_MASTER_ROADMAP_2026-09-16.md`.
-Provider-query hard gate: `../PROVIDER_QUERY_RELEASE_RULE.md`.
+Date: 2026-09-17.  
+Branch: `seo/wordstat-batch-01-2026-09-16`.  
+Status: **M2R_RECONCILED / S01-S03 CLOSED / READY_FOR_R01_PRESTEP**.  
+Master authority: `../SEO_MASTER_ROADMAP_2026-09-16.md`.  
+Current M3 query authority: `M3_QUERY_MATRIX_2026-09-17.md`.  
+M2R return acceptance: `../work/M2R_RECONCILIATION_MAIN_CHAT_RETURN_QA_2026-09-17.md`.
 
 ## Evidence rule
 
-For every provider-backed query, a query-specific fresh-research/release gate must pass before provider execution. After every Bridge/provider response:
+For every provider-backed query:
 
-`FULL RESPONSE -> DURABLE PERSIST -> REMOTE READBACK -> ANALYSIS/PROGRESS -> NEXT ACTION`.
+`QUERY-SPECIFIC FRESH RESEARCH/RELEASE -> PROVIDER LIFECYCLE -> FULL RESPONSE PERSIST -> REMOTE READBACK -> ANALYSIS/DECISION -> NEXT ACTION`.
 
-No blind retry. Pending/no-due is not zero/failure. Provider docs and Bridge capability are separate evidence layers.
+No blind retry. No provider call is released merely because it appears in the matrix. Every RUN candidate must pass its own gate first.
+
+## M2R correction/reconciliation state
+
+Targeted Wordstat correction acquisition ended after A19.
+
+Main Chat accepted the full-volume Work reconciliation with documented corrections:
+
+- Work ledger: `1123` rows;
+- direct result rows: `437`;
+- associations: `637`;
+- seed rows: `49`;
+- more Wordstat now: `NO`;
+- Work package integrity: `PASS`;
+- M3 Work matrix accounting corrected to `15 total = 3 existing + 12 RUN`;
+- Work R07 relation typo corrected to pair/control with R11;
+- historical B02 association accounting corrected from `245/152` to `246/153`, with combined B01+B02 associations corrected from `388/228` to `389/229`;
+- M7 Collection Freeze remains `BLOCKED`;
+- M8 Semantic Master remains `BLOCKED`.
+
+Original immutable Work return ZIP:
+
+`../work/octoport-seo-m2r-reconciliation-2026-09-17(1).zip`
 
 ## S01 — `ии агенты для маркетплейсов`
 
-Status: `CLOSED / 20 NORMALIZED RESULTS`.
+Status: **CLOSED / 20 NORMALIZED RESULTS**.
 
 - job: `octoport-serp-s01-20260916`;
-- operation: `sprjotiech5gn23a4tq3`;
 - normalized authority: `exports/S01_ИИ_АГЕНТЫ_ДЛЯ_МАРКЕТПЛЕЙСОВ_NORMALIZED_2026-09-16.json`;
-- source size: `88320` bytes;
 - source SHA-256: `6a669f140e0b1b0f4e697195d3eed74b44cab8139151970a7c1d3471c04566c6`.
+
+Durable finding: a real marketplace AI-agent SERP/category exists; it is not merely broad card/image-generation intent.
 
 ## S02 — `ии агент для озон`
 
-Status: `CLOSED / 20 NORMALIZED RESULTS`.
+Status: **CLOSED / 20 NORMALIZED RESULTS**.
 
 - job: `octoport-serp-s02-20260916`;
 - operation: `sproisueh6ivih75sbu9`;
 - normalized authority: `exports/S02_ИИ_АГЕНТ_ДЛЯ_ОЗОН_NORMALIZED_2026-09-16.json`;
-- source size: `87159` bytes;
-- source SHA-256: `b67eaba22dc8b3a949ecddbcf87646ede7141ff5d2cf660d875084c88a3b3bf2`;
-- result rows: `20`;
-- URL-comparison validation: PASS.
+- source SHA-256: `b67eaba22dc8b3a949ecddbcf87646ede7141ff5d2cf660d875084c88a3b3bf2`.
 
-Preliminary S02 finding: Ozon-specific wording is strongly seller/API/data/agent oriented and contains dedicated Ozon pages; final page ownership remains blocked until broader evidence/M7.
-
-## Preliminary recurring competitors after S01 + S02
-
-Registry: `competitors/REGISTRY_2026-09-16.md`.
-
-Recurring across both query families currently include:
-
-- `berkuz.ru`;
-- `jafo.ru`;
-- `marketaut.ru`;
-- `superintellect.ru`.
+Durable finding: Ozon-specific seller/API/data/agent intent exists alongside generic dual-marketplace category pages.
 
 ## S03 — `ии агент для wildberries`
 
-Purpose: paired Wildberries-specific control against S02 Ozon before any marketplace split/merge/page-job conclusion.
-
-### Process defect and recovery
-
-The local-only S03 `start` was issued before the mandatory per-query pre-step/release. This is recorded as `OSEO-F01` in `../FAILURE_LEDGER.md`.
-
-Observed local start:
+Status: **CLOSED / 20 NORMALIZED RESULTS**.
 
 - job: `octoport-serp-s03-20260916`;
-- `request_executed:false`;
-- `provider_calls:0`;
-- `PENDING:1`;
-- `revision:0`;
-- raw evidence: `raw/S03_01_START_2026-09-16.md`;
-- remote readback: PASS.
+- accepted operation: `spr9s36a5612vaq2a2ma`;
+- submit: accepted / provider call `1`;
+- collect: succeeded / provider call `1` / unresolved `0`;
+- normalized authority: `exports/S03_ИИ_АГЕНТ_ДЛЯ_WILDBERRIES_NORMALIZED_2026-09-16.json`;
+- source SHA-256: `006c9ca553d20ef210e19ea60ecd2ad7b2d4bae258b8587d8b9062886442ecd3`;
+- paired comparison authority: `analysis/S02_VS_S03_OZON_WB_PAIRED_COMPARISON_2026-09-16.md`.
 
-No Yandex provider request or cost occurred. The local job is retained and not recreated.
+Paired S02/S03 facts:
 
-### Query-specific pre-step/release
+- exact shared URLs: `6`;
+- exact URL Jaccard: `17.65%`;
+- shared domains: `8`;
+- domain Jaccard: `29.63%`;
+- Ozon-specific results: `11/20`;
+- WB-specific results: `11/20`;
+- current split/merge implication: `MIXED` — shared category core plus meaningful marketplace-specific depth; no final page ownership decision.
 
-Authority: `S03_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-16.md`.
-Remote readback: PASS.
+## Current M3 matrix
 
-Owner-facing fresh source disclosure and step analysis were delivered in the current chat before provider execution. The owner then explicitly instructed `Приступай к шагу 3`.
+Existing evidence:
 
-Activation authority: `S03_EXECUTION_ACTIVATION_2026-09-16.md`.
-Activation remote readback: PASS.
+- S01 — covered/closed;
+- S02 — covered/closed;
+- S03 — covered/closed.
 
-Pre-step quality score: `94.5/100 = 9.45/10`.
+New representative RUN candidates in current authority:
 
-### Current hard gate
+- R01 `подключить chatgpt к маркетплейсу`;
+- R02 `chatgpt для ozon`;
+- R03 `chatgpt для wildberries`;
+- R04 `аналитика маркетплейсов для селлеров`;
+- R05 `отчеты для селлеров маркетплейсов`;
+- R06 `помощник селлера маркетплейсов`;
+- R07 `как заполнить карточку товара wildberries`;
+- R08 `аналитика рекламы маркетплейсов`;
+- R09 `поисковые запросы wildberries для продавца`;
+- R10 `анализ ниш wildberries для продавца`;
+- R11 `как работать в кабинете wildberries продавцу`;
+- R12 `какой ии выбрать для маркетплейсов`.
 
-Exactly one provider action is now released:
+These are **candidates**, not automatically released provider actions.
 
-`SEARCH_ASYNC_BATCH_API_V1 {"action":"submitN","jobId":"octoport-serp-s03-20260916","count":1}`
+## Current hard gate
 
-No second `start`, second submit, collect, export, retry or next query is authorized until the exact submit response is persisted/read back and analyzed.
-
-## Current totals
-
-- completed/exported M3 query families: `2`;
-- current query: `S03`;
-- S03 provider submissions: `0`;
-- successful provider submissions total: `2`;
-- successful provider-backed collects total: `2`;
-- local admission failures: `2`;
-- local not-due guards: `2`;
-- provider failures: `0`;
-- current master stage: `M3 Ordinary Yandex SERP collection`;
-- next action: exactly one `S03 submitN count=1`.
+```text
+CURRENT_STAGE = M3 ORDINARY YANDEX SERP COLLECTION
+S01_S03 = CLOSED
+M2R_RECONCILIATION = ACCEPTED
+CURRENT_QUERY_CANDIDATE = R01
+R01_QUERY = подключить chatgpt к маркетплейсу
+R01_PRE_STEP = NOT YET PASSED
+R01_PROVIDER_ACTION = NOT RELEASED
+NEXT_PHYSICAL_ACTION = FRESH R01 RESEARCH + QUERY-SPECIFIC RELEASE + REMOTE READBACK
+M7_COLLECTION_FREEZE = BLOCKED
+```
