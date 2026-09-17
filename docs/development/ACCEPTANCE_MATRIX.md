@@ -3,6 +3,16 @@
 Все сценарии ниже — NOT_RUN_IN_SELLER_AGENTS на этапе D0. Исторические результаты источников не переносят их автоматически в PASS.
 Requirement IDs соответствуют [SPEC](../product/SPEC.md). При реализации к строке добавляются commit/package/environment/evidence и наблюдаемый итог.
 
+## Сквозной pre-handoff gate для всех roadmap stages
+
+Для всей матрицы действует [TOOL_CAPABILITY_AND_HUMAN_ACTION_POLICY](architect-autowork/TOOL_CAPABILITY_AND_HUMAN_ACTION_POLICY.md) и правила [QUALITY](QUALITY.md).
+
+До передачи владельцу extension build/ZIP/package должны быть зелёными все применимые проверки, которые можно выполнить без его физического участия. Исполнитель не имеет права заменять доступную автоматизацию просьбой владельцу нажать кнопку, открыть страницу, проверить DOM/модель/binding или запустить команду. Human-only остаток допускается только после доказанного исчерпания релевантных инструментов и должен быть минимально изолирован в отчёте.
+
+Для любого extension candidate независимо от конкретной строки A01–A32 действует обязательный dialogue-binding gate до owner handoff: exact conversation identity; успешный bind; persistence; восстановление после reload/worker restart; правильный marketplace/store/account context; отсутствие привязки к соседнему/чужому диалогу; unbind/rebind; wrong-dialogue/navigation fail-closed; применимая parallel-dialogue isolation. Если эти действия автоматизируемы в текущей test environment, NOT RUN/SKIPPED блокирует передачу ZIP.
+
+После любого patch, затрагивающего browser/dialogue/composer/account/store lifecycle, сначала выполняется affected test set, затем полный обязательный regression set. Сборка владельцу выдаётся только после green автоматического контура; ручная проверка владельца не используется для первичного обнаружения дефектов, которые могли быть найдены доступными инструментами.
+
 | Test ID | Требования | Сценарий и обязательный результат |
 |---|---|---|
 | A01 | SA-UX-01, SA-SHOP-01 | Переключатель Ozon/WB перерисовывает popup; несколько магазинов, переименование не меняет кабинет |
@@ -40,7 +50,6 @@ Requirement IDs соответствуют [SPEC](../product/SPEC.md). При р
 
 Матрица не является исполняемым тестом. Нельзя выдавать наличие строк A01–A32 за 32 пройденных сценария.
 Installed acceptance записывается отдельно по браузерам/ИИ и по точному пакету. R1–R8 WB открываются отдельным решением после положенного gate.
-
 
 ## D2.4 — ограниченные доказательства implementation
 
