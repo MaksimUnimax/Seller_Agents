@@ -44,22 +44,29 @@ const EXPECTED = [
   }
 }
 
-// 3. Authority and every nested row are frozen inside the extension realm.
+// 3. Authority and every nested row are frozen, and the global authority slot
+// itself is non-writable/non-configurable inside the extension realm.
 {
   const worker = await makeWorker(runtime);
   try {
     const frozen = await worker.call(`(function () {
       const root = SellerAgentsPackagedCapabilities;
       const manifest = root.snapshot();
+      const descriptor = Object.getOwnPropertyDescriptor(globalThis, "SellerAgentsPackagedCapabilities");
       let mutationRejected = false;
       try { manifest.capabilities.push({ id: "remote.injected", packaged: true }); }
       catch (_) { mutationRejected = true; }
+      try { globalThis.SellerAgentsPackagedCapabilities = { replaced: true }; }
+      catch (_) {}
       return {
         api: Object.isFrozen(root),
         manifest: Object.isFrozen(manifest),
         capabilities: Object.isFrozen(manifest.capabilities),
         rows: manifest.capabilities.every(Object.isFrozen),
         bindings: Object.isFrozen(manifest.signedPermissionBindings),
+        globalWritable: descriptor.writable,
+        globalConfigurable: descriptor.configurable,
+        globalUnchanged: globalThis.SellerAgentsPackagedCapabilities === root,
         mutationRejected,
         count: manifest.capabilities.length,
       };
@@ -70,6 +77,9 @@ const EXPECTED = [
       capabilities: true,
       rows: true,
       bindings: true,
+      globalWritable: false,
+      globalConfigurable: false,
+      globalUnchanged: true,
       mutationRejected: true,
       count: 4,
     });
