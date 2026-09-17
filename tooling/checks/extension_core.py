@@ -39,7 +39,7 @@ def main():
         work = output / "work"
         work.mkdir()
         for runtime, label, source_route in [(source, "core-source", True), (extracted, "core-package", False)]:
-            original.ozon_route(runner, work, runtime, label, source_route, expected_version="0.2.3")
+            original.ozon_route(runner, work, runtime, label, source_route, expected_version="0.2.4")
             runner.run(label + "-contracts", ["node", ROOT / "tests/regression/extension-core/core-contracts.mjs", runtime])
             runner.run(label + "-worker", ["node", ROOT / "tests/regression/extension-core/worker-lifecycle.mjs", runtime])
             runner.run(label + "-context", ["node", ROOT / "tests/regression/extension-core/batch-context.mjs", runtime])

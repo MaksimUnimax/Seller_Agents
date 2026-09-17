@@ -33,13 +33,16 @@
         throw error("EXECUTION_CONTEXT_MISSING");
       output[field] = value;
     }
+    if (input?.authGeneration !== undefined) {
+      if (!Number.isSafeInteger(input.authGeneration) || input.authGeneration < 0)
+        throw error("EXECUTION_CONTEXT_MISSING");
+      output.authGeneration = input.authGeneration;
+    }
     return Object.freeze(output);
   }
   function assertSame(expected, live) {
-    if (
-      live?.active !== true ||
-      fields.some((field) => expected[field] !== live[field])
-    )
+    if (live?.active !== true || fields.some((field) => expected[field] !== live[field]) ||
+        (expected.authGeneration !== undefined && expected.authGeneration !== live.authGeneration))
       throw error();
   }
   function createGuard(expected, readCurrent) {

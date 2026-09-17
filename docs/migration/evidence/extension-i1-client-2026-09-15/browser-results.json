@@ -1,0 +1,20 @@
+{
+  "native_chromium_fixture": {
+    "status": "PASS",
+    "browser": "Chromium 151.0.7922.34",
+    "source_and_extracted": true,
+    "provider_calls": 0,
+    "checks": ["popup", "WB catalog", "Work prompt", "Show/Hide", "binary File/IDB/port delivery", "Finish", "responsive popup"],
+    "authority": "ephemeral locally signed fixture; private key was outside package and evidence"
+  },
+  "installed_local_api_portal_postgres": {
+    "status": "CI_JOB_WIRED_NOT_RUN_LOCALLY",
+    "script": "tests/regression/extension-core/client-i1/installed_local_integration.py",
+    "flow": ["disposable PostgreSQL", "real local API", "real local portal", "development OTP 424242", "device approval", "exchange", "browser V2", "catalog", "second-account isolation"],
+    "limitation": "local Docker PostgreSQL initialization failed with No space left on device; this is not reported as PASS"
+  },
+  "claims": [
+    "development OTP does not prove real email delivery",
+    "local installed acceptance does not prove preprod or production"
+  ]
+}

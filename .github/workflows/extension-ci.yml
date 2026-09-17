@@ -134,6 +134,9 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.19.0'
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.12.14'
@@ -143,9 +146,11 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Build and verify actual popup, worker, content and attachments
         run: |
+          node tests/regression/extension-core/client-i1/make-browser-config.mjs "$RUNNER_TEMP/seller-agents-browser-fixture-private.der" > "$RUNNER_TEMP/seller-agents-browser-fixture-config.json"
+          export SA_PACKAGED_CONFIG_JSON="$(cat "$RUNNER_TEMP/seller-agents-browser-fixture-config.json")"
           python tooling/build/extension_composed.py --output build/application-browser/package
-          python tests/regression/extension-core/browser_application.py --runtime build/application-browser/package/runtime --output build/application-browser/source
-          python tests/regression/extension-core/browser_application.py --runtime build/application-browser/package/extracted --output build/application-browser/extracted
+          python tests/regression/extension-core/browser_application.py --runtime build/application-browser/package/runtime --output build/application-browser/source --fixture-private-key "$RUNNER_TEMP/seller-agents-browser-fixture-private.der"
+          python tests/regression/extension-core/browser_application.py --runtime build/application-browser/package/extracted --output build/application-browser/extracted --fixture-private-key "$RUNNER_TEMP/seller-agents-browser-fixture-private.der"
       - name: Preserve application fixture evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

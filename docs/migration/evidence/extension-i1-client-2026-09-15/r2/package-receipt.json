@@ -1,0 +1,11 @@
+{
+  "stage": "I1-C1-R2",
+  "version": "0.2.4",
+  "package": "SELLER_AGENTS_I1_C1_v0.2.4_LOCAL_DEVELOPMENT.zip",
+  "bytes": 1797539,
+  "sha256": "dd96560e52cbfe51e07f6150829c1a01dce31e05f124e69cbed859694ac83c8a",
+  "repeat_archive_match": true,
+  "source_extracted_bytes_match": true,
+  "byte_readback_match": true,
+  "fixture_trust": "ephemeral per native build; public packaged trust only"
+}

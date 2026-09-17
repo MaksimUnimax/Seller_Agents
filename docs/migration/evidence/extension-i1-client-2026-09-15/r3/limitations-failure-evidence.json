@@ -1,0 +1,10 @@
+{
+  "local_blockers": [
+    {"scope": "installed local API/portal/PostgreSQL", "status": "BLOCKED", "failure": "fresh postgres:18.0 initdb failed: No space left on device", "impact": "local installed acceptance not executed", "remote_required": true}
+  ],
+  "resolved_environment_failures": [
+    {"scope": "extension_i1 first invocation", "failure": "FileExistsError because checker output path already existed", "resolution": "reran with a unique non-existent output path"},
+    {"scope": "extension_core first invocation", "failure": "shell node v12 rejected optional chaining", "resolution": "reran with pinned Node24 on PATH"}
+  ],
+  "preserved_limits": ["no server/API contract change", "no legacy fallback restored", "no stub authorization", "no frozen donor rewrite", "no shared container pruning", "no raw tokens/codes/bodies/screenshots in evidence"]
+}

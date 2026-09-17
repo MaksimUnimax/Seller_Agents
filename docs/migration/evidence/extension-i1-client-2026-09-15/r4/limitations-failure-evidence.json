@@ -1,0 +1,18 @@
+{
+  "status": "BLOCKED",
+  "local_installed": {
+    "stage": "database_migrate",
+    "status": "FAIL",
+    "safe_failure": {"stage": "database_migrate", "status": null, "error_code": "DATABASE_MIGRATION_FAILED"},
+    "observed_condition": "ECONNREFUSED 127.0.0.1:45493",
+    "application_started": false,
+    "shared_containers_touched": false
+  },
+  "remote": {
+    "required_job": "https://github.com/MaksimUnimax/Seller_Agents/actions/runs/34969687336/job/104382641739",
+    "status": "NOT_INDEPENDENTLY_VERIFIED",
+    "api_observation": "HTTP 404 from unauthenticated private-repository Actions endpoint",
+    "checkout_sha": null
+  },
+  "privacy": "No raw response bodies, OTP/challenge/cookie values, tokens, private keys, profiles, or screenshots stored."
+}
