@@ -1,37 +1,76 @@
 # SEO SERP collection — execution progress
 
-Date: 2026-09-17.
-Branch: `seo/wordstat-batch-01-2026-09-16`.
-Status: **M3 / R07 TERMINAL SUCCESS / EXPORT-ONLY**.
+Date: 2026-09-17.  
+Branch: `seo/wordstat-batch-01-2026-09-16`.  
+Status: **M3 / R07 CLOSED / R11 NEXT CANDIDATE / QUERY-SPECIFIC PRE-STEP REQUIRED**.
 
-R07 query: `как заполнить карточку товара wildberries`
-Job: `octoport-serp-r07-20260917`
-Operation: `sprh5ncfp74am7l6eofs`
-
-Current observed state:
+## Closed Search evidence
 
 ```text
-request_executed = true
-provider_calls = 1
-processed = 1
-normalized = 1
-PENDING = 0
-WAITING = 0
-SUCCEEDED = 1
-FAILED = 0
-UNKNOWN = 0
-requests_started = 1
-operations_accepted = 1
-polls_started = 1
-unresolved = 0
-all_successful = true
-revision = 5
+S01 ии агенты для маркетплейсов = CLOSED / 20
+S02 ии агент для озон = CLOSED / 20
+S03 ии агент для wildberries = CLOSED / 20
+R01 подключить chatgpt к маркетплейсу = CLOSED / 20
+R02 chatgpt для ozon = CLOSED / 20
+R03 chatgpt для wildberries = CLOSED / 20
+R04 аналитика маркетплейсов для селлеров = CLOSED / 20
+R05 отчеты для селлеров маркетплейсов = CLOSED / 20
+R06 помощник селлера маркетплейсов = CLOSED / 20
+R07 как заполнить карточку товара wildberries = CLOSED / 20
+R08 аналитика рекламы маркетплейсов = CLOSED / 20
+R09 поисковые запросы wildberries для продавца = CLOSED / 20
+R10 анализ ниш wildberries для продавца = CLOSED / 20
 ```
 
-The R07 provider lifecycle is terminal. Do not run start, submitN or collectN again for this accepted job. After durable readback of this state, the only permitted provider action is revision-pinned `exportPage` for revision 5. R07 closes only after complete export, lossless persistence, all-result analysis and readback.
+## R07 closure
 
-R11 remains blocked until R07 closure. R12 remains later. M7 Collection Freeze and M8 Semantic Master remain downstream.
+```text
+R07_QUERY = как заполнить карточку товара wildberries
+R07_FAMILIES = F5,F8
+R07_JOB_ID = octoport-serp-r07-20260917
+R07_OPERATION_ID = sprh5ncfp74am7l6eofs
+R07_REVISION = 5
+R07_RESULT_COUNT = 20
+R07_DOCUMENT_COUNT = 20
+R07_HAS_MORE = false
+R07_SOURCE_BYTES = 97531
+R07_SOURCE_SHA256 = 67fafe83ef45e5b8bce03ab2c44756029af3a6be0288148739db2fac8f71762d
+R07_GZIP_BYTES = 24374
+R07_GZIP_SHA256 = f050ba638cdbf8bb6bf977899267f38539b41f03fa1054c063e6844bb74fda36
+R07_LOSSLESS_PARTS = 14
+R07_WB_NATIVE_CARD_CREATION_OR_FILLING_GUIDE = 1/20
+R07_SELLER_OPERATIONAL_CARD_WORKFLOW_GUIDE = 15/20
+R07_CARD_SEO_TEXT_OR_CHARACTERISTICS_OPTIMIZATION = 4/20
+R07_CREATIVE_IMAGE_INFOGRAPHIC_OR_MEDIA_GENERATOR = 0/20
+R07_AI_CARD_CONTENT_GENERATOR = 0/20
+R07_DIRECT_CARD_MANAGEMENT_OR_AUTOMATION_SERVICE = 0/20
+R07_DIRECT_OPERATIONAL_CARD_WORKFLOW = 16/20
+R07_SELLER_RELEVANCE = 20/20
+R07_OCTOPORT_LAUNCH_DIRECT_CARD_EDITING = NO
+R07_INFORMATION_SATURATED_FOR_CURRENT_DECISION = YES
+R07_MORE_SEARCH_NOW = NO
+R07_PAGE_OWNERSHIP_DECISION = DEFERRED_TO_M9_M11
+R07 = CLOSED FOR CURRENT M3 AFTER DURABLE READBACK
+```
 
 Authorities:
+- `R07_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-17.md`
 - `raw/R07_05_COLLECT_SUCCEEDED_2026-09-17.md`
-- `analysis/R07_05_COLLECT_SUCCEEDED_2026-09-17.md`
+- `raw/R07_06_EXPORT_MANIFEST_2026-09-17.md`
+- `analysis/R07_06_EXPORT_ANALYSIS_2026-09-17.md`
+
+## Current hard gate
+
+```text
+CURRENT_STAGE = M3 ORDINARY YANDEX SERP COLLECTION
+CURRENT_QUERY = NONE / R07 CLOSED
+NEXT_CANDIDATE = R11
+R11_QUERY = как работать в кабинете wildberries продавцу
+R11_OPEN_DECISION = broad seller-cabinet intent and its task mix, using R07 as narrow card-workflow control
+R11_PROVIDER_ACTION = NOT RELEASED
+R11_REQUIRES_QUERY_SPECIFIC_PRE_STEP = true
+R12 = BLOCKED UNTIL R11 COMPLETE
+M7_COLLECTION_FREEZE = BLOCKED
+M8_SEMANTIC_MASTER = BLOCKED
+NEXT_PHYSICAL_ACTION = BUILD + PERSIST + REMOTE READ BACK R11 QUERY-SPECIFIC PRE-STEP; ONLY THEN MAY ONE LOCAL R11 START BE RELEASED
+```
