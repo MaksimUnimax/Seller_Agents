@@ -2,95 +2,107 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M2R RECONCILED / S01-S03 CLOSED / R01 EXPORT RECEIVED / FULL EXPORT PERSISTING**.
+Status: **M2R RECONCILED / S01-S03 CLOSED / R01 CLOSED / R02 PRE-STEP NEXT**.
 
 Authorities:
 - master roadmap: `../SEO_MASTER_ROADMAP_2026-09-16.md`;
 - current M3 matrix: `M3_QUERY_MATRIX_2026-09-17.md`;
 - M2R return acceptance: `../work/M2R_RECONCILIATION_MAIN_CHAT_RETURN_QA_2026-09-17.md`;
 - R01 pre-step: `R01_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-17.md`;
-- R01 activation: `R01_EXECUTION_ACTIVATION_2026-09-17.md`.
+- R01 final export manifest: `raw/R01_06_EXPORT_MANIFEST_2026-09-17.md`;
+- R01 final analysis: `analysis/R01_06_EXPORT_ANALYSIS_2026-09-17.md`.
 
-Evidence rule: `QUERY-SPECIFIC FRESH RESEARCH/RELEASE -> PROVIDER LIFECYCLE -> FULL RESPONSE PERSIST -> REMOTE READBACK -> ANALYSIS/DECISION -> NEXT ACTION`.
+Evidence rule:
+
+`QUERY-SPECIFIC FRESH RESEARCH/RELEASE -> PROVIDER LIFECYCLE -> FULL RESPONSE PERSIST -> REMOTE READBACK -> ANALYSIS/DECISION -> NEXT ACTION`.
+
+## Closed existing M3 evidence
+
+- S01 `ии агенты для маркетплейсов` — CLOSED / 20 normalized results.
+- S02 `ии агент для озон` — CLOSED / 20 normalized results.
+- S03 `ии агент для wildberries` — CLOSED / 20 normalized results.
+- S02/S03 paired verdict remains `MIXED`: shared core plus material marketplace-specific depth.
 
 ## R01 — `подключить chatgpt к маркетплейсу`
 
-Job: `octoport-serp-r01-20260917`  
-Operation: `sprsmko0p531abn82fmk`  
-Revision: `5`.
-
-Provider lifecycle:
+Provider identity:
 
 ```text
-START = PASS / PERSISTED / READBACK
-SUBMIT = ACCEPTED / PERSISTED / READBACK
-FIRST_COLLECT = LOCAL NO_DUE_OPERATIONS / PERSISTED / READBACK
-SECOND_COLLECT = LOCAL NO_DUE_OPERATIONS / PERSISTED / READBACK
-FINAL_COLLECT = SUCCEEDED / PERSISTED / READBACK
+job_id = octoport-serp-r01-20260917
+operation_id = sprsmko0p531abn82fmk
+revision = 5
 SUCCEEDED = 1
-UNRESOLVED = 0
-ALL_SUCCESSFUL = true
+unresolved = 0
+all_successful = true
 ```
 
-Export received and locally validated:
+Final export:
 
 ```text
-schema = YMB_SEARCH_ASYNC_EXPORT_PAGE_V1
-job_id = octoport-serp-r01-20260917
-revision = 5
-total_items = 1
-item_count = 1
-result_row_count = 20
-items_with_raw = 1
-items_with_normalized = 1
-state = SUCCEEDED
+result_rows = 20
+document_count = 20
+usable_for_url_comparison = true
+missing_url_ranks = []
+unsafe_url_ranks = []
 has_more = false
 all_job_items_in_this_file = true
-validation.document_count = 20
-validation.usable_for_url_comparison = true
-validation.missing_url_ranks = []
-validation.unsafe_url_ranks = []
-original_size_bytes = 98455
-original_sha256 = 1c3cf6ae186bcfd07924a183209130cfb38f7af16e533acf864762973c4dfb7e
+source_size_bytes = 98455
+source_sha256 = 1c3cf6ae186bcfd07924a183209130cfb38f7af16e533acf864762973c4dfb7e
+FULL_RAW_PERSISTENCE = PASS
+REMOTE_READBACK = PASS
 ```
 
-For exact lossless transport through the text-only GitHub connector, the uploaded JSON was deterministically gzip-compressed (`gzip -9`, mtime 0), base64-encoded, and split into four concatenation-safe ASCII parts. Reconstruct by byte-concatenating part01..part04, base64-decoding, then gunzip. Expected reconstructed gzip:
+All 20 normalized rows were reviewed.
+
+Primary composition:
 
 ```text
-gzip_size_bytes = 28228
-gzip_sha256 = 3fa45c263cc56f8672713ce379b1d8766440f4230e9011d5aabf4757a98c27ab
-base64_chars = 37640
-part_lengths = [9500,9500,9500,9140]
+DIRECT_TARGET_CONNECTION = 2/20
+ADJACENT_INTEGRATION_MECHANISM = 4/20
+GENERAL_MARKETPLACE_CHATGPT = 4/20
+CARD_CONTENT_GENERATION = 7/20
+BROAD_AUTOMATION_BOTS = 1/20
+NOISE_OTHER_INTENT = 2/20
+TOTAL = 20/20
 ```
 
-Expected Git blob SHA per exact ASCII part:
+The exact target connection pages occupy ranks 1-2. Direct + adjacent integration mechanisms occupy 6/10 of the first ten positions. The whole top-20 remains materially mixed.
+
+Decision:
 
 ```text
-part01 = a6ca55bf6e77aaab7251142dc8fd632905fed9c7
-part02 = 6f14bcb52c5067841c5430d434b0276cf47c4359
-part03 = 64986f06e680d9e18d1662c1c843227d55d7cbc2
-part04 = 7a0a3080af83a589f1b95da6a558afd10123fcb9
+R01_PRIMARY_SERP_CLASS = MIXED_CONNECTION_SERP
+R01_GENERIC_F2_MECHANISM = CONFIRMED
+R01_EXACT_TARGET_HEAD = STRONG
+R01_WHOLE_SERP_CONTAMINATION = MATERIAL
+R01_FINAL_PAGE_OWNERSHIP = UNRESOLVED_BY_DESIGN
+R02_INFORMATION_GAIN = STILL HIGH
+R03_INFORMATION_GAIN = STILL HIGH PAIRED
+R01 = CLOSED
 ```
 
-Paths:
-- `raw/search-octoport-serp-r01-20260917-r5-0-0.json.gz.b64.part01`
-- `raw/search-octoport-serp-r01-20260917-r5-0-0.json.gz.b64.part02`
-- `raw/search-octoport-serp-r01-20260917-r5-0-0.json.gz.b64.part03`
-- `raw/search-octoport-serp-r01-20260917-r5-0-0.json.gz.b64.part04`
+No further R01 provider call is justified now.
 
-Semantic analysis remains blocked until directory readback confirms all expected blob SHAs on the active branch.
+## Next candidate
+
+R02 `chatgpt для ozon` remains the next matrix candidate. It is the Ozon-specific F2 control against generic R01 and paired with R03 `chatgpt для wildberries`.
+
+R02 is **not yet provider-released**. It must first pass its own query-specific pre-step research/release gate. R03 remains blocked behind complete R02 lifecycle + persistence/readback + full result analysis.
 
 ## Current hard gate
 
 ```text
 CURRENT_STAGE = M3 ORDINARY YANDEX SERP COLLECTION
-S01_S03 = CLOSED
 M2R_RECONCILIATION = ACCEPTED
-CURRENT_QUERY = R01
-R01_EXPORT = RECEIVED / 20 RESULTS / LOCAL QA PASS
-R01_FULL_RAW_PERSIST = IN PROGRESS
-R01_SEMANTIC_ANALYSIS = BLOCKED UNTIL REMOTE READBACK
-R02 = BLOCKED
-NEXT_PHYSICAL_ACTION = REMOTE-READBACK PART SHAS, THEN ANALYZE ALL 20 RESULTS
+S01_S03 = CLOSED
+R01 = CLOSED
+R01_EXPORT = PASS / PERSISTED / READBACK
+R01_F2_GENERIC_MECHANISM = CONFIRMED
+R01_PAGE_OWNERSHIP = UNRESOLVED
+R02_QUERY = chatgpt для ozon
+R02_PROVIDER_ACTION = NOT YET RELEASED
+R03 = BLOCKED
+NEXT_PHYSICAL_ACTION = RUN R02 QUERY-SPECIFIC PRE-STEP RESEARCH AND RELEASE GATE
 M7_COLLECTION_FREEZE = BLOCKED
+M8_SEMANTIC_MASTER = BLOCKED
 ```
