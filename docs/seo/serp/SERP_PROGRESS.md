@@ -2,7 +2,7 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M3 / R05 CLOSED / R06 TERMINAL SUCCESS / EXPORT REVISION 5 RELEASED**.
+Status: **M3 / R06 CLOSED / R08 QUERY-SPECIFIC PRE-STEP IN PROGRESS**.
 
 ## Closed Search evidence
 
@@ -15,55 +15,61 @@ R02 chatgpt для ozon = CLOSED / 20
 R03 chatgpt для wildberries = CLOSED / 20
 R04 аналитика маркетплейсов для селлеров = CLOSED / 20
 R05 отчеты для селлеров маркетплейсов = CLOSED / 20
+R06 помощник селлера маркетплейсов = CLOSED / 20
 ```
 
-## R06 current state
+## R06 accepted closure
+
+Authorities:
+
+- `raw/R06_08_EXPORT_MANIFEST_2026-09-17.md` — complete revision-5 export persisted losslessly as seven verified chunks;
+- `analysis/R06_08_EXPORT_ANALYSIS_2026-09-17.md` — all 20 results reviewed.
 
 ```text
-R06_QUERY = помощник селлера маркетплейсов
-R06_FAMILY = F4
-R06_JOB_ID = octoport-serp-r06-20260917
-R06_PRE_STEP = PASS / PERSISTED / READBACK
-R06_START = PASS / RECOVERED BY STATUS / PERSISTED / READBACK
-R06_OPERATION_ID = sprdv3pu6m66t214aidj
-R06_SUBMIT = PASS / ACCEPTED / PERSISTED / READBACK
-R06_COLLECT_1 = LOCAL NO_DUE / PERSISTED / READBACK
-R06_COLLECT_2 = PROVIDER-BACKED SUCCESS / PERSISTED / READBACK
-R06_PENDING = 0
-R06_WAITING = 0
-R06_SUCCEEDED = 1
-R06_UNKNOWN = 0
-R06_REQUESTS_STARTED = 1
-R06_OPERATIONS_ACCEPTED = 1
-R06_POLLS_STARTED = 1
-R06_UNRESOLVED = 0
-R06_ALL_SUCCESSFUL = true
-R06_REVISION = 5
+R06_VERDICT = SOFTWARE_AI_DOMINANT_HELPER_SERP_WITH_STRONG_AI_HEAD_AND_MINOR_HUMAN_SERVICE_COLLISION
+R06_AI_COPILOT_AGENT = 6/20
+R06_GENERAL_SOFTWARE_HELPER = 4/20
+R06_SPECIALIZED_AUTOMATION_UTILITY = 5/20
+R06_SOFTWARE_AI_TOTAL = 15/20
+R06_HUMAN_EMPLOYEE = 1/20
+R06_HUMAN_SERVICE = 1/20
+R06_FULFILLMENT_HELPER_BRANDING = 1/20
+R06_SUPPORT_COMMUNITY = 1/20
+R06_NOISE_ADJACENT = 1/20
+R06_TOP3_AI = 3/3
+R06_TOP10_SOFTWARE_AI = 7/10
+R06_MORE_SEARCH_NOW = NO
+R06_INFORMATION_SATURATED_FOR_CURRENT_DECISION = YES
+R06_PAGE_OWNERSHIP_DECISION = DEFERRED_TO_M9_M11
+R06 = CLOSED
 ```
 
-Terminal authorities:
+Product implication held for later semantic/page work: helper/assistant vocabulary is Search-supported for software/AI seller products, but unqualified `помощник селлера` is broader than Octoport's exact promise and should later be scoped with AI/software/marketplace/data modifiers. Competitor autonomous-action claims do not change PRODUCT_TRUTH.
 
-- `raw/R06_07_COLLECT_SUCCEEDED_2026-09-17.md`;
-- `analysis/R06_07_COLLECT_SUCCEEDED_2026-09-17.md`.
+## Next candidate
 
-The same accepted deferred operation `sprdv3pu6m66t214aidj` completed successfully. No further start, submit or collect is permitted. Semantic R06 closure still requires the complete revision-5 export to be persisted losslessly and reviewed in full.
+```text
+R08_QUERY = аналитика рекламы маркетплейсов
+R08_INFORMATION_GAIN = HIGH
+R08_QUERY_SPECIFIC_PRE_STEP = REQUIRED / IN PROGRESS
+R08_JOB_ID_PLANNED = octoport-serp-r08-20260917
+```
+
+R08 tests whether broad advertising-analytics language is primarily seller-owned marketplace ad/campaign analytics or collides materially with agency/media-planning/external market-intelligence meanings. No provider action is released yet.
 
 ## Current hard gate
 
 ```text
 CURRENT_STAGE = M3 ORDINARY YANDEX SERP COLLECTION
-CURRENT_QUERY = R06
-R06_FURTHER_START_SUBMIT_COLLECT = FORBIDDEN
-R06_EXPORT_PAGE_REV5 = RELEASED EXACTLY ONCE
-R06_SEMANTIC_RESULT = BLOCKED UNTIL COMPLETE EXPORT PERSISTENCE + READBACK + FULL ANALYSIS
-R08 = BLOCKED UNTIL R06 QUERY CLOSURE
+CURRENT_QUERY = R08 PRE-STEP ONLY
+R06 = CLOSED / PERSISTED / REMOTE READBACK
+R08_PRE_STEP = IN PROGRESS
+R08_START = BLOCKED UNTIL QUERY-SPECIFIC FRESH RESEARCH + ARTIFACT + REMOTE READBACK
+R08_SUBMIT = BLOCKED
+R08_COLLECT = BLOCKED
+R08_EXPORT = BLOCKED
+R09 = BLOCKED UNTIL R08 QUERY CLOSURE
 M7_COLLECTION_FREEZE = BLOCKED
 M8_SEMANTIC_MASTER = BLOCKED
-NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE exportPage PINNED TO REVISION 5 AND RETURN COMPLETE EXPORT
-```
-
-## Exact released command
-
-```text
-SEARCH_ASYNC_BATCH_API_V1 {"action":"exportPage","jobId":"octoport-serp-r06-20260917","after":-1,"limit":25,"revision":5}
+NEXT_PHYSICAL_ACTION = COMPLETE R08 QUERY-SPECIFIC PRE-STEP RESEARCH; DO NOT EXECUTE A PROVIDER COMMAND YET
 ```
