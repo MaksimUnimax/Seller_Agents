@@ -2,7 +2,7 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M2R RECONCILED / S01-S03 CLOSED / R01 CLOSED / R02 CLOSED / R03 FIRST COLLECT LOCAL NOT-DUE / ONE FURTHER COLLECT RELEASED**.
+Status: **M2R RECONCILED / S01-S03 CLOSED / R01 CLOSED / R02 CLOSED / R03 SECOND COLLECT LOCAL NOT-DUE / ONE FURTHER COLLECT RELEASED**.
 
 ## Authorities
 
@@ -14,8 +14,9 @@ Status: **M2R RECONCILED / S01-S03 CLOSED / R01 CLOSED / R02 CLOSED / R03 FIRST 
 - R03 pre-step/activation: `R03_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-17.md`, `R03_EXECUTION_ACTIVATION_2026-09-17.md`;
 - R03 start: `raw/R03_01_START_2026-09-17.md`, `analysis/R03_01_START_2026-09-17.md`;
 - R03 submit: `raw/R03_02_SUBMIT_2026-09-17.md`, `analysis/R03_02_SUBMIT_2026-09-17.md`;
-- R03 first collect guard: `raw/R03_03_COLLECT_NOT_DUE_2026-09-17.b64`, `analysis/R03_03_COLLECT_NOT_DUE_2026-09-17.md`;
-- next collect release: `R03_03_NEXT_COLLECT_RELEASE_2026-09-17.md`.
+- R03 first guard: `raw/R03_03_COLLECT_NOT_DUE_2026-09-17.b64`, `analysis/R03_03_COLLECT_NOT_DUE_2026-09-17.md`;
+- R03 second guard: `raw/R03_04_COLLECT_NOT_DUE_2026-09-17.b64`, `analysis/R03_04_COLLECT_NOT_DUE_2026-09-17.md`;
+- current release: `R03_04_NEXT_COLLECT_RELEASE_2026-09-17.md`.
 
 Evidence rule:
 
@@ -37,7 +38,7 @@ R02: `MIXED_OZON_CHATGPT_SERP_WITH_STRONG_CONNECTION_HEAD`, Ozon sharpen vs R01 
 
 ## Current query — R03 `chatgpt для wildberries`
 
-Accepted submit state:
+Accepted operation:
 
 ```text
 operation_id = spr8vij9p1s7cijt2chi
@@ -49,7 +50,7 @@ unresolved = 1
 revision = 2
 ```
 
-First collect attempt returned:
+Both first and second collect attempts returned the same local guard:
 
 ```text
 action = collectN
@@ -66,12 +67,13 @@ unresolved = 1
 revision = 2
 ```
 
-Interpretation: local timing guard only; Yandex was not polled. The accepted operation remains unchanged and unresolved. No semantic conclusion is allowed.
+The two not-due envelopes are byte-identical because lifecycle state did not change. Interpretation: local timing guards only; Yandex has not been polled. No semantic conclusion is allowed.
 
 ```text
 R03_START = PASS / PERSISTED / READBACK
 R03_SUBMIT = ACCEPTED / PERSISTED / READBACK
 R03_FIRST_COLLECT = LOCAL NO_DUE_OPERATIONS / LOSSLESS PERSISTED / READBACK
+R03_SECOND_COLLECT = LOCAL NO_DUE_OPERATIONS / LOSSLESS PERSISTED / READBACK
 R03_OPERATION_ID = spr8vij9p1s7cijt2chi
 R03_SECOND_START = FORBIDDEN
 R03_SECOND_SUBMIT = FORBIDDEN
@@ -99,7 +101,7 @@ R03_QUERY = chatgpt для wildberries
 R03_OPERATION_ID = spr8vij9p1s7cijt2chi
 R03_WAITING = 1
 R03_REVISION = 2
-R03_FIRST_COLLECT = LOCAL NOT-DUE / PERSISTED / READBACK
+R03_SECOND_COLLECT = LOCAL NOT-DUE / PERSISTED / READBACK
 R03_NEXT_COLLECTN_COUNT_1 = RELEASED
 R03_EXPORT = BLOCKED UNTIL PROVIDER-BACKED TERMINAL COLLECT + PERSIST + READBACK
 R04 = BLOCKED
