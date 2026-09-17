@@ -25,37 +25,31 @@ describe("Seller Agents capability permission vocabulary", () => {
     ).toEqual(EXPECTED);
   });
 
-  it(
-    "uses valid BOOLEAN/CAPABILITY entitlement definitions without execution authority",
-    () => {
-      for (const definition of SELLER_AGENTS_CAPABILITY_PERMISSION_DEFINITIONS) {
-        expect(EntitlementKeySchema.parse(definition.entitlementKey)).toBe(
-          definition.entitlementKey,
-        );
-        expect(definition.valueType).toBe("BOOLEAN");
-        expect(definition.securityClassification).toBe("CAPABILITY");
-        expect(definition.executionAuthority).toBe(false);
-      }
-    },
-  );
+  it("uses valid BOOLEAN/CAPABILITY entitlement definitions without execution authority", () => {
+    for (const definition of SELLER_AGENTS_CAPABILITY_PERMISSION_DEFINITIONS) {
+      expect(EntitlementKeySchema.parse(definition.entitlementKey)).toBe(
+        definition.entitlementKey,
+      );
+      expect(definition.valueType).toBe("BOOLEAN");
+      expect(definition.securityClassification).toBe("CAPABILITY");
+      expect(definition.executionAuthority).toBe(false);
+    }
+  });
 
-  it(
-    "does not reuse packaged-local capability ids or operation-level entitlements",
-    () => {
-      for (const value of [
-        "marketplace.ozon.adapter",
-        "marketplace.wildberries.adapter",
-        "ai.chatgpt.web.adapter",
-        "ai.alice.web.adapter",
-        "ozon.analytics",
-        "ozon.performance",
-        "feature.guided_commands",
-        "device.max_active",
-      ]) {
-        expect(isSellerAgentsCapabilityPermissionKey(value), value).toBe(false);
-      }
-    },
-  );
+  it("does not reuse packaged-local capability ids or operation-level entitlements", () => {
+    for (const value of [
+      "marketplace.ozon.adapter",
+      "marketplace.wildberries.adapter",
+      "ai.chatgpt.web.adapter",
+      "ai.alice.web.adapter",
+      "ozon.analytics",
+      "ozon.performance",
+      "feature.guided_commands",
+      "device.max_active",
+    ]) {
+      expect(isSellerAgentsCapabilityPermissionKey(value), value).toBe(false);
+    }
+  });
 
   it("recognizes only exact reviewed permission keys", () => {
     for (const value of EXPECTED)
