@@ -10,7 +10,8 @@ Status: `ACCEPTED / REMOTE VERIFIED`.
 - Base head: `27d1b1a1ec1fac15d284d20a42a27f95e1514924`.
 - Exact tested implementation head: `a1d0a9dc83daf80536f58bf56d498206da8a1eb3`.
 - Exact tested implementation tree: `1f7a54c0ac0c1c95b680071f7036f084715bac4c`.
-- Draft integration PR during implementation: #19.
+- Acceptance/docs head before merge: `513d5e770edd823106adc0e58ae023ba0ccefe40`.
+- PR #19 merged normally into `integration/i1-c1-srv5-2026-09-16` at merge commit `ff55e8aaf3d473582ccce37a89c45098789fa2b3`, tree `cedba79daf0b25109c720c0976bd78deb00834db`.
 
 The exact implementation diff from the accepted C2.2-B integration base contains only five paths:
 
@@ -114,6 +115,12 @@ Packaged authority composition input:
 - `packages/control-client/src/packaged-capabilities.js`;
 - `2,072` bytes;
 - SHA-256 `17783d63479ab5282b0414fd83bfcecbb8d0ed86f272c5e2f2005a081466e927`.
+
+## Post-merge readback
+
+PR #19 was merged normally, without force-push, rebase, or reset, into the accepted integration line at `ff55e8aaf3d473582ccce37a89c45098789fa2b3`. The merge commit has tree `cedba79daf0b25109c720c0976bd78deb00834db` and preserves the exact tested implementation commit in history. The merge does not redefine the exact tested implementation head: all implementation acceptance claims remain pinned to `a1d0a9dc83daf80536f58bf56d498206da8a1eb3` / `1f7a54c0ac0c1c95b680071f7036f084715bac4c`.
+
+The acceptance/docs head `513d5e770edd823106adc0e58ae023ba0ccefe40` changed only documentation after the exact-tested implementation. Its Documentation CI succeeded. A redundant Extension CI rerun was still executing the preserved WB browser route at merge time; it does not replace or weaken the two successful exact-implementation Extension CI runs above and is retained as additional evidence rather than as the authority for implementation acceptance.
 
 ## Explicitly not accepted
 
