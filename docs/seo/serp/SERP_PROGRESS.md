@@ -2,7 +2,7 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M2R_RECONCILED / S01-S03 CLOSED / R01 WAITING / FIRST COLLECT NOT DUE / NEXT COLLECT RELEASED**.  
+Status: **M2R_RECONCILED / S01-S03 CLOSED / R01 WAITING / TWO COLLECTS NOT DUE / NEXT COLLECT RELEASED**.  
 Master authority: `../SEO_MASTER_ROADMAP_2026-09-16.md`.  
 Current M3 query authority: `M3_QUERY_MATRIX_2026-09-17.md`.  
 M2R return acceptance: `../work/M2R_RECONCILIATION_MAIN_CHAT_RETURN_QA_2026-09-17.md`.
@@ -71,7 +71,9 @@ Authorities:
 - submit raw: `raw/R01_02_SUBMIT_2026-09-17.md`;
 - submit analysis: `analysis/R01_02_SUBMIT_2026-09-17.md`;
 - first collect raw: `raw/R01_03_COLLECT_NOT_DUE_2026-09-17.md`;
-- first collect analysis: `analysis/R01_03_COLLECT_NOT_DUE_2026-09-17.md`.
+- first collect analysis: `analysis/R01_03_COLLECT_NOT_DUE_2026-09-17.md`;
+- second collect raw: `raw/R01_04_COLLECT_NOT_DUE_2026-09-17.md`;
+- second collect analysis: `analysis/R01_04_COLLECT_NOT_DUE_2026-09-17.md`.
 
 Current provider lifecycle:
 
@@ -86,7 +88,7 @@ unresolved = 1
 revision = 2
 ```
 
-The first `collectN` returned local `NO_DUE_OPERATIONS` with:
+Both bounded `collectN` attempts returned local `NO_DUE_OPERATIONS` with:
 
 ```text
 request_executed = false
@@ -94,9 +96,9 @@ provider_calls = 0
 polls_started = 0
 ```
 
-Interpretation: no provider poll occurred; this is a local timing guard, not a failure. The accepted operation remains authoritative. A second submit/new start is forbidden. Export remains blocked.
+Interpretation: neither collect contacted Yandex. These are local timing guards, not provider failures and not zero-results evidence. The accepted operation remains authoritative. A second submit/new start is forbidden. Export remains blocked.
 
-The next bounded lifecycle action is another collection attempt against the same job:
+The next bounded lifecycle action remains another collection attempt against the same job:
 
 ```text
 SEARCH_ASYNC_BATCH_API_V1 {"action":"collectN","jobId":"octoport-serp-r01-20260917","count":1}
@@ -116,6 +118,7 @@ R01_LOCAL_START = PASS / PERSISTED / READBACK
 R01_SUBMIT = ACCEPTED / PERSISTED / READBACK
 R01_OPERATION_ID = sprsmko0p531abn82fmk
 R01_FIRST_COLLECT = LOCAL NO_DUE_OPERATIONS / PERSISTED / READBACK
+R01_SECOND_COLLECT = LOCAL NO_DUE_OPERATIONS / PERSISTED / READBACK
 R01_SECOND_SUBMIT = FORBIDDEN
 R01_NEXT_COLLECTN_COUNT_1 = RELEASED
 R01_EXPORT = BLOCKED
