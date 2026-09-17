@@ -1,0 +1,116 @@
+{
+  "task_id": "SA-I1-C2-2B-ARCHITECT-ACCEPTANCE-20260917-01",
+  "status": "ACCEPTED_REMOTE_VERIFIED",
+  "repository": "MaksimUnimax/runtime-fixtures",
+  "source_branch": "feature/extension-i1-c2-2b-signed-metadata-2026-09-17",
+  "base_branch": "integration/i1-c1-srv5-2026-09-16",
+  "base_head": "8b162d97a37aa10566d82dd3184c2bfe3a9cca98",
+  "tested_head": "8a5d9e6ca611d69512ad28fc00684c63bdc87324",
+  "tested_tree": "1fb11a510d6dd314a0647c5348e56d1a26bc007e",
+  "pr": 18,
+  "changed_paths": [
+    ".github/workflows/extension-i1-ci.yml",
+    "apps/extension/composition.json",
+    "docs/development/client-i1/C2_SIGNED_METADATA_2026-09-17.md",
+    "packages/control-client/src/signed-metadata.js",
+    "tests/regression/extension-core/client-i1/client-signed-metadata.mjs",
+    "tooling/checks/extension_i1.py"
+  ],
+  "focused_signed_metadata": {
+    "source": {"status": "PASS", "cases": 5},
+    "extracted": {"status": "PASS", "cases": 5},
+    "execution_authority": false,
+    "offline_work": false,
+    "live_provider_calls": 0
+  },
+  "extension_i1": {
+    "run": 35187262735,
+    "status": "SUCCESS",
+    "gate_processes": 102,
+    "browser_verifier": {
+      "status": "PASS",
+      "browser": "Chromium 151.0.7922.34",
+      "valid": true,
+      "tamper_rejected": true
+    }
+  },
+  "installed_local": {
+    "status": "PASS",
+    "installed_acceptance": true,
+    "distinct_accounts": true,
+    "distinct_device_sessions": true,
+    "distinct_authorizations": true,
+    "device_start": 2,
+    "exchange": 2,
+    "bootstrap": 2,
+    "logout_204": 1,
+    "logout_cleared": true,
+    "beta_unchanged": true,
+    "live_provider_calls": 0,
+    "real_email_delivery_proven": false
+  },
+  "package": {
+    "name": "SELLER_AGENTS_I1_C1_v0.2.4_LOCAL_DEVELOPMENT.zip",
+    "bytes": 1837324,
+    "sha256": "5badfd1a67a824ecd160694fdb45ee25fb2dac27386e22ab93145eeaca4b6afa",
+    "runtime_files": 39,
+    "extracted_files": 39,
+    "zip_files": 39,
+    "source_extracted_bytes_match": true,
+    "zip_extracted_bytes_match": true,
+    "byte_mismatches": 0
+  },
+  "artifacts": [
+    {
+      "id": 10482737502,
+      "name": "extension-i1-8a5d9e6ca611d69512ad28fc00684c63bdc87324",
+      "bytes": 1068730,
+      "sha256": "6295dedcd9973533ace4d51d087785ac6ba68bd75db574cc79329248f4de5853"
+    },
+    {
+      "id": 10482613319,
+      "name": "extension-installed-local-8a5d9e6ca611d69512ad28fc00684c63bdc87324",
+      "bytes": 560,
+      "sha256": "778377994326850ec85d8e3ac9fd2eaf36e97fd184821760c51a0766a77a51cf"
+    }
+  ],
+  "ci": {
+    "documentation": {"run": 35187264986, "status": "SUCCESS"},
+    "extension_i1": {"run": 35187262735, "status": "SUCCESS"},
+    "extension_pr": {"run": 35187264983, "status": "SUCCESS"},
+    "extension_push": {"run": 35187262733, "status": "SUCCESS"},
+    "server": {
+      "status": "NOT_TRIGGERED_PATH_FILTERED",
+      "reason": "No server/contracts/schema/migration/OpenAPI/server-doc path changed; accepted base server authority is unchanged and exact-head installed-local API/portal/PostgreSQL acceptance passed."
+    }
+  },
+  "scope": {
+    "accepted": [
+      "read-only projection of already verified signed Bootstrap V2 metadata",
+      "signed top-level features and entitlements exposed without execution semantics",
+      "already validated signed AI state/profile projection",
+      "executionAuthority=false unconditionally",
+      "existing C2.2-A verification/cache/time/context authority reused unchanged"
+    ],
+    "not_accepted": [
+      "offline Work",
+      "remote feature/entitlement interpretation as executable capability",
+      "local capability registry",
+      "independent packaged AI-profile fingerprint authority",
+      "Work Start/Resume or provider dispatch/replay changes",
+      "delivery/recovery/quota/scheduler changes",
+      "joint offline command/result completion",
+      "real email delivery",
+      "preprod/production",
+      "live marketplace/AI/provider acceptance",
+      "full C2/I1/D2",
+      "D3/S2",
+      "beta/release/deployment"
+    ]
+  },
+  "manual_testing": {
+    "required_for_this_bounded_step": false,
+    "reason": "All C2.2-B metadata-projection criteria are covered by deterministic source/package/browser/installed-local/remote evidence; live provider/email/preprod checks are separate scopes."
+  },
+  "next_boundary": "Define an independent packaged local capability authority before intersecting it with signed feature/entitlement permission; C2.2-B does not open offline Work."
+}
