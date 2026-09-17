@@ -2,7 +2,7 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M3 / R05 CLOSED / R06 PRE-STEP PASS / R06 LOCAL START RELEASED**.
+Status: **M3 / R05 CLOSED / R06 PRE-STEP PASS / START RESULT DELIVERY FAILED / LOCAL STATUS DIAGNOSTIC RELEASED**.
 
 ## Closed Search evidence
 
@@ -38,44 +38,69 @@ R05_MORE_SEARCH_NOW = NO
 R05 = CLOSED
 ```
 
-## R06 release
+## R06 authority
 
-Query-specific authority:
+Query-specific pre-step:
 
 `R06_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-17.md`
-
-Query:
 
 ```text
 R06_QUERY = помощник селлера маркетплейсов
 R06_FAMILY = F4
 R06_JOB_ID = octoport-serp-r06-20260917
+R06_PRE_STEP = PASS / PERSISTED / READBACK
 ```
 
-The pre-step passed remote readback after fresh Yandex deferred-provider research, current human seller-assistant terminology research, current AI/software seller-helper research, current Bridge-head verification and durable-job conflict check.
+The released local `start` did not return a `SEARCH_ASYNC_BATCH_RESULT_V1`. Instead Yandex Marketing Bridge 0.1.9 returned a local delivery error:
 
-R06 will measure current Search collision between human assistant/employee, human marketplace manager/service, AI seller copilot, general software helper, specialized automation utility and support/helper surfaces.
+```text
+stage = DELIVERY_COMPOSER
+code = COMPOSER_NOT_FOUND
+recoverable = true
+request_executed = false
+run_id = null
+operation_id = null
+automatic_retry = false
+```
+
+Authorities:
+
+- `raw/R06_00_DELIVERY_COMPOSER_NOT_FOUND_2026-09-17.md`;
+- `analysis/R06_00_DELIVERY_COMPOSER_NOT_FOUND_2026-09-17.md`.
+
+Interpretation: no provider request is evidenced, but because failure happened during result delivery, this envelope alone does not prove whether the local-only `start` state mutation occurred before delivery failed. Therefore a second `start` is not authorized until local job existence is checked.
 
 ## Current hard gate
 
 ```text
 CURRENT_STAGE = M3 ORDINARY YANDEX SERP COLLECTION
 CURRENT_QUERY = R06
-R06_PRE_STEP = PASS / PERSISTED / REMOTE READBACK
 R06_JOB_ID = octoport-serp-r06-20260917
-R06_EXISTING_START_CONFLICT = NONE
-R06_START = RELEASED EXACTLY ONCE
-R06_SUBMIT = BLOCKED UNTIL START PERSISTENCE + READBACK + ANALYSIS
+R06_START_COMMAND_WAS_RELEASED = YES
+R06_START_RESULT = NOT DELIVERED
+R06_DELIVERY_ERROR = COMPOSER_NOT_FOUND / PERSISTED / READBACK
+R06_PROVIDER_REQUEST_EXECUTED = false
+R06_PROVIDER_OPERATION_ID = null
+R06_LOCAL_JOB_EXISTENCE = UNRESOLVED
+R06_SECOND_START = BLOCKED
+R06_SUBMIT = BLOCKED
+R06_STATUS_DIAGNOSTIC = RELEASED EXACTLY ONCE
 R06_COLLECT = BLOCKED
 R06_EXPORT = BLOCKED
 R08 = BLOCKED UNTIL R06 QUERY CLOSURE
 M7_COLLECTION_FREEZE = BLOCKED
 M8_SEMANTIC_MASTER = BLOCKED
-NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE LOCAL START FOR R06 AND RETURN COMPLETE SEARCH_ASYNC_BATCH_RESULT_V1
+NEXT_PHYSICAL_ACTION = EXECUTE ONE LOCAL status DIAGNOSTIC FOR R06 JOB ID AND RETURN COMPLETE RESULT/ERROR
 ```
 
-## Exact released command
+## Exact released diagnostic command
 
 ```text
-SEARCH_ASYNC_BATCH_API_V1 {"action":"start","jobId":"octoport-serp-r06-20260917","queries":["помощник селлера маркетплейсов"],"confirmBillable":true,"maxRequests":1,"maxCostRub":0.0305,"searchType":"SEARCH_TYPE_RU","region":"225","page":0,"groupsOnPage":20,"docsInGroup":1,"groupMode":"GROUP_MODE_FLAT","familyMode":"FAMILY_MODE_MODERATE","fixTypoMode":"FIX_TYPO_MODE_OFF","sortMode":"SORT_MODE_BY_RELEVANCE","sortOrder":"SORT_ORDER_DESC"}
+SEARCH_ASYNC_BATCH_API_V1 {"action":"status","jobId":"octoport-serp-r06-20260917"}
 ```
+
+Recovery branch after the returned local status:
+
+- if job exists with `PENDING=1` / revision 0: accept original local start and do not start again;
+- if job is absent/not found: separately release one local `start` retry;
+- if another delivery/UI error occurs: persist exact truth and stop without provider work.
