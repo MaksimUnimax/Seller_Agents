@@ -2,7 +2,7 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M2R RECONCILED / S01-S03 CLOSED / R01 CLOSED / R02 LOCAL START RELEASED**.
+Status: **M2R RECONCILED / S01-S03 CLOSED / R01 CLOSED / R02 START PASS / ONE SUBMIT RELEASED**.
 
 Authorities:
 - master roadmap: `../SEO_MASTER_ROADMAP_2026-09-16.md`;
@@ -11,7 +11,9 @@ Authorities:
 - R01 final export manifest: `raw/R01_06_EXPORT_MANIFEST_2026-09-17.md`;
 - R01 final analysis: `analysis/R01_06_EXPORT_ANALYSIS_2026-09-17.md`;
 - R02 pre-step: `R02_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-17.md`;
-- R02 activation: `R02_EXECUTION_ACTIVATION_2026-09-17.md`.
+- R02 activation: `R02_EXECUTION_ACTIVATION_2026-09-17.md`;
+- R02 raw start: `raw/R02_01_START_2026-09-17.md`;
+- R02 start analysis/gate: `analysis/R02_01_START_2026-09-17.md`.
 
 Evidence rule:
 
@@ -37,20 +39,34 @@ R01_FINAL_PAGE_OWNERSHIP = UNRESOLVED_BY_DESIGN
 
 ## R02 — `chatgpt для ozon`
 
-R02 pre-step completed and remote-read back. Fresh evidence reconfirmed:
-
-- current Yandex WebSearchAsync request/deferred lifecycle;
-- current Ozon-specific external-AI connection/API/MCP/Actions language;
-- current generic ChatGPT-for-Ozon seller-content contamination control;
-- R02 remains non-redundant with both generic R01 and F1-category S02.
+R02 pre-step and owner-facing disclosure are complete. Exactly one local start was executed and returned:
 
 ```text
-R02_INFORMATION_GAIN = HIGH
-R02_JOB_ID = octoport-serp-r02-20260917
-R02_EXISTING_START_ARTIFACT = NONE
-R02_OWNER_FACING_DISCLOSURE = PASS
-R02_LOCAL_START_COUNT_1 = RELEASED
-R02_SUBMITN = BLOCKED
+action = start
+ok = true
+request_executed = false
+provider_calls = 0
+control = RUNNING
+total = 1
+PENDING = 1
+requests_started = 0
+operations_accepted = 0
+polls_started = 0
+unresolved = 1
+all_successful = false
+busy = false
+revision = 0
+```
+
+The exact start envelope was persisted and remotely read back with matching job/action/counters.
+
+```text
+R02_START = PASS
+R02_START_RAW_PERSISTENCE = PASS
+R02_START_REMOTE_READBACK = PASS
+R02_SECOND_START = FORBIDDEN
+R02_SUBMITN_COUNT_1 = RELEASED
+R02_SECOND_SUBMIT = BLOCKED
 R02_COLLECTN = BLOCKED
 R02_EXPORT = BLOCKED
 R03 = BLOCKED
@@ -59,10 +75,12 @@ R03 = BLOCKED
 Exactly one currently released command:
 
 ```text
-SEARCH_ASYNC_BATCH_API_V1 {"action":"start","jobId":"octoport-serp-r02-20260917","queries":["chatgpt для ozon"],"confirmBillable":true,"maxRequests":1,"maxCostRub":0.0305,"searchType":"SEARCH_TYPE_RU","region":"225","page":0,"groupsOnPage":20,"docsInGroup":1,"groupMode":"GROUP_MODE_FLAT","familyMode":"FAMILY_MODE_MODERATE","fixTypoMode":"FIX_TYPO_MODE_OFF","sortMode":"SORT_MODE_BY_RELEVANCE","sortOrder":"SORT_ORDER_DESC"}
+SEARCH_ASYNC_BATCH_API_V1 {"action":"submitN","jobId":"octoport-serp-r02-20260917","count":1}
 ```
 
-Expected accepted-Bridge local behavior is `request_executed:false`, `provider_calls:0`, one `PENDING` item. Actual returned envelope remains authority.
+After its complete response:
+
+`persist exact submit envelope -> remote readback -> verify request/provider/operation/revision state -> decide collect separately`.
 
 ## Current hard gate
 
@@ -72,10 +90,11 @@ M2R_RECONCILIATION = ACCEPTED
 S01_S03 = CLOSED
 R01 = CLOSED
 R02_QUERY = chatgpt для ozon
-R02_LOCAL_START_COUNT_1 = RELEASED
-R02_SUBMITN = BLOCKED UNTIL START PERSIST + READBACK
+R02_START = PASS / PERSISTED / READBACK
+R02_SUBMITN_COUNT_1 = RELEASED
+R02_COLLECTN = BLOCKED UNTIL SUBMIT PERSIST + READBACK
 R03 = BLOCKED
-NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE R02 LOCAL START AND RETURN COMPLETE BRIDGE ENVELOPE
+NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE R02 submitN count=1 AND RETURN COMPLETE BRIDGE ENVELOPE
 M7_COLLECTION_FREEZE = BLOCKED
 M8_SEMANTIC_MASTER = BLOCKED
 ```
