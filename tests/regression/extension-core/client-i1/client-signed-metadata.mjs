@@ -29,8 +29,8 @@ function assertProjection(result, source, freshness) {
   assert.equal(result.executionAuthority, false);
   assert.equal(Object.hasOwn(result, "workAllowed"), false);
   assert.equal(Object.hasOwn(result, "capabilities"), false);
-  assert.equal(JSON.stringify(result.signedFeatures), JSON.stringify(expectedFeatures));
-  assert.equal(JSON.stringify(result.signedEntitlements), JSON.stringify(expectedEntitlements));
+  assert.deepEqual(JSON.parse(JSON.stringify(result.signedFeatures)), expectedFeatures);
+  assert.deepEqual(JSON.parse(JSON.stringify(result.signedEntitlements)), expectedEntitlements);
 }
 
 async function makeCachedFixture({ accountOnly = false } = {}) {
