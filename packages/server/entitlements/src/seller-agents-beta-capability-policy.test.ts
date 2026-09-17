@@ -46,9 +46,9 @@ describe("Seller Agents free-beta capability permission policy", () => {
       expect(row.allowed).toBe(true);
       expect(row.executionAuthority).toBe(false);
     }
-    expect(Object.values(getSellerAgentsFreeBetaCapabilityPermissions())).toEqual(
-      [true, true, true, true],
-    );
+    expect(
+      Object.values(getSellerAgentsFreeBetaCapabilityPermissions()),
+    ).toEqual([true, true, true, true]);
   });
 
   it("is anchored only to BOOLEAN/CAPABILITY D1 definitions", () => {
