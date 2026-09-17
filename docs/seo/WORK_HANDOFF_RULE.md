@@ -1,7 +1,7 @@
 # Octoport SEO — ChatGPT Work handoff rule
 
 Status: **ACTIVE / OWNER-LOCKED / MANDATORY WHEN TRIGGERED**.
-Date: 2026-09-16.
+Date: 2026-09-17.
 
 Adapted from KW-002 `LEVEL1/WORK_HANDOFF_RULE.md` and `WORK_BASE_FRESHNESS_AND_AUTHORITY_DRIFT_RULE.md`.
 
@@ -32,17 +32,23 @@ MAIN CHAT
 = receives Work return
 = verifies and accepts/rejects
 = updates current authority
+= gives the owner the exact GitHub upload URL for Work-return files
 
 OWNER
 = relays the prompt to Work
-= relays/downloads/uploads large artifacts when needed
+= downloads the single Work ZIP
+= extracts it locally when the return contains multiple text/data files
+= uploads ALL final unpacked files together in ONE GitHub UI upload action to the exact staging path supplied by Main Chat
 = does not design the analysis prompt
+= does not have to decide final repository placement beyond the staging path
 
 CHATGPT WORK
 = reads complete authorized large inputs
 = analyzes/transforms/systematizes at full required volume
 = creates governed artifacts
 = runs requested QA
+= packages multi-file returns into one ZIP for one-click owner download
+= does not upload to GitHub unless the owner explicitly changes this rule for a specific task
 = does not invent new permanent methodology
 ```
 
@@ -112,6 +118,7 @@ KNOWN FAILURE REGRESSIONS
 QA / ACCEPTANCE CHECKS
 STOP CONDITIONS
 PUBLICATION POLICY
+OWNER RELAY / STAGING PATH
 ```
 
 No ambiguous “analyze everything” prompt is acceptable.
@@ -128,14 +135,18 @@ MAIN CHAT PRE-STEP REVIEW
 -> WORK FETCHES/READS COMPLETE AUTHORIZED INPUT SET
 -> WORK EXECUTES FULL-VOLUME ANALYSIS
 -> WORK MATERIALIZES OUTPUTS + LOCAL QA
--> OUTPUT PUBLICATION / OWNER RELAY
--> OWNER RETURNS WORK RESULT/CONFIRMATION
--> MAIN CHAT REMOTE READBACK + RETURN QA
+-> WORK PACKAGES FINAL MULTI-FILE RETURN INTO ONE ZIP
+-> WORK GIVES OWNER ONE DOWNLOAD LINK
+-> MAIN CHAT GIVES OWNER ONE EXACT GITHUB UPLOAD URL
+-> OWNER DOWNLOADS ZIP, EXTRACTS IT, SELECTS ALL FINAL FILES, UPLOADS THEM TOGETHER IN ONE GITHUB UI ACTION
+-> OWNER CONFIRMS UPLOAD
+-> MAIN CHAT REMOTE-READBACKS THE UNPACKED FILES DIRECTLY
+-> MAIN CHAT RETURN QA
 -> ACCEPT | REWORK | HOLD
 -> ONLY THEN NEXT ROADMAP STAGE
 ```
 
-The owner does not have to invent or repair the prompt.
+The owner does not have to invent or repair the prompt, choose final repository paths, or upload files one-by-one.
 
 ## 7. Work cannot change authority
 
@@ -175,7 +186,7 @@ WORK_EXECUTION_ALLOWED = false
 
 ## 9. Authority drift during a Work run
 
-Before publication:
+Before delivery:
 
 ```text
 RECHECK REMOTE HEAD
@@ -192,7 +203,7 @@ If remote advanced:
 LOCAL CONSISTENCY != CURRENT AUTHORITY CONSISTENCY
 ```
 
-## 10. Large artifact transport
+## 10. Large artifact transport — OWNER-LOCKED
 
 Do not use model text as a byte-transfer mechanism by default.
 
@@ -201,22 +212,83 @@ Forbidden for an already-produced large file:
 - print entire file into chat;
 - base64 the whole file through model output;
 - split it into many giant connector arguments;
-- regenerate a valid artifact merely because Git authentication failed.
+- regenerate a valid artifact merely because Git authentication failed;
+- ask the owner to upload final files one-by-one;
+- make the owner decide where each Work-return file belongs;
+- make Work spend time trying to publish to GitHub when owner relay is the selected transport;
+- give the owner an internal `sandbox:/workspace/...` path as if it were the required user-facing delivery.
 
-Preferred publication:
+### 10.1 Default multi-file Work return
+
+For a Work task that creates multiple final files:
 
 ```text
-IF AUTHENTICATED GIT WORKS RELIABLY
--> push normally
--> remote readback
+WORK
+-> creates all final files
+-> runs local QA
+-> records hashes / manifest
+-> creates exactly one ZIP containing only final deliverables
+-> gives the owner one real downloadable ZIP artifact/link
+-> DOES NOT publish to GitHub
 
-ELSE
--> freeze local artifact + hashes/QA
--> provide downloadable files / optional ZIP
--> owner uploads through normal authenticated GitHub UI
--> owner confirms
--> Main Chat / Work remote-readbacks and verifies identity
+MAIN CHAT
+-> immediately gives the owner one exact GitHub upload URL to the staging folder
+
+OWNER
+-> downloads the ZIP once
+-> extracts it locally
+-> selects ALL final files
+-> uploads them together in ONE GitHub UI upload action
+-> confirms completion
+
+MAIN CHAT
+-> reads the unpacked final files directly from GitHub
+-> validates hashes/counts/lineage/content
+-> moves/redistributes/accepts them as required
 ```
+
+The ZIP is primarily a **one-download transport package from Work to the owner**. Unless a specific task explicitly requires archiving the ZIP itself in GitHub, the owner should upload the **unpacked final files together**, not only the ZIP.
+
+### 10.2 Exact GitHub upload link is Main Chat's responsibility
+
+When owner upload is the chosen transport, Main Chat must provide the exact branch/folder upload URL immediately, for example:
+
+```text
+https://github.com/<owner>/<repo>/upload/<branch>/<staging-path>
+```
+
+Main Chat must not answer with vague instructions such as “upload it somewhere in the repo”.
+
+### 10.3 One-action owner principle
+
+User interaction cost is a hard operational concern.
+
+Default goal:
+
+```text
+ONE WORK ZIP DOWNLOAD
++
+ONE MULTI-FILE GITHUB UPLOAD ACTION
+```
+
+Do not stretch one transfer into multiple conversational turns or one-file-at-a-time uploads.
+
+If a technical limitation is discovered, Main Chat must explain it immediately and choose the lowest-interaction recovery path.
+
+### 10.4 Binary ZIP connector limitation
+
+If Main Chat's repository connector cannot inspect/decompress a binary ZIP reliably:
+
+- do not waste time repeatedly reading base64/binary through text tools;
+- do not ask the owner to re-upload the same ZIP repeatedly;
+- immediately provide the exact GitHub upload URL and ask the owner to upload all **unpacked final files together in one action**;
+- once unpacked files are present, read them directly and continue QA.
+
+If the owner has already uploaded the unpacked final files, the ZIP is no longer needed for content QA.
+
+### 10.5 Single binary artifact exception
+
+If Work produces only one genuine binary deliverable and no text/data sidecars are required, the owner may upload that single artifact directly. Main Chat must use an appropriate binary-capable verification path rather than forcing text transport.
 
 Owner relay is a transport mechanism, not a reduction in analytical quality.
 
@@ -228,6 +300,7 @@ Keep separate:
 LOCAL_ARTIFACT_COMPLETE
 LOCAL_QA_PASS
 PUBLICATION_HANDOFF_READY
+OWNER_DOWNLOAD_COMPLETE
 OWNER_UPLOAD_COMPLETE
 REMOTE_READBACK_PASS
 REMOTE_PUBLICATION_COMPLETE
@@ -277,7 +350,10 @@ Owner instruction adopted:
 THIS CHAT COLLECTS / CONTROLS / PERSISTS EVIDENCE
 THIS CHAT WRITES THE WORK PROMPT
 WORK ANALYZES + SYSTEMATIZES + TRANSFORMS LARGE DATA
-THIS CHAT QA'S AND ACCEPTS THE RETURN
+WORK RETURNS MULTI-FILE RESULTS AS ONE DOWNLOADABLE ZIP
+MAIN CHAT PROVIDES THE EXACT GITHUB STAGING UPLOAD URL
+OWNER UPLOADS ALL UNPACKED FINAL FILES TOGETHER IN ONE ACTION
+THIS CHAT QA'S, REDISTRIBUTES IF NEEDED, AND ACCEPTS THE RETURN
 ```
 
 This is the default large-data architecture for the remainder of the Octoport SEO roadmap.
