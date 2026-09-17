@@ -1,0 +1,139 @@
+import assert from "node:assert/strict";
+import path from "node:path";
+import { makeWorker } from "../worker-harness.mjs";
+
+const runtime = path.resolve(process.argv[2]);
+const clone = value => JSON.parse(JSON.stringify(value));
+const EXPECTED = [
+  "marketplace.ozon.adapter",
+  "marketplace.wildberries.adapter",
+  "ai.chatgpt.web.adapter",
+  "ai.alice.web.adapter",
+].sort();
+
+// 1. Exact packaged manifest: four reviewed adapter-presence facts only.
+{
+  const worker = await makeWorker(runtime);
+  try {
+    const manifest = clone(await worker.call("SellerAgentsPackagedCapabilities.snapshot"));
+    assert.equal(manifest.schemaVersion, "packaged_capability_manifest_v1");
+    assert.equal(manifest.authority, "PACKAGED_LOCAL_ONLY");
+    assert.equal(manifest.executionAuthority, false);
+    assert.deepEqual(manifest.signedPermissionBindings, []);
+    assert.deepEqual(manifest.capabilities.map(row => row.id).sort(), EXPECTED);
+    assert.ok(manifest.capabilities.every(row => row.packaged === true && row.executionAuthority === false));
+    assert.deepEqual(manifest.capabilities.filter(row => row.kind === "marketplace_adapter").map(row => row.marketplace).sort(), ["ozon", "wildberries"]);
+    assert.deepEqual(manifest.capabilities.filter(row => row.kind === "ai_adapter").map(row => `${row.family}:${row.surface}`).sort(), ["alice:web", "chatgpt:web"]);
+  } finally {
+    worker.close();
+  }
+}
+
+// 2. Lookup is strict and does not infer unknown, remote-looking, or malformed ids.
+{
+  const worker = await makeWorker(runtime);
+  try {
+    for (const id of EXPECTED) assert.equal(await worker.call("SellerAgentsPackagedCapabilities.has", id), true, id);
+    for (const id of ["fixture.feature_on", "marketplace.amazon.adapter", "WORK_ALLOWED", "", "../ozon"])
+      assert.equal(await worker.call("SellerAgentsPackagedCapabilities.has", id), false, id);
+    assert.equal(await worker.call("SellerAgentsPackagedCapabilities.describe", "fixture.feature_on"), null);
+  } finally {
+    worker.close();
+  }
+}
+
+// 3. Authority and every nested row are frozen inside the extension realm.
+{
+  const worker = await makeWorker(runtime);
+  try {
+    const frozen = await worker.call(`(function () {
+      const root = SellerAgentsPackagedCapabilities;
+      const manifest = root.snapshot();
+      let mutationRejected = false;
+      try { manifest.capabilities.push({ id: "remote.injected", packaged: true }); }
+      catch (_) { mutationRejected = true; }
+      return {
+        api: Object.isFrozen(root),
+        manifest: Object.isFrozen(manifest),
+        capabilities: Object.isFrozen(manifest.capabilities),
+        rows: manifest.capabilities.every(Object.isFrozen),
+        bindings: Object.isFrozen(manifest.signedPermissionBindings),
+        mutationRejected,
+        count: manifest.capabilities.length,
+      };
+    })`);
+    assert.deepEqual(clone(frozen), {
+      api: true,
+      manifest: true,
+      capabilities: true,
+      rows: true,
+      bindings: true,
+      mutationRejected: true,
+      count: 4,
+    });
+  } finally {
+    worker.close();
+  }
+}
+
+// 4. Signed bootstrap metadata and packaged capability authority remain separate.
+// A remote key that happens to equal a local id is not a binding or a grant.
+{
+  const worker = await makeWorker(runtime);
+  try {
+    const authority = clone(await worker.call("SellerAgentsControlClient.getAuthority"));
+    assert.ok(authority?.payload, "fixture authority exists");
+    authority.payload.features["marketplace.ozon.adapter"] = true;
+    authority.payload.entitlements["ai.chatgpt.web.adapter"] = true;
+    const independence = await worker.call(`(function () {
+      const manifest = SellerAgentsPackagedCapabilities.snapshot();
+      return {
+        localOzon: SellerAgentsPackagedCapabilities.has("marketplace.ozon.adapter"),
+        localChatgpt: SellerAgentsPackagedCapabilities.has("ai.chatgpt.web.adapter"),
+        bindings: manifest.signedPermissionBindings.length,
+        executionAuthority: manifest.executionAuthority,
+      };
+    })`);
+    assert.deepEqual(clone(independence), {
+      localOzon: true,
+      localChatgpt: true,
+      bindings: 0,
+      executionAuthority: false,
+    });
+    assert.equal(await worker.call("SellerAgentsControlClient.canWork"), true, "existing Work authority is unchanged by merely reading local capability facts");
+  } finally {
+    worker.close();
+  }
+}
+
+// 5. Packaged authority is pure local package data: lookups do not touch
+// storage or network after the existing control client has initialized.
+{
+  const io = { read: 0, write: 0, remove: 0 };
+  const worker = await makeWorker(runtime, {
+    onStorageRead: () => { io.read += 1; },
+    onStorageWrite: () => { io.write += 1; },
+    onStorageRemove: () => { io.remove += 1; },
+  });
+  try {
+    await worker.call("SellerAgentsControlClient.status");
+    const before = { ...io, network: worker.network.length };
+    for (let index = 0; index < 25; index += 1) {
+      await worker.call("SellerAgentsPackagedCapabilities.has", EXPECTED[index % EXPECTED.length]);
+      await worker.call("SellerAgentsPackagedCapabilities.describe", EXPECTED[index % EXPECTED.length]);
+      await worker.call("SellerAgentsPackagedCapabilities.snapshot");
+    }
+    assert.deepEqual({ ...io, network: worker.network.length }, before);
+  } finally {
+    worker.close();
+  }
+}
+
+console.log(JSON.stringify({
+  status: "PASS",
+  cases: 5,
+  capabilities: EXPECTED.length,
+  signed_permission_bindings: 0,
+  execution_authority: false,
+  scope: "PACKAGED_LOCAL_CAPABILITY_PRESENCE_ONLY",
+}));
