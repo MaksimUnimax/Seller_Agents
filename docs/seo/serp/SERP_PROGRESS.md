@@ -2,7 +2,7 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M3 / R10 CLOSED / R07 NEXT CANDIDATE / QUERY-SPECIFIC PRE-STEP REQUIRED**.
+Status: **M3 / R10 CLOSED / R07 PRE-STEP PASS / EXACTLY ONE LOCAL R07 START RELEASED AFTER READBACK**.
 
 ## Closed Search evidence
 
@@ -67,24 +67,55 @@ Authorities:
 
 No further R10 provider lifecycle action is permitted for the accepted job/revision.
 
+## R07 pre-step release
+
+```text
+R07_QUERY = как заполнить карточку товара wildberries
+R07_FAMILIES = F5,F8
+R07_JOB_ID = octoport-serp-r07-20260917
+R07_OPEN_DECISION = operational seller card filling vs SEO/text optimization vs creative generators vs generic education
+R07_RELATION = narrow control before R11
+R07_OFFICIAL_WB_CARD_WORKFLOW = CONFIRMED
+R07_WB_PUBLIC_CONTENT_API_CREATE_EDIT = CONFIRMED
+R07_OCTOPORT_LAUNCH_DIRECT_CARD_EDITING = NO
+R07_SEARCH_CAN_AUTHORIZE_NEW_WRITE_CAPABILITY = NO
+R07_PRE_STEP = PASS
+R07_PRE_STEP_PATH = R07_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-17.md
+R07_START = EXACTLY ONE LOCAL START RELEASED AFTER DURABLE READBACK
+R07_SUBMIT = NOT RELEASED UNTIL START ENVELOPE IS PERSISTED + READ BACK
+R07_COLLECT = NOT RELEASED
+R07_EXPORT = NOT RELEASED
+```
+
+R07 full-result coding classes are fixed before provider execution:
+
+```text
+WB_NATIVE_CARD_CREATION_OR_FILLING_GUIDE
+SELLER_OPERATIONAL_CARD_WORKFLOW_GUIDE
+CARD_SEO_TEXT_OR_CHARACTERISTICS_OPTIMIZATION
+CREATIVE_IMAGE_INFOGRAPHIC_OR_MEDIA_GENERATOR
+AI_CARD_CONTENT_GENERATOR
+DIRECT_CARD_MANAGEMENT_OR_AUTOMATION_SERVICE
+COURSE_OR_GENERIC_SELLER_EDUCATION
+NOISE_OTHER_INTENT
+```
+
 ## Current hard gate
 
 ```text
 CURRENT_STAGE = M3 ORDINARY YANDEX SERP COLLECTION
-CURRENT_QUERY = NONE / R10 CLOSED
-NEXT_CANDIDATE = R07
-R07_QUERY = как заполнить карточку товара wildberries
-R07_FAMILIES = F5,F8
-R07_OPEN_DECISION = operational card workflow versus creative generators and generic education
-R07_BOUNDARY = image/infographic generators; courses; unsupported direct card editing at launch
-R07_RELATION = paired/control with R11
-R07_PROVIDER_ACTION = NOT RELEASED
-R07_REQUIRES_QUERY_SPECIFIC_PRE_STEP = true
-R11 = BLOCKED UNTIL R07 COMPLETE
+CURRENT_QUERY = R07
+R07_PROVIDER_ACTION = EXACTLY ONE LOCAL START RELEASED
+R07_JOB_ID = octoport-serp-r07-20260917
+R11 = BLOCKED UNTIL R07 COMPLETE EXPORT + LOSSLESS PERSISTENCE + ALL-RESULT ANALYSIS + READBACK
 R12 = BLOCKED
 M7_COLLECTION_FREEZE = BLOCKED
 M8_SEMANTIC_MASTER = BLOCKED
-NEXT_PHYSICAL_ACTION = BUILD + PERSIST + REMOTE READ BACK R07 QUERY-SPECIFIC PRE-STEP; ONLY THEN MAY EXACTLY ONE LOCAL R07 START BE RELEASED
+NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE R07 LOCAL START; RETURN FULL START ENVELOPE; PERSIST + READ BACK BEFORE ANY SUBMIT
 ```
 
-R07 must be researched independently. It tests seller card workflow against creative card/image generators, courses and generic educational content while preserving current product-scope limits.
+Released command:
+
+```text
+SEARCH_ASYNC_BATCH_API_V1 {"action":"start","jobId":"octoport-serp-r07-20260917","queries":["как заполнить карточку товара wildberries"],"confirmBillable":true,"maxRequests":1,"maxCostRub":0.0305,"searchType":"SEARCH_TYPE_RU","region":"225","page":0,"groupsOnPage":20,"docsInGroup":1,"groupMode":"GROUP_MODE_FLAT","familyMode":"FAMILY_MODE_MODERATE","fixTypoMode":"FIX_TYPO_MODE_OFF","sortMode":"SORT_MODE_BY_RELEVANCE","sortOrder":"SORT_ORDER_DESC"}
+```
