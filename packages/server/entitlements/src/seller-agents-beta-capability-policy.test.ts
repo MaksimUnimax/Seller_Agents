@@ -68,7 +68,7 @@ describe("Seller Agents free-beta capability permission policy", () => {
   });
 
   it("does not contain local capability ids, legacy feature keys or provider-operation entitlements", () => {
-    const keys = new Set(
+    const keys = new Set<string>(
       SELLER_AGENTS_FREE_BETA_CAPABILITY_POLICY.permissions.map(
         (row) => row.entitlementKey,
       ),
