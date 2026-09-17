@@ -2,14 +2,16 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M2R_RECONCILED / S01-S03 CLOSED / R01 START PASS / ONE SUBMITN RELEASED**.  
+Status: **M2R_RECONCILED / S01-S03 CLOSED / R01 SUBMIT ACCEPTED / ONE COLLECTN RELEASED**.  
 Master authority: `../SEO_MASTER_ROADMAP_2026-09-16.md`.  
 Current M3 query authority: `M3_QUERY_MATRIX_2026-09-17.md`.  
 M2R return acceptance: `../work/M2R_RECONCILIATION_MAIN_CHAT_RETURN_QA_2026-09-17.md`.  
 R01 pre-step: `R01_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-17.md`.  
 R01 activation: `R01_EXECUTION_ACTIVATION_2026-09-17.md`.  
 R01 start raw: `raw/R01_01_START_2026-09-17.md`.  
-R01 start analysis: `analysis/R01_01_START_2026-09-17.md`.
+R01 start analysis: `analysis/R01_01_START_2026-09-17.md`.  
+R01 submit raw: `raw/R01_02_SUBMIT_2026-09-17.md`.  
+R01 submit analysis: `analysis/R01_02_SUBMIT_2026-09-17.md`.
 
 ## Evidence rule
 
@@ -111,34 +113,45 @@ These are candidates, not automatically released provider actions.
 
 ## R01 — `подключить chatgpt к маркетплейсу`
 
-Status: **LOCAL START PASS / EXACTLY ONE SUBMITN RELEASED / SUBMIT ENVELOPE NOT YET RECEIVED**.
+Status: **SUBMIT ACCEPTED / OPERATION PRESERVED / EXACTLY ONE COLLECTN RELEASED**.
 
-Observed and remote-read-back start state:
+Local start passed and was persisted/read back with no provider execution.
+
+Observed and remote-read-back submit state:
 
 ```text
 job_id = octoport-serp-r01-20260917
 ok = true
+request_executed = true
+provider_calls = 1
+processed = 1
+normalized = 0
+outcome = accepted
+operation_id = sprsmko0p531abn82fmk
 control = RUNNING
 total = 1
-PENDING = 1
-unresolved = 1
-revision = 0
-request_executed = false
-provider_calls = 0
-requests_started = 0
-operations_accepted = 0
+WAITING = 1
+SUCCEEDED = 0
+FAILED = 0
+UNKNOWN = 0
+requests_started = 1
+operations_accepted = 1
 polls_started = 0
+unresolved = 1
+revision = 2
 ```
 
-Interpretation: the job exists locally, exactly one request is pending, and no Yandex provider request has yet executed. This has no semantic meaning about demand; it only closes the local admission gate.
+Interpretation: exactly one Yandex provider submission executed and was accepted. Operation `sprsmko0p531abn82fmk` is the authoritative deferred operation for R01. The result is not yet semantically available. A second submit is forbidden.
 
-Exactly one provider submission is now released:
+Exactly one bounded collection attempt is now released:
 
 ```text
-SEARCH_ASYNC_BATCH_API_V1 {"action":"submitN","jobId":"octoport-serp-r01-20260917","count":1}
+SEARCH_ASYNC_BATCH_API_V1 {"action":"collectN","jobId":"octoport-serp-r01-20260917","count":1}
 ```
 
-Not released: second submit, `collectN`, export, retry, new start, R02 or later queries.
+A local not-due / `NO_DUE_OPERATIONS` result with `provider_calls:0` is an acceptable lifecycle guard and is not a failure. Any collection response must be persisted/read back before deciding on export or another later collect.
+
+Not released: second submit, export, retry/new start, R02 or later queries.
 
 ## Current hard gate
 
@@ -150,11 +163,12 @@ CURRENT_QUERY = R01
 R01_QUERY = подключить chatgpt к маркетплейсу
 R01_PRE_STEP = PASS / REMOTE READBACK
 R01_LOCAL_START = PASS / RAW PERSISTED / REMOTE READBACK
-R01_START_ANALYSIS = PASS / REMOTE READBACK
-R01_SUBMITN_COUNT_1 = RELEASED
-R01_COLLECTN = BLOCKED
+R01_SUBMIT = ACCEPTED / RAW PERSISTED / REMOTE READBACK
+R01_OPERATION_ID = sprsmko0p531abn82fmk
+R01_SECOND_SUBMIT = FORBIDDEN
+R01_COLLECTN_COUNT_1 = RELEASED
 R01_EXPORT = BLOCKED
 R02 = BLOCKED
-NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE R01 submitN AND RETURN COMPLETE ENVELOPE
+NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE R01 collectN AND RETURN COMPLETE ENVELOPE
 M7_COLLECTION_FREEZE = BLOCKED
 ```
