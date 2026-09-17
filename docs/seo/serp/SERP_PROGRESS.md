@@ -2,10 +2,11 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M2R_RECONCILED / S01-S03 CLOSED / READY_FOR_R01_PRESTEP**.  
+Status: **M2R_RECONCILED / S01-S03 CLOSED / R01 LOCAL START RELEASED**.  
 Master authority: `../SEO_MASTER_ROADMAP_2026-09-16.md`.  
 Current M3 query authority: `M3_QUERY_MATRIX_2026-09-17.md`.  
-M2R return acceptance: `../work/M2R_RECONCILIATION_MAIN_CHAT_RETURN_QA_2026-09-17.md`.
+M2R return acceptance: `../work/M2R_RECONCILIATION_MAIN_CHAT_RETURN_QA_2026-09-17.md`.  
+Current R01 activation: `R01_EXECUTION_ACTIVATION_2026-09-17.md`.
 
 ## Evidence rule
 
@@ -105,6 +106,18 @@ New representative RUN candidates in current authority:
 
 These are **candidates**, not automatically released provider actions.
 
+## R01 — `подключить chatgpt к маркетплейсу`
+
+Status: **PRE-STEP PASS / OWNER DISCLOSURE PASS / EXACTLY ONE LOCAL START RELEASED / START ENVELOPE NOT YET RECEIVED**.
+
+- pre-step authority: `R01_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-17.md`;
+- execution activation: `R01_EXECUTION_ACTIVATION_2026-09-17.md`;
+- planned job: `octoport-serp-r01-20260917`;
+- currently released action: local `start` only;
+- `submitN`, `collectN`, export, retry and R02 remain blocked until the complete local-start envelope is persisted and remote-read back.
+
+The browser execution surface was unavailable in Main Chat at activation time because the Opera Browser Connector was not connected. This is an execution-surface limitation only; the bounded release is durable and read back.
+
 ## Current hard gate
 
 ```text
@@ -113,8 +126,11 @@ S01_S03 = CLOSED
 M2R_RECONCILIATION = ACCEPTED
 CURRENT_QUERY_CANDIDATE = R01
 R01_QUERY = подключить chatgpt к маркетплейсу
-R01_PRE_STEP = NOT YET PASSED
+R01_PRE_STEP = PASS / REMOTE READBACK
+R01_OWNER_FACING_DISCLOSURE = PASS
+R01_EXECUTION_ACTIVATION = PASS / REMOTE READBACK
+R01_LOCAL_START = RELEASED / ENVELOPE NOT YET RECEIVED
 R01_PROVIDER_ACTION = NOT RELEASED
-NEXT_PHYSICAL_ACTION = FRESH R01 RESEARCH + QUERY-SPECIFIC RELEASE + REMOTE READBACK
+NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE RELEASED R01 LOCAL START AND PERSIST/READBACK THE COMPLETE ENVELOPE
 M7_COLLECTION_FREEZE = BLOCKED
 ```
