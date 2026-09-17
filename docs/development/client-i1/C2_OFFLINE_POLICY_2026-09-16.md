@@ -1,6 +1,6 @@
 # C2.2-A verified cached-bootstrap acquisition
 
-Status: `IMPLEMENTED_CANDIDATE / ARCHITECT_REVIEW_PENDING` for task `SA-I1-C2-2A-20260916-01` on the exact integration head supplied by the architect.
+Status: `ACCEPTED / REMOTE VERIFIED` for task `SA-I1-C2-2A-20260916-01`. Architect acceptance and exact-tree remote readback are recorded in `docs/migration/evidence/extension-i1-c2-2a-2026-09-16/r4/README.md`.
 
 This bounded layer keeps public `bootstrap()` online-only and adds privileged `bootstrapWithPolicy()`. The latter performs the same verified online bootstrap first and returns `{ source: "ONLINE", freshness: "FRESH", payload }` on success. Cache acquisition is eligible only for a private registered no-response rejection from `/v1/bootstrap`, a preflight `/v1/auth/refresh` no-response rejection before any bootstrap 401, or HTTP 503 with exactly `BOOTSTRAP_UNAVAILABLE`.
 
@@ -18,8 +18,20 @@ The initial candidate receipt’s broad A–H declaration was incomplete. R1 rec
 
 ## R2 test/evidence addendum
 
-Task `SA-I1-C2-2A-R2-20260916-01` extends the acceptance ledger without changing the production client. The test now records stable per-case outcomes and covers the assigned Q1 classification rows, Q2 fixed-time boundaries and restart floors, Q3 first-floor storage/IDB/catalog retention, Q4 signed context distinctions, Q5 asynchronous ownership barriers, and Q6 the final public-return fence. The shared worker harness forwards existing clock/IDB options and provides only a test-only `beforeCryptoVerify` barrier; production closure state is not exposed.
+Task `SA-I1-C2-2A-R2-20260916-01` extends the acceptance ledger without changing the production client. The test records stable per-case outcomes and covers the assigned Q1 classification rows, Q2 fixed-time boundaries and restart floors, Q3 first-floor storage/IDB/catalog retention, Q4 signed context distinctions, Q5 asynchronous ownership barriers, and Q6 the final public-return fence. The shared worker harness forwards existing clock/IDB options and provides only a test-only `beforeCryptoVerify` barrier; production closure state is not exposed.
 
-The focused policy suite passed on both source and extracted composed runtimes under the local Node `v22.22.2` toolchain. The full local I1 checker passed `100` processes, and the shared core checker passed `111` processes. `docs:check`, `bridge:guard`, and the underlying `@product/api openapi:check` passed. No native/installed-local rerun was performed, and no authenticated current-task remote CI run is claimed.
+The focused policy suite passed on both source and extracted composed runtimes under the local Node `v22.22.2` toolchain. The full local I1 checker passed `100` processes, and the shared core checker passed `111` processes. `docs:check`, `bridge:guard`, and the underlying `@product/api openapi:check` passed. The production client source remained byte-identical to the supplied start: blob `5f6a195048e257304c16fb92a25c4ff772d98fe0`. Historical R2 provenance remains in `r2/README.md` and `r2/results.json`.
 
-The production client source remained byte-identical to the supplied start: blob `5f6a195048e257304c16fb92a25c4ff772d98fe0`. Detailed named results and provenance are in `docs/migration/evidence/extension-i1-c2-2a-2026-09-16/r2/README.md` and `r2/results.json`.
+## R3 factual correction
+
+R3 repaired the retained-artifact proof so the fixture artifact is written once and then checked through readonly gets, made the durable AUTH/account ownership assertions exact, separated a legitimate signed account replacement from stale-account fallback obsolescence, and strengthened held-cache race/final-return fencing. Source and extracted policy suites are `37/37 PASS` each across Q1–Q7. The destructive retention negative control remains an expected failure and does not replace the normal PASS. Historical R2/R3 result files remain unchanged.
+
+## Architect acceptance — 2026-09-17
+
+C2.2-A is accepted for this configuration-acquisition scope only. The accepted implementation tree is `531033ac08f001dd55427c4ae969a6c4b5d6b861`, reached on integration head `5d93bccac163c8728a8d7a3b1d4b9f23ea16b680` after merging current canonical `main` `bc718cc5c677ad0eb4598e7de3ad766473ff0847` without force-push/rebase/reset.
+
+Exact-tree remote evidence is green: all seven workflow runs completed successfully; Extension I1 has `100/100 PASS`; native Chromium and the installed local API/portal/PostgreSQL harness pass; Server CI passes lint, format, typecheck, unit, PostgreSQL integration, migrations, OpenAPI, bridge guard, build and browser E2E; Extension CI passes common core, Ozon/WB baselines including WB browser fixtures, and native application-browser coverage. The deterministic development ZIP is `1,834,654` bytes with SHA-256 `2c1f5765b0eb382d9387e3ea1a59e71bd549344f10c107a39069d92719f341de`, with 39/39 runtime/extracted/ZIP file parity and zero byte mismatches.
+
+No owner/manual test is required for this bounded step: all acceptance criteria are covered by deterministic source/package/native/installed-local/remote evidence. Real email, preprod, live provider and broader installed/live-product acceptance remain later roadmap scopes, not manual residues of C2.2-A.
+
+This acceptance still does **not** authorize offline Work, profile/capability execution, joint offline command/result behavior, provider replay, scheduler integration, S1.2, D3, full I1/D2, deployment or release.
