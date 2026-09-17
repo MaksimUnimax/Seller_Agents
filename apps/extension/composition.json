@@ -27,6 +27,7 @@
   "worker_prelude": [
     "packages/control-client/src/config.js",
     "packages/control-client/src/crypto.js",
+    "packages/control-client/src/packaged-capabilities.js",
     "packages/control-client/src/client.js",
     "packages/control-client/src/signed-metadata.js",
     "packages/bridge-core/src/execution/local-operations.js",
