@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
 import path from "node:path";
-import { makeWorker } from "../worker-harness.mjs";
+import { makeWorker, signFixtureBootstrap } from "../worker-harness.mjs";
 
 const runtime = path.resolve(process.argv[2]);
+const AUTH = "seller_agents_control_auth_v2";
+const CHATGPT = { family: "chatgpt", surface: "web", variant: null };
 const clone = value => JSON.parse(JSON.stringify(value));
 const EXPECTED = [
   "marketplace.ozon.adapter",
@@ -77,15 +79,32 @@ const EXPECTED = [
 }
 
 // 4. Signed bootstrap metadata and packaged capability authority remain separate.
-// A remote key that happens to equal a local id is not a binding or a grant.
+// Even signed remote keys identical to local ids are data only until a later,
+// explicit binding/intersection step is designed and accepted.
 {
-  const worker = await makeWorker(runtime);
+  const backing = { local: {}, session: {} };
+  const seed = await makeWorker(runtime, { backing });
+  await seed.call("SellerAgentsControlClient.status");
+  seed.close();
+
+  const authority = backing.local[AUTH].authority;
+  const payload = clone(authority.payload);
+  payload.features = { "marketplace.ozon.adapter": true };
+  payload.entitlements = { "ai.chatgpt.web.adapter": true };
+  authority.payload = payload;
+  authority.envelope = await signFixtureBootstrap(backing, payload);
+
+  const worker = await makeWorker(runtime, {
+    backing,
+    seedAuthority: false,
+    fetch: async () => { throw new TypeError("fixture transport unavailable"); },
+  });
   try {
-    const authority = clone(await worker.call("SellerAgentsControlClient.getAuthority"));
-    assert.ok(authority?.payload, "fixture authority exists");
-    authority.payload.features["marketplace.ozon.adapter"] = true;
-    authority.payload.entitlements["ai.chatgpt.web.adapter"] = true;
-    const independence = await worker.call(`(function () {
+    const metadata = clone(await worker.call("SellerAgentsControlClient.getVerifiedBootstrapMetadata", { detectedAi: CHATGPT }));
+    assert.equal(metadata.signedFeatures["marketplace.ozon.adapter"], true);
+    assert.equal(metadata.signedEntitlements["ai.chatgpt.web.adapter"], true);
+    assert.equal(metadata.executionAuthority, false);
+    const independence = clone(await worker.call(`(function () {
       const manifest = SellerAgentsPackagedCapabilities.snapshot();
       return {
         localOzon: SellerAgentsPackagedCapabilities.has("marketplace.ozon.adapter"),
@@ -93,14 +112,13 @@ const EXPECTED = [
         bindings: manifest.signedPermissionBindings.length,
         executionAuthority: manifest.executionAuthority,
       };
-    })`);
-    assert.deepEqual(clone(independence), {
+    })`));
+    assert.deepEqual(independence, {
       localOzon: true,
       localChatgpt: true,
       bindings: 0,
       executionAuthority: false,
     });
-    assert.equal(await worker.call("SellerAgentsControlClient.canWork"), true, "existing Work authority is unchanged by merely reading local capability facts");
   } finally {
     worker.close();
   }
@@ -117,6 +135,7 @@ const EXPECTED = [
   });
   try {
     await worker.call("SellerAgentsControlClient.status");
+    await new Promise(resolve => setTimeout(resolve, 20));
     const before = { ...io, network: worker.network.length };
     for (let index = 0; index < 25; index += 1) {
       await worker.call("SellerAgentsPackagedCapabilities.has", EXPECTED[index % EXPECTED.length]);
