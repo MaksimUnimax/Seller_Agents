@@ -1,121 +1,39 @@
 # SEO SERP collection — execution progress
 
-Date: 2026-09-17.  
-Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M3 / R10 CLOSED / R07 PRE-STEP PASS / EXACTLY ONE LOCAL R07 START RELEASED AFTER READBACK**.
+Date: 2026-09-17.
+Branch: `seo/wordstat-batch-01-2026-09-16`.
+Status: **M3 / R10 CLOSED / R07 START ACCEPTED**.
 
-## Closed Search evidence
+## Closed evidence
 
-```text
-S01 ии агенты для маркетплейсов = CLOSED / 20
-S02 ии агент для озон = CLOSED / 20
-S03 ии агент для wildberries = CLOSED / 20
-R01 подключить chatgpt к маркетплейсу = CLOSED / 20
-R02 chatgpt для ozon = CLOSED / 20
-R03 chatgpt для wildberries = CLOSED / 20
-R04 аналитика маркетплейсов для селлеров = CLOSED / 20
-R05 отчеты для селлеров маркетплейсов = CLOSED / 20
-R06 помощник селлера маркетплейсов = CLOSED / 20
-R08 аналитика рекламы маркетплейсов = CLOSED / 20
-R09 поисковые запросы wildberries для продавца = CLOSED / 20
-R10 анализ ниш wildberries для продавца = CLOSED / 20
-```
+S01, S02, S03, R01, R02, R03, R04, R05, R06, R08, R09 and R10 are closed for the current M3 pass.
 
-## R10 closure
+## R07
+
+Query: `как заполнить карточку товара wildberries`
+Job: `octoport-serp-r07-20260917`
+Families: `F5,F8`
+
+Observed local start state:
 
 ```text
-R10_QUERY = анализ ниш wildberries для продавца
-R10_FAMILY = F7
-R10_JOB_ID = octoport-serp-r10-20260917
-R10_OPERATION_ID = spr463ilaidv2pqtcdmm
-R10_REVISION = 5
-R10_RESULT_COUNT = 20
-R10_DOCUMENT_COUNT = 20
-R10_HAS_MORE = false
-R10_MISSING_URL_RANKS = []
-R10_UNSAFE_URL_RANKS = []
-R10_SOURCE_BYTES = 95334
-R10_SOURCE_SHA256 = c5b03e9c55e35d7da99adebeaeccb989b8c50909c543172d7c51c1c1b32e103e
-R10_GZIP_BYTES = 26152
-R10_GZIP_SHA256 = d6142abe4864ea3fd399b3a9a74a3b54c5491d28acf5e29918667b11a009dc94
-R10_LOSSLESS_CHUNKS = 9
-R10_LOSSLESS_PERSISTENCE = PASS / REMOTE CHUNK IDENTITY 9 OF 9
-R10_NATIVE_WB_NICHE_ANALYTICS_REPORT = 1/20
-R10_EXTERNAL_NICHE_MARKET_INTELLIGENCE_PLATFORM = 2/20
-R10_BROAD_MARKETPLACE_ANALYTICS_WITH_NICHE_MODULE = 2/20
-R10_SELLER_EDUCATION_NICHE_SELECTION_GUIDE = 9/20
-R10_PRODUCT_SELECTION_OR_WHAT_TO_SELL_GUIDE = 4/20
-R10_AGENCY_COURSE_OR_CONSULTING_SERVICE = 2/20
-R10_EDUCATION_OR_PRODUCT_SELECTION = 13/20
-R10_EXTERNAL_OR_BROAD_ANALYTICS_PRODUCT_SURFACES = 4/20
-R10_NATIVE_WB_REPORT_VISIBLE = YES / RANK_1
-R10_SELLER_RELEVANCE = 20/20
-R10_PUBLIC_API_NICHE_ENDPOINT = NOT_CONFIRMED
-R10_OCTOPORT_ADDRESSABILITY = CONSTRAINED_BY_CAPABILITY_PROOF
-R10_INFORMATION_SATURATED_FOR_CURRENT_DECISION = YES
-R10_MORE_SEARCH_NOW = NO
-R10_PAGE_OWNERSHIP_DECISION = DEFERRED_TO_M9_M11
-R10 = CLOSED FOR CURRENT M3 PASS AFTER DURABLE READBACK
+ok = true
+request_executed = false
+provider_calls = 0
+PENDING = 1
+requests_started = 0
+operations_accepted = 0
+polls_started = 0
+unresolved = 1
+revision = 0
 ```
+
+The query-specific pre-step is complete and the local start is accepted. The same start is not repeated. The next lifecycle step is submission of the single pending item. Collection begins only after the submission result is durably stored and read back. Export begins only after terminal success.
+
+R11 follows R07. R12 follows later. M7 Collection Freeze and M8 Semantic Master remain downstream.
 
 Authorities:
 
-- `R10_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-17.md`;
-- `raw/R10_05_COLLECT_SUCCEEDED_2026-09-17.md`;
-- `raw/R10_06_EXPORT_MANIFEST_2026-09-17.md`;
-- `analysis/R10_06_EXPORT_ANALYSIS_2026-09-17.md`.
-
-No further R10 provider lifecycle action is permitted for the accepted job/revision.
-
-## R07 pre-step release
-
-```text
-R07_QUERY = как заполнить карточку товара wildberries
-R07_FAMILIES = F5,F8
-R07_JOB_ID = octoport-serp-r07-20260917
-R07_OPEN_DECISION = operational seller card filling vs SEO/text optimization vs creative generators vs generic education
-R07_RELATION = narrow control before R11
-R07_OFFICIAL_WB_CARD_WORKFLOW = CONFIRMED
-R07_WB_PUBLIC_CONTENT_API_CREATE_EDIT = CONFIRMED
-R07_OCTOPORT_LAUNCH_DIRECT_CARD_EDITING = NO
-R07_SEARCH_CAN_AUTHORIZE_NEW_WRITE_CAPABILITY = NO
-R07_PRE_STEP = PASS
-R07_PRE_STEP_PATH = R07_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-17.md
-R07_START = EXACTLY ONE LOCAL START RELEASED AFTER DURABLE READBACK
-R07_SUBMIT = NOT RELEASED UNTIL START ENVELOPE IS PERSISTED + READ BACK
-R07_COLLECT = NOT RELEASED
-R07_EXPORT = NOT RELEASED
-```
-
-R07 full-result coding classes are fixed before provider execution:
-
-```text
-WB_NATIVE_CARD_CREATION_OR_FILLING_GUIDE
-SELLER_OPERATIONAL_CARD_WORKFLOW_GUIDE
-CARD_SEO_TEXT_OR_CHARACTERISTICS_OPTIMIZATION
-CREATIVE_IMAGE_INFOGRAPHIC_OR_MEDIA_GENERATOR
-AI_CARD_CONTENT_GENERATOR
-DIRECT_CARD_MANAGEMENT_OR_AUTOMATION_SERVICE
-COURSE_OR_GENERIC_SELLER_EDUCATION
-NOISE_OTHER_INTENT
-```
-
-## Current hard gate
-
-```text
-CURRENT_STAGE = M3 ORDINARY YANDEX SERP COLLECTION
-CURRENT_QUERY = R07
-R07_PROVIDER_ACTION = EXACTLY ONE LOCAL START RELEASED
-R07_JOB_ID = octoport-serp-r07-20260917
-R11 = BLOCKED UNTIL R07 COMPLETE EXPORT + LOSSLESS PERSISTENCE + ALL-RESULT ANALYSIS + READBACK
-R12 = BLOCKED
-M7_COLLECTION_FREEZE = BLOCKED
-M8_SEMANTIC_MASTER = BLOCKED
-NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE R07 LOCAL START; RETURN FULL START ENVELOPE; PERSIST + READ BACK BEFORE ANY SUBMIT
-```
-
-Released command:
-
-```text
-SEARCH_ASYNC_BATCH_API_V1 {"action":"start","jobId":"octoport-serp-r07-20260917","queries":["как заполнить карточку товара wildberries"],"confirmBillable":true,"maxRequests":1,"maxCostRub":0.0305,"searchType":"SEARCH_TYPE_RU","region":"225","page":0,"groupsOnPage":20,"docsInGroup":1,"groupMode":"GROUP_MODE_FLAT","familyMode":"FAMILY_MODE_MODERATE","fixTypoMode":"FIX_TYPO_MODE_OFF","sortMode":"SORT_MODE_BY_RELEVANCE","sortOrder":"SORT_ORDER_DESC"}
-```
+- `R07_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-17.md`
+- `raw/R07_01_START_2026-09-17.md`
+- `analysis/R07_01_START_2026-09-17.md`
