@@ -10,7 +10,8 @@ Status: `ACCEPTED / REMOTE VERIFIED`.
 - Base head: `8b162d97a37aa10566d82dd3184c2bfe3a9cca98`.
 - Exact tested implementation head: `8a5d9e6ca611d69512ad28fc00684c63bdc87324`.
 - Exact tested implementation tree: `1fb11a510d6dd314a0647c5348e56d1a26bc007e`.
-- Draft integration PR: #18.
+- Post-acceptance documentation head before merge: `76c883878cc32a34aab71dbf4e9eaf2909227484`.
+- PR #18 merged into `integration/i1-c1-srv5-2026-09-16` at merge commit `c6fc2363f25e02e5ff7ce548164df7a37b94bcf8`, tree `ea1ad3b3267053b75e3fb377f2cd636a5b29da40`.
 
 The tested implementation diff from the accepted C2.2-A base changes only six paths:
 
@@ -108,6 +109,10 @@ Deterministic development package:
 - byte mismatches: `0`.
 
 The new `signed-metadata.js` input is present in the deterministic composition and therefore in the tested service worker/package.
+
+## Post-merge readback
+
+PR #18 was merged normally, without force-push/rebase/reset, into the accepted integration line at `c6fc2363f25e02e5ff7ce548164df7a37b94bcf8`. The merge commit has tree `ea1ad3b3267053b75e3fb377f2cd636a5b29da40` and preserves the exact tested implementation commit in history. The merge does not redefine the exact tested implementation head: all implementation acceptance claims above remain pinned to `8a5d9e6ca611d69512ad28fc00684c63bdc87324` / `1fb11a510d6dd314a0647c5348e56d1a26bc007e`.
 
 ## Explicitly not accepted
 
