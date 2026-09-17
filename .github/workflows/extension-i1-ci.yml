@@ -2,7 +2,7 @@ name: Extension I1-C1 client
 
 on:
   push:
-    branches: [main, "feature/extension-i1-client-2026-09-15"]
+    branches: [main, "feature/extension-i1-*"]
     paths:
       - "apps/extension/**"
       - "packages/control-client/**"
