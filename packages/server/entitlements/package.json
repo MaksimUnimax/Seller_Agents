@@ -11,6 +11,10 @@
     "./seller-agents-capability-permissions": {
       "types": "./src/seller-agents-capability-permissions.ts",
       "default": "./src/seller-agents-capability-permissions.ts"
+    },
+    "./seller-agents-beta-capability-policy": {
+      "types": "./src/seller-agents-beta-capability-policy.ts",
+      "default": "./src/seller-agents-beta-capability-policy.ts"
     }
   },
   "scripts": {
