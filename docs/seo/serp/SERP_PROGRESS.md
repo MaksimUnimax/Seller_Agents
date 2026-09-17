@@ -2,7 +2,7 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M3 / R06 CLOSED / R08 QUERY-SPECIFIC PRE-STEP IN PROGRESS**.
+Status: **M3 / R06 CLOSED / R08 PRE-STEP PASS / R08 LOCAL START RELEASED**.
 
 ## Closed Search evidence
 
@@ -22,8 +22,8 @@ R06 помощник селлера маркетплейсов = CLOSED / 20
 
 Authorities:
 
-- `raw/R06_08_EXPORT_MANIFEST_2026-09-17.md` — complete revision-5 export persisted losslessly as seven verified chunks;
-- `analysis/R06_08_EXPORT_ANALYSIS_2026-09-17.md` — all 20 results reviewed.
+- `raw/R06_08_EXPORT_MANIFEST_2026-09-17.md`;
+- `analysis/R06_08_EXPORT_ANALYSIS_2026-09-17.md`.
 
 ```text
 R06_VERDICT = SOFTWARE_AI_DOMINANT_HELPER_SERP_WITH_STRONG_AI_HEAD_AND_MINOR_HUMAN_SERVICE_COLLISION
@@ -44,32 +44,55 @@ R06_PAGE_OWNERSHIP_DECISION = DEFERRED_TO_M9_M11
 R06 = CLOSED
 ```
 
-Product implication held for later semantic/page work: helper/assistant vocabulary is Search-supported for software/AI seller products, but unqualified `помощник селлера` is broader than Octoport's exact promise and should later be scoped with AI/software/marketplace/data modifiers. Competitor autonomous-action claims do not change PRODUCT_TRUTH.
+## R08 release
 
-## Next candidate
+Query-specific authority:
+
+`R08_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-17.md`
 
 ```text
 R08_QUERY = аналитика рекламы маркетплейсов
-R08_INFORMATION_GAIN = HIGH
-R08_QUERY_SPECIFIC_PRE_STEP = REQUIRED / IN PROGRESS
-R08_JOB_ID_PLANNED = octoport-serp-r08-20260917
+R08_FAMILY = F6
+R08_JOB_ID = octoport-serp-r08-20260917
+R08_PRE_STEP = PASS / PERSISTED / REMOTE READBACK
+R08_EXISTING_START_CONFLICT = NONE
 ```
 
-R08 tests whether broad advertising-analytics language is primarily seller-owned marketplace ad/campaign analytics or collides materially with agency/media-planning/external market-intelligence meanings. No provider action is released yet.
+R08 measures current Search composition across native seller campaign analytics, cross-marketplace seller ad-analytics SaaS, external traffic attribution, autobidders/automation, agencies, external/competitor intelligence and generic content.
+
+Marketplace-specific `аналитика рекламы wildberries` / `аналитика рекламы ozon` remain HOLD. They are released only if the complete generic R08 SERP leaves one named marketplace divergence unresolved.
+
+Fresh pre-step verified:
+
+- current Yandex deferred Operation lifecycle;
+- current WB first-party campaign statistics and Promotion API statistics;
+- current Ozon campaign-result metrics terminology;
+- Yandex Direct external traffic-to-marketplace statistics as a separate legitimate ad-analytics meaning;
+- current internal-own-data versus external-market-intelligence boundary;
+- Bridge branch head `469a69b628ef00e79718996cfd7bbb0291edddec`;
+- no existing durable R08 start artifact.
 
 ## Current hard gate
 
 ```text
 CURRENT_STAGE = M3 ORDINARY YANDEX SERP COLLECTION
-CURRENT_QUERY = R08 PRE-STEP ONLY
-R06 = CLOSED / PERSISTED / REMOTE READBACK
-R08_PRE_STEP = IN PROGRESS
-R08_START = BLOCKED UNTIL QUERY-SPECIFIC FRESH RESEARCH + ARTIFACT + REMOTE READBACK
-R08_SUBMIT = BLOCKED
+CURRENT_QUERY = R08
+R06 = CLOSED / PERSISTED / READBACK
+R08_PRE_STEP = PASS / PERSISTED / REMOTE READBACK
+R08_JOB_ID = octoport-serp-r08-20260917
+R08_START = RELEASED EXACTLY ONCE
+R08_SUBMIT = BLOCKED UNTIL START RESULT PERSISTENCE + READBACK + ANALYSIS
 R08_COLLECT = BLOCKED
 R08_EXPORT = BLOCKED
+R08_MARKETPLACE_SPECIFIC_PAIR = HOLD
 R09 = BLOCKED UNTIL R08 QUERY CLOSURE
 M7_COLLECTION_FREEZE = BLOCKED
 M8_SEMANTIC_MASTER = BLOCKED
-NEXT_PHYSICAL_ACTION = COMPLETE R08 QUERY-SPECIFIC PRE-STEP RESEARCH; DO NOT EXECUTE A PROVIDER COMMAND YET
+NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE LOCAL START FOR R08 AND RETURN COMPLETE SEARCH_ASYNC_BATCH_RESULT_V1 OR YMB_ERROR_V1
+```
+
+## Exact released command
+
+```text
+SEARCH_ASYNC_BATCH_API_V1 {"action":"start","jobId":"octoport-serp-r08-20260917","queries":["аналитика рекламы маркетплейсов"],"confirmBillable":true,"maxRequests":1,"maxCostRub":0.0305,"searchType":"SEARCH_TYPE_RU","region":"225","page":0,"groupsOnPage":20,"docsInGroup":1,"groupMode":"GROUP_MODE_FLAT","familyMode":"FAMILY_MODE_MODERATE","fixTypoMode":"FIX_TYPO_MODE_OFF","sortMode":"SORT_MODE_BY_RELEVANCE","sortOrder":"SORT_ORDER_DESC"}
 ```
