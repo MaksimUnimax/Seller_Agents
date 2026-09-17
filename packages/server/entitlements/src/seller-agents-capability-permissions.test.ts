@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
 import { EntitlementKeySchema } from "@product/plans";
+import { describe, expect, it } from "vitest";
 import {
   SELLER_AGENTS_CAPABILITY_PERMISSION_DEFINITIONS,
   SELLER_AGENTS_CAPABILITY_PERMISSION_KEYS,
@@ -15,7 +15,9 @@ const EXPECTED = [
 
 describe("Seller Agents capability permission vocabulary", () => {
   it("defines exactly the four reviewed account permission keys", () => {
-    expect([...SELLER_AGENTS_CAPABILITY_PERMISSION_KEYS].sort()).toEqual(EXPECTED);
+    expect([...SELLER_AGENTS_CAPABILITY_PERMISSION_KEYS].sort()).toEqual(
+      EXPECTED,
+    );
     expect(
       SELLER_AGENTS_CAPABILITY_PERMISSION_DEFINITIONS.map(
         (definition) => definition.entitlementKey,
@@ -66,10 +68,11 @@ describe("Seller Agents capability permission vocabulary", () => {
       );
   });
 
-  it("keeps the exported definition registry immutable", () => {
-    expect(Object.isFrozen(SELLER_AGENTS_CAPABILITY_PERMISSION_DEFINITIONS)).toBe(
-      true,
-    );
+  it("keeps the exported authority registries immutable", () => {
+    expect(Object.isFrozen(SELLER_AGENTS_CAPABILITY_PERMISSION_KEYS)).toBe(true);
+    expect(
+      Object.isFrozen(SELLER_AGENTS_CAPABILITY_PERMISSION_DEFINITIONS),
+    ).toBe(true);
     expect(
       SELLER_AGENTS_CAPABILITY_PERMISSION_DEFINITIONS.every(Object.isFrozen),
     ).toBe(true);
