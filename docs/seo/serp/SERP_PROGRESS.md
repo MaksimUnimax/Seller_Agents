@@ -2,7 +2,7 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M2R RECONCILED / S01-S03 CLOSED / R01 CLOSED / R02 CLOSED / R03 LOCAL START RELEASED**.
+Status: **M2R RECONCILED / S01-S03 CLOSED / R01 CLOSED / R02 CLOSED / R03 START PASS / ONE SUBMIT RELEASED**.
 
 ## Authorities
 
@@ -14,7 +14,9 @@ Status: **M2R RECONCILED / S01-S03 CLOSED / R01 CLOSED / R02 CLOSED / R03 LOCAL 
 - R02 final manifest: `raw/R02_06_EXPORT_MANIFEST_2026-09-17.md`;
 - R02 final analysis: `analysis/R02_06_EXPORT_ANALYSIS_2026-09-17.md`;
 - R03 pre-step: `R03_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-17.md`;
-- R03 activation: `R03_EXECUTION_ACTIVATION_2026-09-17.md`.
+- R03 activation: `R03_EXECUTION_ACTIVATION_2026-09-17.md`;
+- R03 raw start: `raw/R03_01_START_2026-09-17.md`;
+- R03 start analysis/gate: `analysis/R03_01_START_2026-09-17.md`.
 
 Evidence rule:
 
@@ -66,8 +68,6 @@ revision = 5
 SUCCEEDED = 1
 unresolved = 0
 result_rows = 20
-source_size_bytes = 77213
-source_sha256 = 87c69a38376fb368ad01ffc6cf024a9741363e612a9131e762ceba2ccce01206
 FULL_RAW_PERSISTENCE = PASS
 REMOTE_READBACK = PASS
 FULL_20_ROW_REVIEW = PASS
@@ -75,36 +75,48 @@ FULL_20_ROW_REVIEW = PASS
 
 ## Current query — R03 `chatgpt для wildberries`
 
-R03 is required as the paired F2 Wildberries control because R02 has a strong Ozon connection/integration head but retains a large dual WB+Ozon core. Historical S03 is F1 agent-category evidence and does not replace own-ChatGPT F2 evidence.
-
-Fresh R03 pre-step has passed:
+R03 pre-step and owner-facing disclosure are complete. Exactly one local start was executed and returned:
 
 ```text
-R03_INFORMATION_GAIN = HIGH_PAIRED
-FRESH_YANDEX_METHOD_RESEARCH = PASS
-FRESH_OFFICIAL_WB_API_RESEARCH = PASS
-CURRENT_MARKET_LANGUAGE_RESEARCH = PASS
-SOURCE_TO_METHOD_TRACE = PASS
-WORK_TRIGGER_FOR_R03 = NOT MET
-R03_EXISTING_DURABLE_START_ARTIFACT = NONE
-OWNER_FACING_SOURCE_DISCLOSURE = PASS
+action = start
+ok = true
+request_executed = false
+provider_calls = 0
+control = RUNNING
+total = 1
+PENDING = 1
+requests_started = 0
+operations_accepted = 0
+polls_started = 0
+unresolved = 1
+all_successful = false
+busy = false
+revision = 0
 ```
 
-Exactly one currently released Bridge action:
+The exact start envelope was persisted and remotely read back with matching job/action/counters.
 
 ```text
-SEARCH_ASYNC_BATCH_API_V1 {"action":"start","jobId":"octoport-serp-r03-20260917","queries":["chatgpt для wildberries"],"confirmBillable":true,"maxRequests":1,"maxCostRub":0.0305,"searchType":"SEARCH_TYPE_RU","region":"225","page":0,"groupsOnPage":20,"docsInGroup":1,"groupMode":"GROUP_MODE_FLAT","familyMode":"FAMILY_MODE_MODERATE","fixTypoMode":"FIX_TYPO_MODE_OFF","sortMode":"SORT_MODE_BY_RELEVANCE","sortOrder":"SORT_ORDER_DESC"}
+R03_START = PASS
+R03_START_RAW_PERSISTENCE = PASS
+R03_START_REMOTE_READBACK = PASS
+R03_SECOND_START = FORBIDDEN
+R03_SUBMITN_COUNT_1 = RELEASED
+R03_SECOND_SUBMIT = BLOCKED
+R03_COLLECTN = BLOCKED
+R03_EXPORT = BLOCKED
+R04 = BLOCKED
 ```
 
-Not yet released:
+Exactly one currently released command:
 
-- R03 `submitN`;
-- R03 `collectN`;
-- R03 `exportPage`;
-- R04 or later Search queries;
-- final F2 page ownership/IA;
-- M7 Collection Freeze;
-- M8 Semantic Master.
+```text
+SEARCH_ASYNC_BATCH_API_V1 {"action":"submitN","jobId":"octoport-serp-r03-20260917","count":1}
+```
+
+After its complete response:
+
+`persist exact submit envelope -> remote readback -> verify request/provider/operation/revision state -> decide collect separately`.
 
 ## Current hard gate
 
@@ -116,11 +128,11 @@ R01 = CLOSED
 R02 = CLOSED / PERSISTED / READBACK / ANALYZED
 CURRENT_QUERY = R03
 R03_QUERY = chatgpt для wildberries
-R03_PRESTEP = PASS / READBACK
-R03_LOCAL_START_COUNT_1 = RELEASED
-R03_SUBMITN = BLOCKED UNTIL START PERSIST + READBACK
+R03_START = PASS / PERSISTED / READBACK
+R03_SUBMITN_COUNT_1 = RELEASED
+R03_COLLECTN = BLOCKED UNTIL SUBMIT PERSIST + READBACK
 R04 = BLOCKED
-NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE R03 LOCAL START AND RETURN COMPLETE BRIDGE ENVELOPE
+NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE R03 submitN count=1 AND RETURN COMPLETE BRIDGE ENVELOPE
 M7_COLLECTION_FREEZE = BLOCKED
 M8_SEMANTIC_MASTER = BLOCKED
 ```
