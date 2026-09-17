@@ -1,6 +1,6 @@
-# Server / I1 / Health current cursor — 2026-09-16
+# Server / I1 / Health current cursor — 2026-09-17
 
-Current: HEALTH_P8_4_B8_NONLIVE_READINESS_ACCEPTED / HEALTH_B7A_R1_CAPABILITY_PROVENANCE_ACCEPTED / HEALTH_B7_LIVE_BLOCKED_EXTERNAL_PREREQUISITE / P8_4_NOT_ACCEPTED / P8_5_NOT_STARTED / I1_C2_2A_OPEN_BLOCKED.
+Current: HEALTH_P8_4_B8_NONLIVE_READINESS_ACCEPTED / HEALTH_B7A_R1_CAPABILITY_PROVENANCE_ACCEPTED / HEALTH_B7B_ACCOUNT_SCOPE_LUNA_FENCE_NEXT / HEALTH_B7_LIVE_BLOCKED_EXTERNAL_PREREQUISITE / P8_4_NOT_ACCEPTED / P8_5_NOT_STARTED / I1_C2_2A_OPEN_BLOCKED.
 
 Owner continuous autowork remains active. One sequential Codex executor only.
 
@@ -41,9 +41,25 @@ Verdict:
 - P8.4 = NOT_ACCEPTED.
 - P8.5 = NOT_STARTED.
 
+## Owner B7 account-safety constraints — 2026-09-17
+
+Before live B7, implement one bounded internal hardening step: SA-HEALTH-B7B-ACCOUNT-SCOPE-LUNA-FENCE-20260917-01.
+
+Owner requirements are stricter than the earlier provisioning boundary:
+- Health B7 must create zero ChatGPT conversations and zero Projects.
+- Health B7 must delete/archive/rename/move zero conversations and zero Projects.
+- Standard must use one owner-precreated dedicated test conversation; root/new-chat execution is forbidden for live B7.
+- Work must use one owner-precreated dedicated Project + conversation route; route drift to another project/conversation is fail-closed.
+- Dedicated browser navigation must remain locked to the configured conversation identity, not merely to the allowed origin.
+- Work live Health may execute only when the currently displayed model is positively identified as GPT-5.6 Luna.
+- Health must never open the model picker or switch/fallback models. Missing, ambiguous or different model identity blocks before prompt insertion/Send.
+- Unknown/existing foreign conversations/projects are never touched. The B7 implementation does not gain any create/delete/archive/rename/move capability.
+
+Architect decision: implement the stronger zero-mutation account policy rather than a bounded temporary-chat lifecycle. Standard receives a pre-bound conversation start route for live dedicated execution. Work retains its pre-bound project/conversation route. The browser-driver adds a dedicated conversation route lock for all top-level navigation. Work H3 adds a read-only exact Luna identity gate with no model-selection action. Synthetic tests must prove no Send on wrong/missing/ambiguous model and no cross-conversation navigation authority.
+
 ## Remaining Health blocker
 
-B7 live behavioral acceptance has not been run. The remaining prerequisite is external to Git: owner-provisioned dedicated Health authentication state/config for both Standard and Work plus an approved dedicated Work project/conversation route. It must use dedicated controlled Health accounts/profiles, not owner/customer production sessions. No live auth/provider behavior may be invented or claimed without that prerequisite.
+B7 live behavioral acceptance has not been run. After B7B code hardening is accepted, the external prerequisite remains owner-provisioned dedicated Health authentication state/config for both Standard and Work plus the exact precreated Standard conversation URL and approved dedicated Work project/conversation route. The Work conversation must already have GPT-5.6 Luna selected. It must use a dedicated controlled Health account/profile, not owner/customer production sessions. No live auth/provider behavior may be invented or claimed without that prerequisite.
 
 ## Other open roadmap gates
 
