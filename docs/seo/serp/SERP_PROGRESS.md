@@ -2,7 +2,7 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M3 / R09 CLOSED / R10 NEXT CANDIDATE / QUERY-SPECIFIC PRE-STEP REQUIRED**.
+Status: **M3 / R09 CLOSED / R10 QUERY-SPECIFIC PRE-STEP RELEASED / LOCAL START NOT YET EXECUTED**.
 
 ## Closed Search evidence
 
@@ -61,22 +61,46 @@ R09 = CLOSED FOR CURRENT M3 PASS AFTER DURABLE READBACK
 
 No further R09 `start`, `submitN`, `collectN` or `exportPage` is permitted for the accepted job/revision.
 
+## R10 query-specific release
+
+Authority:
+
+- `R10_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-17.md`.
+
+```text
+R10_QUERY = анализ ниш wildberries для продавца
+R10_FAMILY = F7
+R10_JOB_ID_PLANNED = octoport-serp-r10-20260917
+R10_PRE_STEP = PASS / PERSISTED
+R10_NATIVE_WB_NICHE_REPORT = CONFIRMED
+R10_NATIVE_WB_DATA_SCOPE = MARKETPLACE-WIDE FIRST-PARTY WB
+R10_PUBLIC_API_NICHE_ENDPOINT = NOT CONFIRMED
+R10_EXTERNAL_INTELLIGENCE_BOUNDARY = CONFIRMED AS MATERIAL
+R10_START_RELEASE = EXACTLY ONE LOCAL START AFTER THIS PRE-STEP REMOTE READBACK
+R10_SUBMIT = NOT RELEASED
+R10_COLLECT = NOT RELEASED
+R10_EXPORT = NOT RELEASED
+```
+
+The R10 pre-step must be read back from the remote branch before executing the released local start. Actual Bridge output is authority; expected accepted start state is one local `PENDING` item with no provider call.
+
 ## Current hard gate
 
 ```text
 CURRENT_STAGE = M3 ORDINARY YANDEX SERP COLLECTION
-CURRENT_QUERY = NONE / R09 CLOSED
-NEXT_CANDIDATE = R10
+CURRENT_QUERY = R10
 R10_QUERY = анализ ниш wildberries для продавца
 R10_FAMILY = F7
-R10_PROVIDER_ACTION = NOT RELEASED
-R10_REQUIRES_QUERY_SPECIFIC_PRE_STEP = true
-R07 = BLOCKED BY MATRIX ORDER UNTIL R10 COMPLETE
+R10_PROVIDER_ACTION = LOCAL START RELEASED CONDITIONALLY ON PRE-STEP REMOTE READBACK
+R10_SUBMITN = NOT RELEASED
+R10_COLLECTN = NOT RELEASED
+R10_EXPORTPAGE = NOT RELEASED
+R07 = BLOCKED UNTIL R10 COMPLETE
 R11 = BLOCKED
 R12 = BLOCKED
 M7_COLLECTION_FREEZE = BLOCKED
 M8_SEMANTIC_MASTER = BLOCKED
-NEXT_PHYSICAL_ACTION = BUILD + PERSIST + READ BACK R10 QUERY-SPECIFIC PRE-STEP; ONLY THEN MAY ONE LOCAL R10 START BE RELEASED
+NEXT_PHYSICAL_ACTION = REMOTE READ BACK R10 PRE-STEP + THIS PROGRESS FILE; IF BOTH MATCH, EXECUTE EXACTLY ONE R10 LOCAL START; PERSIST/READ BACK RETURNED ENVELOPE BEFORE ANY SUBMIT
 ```
 
-R10 must not inherit R09 conclusions mechanically. It must test the separate niche-analysis boundary: first-party WB niche analysis versus broader external market/competitor intelligence, while preserving product/API authority constraints.
+R10 tests the separate niche-analysis boundary: native Wildberries first-party marketplace-wide niche analysis versus broader MPStats-like external market/competitor intelligence. Search may measure intent and expected data/source scope, but it must not be used to invent API/product capability that current product truth does not prove.
