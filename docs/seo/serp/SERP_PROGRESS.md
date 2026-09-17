@@ -2,7 +2,7 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M3 / R06 CLOSED / R08 PRE-STEP PASS / R08 LOCAL START RELEASED**.
+Status: **M3 / R06 CLOSED / R08 PRE-STEP PASS / R08 START PASS / ONE SUBMIT RELEASED**.
 
 ## Closed Search evidence
 
@@ -27,15 +27,9 @@ Authorities:
 
 ```text
 R06_VERDICT = SOFTWARE_AI_DOMINANT_HELPER_SERP_WITH_STRONG_AI_HEAD_AND_MINOR_HUMAN_SERVICE_COLLISION
-R06_AI_COPILOT_AGENT = 6/20
-R06_GENERAL_SOFTWARE_HELPER = 4/20
-R06_SPECIALIZED_AUTOMATION_UTILITY = 5/20
 R06_SOFTWARE_AI_TOTAL = 15/20
 R06_HUMAN_EMPLOYEE = 1/20
 R06_HUMAN_SERVICE = 1/20
-R06_FULFILLMENT_HELPER_BRANDING = 1/20
-R06_SUPPORT_COMMUNITY = 1/20
-R06_NOISE_ADJACENT = 1/20
 R06_TOP3_AI = 3/3
 R06_TOP10_SOFTWARE_AI = 7/10
 R06_MORE_SEARCH_NOW = NO
@@ -44,33 +38,35 @@ R06_PAGE_OWNERSHIP_DECISION = DEFERRED_TO_M9_M11
 R06 = CLOSED
 ```
 
-## R08 release
+## R08 current state
 
-Query-specific authority:
-
-`R08_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-17.md`
+Query-specific authority: `R08_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-17.md`.
 
 ```text
 R08_QUERY = аналитика рекламы маркетплейсов
 R08_FAMILY = F6
 R08_JOB_ID = octoport-serp-r08-20260917
 R08_PRE_STEP = PASS / PERSISTED / REMOTE READBACK
-R08_EXISTING_START_CONFLICT = NONE
+R08_START = PASS / PERSISTED / REMOTE READBACK
+R08_PENDING = 1
+R08_WAITING = 0
+R08_SUCCEEDED = 0
+R08_UNKNOWN = 0
+R08_REQUESTS_STARTED = 0
+R08_OPERATIONS_ACCEPTED = 0
+R08_POLLS_STARTED = 0
+R08_UNRESOLVED = 1
+R08_REVISION = 0
 ```
 
-R08 measures current Search composition across native seller campaign analytics, cross-marketplace seller ad-analytics SaaS, external traffic attribution, autobidders/automation, agencies, external/competitor intelligence and generic content.
+Start authorities:
+
+- `raw/R08_01_START_2026-09-17.md`;
+- `analysis/R08_01_START_2026-09-17.md`.
+
+The query-specific local start succeeded cleanly. Exactly one pending item exists. No provider request has yet executed and no UNKNOWN/failure state exists.
 
 Marketplace-specific `аналитика рекламы wildberries` / `аналитика рекламы ozon` remain HOLD. They are released only if the complete generic R08 SERP leaves one named marketplace divergence unresolved.
-
-Fresh pre-step verified:
-
-- current Yandex deferred Operation lifecycle;
-- current WB first-party campaign statistics and Promotion API statistics;
-- current Ozon campaign-result metrics terminology;
-- Yandex Direct external traffic-to-marketplace statistics as a separate legitimate ad-analytics meaning;
-- current internal-own-data versus external-market-intelligence boundary;
-- Bridge branch head `469a69b628ef00e79718996cfd7bbb0291edddec`;
-- no existing durable R08 start artifact.
 
 ## Current hard gate
 
@@ -78,21 +74,21 @@ Fresh pre-step verified:
 CURRENT_STAGE = M3 ORDINARY YANDEX SERP COLLECTION
 CURRENT_QUERY = R08
 R06 = CLOSED / PERSISTED / READBACK
-R08_PRE_STEP = PASS / PERSISTED / REMOTE READBACK
-R08_JOB_ID = octoport-serp-r08-20260917
-R08_START = RELEASED EXACTLY ONCE
-R08_SUBMIT = BLOCKED UNTIL START RESULT PERSISTENCE + READBACK + ANALYSIS
-R08_COLLECT = BLOCKED
+R08_PRE_STEP = PASS / PERSISTED / READBACK
+R08_START = PASS / PERSISTED / READBACK
+R08_SECOND_START = FORBIDDEN
+R08_SUBMIT_1 = RELEASED EXACTLY ONCE
+R08_COLLECT = BLOCKED UNTIL SUBMIT RESULT PERSISTENCE + READBACK + ANALYSIS
 R08_EXPORT = BLOCKED
 R08_MARKETPLACE_SPECIFIC_PAIR = HOLD
 R09 = BLOCKED UNTIL R08 QUERY CLOSURE
 M7_COLLECTION_FREEZE = BLOCKED
 M8_SEMANTIC_MASTER = BLOCKED
-NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE LOCAL START FOR R08 AND RETURN COMPLETE SEARCH_ASYNC_BATCH_RESULT_V1 OR YMB_ERROR_V1
+NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE submitN count=1 ON R08 AND RETURN COMPLETE SEARCH_ASYNC_BATCH_RESULT_V1 OR YMB_ERROR_V1
 ```
 
 ## Exact released command
 
 ```text
-SEARCH_ASYNC_BATCH_API_V1 {"action":"start","jobId":"octoport-serp-r08-20260917","queries":["аналитика рекламы маркетплейсов"],"confirmBillable":true,"maxRequests":1,"maxCostRub":0.0305,"searchType":"SEARCH_TYPE_RU","region":"225","page":0,"groupsOnPage":20,"docsInGroup":1,"groupMode":"GROUP_MODE_FLAT","familyMode":"FAMILY_MODE_MODERATE","fixTypoMode":"FIX_TYPO_MODE_OFF","sortMode":"SORT_MODE_BY_RELEVANCE","sortOrder":"SORT_ORDER_DESC"}
+SEARCH_ASYNC_BATCH_API_V1 {"action":"submitN","jobId":"octoport-serp-r08-20260917","count":1}
 ```
