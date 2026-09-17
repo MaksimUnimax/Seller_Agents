@@ -1,6 +1,6 @@
 # C2.2-D2 — read-only packaged/signed capability intersection
 
-Status: `IMPLEMENTED_CANDIDATE / ACCEPTANCE_PENDING`.
+Status: `ACCEPTED / REMOTE VERIFIED / MERGED INTO INTEGRATION`.
 
 ## Purpose
 
@@ -60,15 +60,17 @@ It captures the already frozen `SellerAgentsPackagedCapabilities` and `SellerAge
 - `describeBinding(capabilityId)` — the exact reviewed binding or `null`;
 - `getVerified(options)` — obtains already verified signed metadata through the accepted B path and returns the detached frozen intersection projection.
 
-The projection carries source/freshness/config/access-basis provenance and always has `executionAuthority: false`.
+The projection carries source/freshness/config/access-basis provenance and always has `executionAuthority: false`. The result object, `capabilities` array and every result row are deeply frozen.
 
 D2 reads only `signedEntitlements` for permission. `signedFeatures` are deliberately not a fallback permission source.
 
 ## Important current-state consequence
 
-D1 did not seed entitlement definitions in PostgreSQL, mutate plans or grant accounts these permissions. D2 therefore does not assume that current signed snapshots already contain the four keys. Until the server commercial/beta configuration explicitly emits them, missing keys simply deny in the D2 projection.
+D1 did not seed entitlement definitions in PostgreSQL, mutate plans or grant accounts these permissions. D2 therefore does not assume that current signed snapshots already contain the four keys. Until a separately accepted server policy explicitly emits them, missing keys simply deny in the D2 projection.
 
-This is intentional fail-closed behavior, not a reason to infer permissions from legacy/product/provider keys.
+The current server beta-access authority resolves only `BETA | NONE`; it does not define capability entitlements. Current Bootstrap code signs commercial entitlements only when commercial access is independently eligible, so a beta-only account currently receives an empty signed entitlement map. That fact is now an explicit dependency for the next bounded server step rather than a reason to infer permission from beta status, legacy feature keys or provider-specific entitlement names.
+
+This is intentional fail-closed behavior.
 
 ## Explicit non-goals
 
@@ -87,21 +89,63 @@ C2.2-D2 does **not**:
 - change AI profile resolution or Health policy;
 - close full C2, I1, D2 product integration, D3/S2, S1.2, beta, release or deployment.
 
-## Acceptance gate
+## Acceptance result
 
-The focused source/extracted-package test must prove:
+Exact tested implementation head:
+
+`860b4799eb5bf627e14bfbc7bcfff53a241a2800`
+
+tree:
+
+`305d326add8f04a9bb28dbbaee99abefbfdbe466`
+
+The exact diff from accepted D1 integration base `66140093650dae057b4bb9017d49f48faeb7c5db` contains only five paths:
+
+- `apps/extension/composition.json`;
+- `packages/control-client/src/capability-intersection.js`;
+- `tests/regression/extension-core/client-i1/client-capability-intersection.mjs`;
+- `tooling/checks/extension_i1.py`;
+- this design/acceptance document.
+
+Focused source/extracted-package coverage proves:
 
 1. exactly the four reviewed bindings exist and unknown/local-looking ids are not inferred;
 2. explicit signed boolean `true` plus packaged presence satisfies the read-only intersection while `executionAuthority` remains false;
-3. missing and explicit false permissions deny, and signed features cannot substitute;
-4. unknown signed entitlements and local-capability-looking remote keys cannot manufacture permission;
-5. non-BOOLEAN values on reviewed permission keys fail the intersection closed;
-6. API/manifest/bindings/global slot are immutable and no executable control-client method is patched in.
+3. the computed result object, `capabilities` array and every row are deeply frozen and reject mutation;
+4. missing and explicit false permissions deny, and signed features cannot substitute;
+5. unknown signed entitlements and local-capability-looking remote keys cannot manufacture permission;
+6. non-BOOLEAN values on reviewed permission keys fail the intersection closed;
+7. API/manifest/bindings/global slot are immutable and no executable control-client method is patched in.
 
-The full Extension I1 regression must run against both composed source and extracted package, including the preserved Ozon/WB/browser baselines. Documentation CI and path-triggered Extension CI must pass. No server runtime, contract, migration, DB or OpenAPI file is changed by D2, so Server CI must not be artificially triggered by meaningless server-file edits.
+Remote exact-head evidence:
+
+- Extension I1-C1 push run `35207407249`: `SUCCESS`;
+- full I1 checker: `106` gate processes, `PASS` on composed source and extracted package;
+- focused `i1-capability-intersection`: `PASS` on source and extracted package;
+- browser verifier: `PASS`, Chromium `151.0.7922.34`, valid signed snapshot accepted and tamper rejected;
+- installed-local API / portal / PostgreSQL acceptance: `PASS`;
+- Documentation CI PR run `35207411644`: `SUCCESS`;
+- Extension CI push run `35207407386`: `SUCCESS`;
+- Extension CI PR run `35207411652`: `SUCCESS`;
+- both Extension CI runs include successful Ozon, WB Node, common-core/native Chromium and WB-browser baselines;
+- Extension I1 artifact `10490995106`: `1,075,133` bytes, SHA-256 `5091b770282efb509ec8862cf1a435f67c4e0405739dfec4f42d879caebfde30`;
+- installed-local artifact `10491235005`: `517` bytes, SHA-256 `aa12b47919735082b1868e18bf3415595b2a830db95b4870ee3e87a4307bab45`;
+- live provider calls remain `0` in bounded development acceptance.
+
+PR #21 was merged normally into `integration/i1-c1-srv5-2026-09-16` at merge commit:
+
+`a2c9cdbd48914f6abf1e40221de4b64f1e5e76a7`
+
+The merge commit tree is the exact tested tree `305d326add8f04a9bb28dbbaee99abefbfdbe466`; therefore the accepted implementation bytes are preserved exactly by the merge.
+
+Full receipt: `docs/migration/evidence/extension-i1-c2-2d2-2026-09-17/r1/README.md`.
 
 ## Next boundary after acceptance
 
-Acceptance of D2 will prove only the explicit read-only permission intersection. A later architect step may decide where that verified result participates in execution authority, but it must separately preserve all existing account/session generation, compatibility, profile, Health, online/offline freshness and Work state-machine gates.
+D2 proves only the explicit read-only permission intersection. It must **not** be wired directly into Work or offline completion yet.
 
-Do not wire D2 directly into Work, provider dispatch or offline completion as part of this step.
+The next capability-related dependency is server-side: define an explicit reviewed Seller Agents capability-permission policy for the currently authorized access bases and then emit that policy through the already signed Bootstrap entitlement map without inventing permissions from access status, feature names or local capability ids.
+
+The current beta-access model contains no per-capability policy and beta-only Bootstrap currently signs `entitlements: {}`. Therefore a separate bounded server policy/emission step must precede any execution gate. That step must preserve fail-closed behavior for `NONE`, malformed policy and unknown permissions, keep commercial plan entitlements authoritative for commercial access, and explicitly resolve the beta/commercial-overlap rule before changing runtime execution authority.
+
+Only after the server can legitimately sign the reviewed permission set and that emission is independently accepted may a later step decide where D2 participates in executable Work authority while preserving account/session generation, compatibility, AI profile, Health, freshness and Work state-machine gates.
