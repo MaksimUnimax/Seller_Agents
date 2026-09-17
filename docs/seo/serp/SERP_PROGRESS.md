@@ -2,7 +2,7 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M3 / R06 CLOSED / R08 PRE-STEP PASS / R08 START PASS / ONE SUBMIT RELEASED**.
+Status: **M3 / R06 CLOSED / R08 PRE-STEP PASS / START PASS / SUBMIT ACCEPTED / FIRST COLLECT RELEASED**.
 
 ## Closed Search evidence
 
@@ -48,23 +48,25 @@ R08_FAMILY = F6
 R08_JOB_ID = octoport-serp-r08-20260917
 R08_PRE_STEP = PASS / PERSISTED / REMOTE READBACK
 R08_START = PASS / PERSISTED / REMOTE READBACK
-R08_PENDING = 1
-R08_WAITING = 0
+R08_OPERATION_ID = sprvt6p3aq5uj96uqs0b
+R08_SUBMIT = PASS / ACCEPTED / PERSISTED / REMOTE READBACK
+R08_PENDING = 0
+R08_WAITING = 1
 R08_SUCCEEDED = 0
 R08_UNKNOWN = 0
-R08_REQUESTS_STARTED = 0
-R08_OPERATIONS_ACCEPTED = 0
+R08_REQUESTS_STARTED = 1
+R08_OPERATIONS_ACCEPTED = 1
 R08_POLLS_STARTED = 0
 R08_UNRESOLVED = 1
-R08_REVISION = 0
+R08_REVISION = 2
 ```
 
-Start authorities:
+Submit authorities:
 
-- `raw/R08_01_START_2026-09-17.md`;
-- `analysis/R08_01_START_2026-09-17.md`.
+- `raw/R08_02_SUBMIT_2026-09-17.md`;
+- `analysis/R08_02_SUBMIT_2026-09-17.md`.
 
-The query-specific local start succeeded cleanly. Exactly one pending item exists. No provider request has yet executed and no UNKNOWN/failure state exists.
+The existing R08 job was submitted exactly once. Yandex accepted deferred operation `sprvt6p3aq5uj96uqs0b`; no UNKNOWN/failure state exists and no provider poll has yet executed.
 
 Marketplace-specific `аналитика рекламы wildberries` / `аналитика рекламы ozon` remain HOLD. They are released only if the complete generic R08 SERP leaves one named marketplace divergence unresolved.
 
@@ -76,19 +78,20 @@ CURRENT_QUERY = R08
 R06 = CLOSED / PERSISTED / READBACK
 R08_PRE_STEP = PASS / PERSISTED / READBACK
 R08_START = PASS / PERSISTED / READBACK
+R08_SUBMIT = PASS / ACCEPTED / PERSISTED / READBACK
 R08_SECOND_START = FORBIDDEN
-R08_SUBMIT_1 = RELEASED EXACTLY ONCE
-R08_COLLECT = BLOCKED UNTIL SUBMIT RESULT PERSISTENCE + READBACK + ANALYSIS
-R08_EXPORT = BLOCKED
+R08_SECOND_SUBMIT = FORBIDDEN
+R08_COLLECT_1 = RELEASED EXACTLY ONCE
+R08_EXPORT = BLOCKED UNTIL TERMINAL COLLECT + PERSISTENCE + READBACK
 R08_MARKETPLACE_SPECIFIC_PAIR = HOLD
 R09 = BLOCKED UNTIL R08 QUERY CLOSURE
 M7_COLLECTION_FREEZE = BLOCKED
 M8_SEMANTIC_MASTER = BLOCKED
-NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE submitN count=1 ON R08 AND RETURN COMPLETE SEARCH_ASYNC_BATCH_RESULT_V1 OR YMB_ERROR_V1
+NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE collectN count=1 ON R08 AND RETURN COMPLETE SEARCH_ASYNC_BATCH_RESULT_V1 OR YMB_ERROR_V1
 ```
 
 ## Exact released command
 
 ```text
-SEARCH_ASYNC_BATCH_API_V1 {"action":"submitN","jobId":"octoport-serp-r08-20260917","count":1}
+SEARCH_ASYNC_BATCH_API_V1 {"action":"collectN","jobId":"octoport-serp-r08-20260917","count":1}
 ```
