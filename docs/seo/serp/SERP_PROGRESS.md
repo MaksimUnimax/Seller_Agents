@@ -2,7 +2,7 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M2R RECONCILED / S01-S03 CLOSED / R01-R03 F2 BLOCK CLOSED / R04 OLD JOB FROZEN UNKNOWN / R04-R1 WAITING / TWO LOCAL NO_DUE COLLECTS / THIRD COLLECT RELEASED**.
+Status: **M2R RECONCILED / S01-S03 CLOSED / R01-R03 F2 BLOCK CLOSED / R04 OLD JOB FROZEN UNKNOWN / R04-R1 WAITING / THREE LOCAL NO_DUE COLLECTS / FOURTH COLLECT RELEASED**.
 
 ## Authorities
 
@@ -15,7 +15,8 @@ Status: **M2R RECONCILED / S01-S03 CLOSED / R01-R03 F2 BLOCK CLOSED / R04 OLD JO
 - recovery start: `raw/R04R1_01_START_2026-09-17.md`, `analysis/R04R1_01_START_2026-09-17.md`;
 - recovery submit: `raw/R04R1_02_SUBMIT_2026-09-17.b64`, `analysis/R04R1_02_SUBMIT_2026-09-17.md`;
 - first recovery collect: `raw/R04R1_03_COLLECT_NO_DUE_2026-09-17.md`, `analysis/R04R1_03_COLLECT_NO_DUE_2026-09-17.md`;
-- second recovery collect: `raw/R04R1_04_COLLECT_NO_DUE_2026-09-17.md`, `analysis/R04R1_04_COLLECT_NO_DUE_2026-09-17.md`.
+- second recovery collect: `raw/R04R1_04_COLLECT_NO_DUE_2026-09-17.md`, `analysis/R04R1_04_COLLECT_NO_DUE_2026-09-17.md`;
+- third recovery collect: `raw/R04R1_05_COLLECT_NO_DUE_2026-09-17.md`, `analysis/R04R1_05_COLLECT_NO_DUE_2026-09-17.md`.
 
 Evidence rule:
 
@@ -64,19 +65,7 @@ polls_started = 0
 revision = 2
 ```
 
-The first bounded `collectN` returned a local guard only:
-
-```text
-request_executed = false
-provider_calls = 0
-last.code = NO_DUE_OPERATIONS
-WAITING = 1
-UNKNOWN = 0
-polls_started = 0
-revision = 2
-```
-
-The second bounded `collectN` returned the same local guard:
+Three separately released bounded `collectN` calls have now each returned the same local guard:
 
 ```text
 request_executed = false
@@ -91,9 +80,9 @@ unresolved = 1
 revision = 2
 ```
 
-Interpretation: neither collect contacted Yandex. The same accepted operation remains waiting. No semantic conclusion is permitted from either local guard.
+Interpretation: none of these three collects contacted Yandex. The same accepted operation remains waiting. No semantic conclusion is permitted from any local guard.
 
-The accepted R03 lifecycle precedent also required multiple local `NO_DUE_OPERATIONS` responses before the first provider-backed terminal collect. Therefore exactly one further bounded `collectN` on the same R04-R1 job is now released. No resubmit/restart/export/R05 action is released.
+Exactly one further bounded `collectN` on the same R04-R1 job is now released. No resubmit/restart/export/R05 action is released.
 
 ## Current hard gate
 
@@ -108,13 +97,14 @@ R04_R1_START = PASS / PERSISTED / READBACK
 R04_R1_SUBMIT = PASS / PERSISTED / READBACK
 R04_R1_COLLECT_1 = LOCAL NO_DUE / PERSISTED / READBACK
 R04_R1_COLLECT_2 = LOCAL NO_DUE / PERSISTED / READBACK
+R04_R1_COLLECT_3 = LOCAL NO_DUE / PERSISTED / READBACK
 R04_R1_WAITING = 1
 R04_R1_UNKNOWN = 0
 R04_R1_POLLS_STARTED = 0
 R04_R1_REVISION = 2
 R04_R1_SECOND_START = FORBIDDEN
 R04_R1_SECOND_SUBMIT = FORBIDDEN
-R04_R1_COLLECT_3 = RELEASED EXACTLY ONCE
+R04_R1_COLLECT_4 = RELEASED EXACTLY ONCE
 R04_R1_EXPORT = BLOCKED UNTIL TERMINAL COLLECT PERSISTENCE + READBACK
 R05 = BLOCKED UNTIL R04 QUERY CLOSURE
 NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE collectN count=1 ON R04-R1 AND RETURN COMPLETE SEARCH_ASYNC_BATCH_RESULT_V1
