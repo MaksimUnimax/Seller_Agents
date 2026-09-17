@@ -2,7 +2,7 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M2R RECONCILED / S01-S03 CLOSED / R01 CLOSED / R02 CLOSED / R03 SECOND COLLECT LOCAL NOT-DUE / ONE FURTHER COLLECT RELEASED**.
+Status: **M2R RECONCILED / S01-S03 CLOSED / R01 CLOSED / R02 CLOSED / R03 COLLECT SUCCEEDED / ONE EXPORT RELEASED**.
 
 ## Authorities
 
@@ -16,7 +16,8 @@ Status: **M2R RECONCILED / S01-S03 CLOSED / R01 CLOSED / R02 CLOSED / R03 SECOND
 - R03 submit: `raw/R03_02_SUBMIT_2026-09-17.md`, `analysis/R03_02_SUBMIT_2026-09-17.md`;
 - R03 first guard: `raw/R03_03_COLLECT_NOT_DUE_2026-09-17.b64`, `analysis/R03_03_COLLECT_NOT_DUE_2026-09-17.md`;
 - R03 second guard: `raw/R03_04_COLLECT_NOT_DUE_2026-09-17.b64`, `analysis/R03_04_COLLECT_NOT_DUE_2026-09-17.md`;
-- current release: `R03_04_NEXT_COLLECT_RELEASE_2026-09-17.md`.
+- R03 successful collect: `raw/R03_05_COLLECT_SUCCEEDED_2026-09-17.b64`, `analysis/R03_05_COLLECT_SUCCEEDED_2026-09-17.md`;
+- current export release: `R03_05_EXPORT_RELEASE_2026-09-17.md`.
 
 Evidence rule:
 
@@ -38,55 +39,46 @@ R02: `MIXED_OZON_CHATGPT_SERP_WITH_STRONG_CONNECTION_HEAD`, Ozon sharpen vs R01 
 
 ## Current query — R03 `chatgpt для wildberries`
 
-Accepted operation:
+Accepted operation and terminal state:
 
 ```text
 operation_id = spr8vij9p1s7cijt2chi
 requests_started = 1
 operations_accepted = 1
-WAITING = 1
-polls_started = 0
-unresolved = 1
-revision = 2
+polls_started = 1
+WAITING = 0
+SUCCEEDED = 1
+unresolved = 0
+all_successful = true
+revision = 5
 ```
 
-Both first and second collect attempts returned the same local guard:
-
-```text
-action = collectN
-ok = true
-request_executed = false
-provider_calls = 0
-processed = 1
-normalized = 0
-last.code = NO_DUE_OPERATIONS
-WAITING = 1
-SUCCEEDED = 0
-polls_started = 0
-unresolved = 1
-revision = 2
-```
-
-The two not-due envelopes are byte-identical because lifecycle state did not change. Interpretation: local timing guards only; Yandex has not been polled. No semantic conclusion is allowed.
+Lifecycle summary:
 
 ```text
 R03_START = PASS / PERSISTED / READBACK
 R03_SUBMIT = ACCEPTED / PERSISTED / READBACK
 R03_FIRST_COLLECT = LOCAL NO_DUE_OPERATIONS / LOSSLESS PERSISTED / READBACK
 R03_SECOND_COLLECT = LOCAL NO_DUE_OPERATIONS / LOSSLESS PERSISTED / READBACK
+R03_FINAL_COLLECT = SUCCEEDED / LOSSLESS PERSISTED / READBACK
 R03_OPERATION_ID = spr8vij9p1s7cijt2chi
+R03_REVISION = 5
 R03_SECOND_START = FORBIDDEN
 R03_SECOND_SUBMIT = FORBIDDEN
-R03_NEXT_COLLECTN_COUNT_1 = RELEASED
-R03_EXPORT = BLOCKED
+R03_FURTHER_COLLECT = FORBIDDEN
+R03_EXPORTPAGE_AFTER_MINUS_1_LIMIT_1_REV_5 = RELEASED
 R04 = BLOCKED
 ```
 
 Exactly one currently released command:
 
 ```text
-SEARCH_ASYNC_BATCH_API_V1 {"action":"collectN","jobId":"octoport-serp-r03-20260917","count":1}
+SEARCH_ASYNC_BATCH_API_V1 {"action":"exportPage","jobId":"octoport-serp-r03-20260917","after":-1,"limit":1,"revision":5}
 ```
+
+After the export artifact returns:
+
+`persist losslessly -> remote readback -> analyze all returned rows -> R02↔R03 paired comparison -> decide F2 saturation -> only then evaluate R04 pre-step`.
 
 ## Current hard gate
 
@@ -99,13 +91,13 @@ R02 = CLOSED / PERSISTED / READBACK / ANALYZED
 CURRENT_QUERY = R03
 R03_QUERY = chatgpt для wildberries
 R03_OPERATION_ID = spr8vij9p1s7cijt2chi
-R03_WAITING = 1
-R03_REVISION = 2
-R03_SECOND_COLLECT = LOCAL NOT-DUE / PERSISTED / READBACK
-R03_NEXT_COLLECTN_COUNT_1 = RELEASED
-R03_EXPORT = BLOCKED UNTIL PROVIDER-BACKED TERMINAL COLLECT + PERSIST + READBACK
+R03_SUCCEEDED = 1
+R03_UNRESOLVED = 0
+R03_REVISION = 5
+R03_COLLECT = SUCCEEDED / PERSISTED / READBACK
+R03_EXPORTPAGE_AFTER_MINUS_1_LIMIT_1_REV_5 = RELEASED
 R04 = BLOCKED
-NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE FURTHER R03 collectN count=1 AND RETURN COMPLETE BRIDGE ENVELOPE
+NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE R03 exportPage AND RETURN COMPLETE EXPORT ARTIFACT
 M7_COLLECTION_FREEZE = BLOCKED
 M8_SEMANTIC_MASTER = BLOCKED
 ```
