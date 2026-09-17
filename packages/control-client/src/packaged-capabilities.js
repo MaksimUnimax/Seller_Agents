@@ -69,10 +69,16 @@
     return manifest;
   }
 
-  globalThis.SellerAgentsPackagedCapabilities = Object.freeze({
+  const api = Object.freeze({
     schemaVersion: manifest.schemaVersion,
     has,
     describe,
     snapshot,
+  });
+  Object.defineProperty(globalThis, "SellerAgentsPackagedCapabilities", {
+    value: api,
+    writable: false,
+    configurable: false,
+    enumerable: true,
   });
 })();
