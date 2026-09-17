@@ -78,7 +78,7 @@ Paths:
 - `raw/search-octoport-serp-r01-20260917-r5-0-0.json.gz.b64.part03`
 - `raw/search-octoport-serp-r01-20260917-r5-0-0.json.gz.b64.part04`
 
-Semantic analysis remains blocked until the four exact parts are attached to branch and directory readback confirms all expected blob SHAs.
+Semantic analysis remains blocked until directory readback confirms all expected blob SHAs on the active branch.
 
 ## Current hard gate
 
@@ -91,6 +91,6 @@ R01_EXPORT = RECEIVED / 20 RESULTS / LOCAL QA PASS
 R01_FULL_RAW_PERSIST = IN PROGRESS
 R01_SEMANTIC_ANALYSIS = BLOCKED UNTIL REMOTE READBACK
 R02 = BLOCKED
-NEXT_PHYSICAL_ACTION = ATTACH PART BLOBS, REMOTE-READBACK THEIR SHAS, THEN ANALYZE ALL 20 RESULTS
+NEXT_PHYSICAL_ACTION = REMOTE-READBACK PART SHAS, THEN ANALYZE ALL 20 RESULTS
 M7_COLLECTION_FREEZE = BLOCKED
 ```
