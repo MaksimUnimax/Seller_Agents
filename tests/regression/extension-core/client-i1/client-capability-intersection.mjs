@@ -76,6 +76,7 @@ async function makeCachedWorker(entitlements, features = {}) {
 
 // 2. Explicit signed true plus packaged-local presence satisfies the read-only
 // intersection for every reviewed binding, but still grants no execution.
+// The computed result itself is also immutable, not only the binding manifest.
 {
   const worker = await makeCachedWorker({
     "source.ozon": true,
@@ -104,6 +105,31 @@ async function makeCachedWorker(entitlements, features = {}) {
           row.executionAuthority === false,
       ),
     );
+
+    const immutability = clone(
+      await worker.call(`(async function () {
+        const value = await SellerAgentsCapabilityIntersection.getVerified({ detectedAi: ${JSON.stringify(CHATGPT)} });
+        let arrayMutationRejected = false;
+        try { value.capabilities.push({ capabilityId: "marketplace.amazon.adapter" }); }
+        catch (_) { arrayMutationRejected = true; }
+        return {
+          result: Object.isFrozen(value),
+          capabilities: Object.isFrozen(value.capabilities),
+          rows: value.capabilities.every(Object.isFrozen),
+          arrayMutationRejected,
+          count: value.capabilities.length,
+          executionAuthority: value.executionAuthority,
+        };
+      })`),
+    );
+    assert.deepEqual(immutability, {
+      result: true,
+      capabilities: true,
+      rows: true,
+      arrayMutationRejected: true,
+      count: 4,
+      executionAuthority: false,
+    });
   } finally {
     worker.close();
   }
