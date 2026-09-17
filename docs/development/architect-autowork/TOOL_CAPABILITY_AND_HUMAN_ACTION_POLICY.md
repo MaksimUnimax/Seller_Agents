@@ -159,11 +159,11 @@ The required development loop is:
 - collect current live DOM/page/tool evidence where relevant;
 - build the complete test list for the bounded scope;
 - run every automatable test;
-- collect actual failures;
-- design and implement the smallest correct patch;
-- rerun the affected tests and then the full required regression matrix;
-- repeat until green;
-- only then prepare the owner handoff/package.
+- collect ALL failures reachable in the current automated pass before ordinary patching, except when continuing would be destructive or unsafe;
+- group failures by root cause and dependency and design the smallest coordinated patch for the complete known defect set;
+- rerun focused tests for every fixed defect and then the full required regression matrix;
+- repeat until no automatable failure remains;
+- only then prepare the owner handoff/package and any consolidated human-only batch.
 
 ## 5. Mandatory dialogue-binding gate for extension handoff
 
@@ -183,7 +183,7 @@ Before packaging/handoff, automate and prove as much of this path as the availab
 - prove wrong-dialogue/navigation drift fails closed;
 - collect DOM/accessibility/runtime evidence for any selector/identity dependency.
 
-If final Send is the only operation that the available environment truly cannot execute without a provider confirmation, all pre-Send and post-state-independent checks still MUST be completed before owner involvement. The report must isolate that one residue instead of handing the owner a broad manual test script.
+If final Send is the only operation that the available environment truly cannot execute without a provider confirmation, all pre-Send and post-state-independent checks still MUST be completed before owner involvement. The report must isolate that residue and combine it with every other currently reachable human-only check instead of handing the owner a sequence of one-off manual tests.
 
 ## 6. Prompt requirement
 
@@ -195,7 +195,9 @@ That section must:
 - require the automation ladder above;
 - prohibit asking the owner to perform an automatable step;
 - require evidence for any claimed human-only blocker;
-- require all non-human tests to be green before handoff.
+- require all non-human tests to be green before handoff;
+- require any remaining owner/manual checks to be accumulated into one complete current-stage manual batch rather than sent one by one;
+- require all defects found in that manual batch to be collected before the next ordinary patch cycle.
 
 Do not shorten this into a vague sentence such as "use available tools". The purpose is to prevent a future executor/architect from forgetting that the tools exist or assuming a capability boundary without checking it.
 
@@ -222,4 +224,37 @@ Every browser/installed/Health acceptance report must distinguish:
 
 Never label a capability "tested" because a tool advertises it. For example, "CDP capability advertised" is not the same as "CDP exercised". Record the tool/action actually used.
 
-This policy overrides older instructions that casually defer ordinary validation to the owner. Later explicit owner instructions still have priority.
+## 9. Mandatory batched manual testing and defect closure
+
+Owner/manual testing MUST NOT be handed off one test, one button, one scenario or one defect at a time.
+
+Before any manual handoff, the architect/executor MUST:
+- complete the full automation ladder for the exact current candidate;
+- collect every automatable failure that can safely be reached in that pass;
+- close the complete known automated defect batch with one coordinated patch cycle, except where separate patches are technically required for safety or isolation;
+- rerun focused tests and the full required regression matrix until automation is green;
+- enumerate ALL remaining checks that are genuinely human-only and currently reachable on that same exact candidate;
+- combine those checks into ONE consolidated manual test batch for the owner.
+
+The owner performs the consolidated batch as one testing pass. The architect/executor must collect ALL defects/findings from that pass before starting the next ordinary patch cycle. Do not interrupt the owner after each discovered defect to patch one item and then send the owner back for the next isolated check when the remaining checks can still be completed safely.
+
+After the consolidated manual pass:
+- build one complete manual defect inventory;
+- group defects by root cause, dependency and safety boundary;
+- implement the smallest coordinated patch that closes the complete known manual defect set without unrelated refactoring;
+- rerun ALL affected focused tests;
+- rerun the complete automated/regression matrix for the touched scope;
+- only after automation is green again may another manual batch be considered;
+- if more human-only checks remain, they are again accumulated into one complete current-stage batch.
+
+Forbidden anti-pattern:
+
+`one manual test -> one defect -> patch -> one manual test -> one defect -> patch`.
+
+Required pattern:
+
+`all available automation -> complete automated defect batch -> coordinated patch -> full regression -> all currently reachable human-only tests in one batch -> complete manual defect batch -> coordinated patch -> full regression`.
+
+A manual batch may be split only when continuing the same batch would be destructive, unsafe, invalidate later observations, consume a one-shot external action, or when one manual result is a genuine prerequisite that makes the remaining tests technically unreachable. Such a split must be explicitly justified in evidence; convenience is not a valid reason.
+
+This policy overrides older instructions that casually defer ordinary validation to the owner or permit piecemeal owner testing. Later explicit owner instructions still have priority.
