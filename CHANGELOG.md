@@ -1,84 +1,27 @@
-# Изменения
+# Repository Change Log
 
-## 2026-09-14 — документационный каркас
+This top-level log tracks repository-level engineering changes only. Component-specific implementation evidence and historical acceptance records live under `docs/` and the relevant test/evidence directories.
 
-- Описаны единое расширение, сервер, сайт, админка и мониторинг.
-- Зафиксированы магазины, ручные пакеты, завершение, часовой буфер и автономная работа.
-- Определено редкое согласование установок без серверных разрешений на каждый запрос.
-- Добавлена бесплатная бета с управляемым пределом регистраций.
-- Статус WB исправлен в текущем учёте: INSTALLED FAIL, migration REOPENED; R1–R8 заблокированы.
-- Разделены перенос, объединение, параллельная серверная разработка и выпуск.
-- Production-код, сборки и развёртывание не входят в эту ревизию.
+## 2026-09-16
 
-## 2026-09-14 — D1.S1 server import candidate
+- Added and validated static-site deployment scaffolding, rollback checks, TLS/SNI verification, and live-route acceptance.
+- Added technical documentation for deployment boundaries and operational verification.
+- Added semantic/SEO research scaffolding without changing the established implementation contracts.
+- Normalized the public repository entry points to describe the workspace as an implementation and regression-test repository rather than as a product overview.
 
-- Импорт замороженного server P8.4 Foundation, 3f16bbf.
-- Новая структура, workspace paths и Server CI; без продолжения H3/P8.5/P8.6.
-- Source mapping, проверка Git blob SHA и поручение серверному Codex.
+## 2026-09-15
 
-## 2026-09-14 — D1.S1 server import accepted
+- Extended account/bootstrap integration coverage and server/client synchronization evidence.
+- Added bounded acceptance scenarios for refresh, revocation, offline behavior, and identity continuity.
+- Kept implementation, documentation, installed-browser, and live/deployment acceptance as separate evidence boundaries.
 
-- Новый Server CI PASS: 1272 unit, 1507 PostgreSQL integration, 85 browser E2E и отдельный regression пути Playwright.
-- Подтверждено совпадение 594 файлов candidate с подготовленным деревом.
-- Подготовлен handoff серверному Codex; расширения и дальнейшие H3/P8.5/P8.6 не начаты.
+## 2026-09-14
 
-## 2026-09-14 — D1.E0 extension source map
+- Imported the initial server and client/runtime baselines into the workspace.
+- Added shared runtime modules, integration fixtures, packaging checks, and browser regression coverage.
+- Added repository documentation, CI workflows, migration evidence, and acceptance records.
+- Established forward-only parallel development and explicit synchronization boundaries for shared changes.
 
-- Ozon source authority обновлена на 0.1.22, 3b102f68; WB 0.3.0, 006af272, сохраняет INSTALLED FAIL.
-- Независимо сверены оба ZIP, 76 исходных файлов и 100 связей загрузки; составлена карта D1/D2 и 176 входов проверок/исторических документов.
-- Закреплён внешний input 514 matrix; его gate пройден на текущем Ozon. Проба WB подтверждает неединообразный TTL с 24-часовым default.
-- Подготовлен отдельный D1.E1 import с сохранением исходных тестов и границами D2; production-код и сервер не изменены.
+## Maintenance rule
 
-## 2026-09-14 — D1.E1 extension import candidate
-
-- Перенесены 232 точных файла: Ozon 0.1.22, WB 0.3.0 reference, тесты и закреплённые inputs; runtime-байты не изменены.
-- Добавлены независимые от сервера сборка и scoped Extension CI, исходные и распакованные package routes, контроль ошибки промежуточного шага.
-- Упаковка baseline воспроизводима; новый ZIP_STORED имеет собственные hashes. Текущие результаты и ограничения сохранены в квитанции D1.E1.
-
-## 2026-09-14 — D1.E1 extension import accepted
-
-- Remote CI на cc8bc2a: Ozon source/extracted-package PASS; 52 WB suites, 1075/0 на каждом маршруте.
-- Все три CI artifacts скачаны и независимо сверены; 232 Git-файла совпали с закреплёнными sources.
-- Добавлены REMOTE_RESULTS и REMOTE_READBACK; D1 завершён, D2 ещё не начат.
-- Зафиксированы неудачная первая конфигурация CI и диагностические сообщения Playwright teardown; исходный runtime и assertions не изменены.
-- Ozon LIVE CERTIFICATION PENDING, WB INSTALLED FAIL и R1–R8 BLOCKED сохраняются. Сервер не менялся.
-
-## 2026-09-14 — D2.1 common-core candidate
-
-- Выделены Work/discovery/local execution/delivery-модули и Ozon protocol/file policy adapters.
-- Общие алгоритмы подключены в реальную development-сборку 0.2.0; импортированные baseline-файлы не изменены.
-- Добавлены 15 групп contract/worker сценариев, source/extracted-package маршруты и отдельный job существующего Extension CI.
-- Локально 99 процессов PASS; remote приёмка ожидается. Общий D2, установленная приёмка и WB adapter остаются открыты.
-
-## 2026-09-14 — D2.1 common-core accepted
-
-- Полный Extension CI на 45f7d4e завершён SUCCESS: новый core job и три сохранённых baseline jobs.
-- 99 процессов composed source/ZIP проверки PASS; 15 новых групп module/worker сценариев, прежние Ozon gates, transaction-abort и direct-binary attachment.
-- CI artifact независимо скачан; 36 файлов пакета и 50 production inputs сверены с локальной сборкой и Git.
-- D2.1 принят; общий D2, WB adapter, многомагазинность, общий popup и installed acceptance остаются открытыми.
-
-## 2026-09-14 — D2.2 batch context candidate
-
-- Воспроизведена отправка хвоста пакета под новыми ключами на D2.1.
-- Общая очередь, безопасный snapshot и guard на асинхронных границах, до fetch и delivery; блокировка legacy pending API без context.
-- Сохранены Ozon policy/cache/quota/delivery wrappers; Performance bearer ограничен теми же credentials.
-- Добавлены 12 behavioral context-сценариев; пакет development 0.2.1. Remote acceptance pending.
-
-## 2026-09-14 — D2.2 accepted
-
-- Полный Extension CI 34835820799 на 6f3a356d завершён SUCCESS.
-- Exact source/ZIP route: 101 процесс PASS; 12 новых context-сценариев; старые behavioral assertions сохранены.
-- Artifact независимо скачан: 36 runtime files и 67 source inputs MATCH. 39 изменённых Git-файлов сверены.
-- D2.2 принят. WB adapter, каталог магазинов, popup, часовой TTL, auth/I1 и installed приёмка остаются открытыми.
-
-## 2026-09-14 — D2.3 internal WB adapter candidate
-
-- WB API authority изолирована от Ozon globals; adapter исполняется через общую очередь, без старого WB worker/popup.
-- Await guards выделены из Ozon в один общий модуль; сохранены его regressions. Добавлены WB контекст, локальная HELP/ошибки, shared observed Retry-After и сохранение результата перед остановкой из-за ошибки квоты.
-- 17 новых групп WB, 105 source/ZIP процессов PASS; version 0.2.2, 37 файлов. Remote приёмка ожидается.
-- Это внутренний API: реальный WB popup/content/Start/delivery ещё не соединён. Catalog/часовой TTL/I1/installed acceptance остаются открыты, R1–R8 закрыты.
-
-## 2026-09-14 — D2.3 internal WB adapter accepted
-
-- Extension CI 34839904748 на be8f949: core и три baseline jobs SUCCESS. Скачанный development ZIP совпал побайтово; 37 runtime files / 77 inputs / 97-file Git readback MATCH.
-- Внутренний adapter API принят. Прикладная WB интеграция, магазины, общий popup, TTL и установленная приёмка остаются открыты. Новых provider calls и изменений сервера нет.
+A top-level entry summarizes repository engineering work; detailed component evidence remains in the scoped records that produced it. Historical evidence is not rewritten to imply broader acceptance than was actually tested.

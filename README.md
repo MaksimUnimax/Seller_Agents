@@ -1,38 +1,31 @@
-# Seller Agents
+# Runtime Fixtures
 
-Единый продукт: расширение связывает выбранный пользователем веб-ИИ с Ozon и Wildberries; сервер обеспечивает аккаунты, конфигурацию и обслуживание. Позиционирование: «Ваш ИИ-сотрудник для работы с данными магазина».
+TypeScript workspace for runtime integration fixtures, contract validation, browser regression testing, and supporting service scaffolds.
 
-**Сервер перенесён и проверен. Перенос исходников Ozon 0.1.22 и WB 0.3.0 принят по результатам D1.E1. D2.1 и D2.2 приняты: общее ядро, очередь и защита контекста. D2.3: внутренний WB adapter принят. D2.4 принят как development 0.2.3: единый каталог, popup, Work и доставка Ozon/WB; source/ZIP/native Chromium/remote CI/readback PASS. Production-развёртывания ещё нет.**
+## Scope
 
-Первая бета бесплатная, с регистрацией и управляемым числом новых участников. Продажи и изменения в кабинетах не выполняются: продукт предоставляет проверенные операции чтения и получения отчётов.
+This repository groups executable applications, shared packages, integration fixtures, automated checks, deployment scaffolds, and engineering evidence used to validate interactions between components.
 
-## Откуда начинать
+The top-level documentation is intentionally implementation-focused. Component-specific behavior and historical evidence live next to the relevant code or under `docs/`.
 
-- [Карта документации](docs/README.md)
-- [Продуктовое ТЗ](docs/product/SPEC.md)
-- [Интерфейс и сценарии](docs/product/UX.md)
-- [Архитектура](docs/architecture/OVERVIEW.md)
-- [Roadmap](docs/ROADMAP.md)
-- [Фактическое состояние](docs/STATUS.md)
-- [Правила исполнителей](AGENTS.md)
-- [Источники переноса](docs/migration/SOURCES.md)
+## Layout
 
-## Структура
-
-| Каталог | Назначение |
+| Path | Purpose |
 |---|---|
-| apps | Расширение, API, сайт, админка, фоновые задачи и мониторинг |
-| packages | Общее ядро и отдельные адаптеры/серверные модули |
-| docs | Нормативные решения, состояние, инструкции и миграция |
-| tests | Проверки контрактов, интеграции и пользовательских сценариев |
-| tooling | Сборка, проверка документации, мониторинг API |
-| infra | Локальное, предпродукционное и рабочее размещение |
-| .github | Автоматические проверки и шаблоны задач |
+| `apps/` | executable application surfaces and runtime entry points |
+| `packages/` | shared libraries, contracts, adapters, and service modules |
+| `tests/` | integration, regression, and end-to-end checks |
+| `tooling/` | build, validation, packaging, and repository tooling |
+| `infra/` | deployment and environment scaffolding |
+| `docs/` | technical notes, implementation evidence, and maintenance records |
+| `.github/` | repository automation and CI definitions |
 
-## Текущий этап
+## Working in the repository
 
-D0 и D1 завершены, включая D1.S1, D1.E0 и D1.E1. В D1.E1: 232 файла исходников и проверок перенесены по [карте](docs/migration/EXTENSION_IMPORT_MAP.md); [приёмка переноса](docs/migration/evidence/extension-import-2026-09-14/README.md) завершена: remote CI и readback PASS. [Команды расширений](docs/development/EXTENSION_BASELINE.md). D2.1 принят: общие модули включены в проверенную development-сборку; [проверка](docs/migration/evidence/extension-core-d2-1-2026-09-14/README.md) и [команды](docs/development/EXTENSION_CORE.md). D2.2: [общая очередь и контекст пакета](docs/migration/evidence/extension-context-d2-2-2026-09-14/README.md), приёмка source/package/remote CI/readback PASS. D2.3: [внутренний WB adapter и общая очередь](docs/development/EXTENSION_WB_ADAPTER.md), SOURCE/PACKAGE/REMOTE CI/READBACK PASS; внутренний adapter API принят. D2.4 соединяет адаптеры с [каталогом, общим popup и доставкой](docs/development/EXTENSION_APPLICATION.md); [квитанция](docs/migration/evidence/extension-application-d2-4-2026-09-14/README.md). Сервер развивается параллельно отдельным Codex.
+Use the root package scripts and the workflow relevant to the component being changed. Keep changes bounded to the requested subsystem, preserve existing regression coverage, and verify the exact remote revision before integration work.
 
-**WB 0.3.0: INSTALLED FAIL по последней проверке владельца. Полнота Ozon → WB переноса не доказана; R1–R8 закрыты до установленной приёмки исправленного общего механизма.** Исторический 1075/0 не отменяет этот результат.
+Repository maintenance rules are in `AGENTS.md`. The technical documentation index is in `docs/README.md`.
 
-Команды серверной разработки находятся в корневом package.json. Начать с [серверного README](docs/server/README.md) и [квитанции переноса](docs/migration/evidence/SERVER_IMPORT_ACCEPTANCE.md). Установочных пакетов единого расширения пока нет.
+## Validation
+
+Different areas have separate validation routes. A successful documentation, packaging, or fixture check proves only that bounded check; it does not imply unrelated runtime or deployment acceptance.
