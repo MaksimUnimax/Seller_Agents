@@ -2,38 +2,28 @@
 
 Date: 2026-09-17.
 Branch: `seo/wordstat-batch-01-2026-09-16`.
-Status: **M3 / R10 CLOSED / R07 START ACCEPTED**.
+Status: **M3 / R07 SUBMIT ACCEPTED / WAITING**.
 
-## Closed evidence
-
-S01, S02, S03, R01, R02, R03, R04, R05, R06, R08, R09 and R10 are closed for the current M3 pass.
-
-## R07
-
-Query: `как заполнить карточку товара wildberries`
+R07 query: `как заполнить карточку товара wildberries`
 Job: `octoport-serp-r07-20260917`
-Families: `F5,F8`
-
-Observed local start state:
+Operation: `sprh5ncfp74am7l6eofs`
 
 ```text
-ok = true
-request_executed = false
-provider_calls = 0
-PENDING = 1
-requests_started = 0
-operations_accepted = 0
+provider_calls = 1
+PENDING = 0
+WAITING = 1
+SUCCEEDED = 0
+FAILED = 0
+UNKNOWN = 0
+requests_started = 1
+operations_accepted = 1
 polls_started = 0
 unresolved = 1
-revision = 0
+revision = 2
 ```
 
-The query-specific pre-step is complete and the local start is accepted. The same start is not repeated. The next lifecycle step is submission of the single pending item. Collection begins only after the submission result is durably stored and read back. Export begins only after terminal success.
-
-R11 follows R07. R12 follows later. M7 Collection Freeze and M8 Semantic Master remain downstream.
+Start and submit are accepted. Next action after durable readback: one bounded `collectN`. Export requires terminal success. R11 remains after R07 closure; R12 remains later. M7 and M8 remain downstream.
 
 Authorities:
-
-- `R07_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-17.md`
-- `raw/R07_01_START_2026-09-17.md`
-- `analysis/R07_01_START_2026-09-17.md`
+- `raw/R07_02_SUBMIT_2026-09-17.md`
+- `analysis/R07_02_SUBMIT_2026-09-17.md`
