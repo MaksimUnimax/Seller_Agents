@@ -1,8 +1,10 @@
 {
   "schema_version": 1,
-  "stage": "D2.4",
-  "version": "0.2.3",
-  "purpose": "DEVELOPMENT_COMBINED_APPLICATION_NOT_BETA",
+  "stage": "I1-C1",
+  "version": "0.2.4",
+  "purpose": "LOCAL_DEVELOPMENT_CANDIDATE_DEVICE_AUTH_SIGNED_ACCOUNT_BINDING",
+  "control_api_origin": "http://127.0.0.1:43100",
+  "portal_origin": "http://127.0.0.1:43101",
   "baseline": "apps/extension/src/imported/ozon-v0.1.22",
   "bundles": {
     "shared/work_session_model.js": [
@@ -23,6 +25,12 @@
     ]
   },
   "worker_prelude": [
+    "packages/control-client/src/config.js",
+    "packages/control-client/src/crypto.js",
+    "packages/control-client/src/packaged-capabilities.js",
+    "packages/control-client/src/client.js",
+    "packages/control-client/src/signed-metadata.js",
+    "packages/control-client/src/capability-intersection.js",
     "packages/bridge-core/src/execution/local-operations.js",
     "packages/bridge-core/src/execution/context.js",
     "packages/bridge-core/src/execution/batch-queue.js",
@@ -149,6 +157,9 @@
   ],
   "application_patches": "apps/extension/application-patches.json",
   "application_files": {
+    "shared/bootstrap_verifier.js": [
+      "packages/control-client/src/crypto.js"
+    ],
     "shared/application.js": [
       "packages/bridge-core/src/stores/catalog.js",
       "apps/extension/src/application/runtime.js",
@@ -179,5 +190,9 @@
     "https://dp-calendar-api.wildberries.ru/*",
     "https://feedbacks-api.wildberries.ru/*",
     "https://returns-api.wildberries.ru/*"
+  ],
+  "control_hosts": [
+    "http://127.0.0.1:43100/*",
+    "http://127.0.0.1:43101/*"
   ]
 }

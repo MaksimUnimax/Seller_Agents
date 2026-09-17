@@ -1,0 +1,68 @@
+{
+  "task_id": "SA-I1-C2-1-20260916-01",
+  "status": "PENDING_ARCHITECT_REVIEW",
+  "review": {
+    "prior_candidate": "REWORK_REQUIRED",
+    "prior_causes": [
+      "authority-gated restore allowed credentials to survive an origin mismatch",
+      "pending activation had no origin provenance",
+      "effective time used an initial-only monotonic anchor",
+      "wall-clock forward observations did not carry into the runtime anchor",
+      "checkpoint completion did not veto a grant after storage crossed expiry"
+    ],
+    "new_r1": "PENDING_ARCHITECT_REVIEW"
+  },
+  "start": {
+    "commit": "981d7e422d45234674aeda84c762245be55ff493",
+    "tree": "4711cea969329f5552fe07e7f99af122fda60dc9",
+    "parent": "38471d667936f6f80a3f4aa682057309745ac080",
+    "canonical_main": "5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c"
+  },
+  "code_commit": "17d54dc3a8577ae6d46736608c0bbed909b70d1a",
+  "focused": {
+    "exact_base_red": "ARCHITECT_VERIFIED against 981d7e422d45234674aeda84c762245be55ff493",
+    "source": "PASS",
+    "extracted": "PASS",
+    "processes": 98,
+    "named_cases": {
+      "A-rolling-monotonic-and-completion-veto": 2,
+      "B-origin-and-same-origin-replacement": 2,
+      "C-legacy-and-pending-provenance": 2,
+      "D-wall-rollback-and-restart-floor": 1,
+      "prior-focused-matrix": 11
+    },
+    "provider_calls": 0
+  },
+  "gates": {
+    "extension_i1_source_extracted": {"status": "PASS", "processes": 98},
+    "extension_core_source_extracted": {"status": "PASS", "processes": 111},
+    "browser_verifier_source": {"status": "PASS", "browser": "151.0.7922.34"},
+    "browser_verifier_extracted": {"status": "PASS", "browser": "151.0.7922.34"},
+    "native_application_source": {"status": "PASS", "browser": "151.0.7922.34", "live_provider_calls": 0},
+    "native_application_extracted": {"status": "PASS", "browser": "151.0.7922.34", "live_provider_calls": 0},
+    "installed_local_api_portal_postgresql": {"status": "PASS", "live_provider_calls": 0, "same_worker": true, "distinct_accounts": true, "distinct_device_sessions": true, "control_counts": {"device_start": 2, "exchange": 2, "bootstrap": 2}, "bff_counts": {"otp_request_202": 2, "otp_verify_200": 2, "logout_204": 1}},
+    "docs_check": {"status": "PASS", "files": 460, "markdownFiles": 241, "relativeLinks": 363, "requirements": 26, "acceptanceScenarios": 32},
+    "bridge_guard": "PASS",
+    "openapi_check": "PASS",
+    "remote_installed_job": "UNKNOWN: executor has no authenticated CI connector"
+  },
+  "package": {
+    "name": "SELLER_AGENTS_I1_C1_v0.2.4_LOCAL_DEVELOPMENT.zip",
+    "bytes": 1822215,
+    "sha256": "0dbfcf2f390b00417395164b5f20c4e676c02695ecaa359ee178cdaf027f39ae",
+    "repeat_archive_match": true,
+    "source_extracted_bytes_match": true,
+    "runtime_file_count": 39,
+    "runtime_manifest_sha256": "9e805eed071678755b381249362f2d3c2a491715b712a297ea0c07a080d476ac",
+    "extracted_manifest_sha256": "9e805eed071678755b381249362f2d3c2a491715b712a297ea0c07a080d476ac",
+    "service_worker_sha256": "6990cd261d326f797ddc64297e83713049d59ca17af0284bc784462903457dbd",
+    "receipt": "/tmp/sa-r1-browser2-1789534668665470580/package/composition-receipt.json"
+  },
+  "scope": {
+    "offline_grace": "OPEN_C2_2_PLUS",
+    "signed_profile_consumption": "OPEN_C2_2_PLUS",
+    "joint_offline_command_result": "OPEN_C2_2_PLUS",
+    "architect_review": "REQUIRED",
+    "remote_ci_visibility": "UNKNOWN: missing executor CI credentials"
+  }
+}

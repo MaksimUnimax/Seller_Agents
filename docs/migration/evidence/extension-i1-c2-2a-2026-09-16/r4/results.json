@@ -1,0 +1,95 @@
+{
+  "task_id": "SA-I1-C2-2A-ARCHITECT-ACCEPTANCE-20260917-01",
+  "status": "ACCEPTED_REMOTE_VERIFIED",
+  "repository": "MaksimUnimax/runtime-fixtures",
+  "branch": "integration/i1-c1-srv5-2026-09-16",
+  "main": "bc718cc5c677ad0eb4598e7de3ad766473ff0847",
+  "tested_head": "5d93bccac163c8728a8d7a3b1d4b9f23ea16b680",
+  "tested_tree": "531033ac08f001dd55427c4ae969a6c4b5d6b861",
+  "parents": [
+    "076af64efbcdfdc67aec8713969c31c276a90b2d",
+    "bc718cc5c677ad0eb4598e7de3ad766473ff0847"
+  ],
+  "pr": 9,
+  "github_virtual_merge": {
+    "sha": "5d908524db63610163770e3400c3426d7baa8177",
+    "tree": "531033ac08f001dd55427c4ae969a6c4b5d6b861",
+    "byte_identical_tree": true
+  },
+  "focused_policy": {
+    "source": {"status": "PASS", "cases": 37, "groups": ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7"]},
+    "extracted": {"status": "PASS", "cases": 37, "groups": ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7"]},
+    "negative_control": "EXPECTED_FAIL",
+    "live_provider_calls": 0,
+    "provider_replay": 0,
+    "offline_work": false
+  },
+  "extension_i1": {"status": "PASS", "gate_processes": 100},
+  "browser_verifier": {"status": "PASS", "browser": "Chromium 151.0.7922.34", "valid": true, "tamper_rejected": true},
+  "installed_local": {
+    "status": "PASS",
+    "installed_acceptance": true,
+    "distinct_accounts": true,
+    "distinct_device_sessions": true,
+    "distinct_authorizations": true,
+    "device_start": 2,
+    "exchange": 2,
+    "bootstrap": 2,
+    "logout_204": 1,
+    "logout_cleared": true,
+    "beta_unchanged": true,
+    "live_provider_calls": 0,
+    "real_email_delivery_proven": false
+  },
+  "package": {
+    "name": "SELLER_AGENTS_I1_C1_v0.2.4_LOCAL_DEVELOPMENT.zip",
+    "bytes": 1834654,
+    "sha256": "2c1f5765b0eb382d9387e3ea1a59e71bd549344f10c107a39069d92719f341de",
+    "runtime_files": 39,
+    "extracted_files": 39,
+    "zip_files": 39,
+    "runtime_extracted_names_match": true,
+    "runtime_extracted_byte_mismatches": 0,
+    "zip_extracted_names_match": true,
+    "zip_extracted_byte_mismatches": 0
+  },
+  "artifacts": [
+    {"id": 10481101652, "name": "extension-i1-5d908524db63610163770e3400c3426d7baa8177", "bytes": 1065924, "sha256": "a149542e5a5bc08db99e2a7ef751dd4b4c4e333974ec4967dc79afc0e1f9d61a"},
+    {"id": 10480663290, "name": "extension-installed-local-5d908524db63610163770e3400c3426d7baa8177", "bytes": 517, "sha256": "12d343d9735bcff80299aef17969b4a1ccd9dc40f1725d6bf7ea04fd655c2ffc"}
+  ],
+  "ci": {
+    "documentation_pr": {"run": 35182768504, "status": "SUCCESS"},
+    "extension_i1_pr": {"run": 35182768475, "status": "SUCCESS"},
+    "server_pr": {"run": 35182768483, "status": "SUCCESS"},
+    "extension_pr": {"run": 35182768462, "status": "SUCCESS"},
+    "server_push": {"run": 35182765846, "status": "SUCCESS"},
+    "completed_workflows": 7,
+    "failed_workflows": 0
+  },
+  "scope": {
+    "accepted": [
+      "online-first verified cached-bootstrap configuration acquisition",
+      "exact signed cache re-verification",
+      "durable effective-time/offline-grace classification and checkpoint",
+      "transport provenance and endpoint binding",
+      "generation/device/session/account/attempt obsolescence fences"
+    ],
+    "not_accepted": [
+      "offline Work",
+      "capability/profile execution",
+      "joint offline command/result completion",
+      "provider replay",
+      "scheduler integration",
+      "real email delivery",
+      "preprod/production",
+      "live marketplace/provider acceptance",
+      "full I1/D2",
+      "D3",
+      "release/deployment"
+    ]
+  },
+  "manual_testing": {
+    "required_for_this_bounded_step": false,
+    "reason": "All acceptance criteria for this bounded configuration-acquisition step are covered by deterministic source/package/native/installed-local/CI evidence; live provider/email/preprod checks are out of scope, not manual residues."
+  }
+}

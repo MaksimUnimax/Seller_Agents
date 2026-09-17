@@ -1,0 +1,8 @@
+{
+  "probe": "client-offline-policy.mjs",
+  "source_route": {"runtime":"i1-source","status":"PASS","case_count":37,"groups":{"Q1":"PASS","Q2":"PASS","Q3":"PASS","Q4":"PASS","Q5":"PASS","Q6":"PASS","Q7":"PASS"}},
+  "extracted_route": {"runtime":"i1-package","status":"PASS","case_count":37,"groups":{"Q1":"PASS","Q2":"PASS","Q3":"PASS","Q4":"PASS","Q5":"PASS","Q6":"PASS","Q7":"PASS"}},
+  "assertion_policy": "missing, failed, or skipped cases make the group fail",
+  "negative_control": {"id":"Q3-readonly-get-after-destructive-clear","expected_status":"FAIL","observed_failure":"IDB readonly get returned undefined after scratch clear","normal_scenario":"PASS"},
+  "live_provider_calls": 0
+}

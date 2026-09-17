@@ -1,0 +1,1537 @@
+{
+  "task_id": "SA-I1-SYNC-20260916-01",
+  "candidate_merge": "9d3407bc248e935860c5d7d3a50536c6a08d92f4",
+  "tree": "e834d3af55bb102e0378218dff731dd15b124d02",
+  "version": "0.2.4",
+  "environment": {
+    "node": "v24.20.0",
+    "pnpm": "10.34.5",
+    "python": "3.10.12",
+    "chromium": "151.0.7922.34",
+    "postgresql": "18.0",
+    "live_provider_calls": 0
+  },
+  "receipts": {
+    "default_development": {
+      "source": "tooling/checks/extension_core.py and extension_i1.py; no ephemeral fixture key",
+      "output": "build/i1-sync/client/package",
+      "zip": {
+        "name": "SELLER_AGENTS_I1_C1_v0.2.4_LOCAL_DEVELOPMENT.zip",
+        "bytes": 1801114,
+        "sha256": "2f364316986187db50251dc4708317ca612ce51dd7106138106f64239605ba43"
+      },
+      "repeated_build_equal": true,
+      "source_extracted_bytes_equal": true,
+      "packaged_file_count": 39,
+      "all_packaged_file_byte_readbacks": true,
+      "file_readbacks": [
+        {
+          "path": "attachment_delivery_port_content.js",
+          "archive": {
+            "bytes": 28802,
+            "sha256": "087fe504224634b610c8e27d075bb36f665a4c5f2503e828ea9b4fa8136a99ec"
+          },
+          "runtime": {
+            "bytes": 28802,
+            "sha256": "087fe504224634b610c8e27d075bb36f665a4c5f2503e828ea9b4fa8136a99ec"
+          },
+          "extracted": {
+            "bytes": 28802,
+            "sha256": "087fe504224634b610c8e27d075bb36f665a4c5f2503e828ea9b4fa8136a99ec"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "attachment_delivery_wake_content.js",
+          "archive": {
+            "bytes": 759,
+            "sha256": "6b3a7a4b25ce6a86a9e7b54c0a71a29c02aad9480cfbe7d2a0007e9ca4c9aa11"
+          },
+          "runtime": {
+            "bytes": 759,
+            "sha256": "6b3a7a4b25ce6a86a9e7b54c0a71a29c02aad9480cfbe7d2a0007e9ca4c9aa11"
+          },
+          "extracted": {
+            "bytes": 759,
+            "sha256": "6b3a7a4b25ce6a86a9e7b54c0a71a29c02aad9480cfbe7d2a0007e9ca4c9aa11"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "content_script.js",
+          "archive": {
+            "bytes": 136205,
+            "sha256": "6f3f156d980caf94f16f1079bd9786a1c6ca673ce08448659220f75367484c79"
+          },
+          "runtime": {
+            "bytes": 136205,
+            "sha256": "6f3f156d980caf94f16f1079bd9786a1c6ca673ce08448659220f75367484c79"
+          },
+          "extracted": {
+            "bytes": 136205,
+            "sha256": "6f3f156d980caf94f16f1079bd9786a1c6ca673ce08448659220f75367484c79"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "manifest.json",
+          "archive": {
+            "bytes": 2479,
+            "sha256": "54e14ea28fb8bbb11adfc1cadf016d7aabd4914b182eeb9a50d9cb7f9375ec26"
+          },
+          "runtime": {
+            "bytes": 2479,
+            "sha256": "54e14ea28fb8bbb11adfc1cadf016d7aabd4914b182eeb9a50d9cb7f9375ec26"
+          },
+          "extracted": {
+            "bytes": 2479,
+            "sha256": "54e14ea28fb8bbb11adfc1cadf016d7aabd4914b182eeb9a50d9cb7f9375ec26"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "popup.css",
+          "archive": {
+            "bytes": 2152,
+            "sha256": "2a8f4eba8a461dc81e3a7348babd95e71da843c35db1d60da30aae449f4fb43d"
+          },
+          "runtime": {
+            "bytes": 2152,
+            "sha256": "2a8f4eba8a461dc81e3a7348babd95e71da843c35db1d60da30aae449f4fb43d"
+          },
+          "extracted": {
+            "bytes": 2152,
+            "sha256": "2a8f4eba8a461dc81e3a7348babd95e71da843c35db1d60da30aae449f4fb43d"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "popup.html",
+          "archive": {
+            "bytes": 4341,
+            "sha256": "4e57a16818078ed7703442d0bcd880020223e9f75eb2e8155cb8fcc5c29b5aec"
+          },
+          "runtime": {
+            "bytes": 4341,
+            "sha256": "4e57a16818078ed7703442d0bcd880020223e9f75eb2e8155cb8fcc5c29b5aec"
+          },
+          "extracted": {
+            "bytes": 4341,
+            "sha256": "4e57a16818078ed7703442d0bcd880020223e9f75eb2e8155cb8fcc5c29b5aec"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "popup.js",
+          "archive": {
+            "bytes": 11426,
+            "sha256": "256e16c5af10639f1a85148b57f8b5822ae66509b8f6f59d496e0ee9a84046a1"
+          },
+          "runtime": {
+            "bytes": 11426,
+            "sha256": "256e16c5af10639f1a85148b57f8b5822ae66509b8f6f59d496e0ee9a84046a1"
+          },
+          "extracted": {
+            "bytes": 11426,
+            "sha256": "256e16c5af10639f1a85148b57f8b5822ae66509b8f6f59d496e0ee9a84046a1"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "service_worker.js",
+          "archive": {
+            "bytes": 415541,
+            "sha256": "3858e64c88abd91c0e9a08df05ce1d26e8f3773ad329366a6d1600cdab75cd81"
+          },
+          "runtime": {
+            "bytes": 415541,
+            "sha256": "3858e64c88abd91c0e9a08df05ce1d26e8f3773ad329366a6d1600cdab75cd81"
+          },
+          "extracted": {
+            "bytes": 415541,
+            "sha256": "3858e64c88abd91c0e9a08df05ce1d26e8f3773ad329366a6d1600cdab75cd81"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "service_worker_entry.js",
+          "archive": {
+            "bytes": 1810,
+            "sha256": "895daa2b1e11c2129e5d075bf738313fd5a689e1a0b30ab4a11dcbbb075866fc"
+          },
+          "runtime": {
+            "bytes": 1810,
+            "sha256": "895daa2b1e11c2129e5d075bf738313fd5a689e1a0b30ab4a11dcbbb075866fc"
+          },
+          "extracted": {
+            "bytes": 1810,
+            "sha256": "895daa2b1e11c2129e5d075bf738313fd5a689e1a0b30ab4a11dcbbb075866fc"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/ai_adapters.js",
+          "archive": {
+            "bytes": 22597,
+            "sha256": "4b9423666cf7bed03f89edb3c23d535bd02143e85c1a1b7317d184f25cc1bb72"
+          },
+          "runtime": {
+            "bytes": 22597,
+            "sha256": "4b9423666cf7bed03f89edb3c23d535bd02143e85c1a1b7317d184f25cc1bb72"
+          },
+          "extracted": {
+            "bytes": 22597,
+            "sha256": "4b9423666cf7bed03f89edb3c23d535bd02143e85c1a1b7317d184f25cc1bb72"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/ai_delivery_capabilities.js",
+          "archive": {
+            "bytes": 9753,
+            "sha256": "dca544904ae1aac578e52f60883c603cee4129fe56089f807ec175cef4e2e83a"
+          },
+          "runtime": {
+            "bytes": 9753,
+            "sha256": "dca544904ae1aac578e52f60883c603cee4129fe56089f807ec175cef4e2e83a"
+          },
+          "extracted": {
+            "bytes": 9753,
+            "sha256": "dca544904ae1aac578e52f60883c603cee4129fe56089f807ec175cef4e2e83a"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/application.js",
+          "archive": {
+            "bytes": 35300,
+            "sha256": "de791d35b53adf91fac5cfb45eb1b83dec889419e532e04279f3a6cb13a1a0ae"
+          },
+          "runtime": {
+            "bytes": 35300,
+            "sha256": "de791d35b53adf91fac5cfb45eb1b83dec889419e532e04279f3a6cb13a1a0ae"
+          },
+          "extracted": {
+            "bytes": 35300,
+            "sha256": "de791d35b53adf91fac5cfb45eb1b83dec889419e532e04279f3a6cb13a1a0ae"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/bootstrap_verifier.js",
+          "archive": {
+            "bytes": 13685,
+            "sha256": "649121f9ac3261ca4b8aa9b5731fb3108104551fe301aa235ef371f7f0848d08"
+          },
+          "runtime": {
+            "bytes": 13685,
+            "sha256": "649121f9ac3261ca4b8aa9b5731fb3108104551fe301aa235ef371f7f0848d08"
+          },
+          "extracted": {
+            "bytes": 13685,
+            "sha256": "649121f9ac3261ca4b8aa9b5731fb3108104551fe301aa235ef371f7f0848d08"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/bridge_autorun_model.js",
+          "archive": {
+            "bytes": 21583,
+            "sha256": "4e3e0fcd18c4d2e72c3758419f7fbb082e6a75e8d444913ec8b0dfdc0ea0b360"
+          },
+          "runtime": {
+            "bytes": 21583,
+            "sha256": "4e3e0fcd18c4d2e72c3758419f7fbb082e6a75e8d444913ec8b0dfdc0ea0b360"
+          },
+          "extracted": {
+            "bytes": 21583,
+            "sha256": "4e3e0fcd18c4d2e72c3758419f7fbb082e6a75e8d444913ec8b0dfdc0ea0b360"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/composer_send.js",
+          "archive": {
+            "bytes": 8267,
+            "sha256": "3e9421e8e1bc209af635e2b90d957e558301763572a42875b95c8973ca75b736"
+          },
+          "runtime": {
+            "bytes": 8267,
+            "sha256": "3e9421e8e1bc209af635e2b90d957e558301763572a42875b95c8973ca75b736"
+          },
+          "extracted": {
+            "bytes": 8267,
+            "sha256": "3e9421e8e1bc209af635e2b90d957e558301763572a42875b95c8973ca75b736"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/conversation_identity.js",
+          "archive": {
+            "bytes": 4027,
+            "sha256": "939036acd95ccb3dfe00f05b5d49568615f6d798a023a0ec995e38267fb68f57"
+          },
+          "runtime": {
+            "bytes": 4027,
+            "sha256": "939036acd95ccb3dfe00f05b5d49568615f6d798a023a0ec995e38267fb68f57"
+          },
+          "extracted": {
+            "bytes": 4027,
+            "sha256": "939036acd95ccb3dfe00f05b5d49568615f6d798a023a0ec995e38267fb68f57"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/direct_binary_file_delivery_patch.js",
+          "archive": {
+            "bytes": 10095,
+            "sha256": "e66dfd9bb91be078de9b08d86ac1acc124eabb3a22fb29fac77f59e7d036ab96"
+          },
+          "runtime": {
+            "bytes": 10095,
+            "sha256": "e66dfd9bb91be078de9b08d86ac1acc124eabb3a22fb29fac77f59e7d036ab96"
+          },
+          "extracted": {
+            "bytes": 10095,
+            "sha256": "e66dfd9bb91be078de9b08d86ac1acc124eabb3a22fb29fac77f59e7d036ab96"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/file_delivery_model_policy.js",
+          "archive": {
+            "bytes": 4021,
+            "sha256": "caba2a05701d74879bc699316530575c63106a62f8f782eee694ef1c3b4b5aab"
+          },
+          "runtime": {
+            "bytes": 4021,
+            "sha256": "caba2a05701d74879bc699316530575c63106a62f8f782eee694ef1c3b4b5aab"
+          },
+          "extracted": {
+            "bytes": 4021,
+            "sha256": "caba2a05701d74879bc699316530575c63106a62f8f782eee694ef1c3b4b5aab"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/file_delivery_port_worker.js",
+          "archive": {
+            "bytes": 40866,
+            "sha256": "7604deaf221dd3dc7480d676bb0602109ecbef759279185afa8be80fd8236910"
+          },
+          "runtime": {
+            "bytes": 40866,
+            "sha256": "7604deaf221dd3dc7480d676bb0602109ecbef759279185afa8be80fd8236910"
+          },
+          "extracted": {
+            "bytes": 40866,
+            "sha256": "7604deaf221dd3dc7480d676bb0602109ecbef759279185afa8be80fd8236910"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/file_delivery_wake_worker.js",
+          "archive": {
+            "bytes": 1750,
+            "sha256": "ec1b59ba7243bf4a5591bdbe10b0b5f6e727f8769b08833da156378d202acffd"
+          },
+          "runtime": {
+            "bytes": 1750,
+            "sha256": "ec1b59ba7243bf4a5591bdbe10b0b5f6e727f8769b08833da156378d202acffd"
+          },
+          "extracted": {
+            "bytes": 1750,
+            "sha256": "ec1b59ba7243bf4a5591bdbe10b0b5f6e727f8769b08833da156378d202acffd"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/live_runtime_v0122_patch.js",
+          "archive": {
+            "bytes": 21042,
+            "sha256": "b496fe501ca13860abf501833e4fb34d588103645047a41dbb568cc45228a79d"
+          },
+          "runtime": {
+            "bytes": 21042,
+            "sha256": "b496fe501ca13860abf501833e4fb34d588103645047a41dbb568cc45228a79d"
+          },
+          "extracted": {
+            "bytes": 21042,
+            "sha256": "b496fe501ca13860abf501833e4fb34d588103645047a41dbb568cc45228a79d"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/llm_output_report_workflow_patch.js",
+          "archive": {
+            "bytes": 15664,
+            "sha256": "a564e2dbafb3980bd406e82744c177a34df2279b63c3198395c13126520dbbff"
+          },
+          "runtime": {
+            "bytes": 15664,
+            "sha256": "a564e2dbafb3980bd406e82744c177a34df2279b63c3198395c13126520dbbff"
+          },
+          "extracted": {
+            "bytes": 15664,
+            "sha256": "a564e2dbafb3980bd406e82744c177a34df2279b63c3198395c13126520dbbff"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/manual_controls.js",
+          "archive": {
+            "bytes": 10269,
+            "sha256": "81f302487da7b5ff7c1b746298353438b2cfec100a5bb8f7fa2c80d1e033c81e"
+          },
+          "runtime": {
+            "bytes": 10269,
+            "sha256": "81f302487da7b5ff7c1b746298353438b2cfec100a5bb8f7fa2c80d1e033c81e"
+          },
+          "extracted": {
+            "bytes": 10269,
+            "sha256": "81f302487da7b5ff7c1b746298353438b2cfec100a5bb8f7fa2c80d1e033c81e"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/mixed_batch_discovery.js",
+          "archive": {
+            "bytes": 6054,
+            "sha256": "5daff1af1af6244068258e27cf77e4a814192c1019b3bf3e73dcb9c63a0619ad"
+          },
+          "runtime": {
+            "bytes": 6054,
+            "sha256": "5daff1af1af6244068258e27cf77e4a814192c1019b3bf3e73dcb9c63a0619ad"
+          },
+          "extracted": {
+            "bytes": 6054,
+            "sha256": "5daff1af1af6244068258e27cf77e4a814192c1019b3bf3e73dcb9c63a0619ad"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/ozon_contract.js",
+          "archive": {
+            "bytes": 321332,
+            "sha256": "96c3a97ba167b4cd7971bba76bd1cb29f3a149f26cb405d60be5eae5fd2bb520"
+          },
+          "runtime": {
+            "bytes": 321332,
+            "sha256": "96c3a97ba167b4cd7971bba76bd1cb29f3a149f26cb405d60be5eae5fd2bb520"
+          },
+          "extracted": {
+            "bytes": 321332,
+            "sha256": "96c3a97ba167b4cd7971bba76bd1cb29f3a149f26cb405d60be5eae5fd2bb520"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/ozon_credentials.js",
+          "archive": {
+            "bytes": 4085,
+            "sha256": "286c6021f958e41912842569bcfa0d0dfe920eed8ce1646014899a1de064415d"
+          },
+          "runtime": {
+            "bytes": 4085,
+            "sha256": "286c6021f958e41912842569bcfa0d0dfe920eed8ce1646014899a1de064415d"
+          },
+          "extracted": {
+            "bytes": 4085,
+            "sha256": "286c6021f958e41912842569bcfa0d0dfe920eed8ce1646014899a1de064415d"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/ozon_entitlements.js",
+          "archive": {
+            "bytes": 58578,
+            "sha256": "f8b9222368a2e3bbfb323ab5cd0fe1c3238742d5c06ef9afac752861d4c7422b"
+          },
+          "runtime": {
+            "bytes": 58578,
+            "sha256": "f8b9222368a2e3bbfb323ab5cd0fe1c3238742d5c06ef9afac752861d4c7422b"
+          },
+          "extracted": {
+            "bytes": 58578,
+            "sha256": "f8b9222368a2e3bbfb323ab5cd0fe1c3238742d5c06ef9afac752861d4c7422b"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/ozon_guidance.js",
+          "archive": {
+            "bytes": 10926,
+            "sha256": "346da9b83082f5b8246cab7c5aa6afb2e5f04b14d225384ab267f803a030de3e"
+          },
+          "runtime": {
+            "bytes": 10926,
+            "sha256": "346da9b83082f5b8246cab7c5aa6afb2e5f04b14d225384ab267f803a030de3e"
+          },
+          "extracted": {
+            "bytes": 10926,
+            "sha256": "346da9b83082f5b8246cab7c5aa6afb2e5f04b14d225384ab267f803a030de3e"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/ozon_operation_registry.js",
+          "archive": {
+            "bytes": 225182,
+            "sha256": "b42b51f815c0f88e89e1cd193d28cc4f72949d5dd1738ab35d473b226fd0a832"
+          },
+          "runtime": {
+            "bytes": 225182,
+            "sha256": "b42b51f815c0f88e89e1cd193d28cc4f72949d5dd1738ab35d473b226fd0a832"
+          },
+          "extracted": {
+            "bytes": 225182,
+            "sha256": "b42b51f815c0f88e89e1cd193d28cc4f72949d5dd1738ab35d473b226fd0a832"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/ozon_provider.js",
+          "archive": {
+            "bytes": 35796,
+            "sha256": "7afcd03731950cde9e5374eb0e85663cfee81713e98efbec28867ce3153373b0"
+          },
+          "runtime": {
+            "bytes": 35796,
+            "sha256": "7afcd03731950cde9e5374eb0e85663cfee81713e98efbec28867ce3153373b0"
+          },
+          "extracted": {
+            "bytes": 35796,
+            "sha256": "7afcd03731950cde9e5374eb0e85663cfee81713e98efbec28867ce3153373b0"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/performance_report_continuation_patch.js",
+          "archive": {
+            "bytes": 5181,
+            "sha256": "f42115e8ac4197fef8b7f5ba463bc6303e3d425a9202c95605edc3844b34a9b5"
+          },
+          "runtime": {
+            "bytes": 5181,
+            "sha256": "f42115e8ac4197fef8b7f5ba463bc6303e3d425a9202c95605edc3844b34a9b5"
+          },
+          "extracted": {
+            "bytes": 5181,
+            "sha256": "f42115e8ac4197fef8b7f5ba463bc6303e3d425a9202c95605edc3844b34a9b5"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/proven_writing_block_capture.js",
+          "archive": {
+            "bytes": 14614,
+            "sha256": "5b0eaac9619cb827d1e74c61f53e2755c084a1d4b60c64d23f5fd4a5354c3aef"
+          },
+          "runtime": {
+            "bytes": 14614,
+            "sha256": "5b0eaac9619cb827d1e74c61f53e2755c084a1d4b60c64d23f5fd4a5354c3aef"
+          },
+          "extracted": {
+            "bytes": 14614,
+            "sha256": "5b0eaac9619cb827d1e74c61f53e2755c084a1d4b60c64d23f5fd4a5354c3aef"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/provider_transport_core.js",
+          "archive": {
+            "bytes": 37467,
+            "sha256": "97f9a8bed0427753168c8ff083191338225cbe3abd026b471876daf19e04bba4"
+          },
+          "runtime": {
+            "bytes": 37467,
+            "sha256": "97f9a8bed0427753168c8ff083191338225cbe3abd026b471876daf19e04bba4"
+          },
+          "extracted": {
+            "bytes": 37467,
+            "sha256": "97f9a8bed0427753168c8ff083191338225cbe3abd026b471876daf19e04bba4"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/runtime_names.js",
+          "archive": {
+            "bytes": 10640,
+            "sha256": "d502b11ef8d772dfc42499991d3307c7d18aa0bc1e5bb269a7b57a1f08582b0f"
+          },
+          "runtime": {
+            "bytes": 10640,
+            "sha256": "d502b11ef8d772dfc42499991d3307c7d18aa0bc1e5bb269a7b57a1f08582b0f"
+          },
+          "extracted": {
+            "bytes": 10640,
+            "sha256": "d502b11ef8d772dfc42499991d3307c7d18aa0bc1e5bb269a7b57a1f08582b0f"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/swagger_read_surface_patch.js",
+          "archive": {
+            "bytes": 57274,
+            "sha256": "252274d629e635258f4c18a00ee90b02dc0d2d277945328986e4f49066b1ae06"
+          },
+          "runtime": {
+            "bytes": 57274,
+            "sha256": "252274d629e635258f4c18a00ee90b02dc0d2d277945328986e4f49066b1ae06"
+          },
+          "extracted": {
+            "bytes": 57274,
+            "sha256": "252274d629e635258f4c18a00ee90b02dc0d2d277945328986e4f49066b1ae06"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/wb_adapter.js",
+          "archive": {
+            "bytes": 167052,
+            "sha256": "a7adf8ae58132c3f19a74c8f728cf02aa056ca0602e017d4905547923c0e2cd7"
+          },
+          "runtime": {
+            "bytes": 167052,
+            "sha256": "a7adf8ae58132c3f19a74c8f728cf02aa056ca0602e017d4905547923c0e2cd7"
+          },
+          "extracted": {
+            "bytes": 167052,
+            "sha256": "a7adf8ae58132c3f19a74c8f728cf02aa056ca0602e017d4905547923c0e2cd7"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/web_file_attachment.js",
+          "archive": {
+            "bytes": 4750,
+            "sha256": "a1d91cb7b6aa5b1b26bf780e29f3d42895510b04d55d37569cfc3d3cf4db3010"
+          },
+          "runtime": {
+            "bytes": 4750,
+            "sha256": "a1d91cb7b6aa5b1b26bf780e29f3d42895510b04d55d37569cfc3d3cf4db3010"
+          },
+          "extracted": {
+            "bytes": 4750,
+            "sha256": "a1d91cb7b6aa5b1b26bf780e29f3d42895510b04d55d37569cfc3d3cf4db3010"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/work_session_model.js",
+          "archive": {
+            "bytes": 2431,
+            "sha256": "28d82f48ceb4926eb3af7db9dde9fb1f17eadfdc58e8a257065ef5971aa345ff"
+          },
+          "runtime": {
+            "bytes": 2431,
+            "sha256": "28d82f48ceb4926eb3af7db9dde9fb1f17eadfdc58e8a257065ef5971aa345ff"
+          },
+          "extracted": {
+            "bytes": 2431,
+            "sha256": "28d82f48ceb4926eb3af7db9dde9fb1f17eadfdc58e8a257065ef5971aa345ff"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/xlsx_direct_binary_delivery_patch.js",
+          "archive": {
+            "bytes": 12156,
+            "sha256": "5e61f6d749cf69d980b4d9bdae8b32bb0937e48a298abd4afd9793241252c3fa"
+          },
+          "runtime": {
+            "bytes": 12156,
+            "sha256": "5e61f6d749cf69d980b4d9bdae8b32bb0937e48a298abd4afd9793241252c3fa"
+          },
+          "extracted": {
+            "bytes": 12156,
+            "sha256": "5e61f6d749cf69d980b4d9bdae8b32bb0937e48a298abd4afd9793241252c3fa"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        }
+      ]
+    },
+    "ephemeral_key_browser": {
+      "source": "tooling/build/extension_composed.py with make-browser-config.mjs; private fixture material remained outside published artifacts and was removed",
+      "output": "build/i1-sync/application-browser/package",
+      "zip": {
+        "name": "SELLER_AGENTS_I1_C1_v0.2.4_LOCAL_DEVELOPMENT.zip",
+        "bytes": 1801899,
+        "sha256": "f29f48518f114353349a495fea7087007e7dad12be4cde0cc0d0e6e5bd078a67"
+      },
+      "repeated_build_equal": true,
+      "source_extracted_bytes_equal": true,
+      "packaged_file_count": 39,
+      "all_packaged_file_byte_readbacks": true,
+      "file_readbacks": [
+        {
+          "path": "attachment_delivery_port_content.js",
+          "archive": {
+            "bytes": 28802,
+            "sha256": "087fe504224634b610c8e27d075bb36f665a4c5f2503e828ea9b4fa8136a99ec"
+          },
+          "runtime": {
+            "bytes": 28802,
+            "sha256": "087fe504224634b610c8e27d075bb36f665a4c5f2503e828ea9b4fa8136a99ec"
+          },
+          "extracted": {
+            "bytes": 28802,
+            "sha256": "087fe504224634b610c8e27d075bb36f665a4c5f2503e828ea9b4fa8136a99ec"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "attachment_delivery_wake_content.js",
+          "archive": {
+            "bytes": 759,
+            "sha256": "6b3a7a4b25ce6a86a9e7b54c0a71a29c02aad9480cfbe7d2a0007e9ca4c9aa11"
+          },
+          "runtime": {
+            "bytes": 759,
+            "sha256": "6b3a7a4b25ce6a86a9e7b54c0a71a29c02aad9480cfbe7d2a0007e9ca4c9aa11"
+          },
+          "extracted": {
+            "bytes": 759,
+            "sha256": "6b3a7a4b25ce6a86a9e7b54c0a71a29c02aad9480cfbe7d2a0007e9ca4c9aa11"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "content_script.js",
+          "archive": {
+            "bytes": 136205,
+            "sha256": "6f3f156d980caf94f16f1079bd9786a1c6ca673ce08448659220f75367484c79"
+          },
+          "runtime": {
+            "bytes": 136205,
+            "sha256": "6f3f156d980caf94f16f1079bd9786a1c6ca673ce08448659220f75367484c79"
+          },
+          "extracted": {
+            "bytes": 136205,
+            "sha256": "6f3f156d980caf94f16f1079bd9786a1c6ca673ce08448659220f75367484c79"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "manifest.json",
+          "archive": {
+            "bytes": 2479,
+            "sha256": "54e14ea28fb8bbb11adfc1cadf016d7aabd4914b182eeb9a50d9cb7f9375ec26"
+          },
+          "runtime": {
+            "bytes": 2479,
+            "sha256": "54e14ea28fb8bbb11adfc1cadf016d7aabd4914b182eeb9a50d9cb7f9375ec26"
+          },
+          "extracted": {
+            "bytes": 2479,
+            "sha256": "54e14ea28fb8bbb11adfc1cadf016d7aabd4914b182eeb9a50d9cb7f9375ec26"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "popup.css",
+          "archive": {
+            "bytes": 2152,
+            "sha256": "2a8f4eba8a461dc81e3a7348babd95e71da843c35db1d60da30aae449f4fb43d"
+          },
+          "runtime": {
+            "bytes": 2152,
+            "sha256": "2a8f4eba8a461dc81e3a7348babd95e71da843c35db1d60da30aae449f4fb43d"
+          },
+          "extracted": {
+            "bytes": 2152,
+            "sha256": "2a8f4eba8a461dc81e3a7348babd95e71da843c35db1d60da30aae449f4fb43d"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "popup.html",
+          "archive": {
+            "bytes": 4341,
+            "sha256": "4e57a16818078ed7703442d0bcd880020223e9f75eb2e8155cb8fcc5c29b5aec"
+          },
+          "runtime": {
+            "bytes": 4341,
+            "sha256": "4e57a16818078ed7703442d0bcd880020223e9f75eb2e8155cb8fcc5c29b5aec"
+          },
+          "extracted": {
+            "bytes": 4341,
+            "sha256": "4e57a16818078ed7703442d0bcd880020223e9f75eb2e8155cb8fcc5c29b5aec"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "popup.js",
+          "archive": {
+            "bytes": 11426,
+            "sha256": "256e16c5af10639f1a85148b57f8b5822ae66509b8f6f59d496e0ee9a84046a1"
+          },
+          "runtime": {
+            "bytes": 11426,
+            "sha256": "256e16c5af10639f1a85148b57f8b5822ae66509b8f6f59d496e0ee9a84046a1"
+          },
+          "extracted": {
+            "bytes": 11426,
+            "sha256": "256e16c5af10639f1a85148b57f8b5822ae66509b8f6f59d496e0ee9a84046a1"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "service_worker.js",
+          "archive": {
+            "bytes": 416326,
+            "sha256": "76de5a12be8b54ee17b73f362024f8734a69e50b68b853c23faaf52b6d75f35a"
+          },
+          "runtime": {
+            "bytes": 416326,
+            "sha256": "76de5a12be8b54ee17b73f362024f8734a69e50b68b853c23faaf52b6d75f35a"
+          },
+          "extracted": {
+            "bytes": 416326,
+            "sha256": "76de5a12be8b54ee17b73f362024f8734a69e50b68b853c23faaf52b6d75f35a"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "service_worker_entry.js",
+          "archive": {
+            "bytes": 1810,
+            "sha256": "895daa2b1e11c2129e5d075bf738313fd5a689e1a0b30ab4a11dcbbb075866fc"
+          },
+          "runtime": {
+            "bytes": 1810,
+            "sha256": "895daa2b1e11c2129e5d075bf738313fd5a689e1a0b30ab4a11dcbbb075866fc"
+          },
+          "extracted": {
+            "bytes": 1810,
+            "sha256": "895daa2b1e11c2129e5d075bf738313fd5a689e1a0b30ab4a11dcbbb075866fc"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/ai_adapters.js",
+          "archive": {
+            "bytes": 22597,
+            "sha256": "4b9423666cf7bed03f89edb3c23d535bd02143e85c1a1b7317d184f25cc1bb72"
+          },
+          "runtime": {
+            "bytes": 22597,
+            "sha256": "4b9423666cf7bed03f89edb3c23d535bd02143e85c1a1b7317d184f25cc1bb72"
+          },
+          "extracted": {
+            "bytes": 22597,
+            "sha256": "4b9423666cf7bed03f89edb3c23d535bd02143e85c1a1b7317d184f25cc1bb72"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/ai_delivery_capabilities.js",
+          "archive": {
+            "bytes": 9753,
+            "sha256": "dca544904ae1aac578e52f60883c603cee4129fe56089f807ec175cef4e2e83a"
+          },
+          "runtime": {
+            "bytes": 9753,
+            "sha256": "dca544904ae1aac578e52f60883c603cee4129fe56089f807ec175cef4e2e83a"
+          },
+          "extracted": {
+            "bytes": 9753,
+            "sha256": "dca544904ae1aac578e52f60883c603cee4129fe56089f807ec175cef4e2e83a"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/application.js",
+          "archive": {
+            "bytes": 35300,
+            "sha256": "de791d35b53adf91fac5cfb45eb1b83dec889419e532e04279f3a6cb13a1a0ae"
+          },
+          "runtime": {
+            "bytes": 35300,
+            "sha256": "de791d35b53adf91fac5cfb45eb1b83dec889419e532e04279f3a6cb13a1a0ae"
+          },
+          "extracted": {
+            "bytes": 35300,
+            "sha256": "de791d35b53adf91fac5cfb45eb1b83dec889419e532e04279f3a6cb13a1a0ae"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/bootstrap_verifier.js",
+          "archive": {
+            "bytes": 13685,
+            "sha256": "649121f9ac3261ca4b8aa9b5731fb3108104551fe301aa235ef371f7f0848d08"
+          },
+          "runtime": {
+            "bytes": 13685,
+            "sha256": "649121f9ac3261ca4b8aa9b5731fb3108104551fe301aa235ef371f7f0848d08"
+          },
+          "extracted": {
+            "bytes": 13685,
+            "sha256": "649121f9ac3261ca4b8aa9b5731fb3108104551fe301aa235ef371f7f0848d08"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/bridge_autorun_model.js",
+          "archive": {
+            "bytes": 21583,
+            "sha256": "4e3e0fcd18c4d2e72c3758419f7fbb082e6a75e8d444913ec8b0dfdc0ea0b360"
+          },
+          "runtime": {
+            "bytes": 21583,
+            "sha256": "4e3e0fcd18c4d2e72c3758419f7fbb082e6a75e8d444913ec8b0dfdc0ea0b360"
+          },
+          "extracted": {
+            "bytes": 21583,
+            "sha256": "4e3e0fcd18c4d2e72c3758419f7fbb082e6a75e8d444913ec8b0dfdc0ea0b360"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/composer_send.js",
+          "archive": {
+            "bytes": 8267,
+            "sha256": "3e9421e8e1bc209af635e2b90d957e558301763572a42875b95c8973ca75b736"
+          },
+          "runtime": {
+            "bytes": 8267,
+            "sha256": "3e9421e8e1bc209af635e2b90d957e558301763572a42875b95c8973ca75b736"
+          },
+          "extracted": {
+            "bytes": 8267,
+            "sha256": "3e9421e8e1bc209af635e2b90d957e558301763572a42875b95c8973ca75b736"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/conversation_identity.js",
+          "archive": {
+            "bytes": 4027,
+            "sha256": "939036acd95ccb3dfe00f05b5d49568615f6d798a023a0ec995e38267fb68f57"
+          },
+          "runtime": {
+            "bytes": 4027,
+            "sha256": "939036acd95ccb3dfe00f05b5d49568615f6d798a023a0ec995e38267fb68f57"
+          },
+          "extracted": {
+            "bytes": 4027,
+            "sha256": "939036acd95ccb3dfe00f05b5d49568615f6d798a023a0ec995e38267fb68f57"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/direct_binary_file_delivery_patch.js",
+          "archive": {
+            "bytes": 10095,
+            "sha256": "e66dfd9bb91be078de9b08d86ac1acc124eabb3a22fb29fac77f59e7d036ab96"
+          },
+          "runtime": {
+            "bytes": 10095,
+            "sha256": "e66dfd9bb91be078de9b08d86ac1acc124eabb3a22fb29fac77f59e7d036ab96"
+          },
+          "extracted": {
+            "bytes": 10095,
+            "sha256": "e66dfd9bb91be078de9b08d86ac1acc124eabb3a22fb29fac77f59e7d036ab96"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/file_delivery_model_policy.js",
+          "archive": {
+            "bytes": 4021,
+            "sha256": "caba2a05701d74879bc699316530575c63106a62f8f782eee694ef1c3b4b5aab"
+          },
+          "runtime": {
+            "bytes": 4021,
+            "sha256": "caba2a05701d74879bc699316530575c63106a62f8f782eee694ef1c3b4b5aab"
+          },
+          "extracted": {
+            "bytes": 4021,
+            "sha256": "caba2a05701d74879bc699316530575c63106a62f8f782eee694ef1c3b4b5aab"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/file_delivery_port_worker.js",
+          "archive": {
+            "bytes": 40866,
+            "sha256": "7604deaf221dd3dc7480d676bb0602109ecbef759279185afa8be80fd8236910"
+          },
+          "runtime": {
+            "bytes": 40866,
+            "sha256": "7604deaf221dd3dc7480d676bb0602109ecbef759279185afa8be80fd8236910"
+          },
+          "extracted": {
+            "bytes": 40866,
+            "sha256": "7604deaf221dd3dc7480d676bb0602109ecbef759279185afa8be80fd8236910"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/file_delivery_wake_worker.js",
+          "archive": {
+            "bytes": 1750,
+            "sha256": "ec1b59ba7243bf4a5591bdbe10b0b5f6e727f8769b08833da156378d202acffd"
+          },
+          "runtime": {
+            "bytes": 1750,
+            "sha256": "ec1b59ba7243bf4a5591bdbe10b0b5f6e727f8769b08833da156378d202acffd"
+          },
+          "extracted": {
+            "bytes": 1750,
+            "sha256": "ec1b59ba7243bf4a5591bdbe10b0b5f6e727f8769b08833da156378d202acffd"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/live_runtime_v0122_patch.js",
+          "archive": {
+            "bytes": 21042,
+            "sha256": "b496fe501ca13860abf501833e4fb34d588103645047a41dbb568cc45228a79d"
+          },
+          "runtime": {
+            "bytes": 21042,
+            "sha256": "b496fe501ca13860abf501833e4fb34d588103645047a41dbb568cc45228a79d"
+          },
+          "extracted": {
+            "bytes": 21042,
+            "sha256": "b496fe501ca13860abf501833e4fb34d588103645047a41dbb568cc45228a79d"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/llm_output_report_workflow_patch.js",
+          "archive": {
+            "bytes": 15664,
+            "sha256": "a564e2dbafb3980bd406e82744c177a34df2279b63c3198395c13126520dbbff"
+          },
+          "runtime": {
+            "bytes": 15664,
+            "sha256": "a564e2dbafb3980bd406e82744c177a34df2279b63c3198395c13126520dbbff"
+          },
+          "extracted": {
+            "bytes": 15664,
+            "sha256": "a564e2dbafb3980bd406e82744c177a34df2279b63c3198395c13126520dbbff"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/manual_controls.js",
+          "archive": {
+            "bytes": 10269,
+            "sha256": "81f302487da7b5ff7c1b746298353438b2cfec100a5bb8f7fa2c80d1e033c81e"
+          },
+          "runtime": {
+            "bytes": 10269,
+            "sha256": "81f302487da7b5ff7c1b746298353438b2cfec100a5bb8f7fa2c80d1e033c81e"
+          },
+          "extracted": {
+            "bytes": 10269,
+            "sha256": "81f302487da7b5ff7c1b746298353438b2cfec100a5bb8f7fa2c80d1e033c81e"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/mixed_batch_discovery.js",
+          "archive": {
+            "bytes": 6054,
+            "sha256": "5daff1af1af6244068258e27cf77e4a814192c1019b3bf3e73dcb9c63a0619ad"
+          },
+          "runtime": {
+            "bytes": 6054,
+            "sha256": "5daff1af1af6244068258e27cf77e4a814192c1019b3bf3e73dcb9c63a0619ad"
+          },
+          "extracted": {
+            "bytes": 6054,
+            "sha256": "5daff1af1af6244068258e27cf77e4a814192c1019b3bf3e73dcb9c63a0619ad"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/ozon_contract.js",
+          "archive": {
+            "bytes": 321332,
+            "sha256": "96c3a97ba167b4cd7971bba76bd1cb29f3a149f26cb405d60be5eae5fd2bb520"
+          },
+          "runtime": {
+            "bytes": 321332,
+            "sha256": "96c3a97ba167b4cd7971bba76bd1cb29f3a149f26cb405d60be5eae5fd2bb520"
+          },
+          "extracted": {
+            "bytes": 321332,
+            "sha256": "96c3a97ba167b4cd7971bba76bd1cb29f3a149f26cb405d60be5eae5fd2bb520"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/ozon_credentials.js",
+          "archive": {
+            "bytes": 4085,
+            "sha256": "286c6021f958e41912842569bcfa0d0dfe920eed8ce1646014899a1de064415d"
+          },
+          "runtime": {
+            "bytes": 4085,
+            "sha256": "286c6021f958e41912842569bcfa0d0dfe920eed8ce1646014899a1de064415d"
+          },
+          "extracted": {
+            "bytes": 4085,
+            "sha256": "286c6021f958e41912842569bcfa0d0dfe920eed8ce1646014899a1de064415d"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/ozon_entitlements.js",
+          "archive": {
+            "bytes": 58578,
+            "sha256": "f8b9222368a2e3bbfb323ab5cd0fe1c3238742d5c06ef9afac752861d4c7422b"
+          },
+          "runtime": {
+            "bytes": 58578,
+            "sha256": "f8b9222368a2e3bbfb323ab5cd0fe1c3238742d5c06ef9afac752861d4c7422b"
+          },
+          "extracted": {
+            "bytes": 58578,
+            "sha256": "f8b9222368a2e3bbfb323ab5cd0fe1c3238742d5c06ef9afac752861d4c7422b"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/ozon_guidance.js",
+          "archive": {
+            "bytes": 10926,
+            "sha256": "346da9b83082f5b8246cab7c5aa6afb2e5f04b14d225384ab267f803a030de3e"
+          },
+          "runtime": {
+            "bytes": 10926,
+            "sha256": "346da9b83082f5b8246cab7c5aa6afb2e5f04b14d225384ab267f803a030de3e"
+          },
+          "extracted": {
+            "bytes": 10926,
+            "sha256": "346da9b83082f5b8246cab7c5aa6afb2e5f04b14d225384ab267f803a030de3e"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/ozon_operation_registry.js",
+          "archive": {
+            "bytes": 225182,
+            "sha256": "b42b51f815c0f88e89e1cd193d28cc4f72949d5dd1738ab35d473b226fd0a832"
+          },
+          "runtime": {
+            "bytes": 225182,
+            "sha256": "b42b51f815c0f88e89e1cd193d28cc4f72949d5dd1738ab35d473b226fd0a832"
+          },
+          "extracted": {
+            "bytes": 225182,
+            "sha256": "b42b51f815c0f88e89e1cd193d28cc4f72949d5dd1738ab35d473b226fd0a832"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/ozon_provider.js",
+          "archive": {
+            "bytes": 35796,
+            "sha256": "7afcd03731950cde9e5374eb0e85663cfee81713e98efbec28867ce3153373b0"
+          },
+          "runtime": {
+            "bytes": 35796,
+            "sha256": "7afcd03731950cde9e5374eb0e85663cfee81713e98efbec28867ce3153373b0"
+          },
+          "extracted": {
+            "bytes": 35796,
+            "sha256": "7afcd03731950cde9e5374eb0e85663cfee81713e98efbec28867ce3153373b0"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/performance_report_continuation_patch.js",
+          "archive": {
+            "bytes": 5181,
+            "sha256": "f42115e8ac4197fef8b7f5ba463bc6303e3d425a9202c95605edc3844b34a9b5"
+          },
+          "runtime": {
+            "bytes": 5181,
+            "sha256": "f42115e8ac4197fef8b7f5ba463bc6303e3d425a9202c95605edc3844b34a9b5"
+          },
+          "extracted": {
+            "bytes": 5181,
+            "sha256": "f42115e8ac4197fef8b7f5ba463bc6303e3d425a9202c95605edc3844b34a9b5"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/proven_writing_block_capture.js",
+          "archive": {
+            "bytes": 14614,
+            "sha256": "5b0eaac9619cb827d1e74c61f53e2755c084a1d4b60c64d23f5fd4a5354c3aef"
+          },
+          "runtime": {
+            "bytes": 14614,
+            "sha256": "5b0eaac9619cb827d1e74c61f53e2755c084a1d4b60c64d23f5fd4a5354c3aef"
+          },
+          "extracted": {
+            "bytes": 14614,
+            "sha256": "5b0eaac9619cb827d1e74c61f53e2755c084a1d4b60c64d23f5fd4a5354c3aef"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/provider_transport_core.js",
+          "archive": {
+            "bytes": 37467,
+            "sha256": "97f9a8bed0427753168c8ff083191338225cbe3abd026b471876daf19e04bba4"
+          },
+          "runtime": {
+            "bytes": 37467,
+            "sha256": "97f9a8bed0427753168c8ff083191338225cbe3abd026b471876daf19e04bba4"
+          },
+          "extracted": {
+            "bytes": 37467,
+            "sha256": "97f9a8bed0427753168c8ff083191338225cbe3abd026b471876daf19e04bba4"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/runtime_names.js",
+          "archive": {
+            "bytes": 10640,
+            "sha256": "d502b11ef8d772dfc42499991d3307c7d18aa0bc1e5bb269a7b57a1f08582b0f"
+          },
+          "runtime": {
+            "bytes": 10640,
+            "sha256": "d502b11ef8d772dfc42499991d3307c7d18aa0bc1e5bb269a7b57a1f08582b0f"
+          },
+          "extracted": {
+            "bytes": 10640,
+            "sha256": "d502b11ef8d772dfc42499991d3307c7d18aa0bc1e5bb269a7b57a1f08582b0f"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/swagger_read_surface_patch.js",
+          "archive": {
+            "bytes": 57274,
+            "sha256": "252274d629e635258f4c18a00ee90b02dc0d2d277945328986e4f49066b1ae06"
+          },
+          "runtime": {
+            "bytes": 57274,
+            "sha256": "252274d629e635258f4c18a00ee90b02dc0d2d277945328986e4f49066b1ae06"
+          },
+          "extracted": {
+            "bytes": 57274,
+            "sha256": "252274d629e635258f4c18a00ee90b02dc0d2d277945328986e4f49066b1ae06"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/wb_adapter.js",
+          "archive": {
+            "bytes": 167052,
+            "sha256": "a7adf8ae58132c3f19a74c8f728cf02aa056ca0602e017d4905547923c0e2cd7"
+          },
+          "runtime": {
+            "bytes": 167052,
+            "sha256": "a7adf8ae58132c3f19a74c8f728cf02aa056ca0602e017d4905547923c0e2cd7"
+          },
+          "extracted": {
+            "bytes": 167052,
+            "sha256": "a7adf8ae58132c3f19a74c8f728cf02aa056ca0602e017d4905547923c0e2cd7"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/web_file_attachment.js",
+          "archive": {
+            "bytes": 4750,
+            "sha256": "a1d91cb7b6aa5b1b26bf780e29f3d42895510b04d55d37569cfc3d3cf4db3010"
+          },
+          "runtime": {
+            "bytes": 4750,
+            "sha256": "a1d91cb7b6aa5b1b26bf780e29f3d42895510b04d55d37569cfc3d3cf4db3010"
+          },
+          "extracted": {
+            "bytes": 4750,
+            "sha256": "a1d91cb7b6aa5b1b26bf780e29f3d42895510b04d55d37569cfc3d3cf4db3010"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/work_session_model.js",
+          "archive": {
+            "bytes": 2431,
+            "sha256": "28d82f48ceb4926eb3af7db9dde9fb1f17eadfdc58e8a257065ef5971aa345ff"
+          },
+          "runtime": {
+            "bytes": 2431,
+            "sha256": "28d82f48ceb4926eb3af7db9dde9fb1f17eadfdc58e8a257065ef5971aa345ff"
+          },
+          "extracted": {
+            "bytes": 2431,
+            "sha256": "28d82f48ceb4926eb3af7db9dde9fb1f17eadfdc58e8a257065ef5971aa345ff"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        },
+        {
+          "path": "shared/xlsx_direct_binary_delivery_patch.js",
+          "archive": {
+            "bytes": 12156,
+            "sha256": "5e61f6d749cf69d980b4d9bdae8b32bb0937e48a298abd4afd9793241252c3fa"
+          },
+          "runtime": {
+            "bytes": 12156,
+            "sha256": "5e61f6d749cf69d980b4d9bdae8b32bb0937e48a298abd4afd9793241252c3fa"
+          },
+          "extracted": {
+            "bytes": 12156,
+            "sha256": "5e61f6d749cf69d980b4d9bdae8b32bb0937e48a298abd4afd9793241252c3fa"
+          },
+          "archive_runtime_equal": true,
+          "archive_extracted_equal": true,
+          "runtime_extracted_equal": true
+        }
+      ]
+    }
+  },
+  "validation": {
+    "A": {
+      "status": "PASS",
+      "commands": [
+        "pnpm install --frozen-lockfile",
+        "pnpm lint",
+        "pnpm format:check",
+        "pnpm typecheck",
+        "pnpm exec vitest run tests/e2e/server/playwright-config-regression.test.ts",
+        "pnpm test"
+      ],
+      "notes": [
+        "frozen lockfile unchanged",
+        "Playwright regression 1/1",
+        "workspace unit tests passed; intentional checker RED controls are not this suite"
+      ]
+    },
+    "B": {
+      "status": "PASS",
+      "database": "fresh task-owned loopback PostgreSQL database; name includes test",
+      "commands": [
+        "pnpm test:integration",
+        "pnpm db:migrate",
+        "pnpm openapi:check",
+        "pnpm bridge:guard",
+        "pnpm build",
+        "pnpm test:e2e"
+      ],
+      "counts": {
+        "integration_files": 39,
+        "integration_tests": 1527,
+        "health_tests_executed": 20,
+        "e2e": "88/88",
+        "i1_reference_tests": "2/2 included in 88/88"
+      },
+      "notes": [
+        "no new skips",
+        "existing remote baseline suites not repeated per instruction"
+      ]
+    },
+    "C": {
+      "status": "PASS",
+      "command": "python tooling/checks/extension_core.py --output build/i1-sync/core",
+      "processes": 111,
+      "source_and_extracted": "PASS"
+    },
+    "D": {
+      "status": "PASS",
+      "command": "python tooling/checks/extension_i1.py --output build/i1-sync/client",
+      "processes": 96,
+      "source_and_extracted": "PASS"
+    },
+    "E": {
+      "status": "PASS",
+      "runtime": "PASS; valid=true; tamperRejected=true",
+      "extracted": "PASS; valid=true; tamperRejected=true"
+    },
+    "F": {
+      "status": "PASS",
+      "runtime": "PASS",
+      "extracted": "PASS",
+      "native_application": "PASS",
+      "private_fixture_material": "removed; not published"
+    },
+    "G": {
+      "status": "PASS",
+      "command": "python tests/regression/extension-core/client-i1/installed_local_integration.py --output build/i1-sync/installed-local",
+      "installed_acceptance": true,
+      "both_account_scenarios": true,
+      "same_worker": true,
+      "account_isolation": true,
+      "fail_closed_checks": true,
+      "api_portal_postgresql": true,
+      "approval_exchange_bootstrap": true,
+      "chromium": "151.0.7922.34",
+      "live_provider_calls": 0
+    },
+  "H": {
+      "status": "PASS",
+      "command": "pnpm docs:check"
+    },
+    "not_run_or_unknown": {
+      "c2_health_merge_deploy_release": "NOT_RUN / OPEN",
+      "remote_workflow_run_urls_and_checkout_sha": "UNKNOWN; authenticated remote visibility unavailable",
+      "conditional_frozen_import_workflow_step": "not a local test result; no claim made"
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "task_id": "SA-I1-C2-1-20260916-01",
+  "status": "PENDING_ARCHITECT_REVIEW",
+  "start": {
+    "commit": "1ff322b3dd2b68c4f02e5390850cd2f1b9548186",
+    "tree": "f944feef7fb5cf7631df51d20fc70b2692ee907f",
+    "parent": "b8cd19ccfe9b7a1b92b9fa3376f94dccceb2c3ed",
+    "canonical_main": "5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c"
+  },
+  "focused_matrix": {
+    "base_red": {
+      "status": "RED",
+      "initial_work": true,
+      "exact_expiry_work": false,
+      "wall_rollback_work": true,
+      "changed_origin_browser_restore_work": true,
+      "runtime": "exact base 1ff322b3dd2b68c4f02e5390850cd2f1b9548186"
+    },
+    "candidate_source": "PASS",
+    "candidate_extracted": "PASS",
+    "context_dimensions": 11,
+    "provider_calls": 0
+  },
+  "gates": {
+    "extension_i1_source_extracted": "PASS",
+    "extension_core_source_extracted": "PASS",
+    "browser_verifier": "PASS",
+    "native_application_source": "PASS",
+    "native_application_extracted": "PASS",
+    "installed_local_api_portal_postgresql": "SKIPPED",
+    "docs_check": "PASS",
+    "bridge_guard": "PASS",
+    "openapi_check": "PASS",
+    "installed_local_prerequisite": "SKIPPED: DATABASE_URL is not configured in executor environment"
+  },
+  "package": {
+    "name": "SELLER_AGENTS_I1_C1_v0.2.4_LOCAL_DEVELOPMENT.zip",
+    "bytes": 1814944,
+    "sha256": "95456cc3a34eec92ce487c75da17d38ec63b63927bc19cb4b47a632d12d9807d",
+    "repeat_archive_match": true,
+    "source_extracted_bytes_match": true,
+    "service_worker_source_extracted_sha256": "531e174a1123fc16c0620762b5815a9a70adc72e62480e258ee12081a45a4298"
+  },
+  "scope": {
+    "offline_grace": "OPEN_C2_2_PLUS",
+    "signed_profile_consumption": "OPEN_C2_2_PLUS",
+    "joint_offline_command_result": "OPEN_C2_2_PLUS",
+    "architect_review": "REQUIRED",
+    "remote_ci_visibility": "UNKNOWN: executor has no authenticated CI connector"
+  }
+}

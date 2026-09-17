@@ -1,0 +1,19 @@
+{
+  "starting_candidate": {
+    "head": "9e80e8ad531f079b38bf03b9e29f171c87c477c0",
+    "test": "client-r2.mjs",
+    "result": "FAIL",
+    "fact": "Timed out: second exchange"
+  },
+  "remaining_local_gate_failure": {
+    "gate": "extension_core.py",
+    "control": "core-source-full-worker-green",
+    "fact": "settings setup failed: {\"ok\":false,\"code\":\"LEGACY_ACTION_DISABLED\",\"error\":\"LEGACY_ACTION_DISABLED\"}",
+    "source": "historical full-worker control assumes standalone routing while R2 requires composed readiness independent of account"
+  },
+  "installed_local_attempt": {
+    "command": "PRODUCT_CONTROL_PLANE_E2E=1 DATABASE_URL=postgresql://postgres:<task-password>@127.0.0.1:55493/seller_agents pnpm exec python tests/regression/extension-core/client-i1/installed_local_integration.py --output <fresh>",
+    "result": "BLOCKED",
+    "fact": "pnpm db:migrate failed with connect ECONNREFUSED 127.0.0.1:55493 after the task-specific postgres:18 container could not initialize: No space left on device"
+  }
+}

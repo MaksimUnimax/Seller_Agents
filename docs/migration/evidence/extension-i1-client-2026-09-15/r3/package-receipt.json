@@ -1,0 +1,13 @@
+{
+  "stage": "I1-C1-R3",
+  "version": "0.2.4",
+  "package": "SELLER_AGENTS_I1_C1_v0.2.4_LOCAL_DEVELOPMENT.zip",
+  "bytes": 1800206,
+  "sha256": "470a14e478480969302a566d35b27b7499566bcc2918b84902353b702c27cfe1",
+  "runtime_files": 39,
+  "repeat_archive_match": true,
+  "source_extracted_bytes_match": true,
+  "format": "ZIP_STORED, sorted files, 1980 timestamp, Unix 0644",
+  "readback": "composition receipt verified every source/extracted runtime file hash",
+  "installed_acceptance": false
+}

@@ -1,0 +1,77 @@
+{
+  "task_id": "SA-I1-C2-1-R2-20260916-01",
+  "status": "PENDING_ARCHITECT_REVIEW",
+  "review": {
+    "prior_r1_task_id": "old task ID in preserved R1 publication; not repeated in R2",
+    "prior_r1_review": "REWORK_REQUIRED",
+    "independently_architect_proven_red": "restoreOnce treated credentials:null as STORED_CREDENTIALS_INVALID and discarded a valid pending activation before exchange",
+    "local_red_execution": "not repeated; exact-base RED is architect-proven and R2 is tested GREEN locally"
+  },
+  "start": {
+    "task_start_commit": "13068c24354e8ec61bab6cf05598a5bb6ced7b65",
+    "task_start_tree": "035cbd5ee60919597ae29f56aa1ed4240950fb06",
+    "task_start_parent": "17d54dc3a8577ae6d46736608c0bbed909b70d1a",
+    "canonical_main": "5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+    "code_commit": "790975c4879de41043d747485f4c957e7f51b003",
+    "code_tree": "fafc0fa6fda3b612fa341ef90fb747ad200b02cd",
+    "code_parent": "13068c24354e8ec61bab6cf05598a5bb6ced7b65",
+    "test_receipt_commit": "ead575816dde5df2613a61cb8aa599e216c8066a"
+  },
+  "focused": {
+    "source": "PASS",
+    "extracted": "PASS",
+    "processes": 98,
+    "named_cases": {
+      "T1-valid-pending-restart": "PASS",
+      "T2-valid-starting-restart": "PASS",
+      "T3-negative-pending-controls": "PASS (7 controls plus positive controls)",
+      "T4-actual-completion-veto": "PASS",
+      "T5-storage-failures": "PASS",
+      "T6-ownership-renewal": "PASS",
+      "T7-composed-expiry-ozon": "PASS",
+      "T7-composed-expiry-wildberries": "PASS"
+    },
+    "provider_calls": 0
+  },
+  "gates": {
+    "extension_i1_source_extracted": {"status": "PASS", "processes": 98},
+    "extension_core_source_extracted": {"status": "PASS", "processes": 111},
+    "browser_verifier_source_runtime": {"status": "PASS", "browser": "151.0.7922.34"},
+    "native_application_source_runtime": {"status": "FAIL", "live_provider_calls": 0, "failure": "existing restore assertion at browser_application.py:103: restored authenticated/workAllowed was false"},
+    "native_application_extracted_runtime": {"status": "FAIL", "live_provider_calls": 0, "failure": "existing restore assertion at browser_application.py:103: restored authenticated/workAllowed was false"},
+    "native_prior_runtime_control": {"status": "FAIL", "live_provider_calls": 0, "failure": "same browser_application.py:103 restore assertion reproduced on prior built runtime"},
+    "installed_local_api_portal_postgresql": {"status": "PASS", "live_provider_calls": 0, "same_worker": true, "distinct_accounts": true, "distinct_device_sessions": true, "control_counts": {"device_start": 2, "exchange": 2, "bootstrap": 2}, "bff_counts": {"otp_request_202": 2, "otp_verify_200": 2, "logout_204": 1}, "fixture_accounts_prepared": 2, "beta_unchanged": true},
+    "docs_check": {"status": "PASS"},
+    "bridge_guard": "PASS",
+    "openapi_check": "PASS",
+    "remote_ci": {"run": "35057935403", "installed_job": "104671924481", "client_job": "104671924614", "checkout": "3e69df315214546b32b09c411fcdadf754ebdcdc", "status": "SUCCESS (architect-provided existing run; not rerun)"},
+    "remote_installed_job_observability": "UNKNOWN: no authenticated CI connector in executor"
+  },
+  "package": {
+    "name": "SELLER_AGENTS_I1_C1_v0.2.4_LOCAL_DEVELOPMENT.zip",
+    "bytes": 1822586,
+    "sha256": "d43b25e4ab7d981d3d0d93b759c8e1f7d44d0b21c92d6f7a03f6b1eed4ac22f4",
+    "repeat_archive_match": true,
+    "source_extracted_bytes_match": true,
+    "runtime_file_count": 39,
+    "extracted_file_count": 39,
+    "runtime_manifest_sha256": "54e14ea28fb8bbb11adfc1cadf016d7aabd4914b182eeb9a50d9cb7f9375ec26",
+    "extracted_manifest_sha256": "54e14ea28fb8bbb11adfc1cadf016d7aabd4914b182eeb9a50d9cb7f9375ec26",
+    "runtime_service_worker_sha256": "4343c9410c81c23ea5cb2a779337694d6e79cfa7477a6693ecc58b827d928dba",
+    "extracted_service_worker_sha256": "4343c9410c81c23ea5cb2a779337694d6e79cfa7477a6693ecc58b827d928dba",
+    "receipt": "build/c2-r2-final-i1/package/composition-receipt.json"
+  },
+  "evidence_paths": {
+    "focused_suite": "tests/regression/extension-core/client-i1/client-cache-time.mjs",
+    "r1_addendum": "docs/migration/evidence/extension-i1-c2-1-2026-09-16/r1/README.md",
+    "r2_readme": "docs/migration/evidence/extension-i1-c2-1-2026-09-16/r2/README.md",
+    "r2_results": "docs/migration/evidence/extension-i1-c2-1-2026-09-16/r2/results.json"
+  },
+  "scope": {
+    "offline_grace": "OPEN_C2_2_PLUS",
+    "signed_profile_consumption": "OPEN_C2_2_PLUS",
+    "joint_offline_command_result": "OPEN_C2_2_PLUS",
+    "architect_review": "REQUIRED",
+    "remote_head": "integration branch remained at origin head 13068c24354e8ec61bab6cf05598a5bb6ced7b65 before local code commit; no remote push performed"
+  }
+}

@@ -1,0 +1,1326 @@
+{
+  "task_id": "SA-I1-SYNC-20260916-01",
+  "common_ancestor": "bc0cd0088ca50ba06021ea602a46bdd90de91378",
+  "canonical_main": "5d7c8853cc69dd95bc6e713cac3fb2aa0a63383c",
+  "accepted_server_head": "086ae20c2858849ec13b1ab67c2f7661259022c3",
+  "accepted_server_tree": "ea17da20acb01ae3c03a14d5b18128c8040e27e7",
+  "accepted_client_head": "56c81a3521c02502b65fd713aec890e5a30f038d",
+  "accepted_client_tree": "5c14497e239922c3712d0c3be12af7ee59e665f5",
+  "merge_commit": "9d3407bc248e935860c5d7d3a50536c6a08d92f4",
+  "merge_tree": "e834d3af55bb102e0378218dff731dd15b124d02",
+  "parents": [
+    "086ae20c2858849ec13b1ab67c2f7661259022c3",
+    "56c81a3521c02502b65fd713aec890e5a30f038d"
+  ],
+  "ancestry": {
+    "canonical_main": true,
+    "accepted_server_head": true,
+    "accepted_client_head": true
+  },
+  "path_counts": {
+    "client_only": 54,
+    "server_only": 19,
+    "intersection": 0,
+    "common_unchanged": 922
+  },
+  "changed_paths": [
+    {
+      "side": "client",
+      "status": "M",
+      "path": ".github/workflows/extension-ci.yml",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "af2ab431c293b3898c458c2e30014b9cb79861a4"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "8f93b7968fb8639a1dcf7cdd87183ed2aa447716"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "8f93b7968fb8639a1dcf7cdd87183ed2aa447716"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": ".github/workflows/extension-i1-ci.yml",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7da24076a66e1b7b4982d3f84b3c7e45a3530c16"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7da24076a66e1b7b4982d3f84b3c7e45a3530c16"
+      }
+    },
+    {
+      "side": "client",
+      "status": "M",
+      "path": "apps/extension/composition.json",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "dfc04c3ae8efbc44c20aa7d57e04d6f6c0a969ee"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1137fa1cf9b3c57ebcdd17af51c16e2131b75585"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1137fa1cf9b3c57ebcdd17af51c16e2131b75585"
+      }
+    },
+    {
+      "side": "client",
+      "status": "M",
+      "path": "apps/extension/src/application/popup.html",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "520fcc88a54fdf4ce1df65fdc264d01f94153950"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "5f23346a31591055f84bbc660783957592a152d2"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "5f23346a31591055f84bbc660783957592a152d2"
+      }
+    },
+    {
+      "side": "client",
+      "status": "M",
+      "path": "apps/extension/src/application/popup.js",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "ab1ce0bddb152afad17db314e65091186748aed4"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "2e46c66a05833f3472ddd8408bf522874d3aec64"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "2e46c66a05833f3472ddd8408bf522874d3aec64"
+      }
+    },
+    {
+      "side": "client",
+      "status": "M",
+      "path": "apps/extension/src/application/runtime.js",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c5c67261144e4a0015288ac6a3645e46c605d6fb"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0b9d4dcf211039267e70949f2bbd7b7b37acd858"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "0b9d4dcf211039267e70949f2bbd7b7b37acd858"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "docs/development/client-i1/I1_CLIENT_CODEX_EXECUTION_2026-09-15.md",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "addcaea888e15db3e5b8f20b96c204b2a863542d"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "addcaea888e15db3e5b8f20b96c204b2a863542d"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "docs/development/client-i1/README.md",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f8840c52a627f789c9687de370b4f0c5d9dbc325"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f8840c52a627f789c9687de370b4f0c5d9dbc325"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "docs/migration/evidence/extension-i1-client-2026-09-15/README.md",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "ad9129d406291677a3c87c3083b430a53b47fd63"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "ad9129d406291677a3c87c3083b430a53b47fd63"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "docs/migration/evidence/extension-i1-client-2026-09-15/browser-results.json",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1f2d1a64a74af16cf58d97687ad6d667a04f154a"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1f2d1a64a74af16cf58d97687ad6d667a04f154a"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "docs/migration/evidence/extension-i1-client-2026-09-15/package-receipt.json",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "06a5f1a8c3a1d9547e948bf32eec5c439a657480"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "06a5f1a8c3a1d9547e948bf32eec5c439a657480"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "docs/migration/evidence/extension-i1-client-2026-09-15/r2/commands-outcomes.md",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c33d83b8301308221b33b705540c81d45dc39921"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c33d83b8301308221b33b705540c81d45dc39921"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "docs/migration/evidence/extension-i1-client-2026-09-15/r2/failure-evidence.json",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4223133878e92a6cbc4081316083e454e7469c2f"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "4223133878e92a6cbc4081316083e454e7469c2f"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "docs/migration/evidence/extension-i1-client-2026-09-15/r2/package-receipt.json",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7eb7790617ed9ff2acf47890dbf3a3a0f28d5bc4"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7eb7790617ed9ff2acf47890dbf3a3a0f28d5bc4"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "docs/migration/evidence/extension-i1-client-2026-09-15/r2/requirement-mapping.json",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "fb7f388327ed5d66d238a522d6a8cd6b58fd85f8"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "fb7f388327ed5d66d238a522d6a8cd6b58fd85f8"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "docs/migration/evidence/extension-i1-client-2026-09-15/r3/README.md",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f86d3aaef62bbd4f07fda92b9dfdab1cc155f643"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f86d3aaef62bbd4f07fda92b9dfdab1cc155f643"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "docs/migration/evidence/extension-i1-client-2026-09-15/r3/commands-outcomes.md",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "5f85de6a0f0fbd9c07f9112db095dc4fd8e5a7cb"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "5f85de6a0f0fbd9c07f9112db095dc4fd8e5a7cb"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "docs/migration/evidence/extension-i1-client-2026-09-15/r3/limitations-failure-evidence.json",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c003c4daac2131b6f4cb8e8853685149bcf81eb7"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c003c4daac2131b6f4cb8e8853685149bcf81eb7"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "docs/migration/evidence/extension-i1-client-2026-09-15/r3/package-receipt.json",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9820ed4f4a98cc62d37d17f5595c8a1672f96f28"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9820ed4f4a98cc62d37d17f5595c8a1672f96f28"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "docs/migration/evidence/extension-i1-client-2026-09-15/r3/requirement-mapping.json",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "65f22407939fc88e3c4016ab9cb955a6ddeefeae"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "65f22407939fc88e3c4016ab9cb955a6ddeefeae"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "docs/migration/evidence/extension-i1-client-2026-09-15/r4/README.md",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7db1f5644711093d0d588a84373acf5cf3406778"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7db1f5644711093d0d588a84373acf5cf3406778"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "docs/migration/evidence/extension-i1-client-2026-09-15/r4/commands-outcomes.md",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "54e15c739ac56a0785368ac3bd797303035e3d43"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "54e15c739ac56a0785368ac3bd797303035e3d43"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "docs/migration/evidence/extension-i1-client-2026-09-15/r4/limitations-failure-evidence.json",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "856cd07f66bb0b81fa09b0dbd39f6c1d7210fb01"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "856cd07f66bb0b81fa09b0dbd39f6c1d7210fb01"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "docs/migration/evidence/extension-i1-client-2026-09-15/r4/package-receipt.json",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "bd693bc3778baf6b8774c12fe63fcf270f68f53d"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "bd693bc3778baf6b8774c12fe63fcf270f68f53d"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "docs/migration/evidence/extension-i1-client-2026-09-15/r4/requirement-mapping.json",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "26d18a6bfeebb1dddbaab5d4d5cf51d47a40b3fc"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "26d18a6bfeebb1dddbaab5d4d5cf51d47a40b3fc"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "docs/migration/evidence/extension-i1-client-2026-09-15/requirement-mapping.json",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "5d453894b180771ec74dbc55778d3717f025eb6b"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "5d453894b180771ec74dbc55778d3717f025eb6b"
+      }
+    },
+    {
+      "side": "client",
+      "status": "M",
+      "path": "packages/bridge-core/src/execution/context.js",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7bb78b453a46aa1251bd17081e6092c91b434907"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9ad928ec5a3f5dabdb295530c597e19808e26584"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9ad928ec5a3f5dabdb295530c597e19808e26584"
+      }
+    },
+    {
+      "side": "client",
+      "status": "M",
+      "path": "packages/control-client/README.md",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f7355758275d07cd6594690784c9238575c1da6d"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e5c427e3a5cbc087b6162bd27fb73c5d51c20f1f"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e5c427e3a5cbc087b6162bd27fb73c5d51c20f1f"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "packages/control-client/src/client.js",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "a7c6afdbde242f08ae39c39059c094588e468968"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "a7c6afdbde242f08ae39c39059c094588e468968"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "packages/control-client/src/config.js",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7c0a8019703929bc201995ed9e38e7c1706a459b"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7c0a8019703929bc201995ed9e38e7c1706a459b"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "packages/control-client/src/crypto.js",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c1fbb7671bb363e4ca6210e9243ac58b1a304561"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c1fbb7671bb363e4ca6210e9243ac58b1a304561"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "r5/README.md",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "19aca96b82464a1e742dfbdfb7152b13f44b97fb"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "19aca96b82464a1e742dfbdfb7152b13f44b97fb"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "r5/receipt.json",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "51d78041e3d0acfb7ebd9dbef634e7067a969a71"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "51d78041e3d0acfb7ebd9dbef634e7067a969a71"
+      }
+    },
+    {
+      "side": "client",
+      "status": "M",
+      "path": "tests/regression/extension-core/application.mjs",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "5ca7aba3cbf81baaf3dbfeb2c756cd52f220712f"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "83f26824ecafa10bd0264d494ad6e96e746d9931"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "83f26824ecafa10bd0264d494ad6e96e746d9931"
+      }
+    },
+    {
+      "side": "client",
+      "status": "M",
+      "path": "tests/regression/extension-core/batch-context.mjs",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "5dd9f51e5a45428f42b7b54ac415f742982335da"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "81832299600dd44f4b3b7cbe49a9613c69151642"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "81832299600dd44f4b3b7cbe49a9613c69151642"
+      }
+    },
+    {
+      "side": "client",
+      "status": "M",
+      "path": "tests/regression/extension-core/browser_application.py",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "f4103dfbb8dfcebfe037b3f5b627a1f00fe23fc0"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "98341b1621bc80aa964fa6d9c487f0cb78894bc7"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "98341b1621bc80aa964fa6d9c487f0cb78894bc7"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "tests/regression/extension-core/client-i1/api-harness.ts",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9d3c9f8c301147768a2a9696c1a4bdb2549d67f8"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9d3c9f8c301147768a2a9696c1a4bdb2549d67f8"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "tests/regression/extension-core/client-i1/browser_verifier.py",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "b6de8a9bdcd09acbf60a85359be18bdfb94c06d9"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "b6de8a9bdcd09acbf60a85359be18bdfb94c06d9"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "tests/regression/extension-core/client-i1/client-lifecycle.mjs",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c423a61cc8b3d256eb32184583bea251aee6b0ad"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c423a61cc8b3d256eb32184583bea251aee6b0ad"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "tests/regression/extension-core/client-i1/client-r2.mjs",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "d176f1fa123b43151efdb5b0070ec1633db06050"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "d176f1fa123b43151efdb5b0070ec1633db06050"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "tests/regression/extension-core/client-i1/client-r3.mjs",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1edf4643d3c853298344b77e61092b34aa8c6f50"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1edf4643d3c853298344b77e61092b34aa8c6f50"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "tests/regression/extension-core/client-i1/client-r4.mjs",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7575b31301bdca90bf73c820fc0b078e64095ac0"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "7575b31301bdca90bf73c820fc0b078e64095ac0"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "tests/regression/extension-core/client-i1/client-r5.mjs",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e10c16de5a258c87c445c72ea8accf6b9e71dc76"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e10c16de5a258c87c445c72ea8accf6b9e71dc76"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "tests/regression/extension-core/client-i1/client-races.mjs",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "13cf79cc7ac45bed1583089d06f93ed8fc8d611f"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "13cf79cc7ac45bed1583089d06f93ed8fc8d611f"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "tests/regression/extension-core/client-i1/installed_local_integration.py",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "ab6e6d4dc620fb2f6fe8bb79823548deedb0e1fe"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "ab6e6d4dc620fb2f6fe8bb79823548deedb0e1fe"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "tests/regression/extension-core/client-i1/make-browser-config.mjs",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "40cc3293e22e1e2fd3eb7347d8618faaebdbc564"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "40cc3293e22e1e2fd3eb7347d8618faaebdbc564"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "tests/regression/extension-core/client-i1/verifier.mjs",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "b35e76b249177c0a3058f9822fecd7e89427dfaa"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "b35e76b249177c0a3058f9822fecd7e89427dfaa"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "tests/regression/extension-core/full-worker-composed.mjs",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "d30b435619dca8a28247f4499d34e6e3d8bfaaae"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "d30b435619dca8a28247f4499d34e6e3d8bfaaae"
+      }
+    },
+    {
+      "side": "client",
+      "status": "M",
+      "path": "tests/regression/extension-core/worker-harness.mjs",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "900b399d5d951caed0ff06cc33929c6ad59d86e7"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1da04445c87480cbe5a76f7a694d367f02cbc8ab"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1da04445c87480cbe5a76f7a694d367f02cbc8ab"
+      }
+    },
+    {
+      "side": "client",
+      "status": "M",
+      "path": "tests/regression/extension-core/worker-lifecycle.mjs",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "9591e72b4f63e1e543e26d880263d2efdbea0985"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "ca74a79cb8d256a24421b544803b06eb5e7d00e9"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "ca74a79cb8d256a24421b544803b06eb5e7d00e9"
+      }
+    },
+    {
+      "side": "client",
+      "status": "M",
+      "path": "tooling/build/extension_composed.py",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "de4d60d00d5bc4d8fbcfd42a54f6245681008580"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "18bbe249de5e747dcca989f172282d778807e600"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "18bbe249de5e747dcca989f172282d778807e600"
+      }
+    },
+    {
+      "side": "client",
+      "status": "M",
+      "path": "tooling/checks/extension_core.py",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "46308dbed44642e2eda6767efee242ab80b4cb1b"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c5efd85eb469c086cb099ae975f76fae11532466"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "c5efd85eb469c086cb099ae975f76fae11532466"
+      }
+    },
+    {
+      "side": "client",
+      "status": "A",
+      "path": "tooling/checks/extension_i1.py",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "29f13db45c5b14cce701b3faaffe754542fb5a32"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "29f13db45c5b14cce701b3faaffe754542fb5a32"
+      }
+    },
+    {
+      "side": "client",
+      "status": "M",
+      "path": "tooling/checks/extension_import.py",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "87da81a3a77752c20436b38f32a6c3661b45b4dd"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "ab413ab7467c14e5a6ff3700c557dac84cfa5ba4"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "ab413ab7467c14e5a6ff3700c557dac84cfa5ba4"
+      }
+    },
+    {
+      "side": "server",
+      "status": "M",
+      "path": "docs/README.md",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "810fa7caedf0abe9cbf958ea29b0b85ae07b9c64"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "68af5791a494062bed2897e8a5df328f68c989b0"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "68af5791a494062bed2897e8a5df328f68c989b0"
+      }
+    },
+    {
+      "side": "server",
+      "status": "M",
+      "path": "docs/ROADMAP.md",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "b4242bd57bfbb9a5f7a7206e9064d9df04d9ead8"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "a7fb3aa499e5f8d2eac6d1f141f2e82ebf329f66"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "a7fb3aa499e5f8d2eac6d1f141f2e82ebf329f66"
+      }
+    },
+    {
+      "side": "server",
+      "status": "M",
+      "path": "docs/STATUS.md",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "63b84185ef5af5d0d9e8689c8af4a380d647899c"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e57860b6ae8f5fd38597b14c50375ba10458092f"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e57860b6ae8f5fd38597b14c50375ba10458092f"
+      }
+    },
+    {
+      "side": "server",
+      "status": "A",
+      "path": "docs/server/I1_SERVER_EXTENSION_SYNC_2026-09-16.md",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3fed753c174e6ea611a5a7ca9668a39fde1c2f08"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3fed753c174e6ea611a5a7ca9668a39fde1c2f08"
+      }
+    },
+    {
+      "side": "server",
+      "status": "A",
+      "path": "docs/server/I1_SRV_4_ERROR_REVOCATION_OFFLINE_ACCEPTANCE_2026-09-15.md",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "ee9f092a1d713e39b35b97ad18a3fbd803922c5a"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "ee9f092a1d713e39b35b97ad18a3fbd803922c5a"
+      }
+    },
+    {
+      "side": "server",
+      "status": "A",
+      "path": "docs/server/I1_SRV_4_EXTENSION_HANDOFF_2026-09-15.md",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e6d41a93b129c708744fefb9dae16b4f0f2bc8b8"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e6d41a93b129c708744fefb9dae16b4f0f2bc8b8"
+      }
+    },
+    {
+      "side": "server",
+      "status": "A",
+      "path": "docs/server/I1_SRV_5_REFERENCE_ACCEPTANCE_2026-09-16.md",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "47c3dfc6ed4b0b7b59ebb97d8129aa3d9238e091"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "47c3dfc6ed4b0b7b59ebb97d8129aa3d9238e091"
+      }
+    },
+    {
+      "side": "server",
+      "status": "A",
+      "path": "docs/server/evidence/i1-srv5-r1-2026-09-16/README.md",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "976834796dfc4a8d625ab44a34b64450e932ae24"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "976834796dfc4a8d625ab44a34b64450e932ae24"
+      }
+    },
+    {
+      "side": "server",
+      "status": "A",
+      "path": "docs/server/evidence/i1-srv5-r2-2026-09-16/README.md",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3c090a882a31d0cafcc87c612aba1b7cf5492dbb"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "3c090a882a31d0cafcc87c612aba1b7cf5492dbb"
+      }
+    },
+    {
+      "side": "server",
+      "status": "M",
+      "path": "packages/server/db/src/health-persistence.integration.test.ts",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "5f41b8600ba9497835c677b3fcb6f813484c66a1"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "11b9dbeac431228cf0d5b16627ccadc5e1679784"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "11b9dbeac431228cf0d5b16627ccadc5e1679784"
+      }
+    },
+    {
+      "side": "server",
+      "status": "M",
+      "path": "packages/server/simulated-extension-client/src/ai-binding.test.ts",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "5d8c2f1a067c7ffca2f7d40a869fde5f1f386a68"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1fb77bf166cee8b94afa620ca8f0af3d15604813"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "1fb77bf166cee8b94afa620ca8f0af3d15604813"
+      }
+    },
+    {
+      "side": "server",
+      "status": "M",
+      "path": "packages/server/simulated-extension-client/src/bootstrap-cache.ts",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "479b037f98498aeb61e4bf2c038cec2d23661b00"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "77f79927efb5c750880da2d9f915777c83637d91"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "77f79927efb5c750880da2d9f915777c83637d91"
+      }
+    },
+    {
+      "side": "server",
+      "status": "M",
+      "path": "packages/server/simulated-extension-client/src/index.ts",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "a1a503dc7523d1446462171936c0448b20a0d61e"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "49584fbc37b5cb5751c8f87ef664d0fad86c0076"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "49584fbc37b5cb5751c8f87ef664d0fad86c0076"
+      }
+    },
+    {
+      "side": "server",
+      "status": "A",
+      "path": "packages/server/simulated-extension-client/src/offline-policy.test.ts",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "075adf3883987b603b27b255c4eecc284ed8bf82"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "075adf3883987b603b27b255c4eecc284ed8bf82"
+      }
+    },
+    {
+      "side": "server",
+      "status": "A",
+      "path": "packages/server/simulated-extension-client/src/offline-policy.ts",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e35beb782e73cef966229042c49e32c86f87cd5b"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e35beb782e73cef966229042c49e32c86f87cd5b"
+      }
+    },
+    {
+      "side": "server",
+      "status": "M",
+      "path": "packages/server/simulated-extension-client/src/policy.test.ts",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "e20022e87c70beb8c2497962c0565497e32de871"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "516e18fd7234c6ed55ea4574397624cbfd9c99a4"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "516e18fd7234c6ed55ea4574397624cbfd9c99a4"
+      }
+    },
+    {
+      "side": "server",
+      "status": "M",
+      "path": "tests/e2e/server/bootstrap.spec.ts",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "548318dd85b867b0cc5f700695b01c4396b5e5b7"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "66424d3b350107f9e0b9fb4d5eb932ff34983c17"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "66424d3b350107f9e0b9fb4d5eb932ff34983c17"
+      }
+    },
+    {
+      "side": "server",
+      "status": "A",
+      "path": "tests/e2e/server/i1-reference-acceptance.spec.ts",
+      "common_ancestor": null,
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "69edb76d8cb736d0e279b1b4fc645edddc0a27c0"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "69edb76d8cb736d0e279b1b4fc645edddc0a27c0"
+      }
+    },
+    {
+      "side": "server",
+      "status": "M",
+      "path": "tests/e2e/server/playwright.config.ts",
+      "common_ancestor": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "bd84bc80a1d3286af41b4327822e0958a09f099e"
+      },
+      "accepted_head": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "ddd189765ffb777941b6e272b7fdc9808d9d22ad"
+      },
+      "merged": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "ddd189765ffb777941b6e272b7fdc9808d9d22ad"
+      }
+    }
+  ],
+  "provenance_checks": {
+    "client_only_accepted_blob_mode": true,
+    "server_only_accepted_blob_mode": true,
+    "every_other_path_common_blob_mode": true,
+    "additions_deletions_explicit": true
+  },
+  "common_unchanged_inventory_sha256": "452c14f13d17cf63be12e0e7be0ea81e6e171c4995801b797b14f21cbd0e2284",
+  "post_merge_non_documentation_blobs_unchanged": true,
+  "post_merge_non_documentation_check": {
+    "status": "PASS",
+    "compared_against_merge_tree": "e834d3af55bb102e0378218dff731dd15b124d02",
+    "compared_inventory_paths_excluding_preexisting_allowlisted_documentation": 990,
+    "architect_verified_actual_non_documentation_paths": 759,
+    "architect_verified_actual_non_documentation_check": {
+      "status": "PASS",
+      "compared_against": "1ff322b3dd2b68c4f02e5390850cd2f1b9548186",
+      "mismatches": []
+    },
+    "mismatches": [],
+    "allowlisted_post_merge_paths": [
+      "docs/STATUS.md",
+      "docs/ROADMAP.md",
+      "docs/development/client-i1/README.md",
+      "docs/server/I1_SRV_5_REFERENCE_ACCEPTANCE_2026-09-16.md",
+      "docs/server/I1_SERVER_EXTENSION_SYNC_2026-09-16.md",
+      "docs/server/evidence/i1-sync-2026-09-16/README.md",
+      "docs/server/evidence/i1-sync-2026-09-16/runtime-blobs.json",
+      "docs/server/evidence/i1-sync-2026-09-16/package-receipt.json"
+    ]
+  }
+}

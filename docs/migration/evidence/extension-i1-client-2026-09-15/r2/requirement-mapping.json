@@ -1,0 +1,14 @@
+{
+  "task": "SA-I1-C1-R2-20260915-01",
+  "starting_head": "9e80e8ad531f079b38bf03b9e29f171c87c477c0",
+  "base": "bc0cd0088ca50ba06021ea602a46bdd90de91378",
+  "requirements": {
+    "G1": ["client.js operation owners", "client-r2 generation_owned_polling"],
+    "G2": ["client.js forced refresh and bounded bootstrap retry", "client-r2 forced_bootstrap_rotation"],
+    "G3": ["client.js restrictive invalidation", "runtime.js composed readiness/work guards"],
+    "G4": ["client.js SemVerV1 and Chromium comparators"],
+    "G5": ["installed_local_integration.py exact root and custom confirmation"],
+    "G6": ["browser_application.py empty restore, persistent-profile restart, normal restore"]
+  },
+  "scope": "candidate only; architect acceptance and full I1 remain open"
+}

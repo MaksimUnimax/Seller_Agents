@@ -1,12 +1,11 @@
 /* Privileged application orchestration. Mature Ozon Work and delivery remain the implementation. */
-const SA_DEVELOPMENT_ACCOUNT = "standalone-local-development";
 const SA_PAYLOAD_TTL = 3600000;
 let saCatalogEnabled = false;
 const saStarts = new Map();
 const saStartFlights = new Map();
 const saCatalog = SellerAgentsStoreCatalog.create({
   read: storageGet, write: storageSet,
-  currentAccount: async () => SA_DEVELOPMENT_ACCOUNT, // I1 will supply the real signed account; no fake login UI.
+  currentAccount: () => SellerAgentsControlClient.currentAccount(),
   uuid: () => crypto.randomUUID(),
   normalizeCredentials(marketplace, input, previous = {}) {
     if (marketplace === "wildberries") return { token: SellerAgentsWBReference.credentials.normalizeSellerCredentials({ token: input.token || previous.token, tokenType: "personal" }, { required: true }).token };
@@ -18,12 +17,13 @@ const saCatalog = SellerAgentsStoreCatalog.create({
     return { seller, performance };
   },
   revision: (marketplace, c) => marketplace === "wildberries" ? SellerAgentsWBAdapter.credentialRevision(c) :
-    sha256Hex(JSON.stringify(["standalone-ozon-credentials", c.seller.clientId, c.seller.apiKey, c.performance.clientId, c.performance.clientSecret]))
+    sha256Hex(JSON.stringify(["account-scoped-ozon-credentials", c.seller.clientId, c.seller.apiKey, c.performance.clientId, c.performance.clientSecret]))
 });
 const saQuota = SellerAgentsObservedQuota.create({ read: storageGet, write: storageSet, namespace: "seller_agents_observed_quota_v1" });
 const saReady = (async () => {
   await chrome.storage.local.setAccessLevel?.({ accessLevel: "TRUSTED_CONTEXTS" });
-  saCatalogEnabled = Boolean((await storageGet(saCatalog.key))[saCatalog.key]);
+  await SellerAgentsControlClient.restore();
+  saCatalogEnabled = true;
 })();
 function saError(code) { return Object.assign(new Error(code), { code }); }
 function saPopupSender(sender) {
@@ -32,29 +32,36 @@ function saPopupSender(sender) {
   return sender?.url === chrome.runtime.getURL("popup.html");
 }
 async function saEnabled() { await saReady; return saCatalogEnabled; }
+async function saAssertWorkAuthority() {
+  await saReady;
+  if (!await SellerAgentsControlClient.currentAccount() || !await SellerAgentsControlClient.canWork()) throw saError("WORK_POLICY_BLOCKED");
+  return true;
+}
 let saInitializeFlight = null;
 async function saInitialize() {
-  if (await saEnabled()) return;
+  await saReady;
   if (saInitializeFlight) return saInitializeFlight;
   saInitializeFlight = saInitializeOnce().finally(() => { saInitializeFlight = null; });
   return saInitializeFlight;
 }
 async function saInitializeOnce() {
-  const settings = await getSettings();
-  if (settings.sellerCredentials.present) await saCatalog.save({ marketplace: "ozon", name: "Ozon 1",
-    credentials: { seller: settings.sellerCredentials, performance: settings.performanceCredentials }, personalDataEnabled: settings.personalDataEnabled });
-  else await storageSet({ [saCatalog.key]: { version: 1, accounts: {} } });
-  saCatalogEnabled = true;
+  /* Legacy global credentials remain isolated. Never assign them to the first real account. */
+  if (!await SellerAgentsControlClient.currentAccount()) return;
+  await saCatalog.list();
 }
 function saStoreContext(store) {
   return { accountId: store.accountId, storeId: store.id, marketplace: store.marketplace,
     credentialRevision: store.credentialRevision, policyRevision: store.personalDataEnabled ? "personal-enabled" : "personal-disabled" };
 }
+async function saAuthorityStoreContext(store) {
+  return { ...saStoreContext(store), authGeneration: await SellerAgentsControlClient.generation() };
+}
 async function saAssertStore(pinned) {
-  if (!pinned || pinned.accountId !== SA_DEVELOPMENT_ACCOUNT) throw SellerAgentsExecutionContext.error();
+  const accountId = await SellerAgentsControlClient.currentAccount();
+  if (!accountId || !pinned || pinned.accountId !== accountId) throw SellerAgentsExecutionContext.error();
   let store;
   try { store = await saCatalog.get(pinned.storeId); } catch (_) { throw SellerAgentsExecutionContext.error(); }
-  const live = saStoreContext(store);
+  const live = { ...saStoreContext(store), ...(pinned.authGeneration === undefined ? {} : { authGeneration: await SellerAgentsControlClient.generation() }) };
   if (Object.keys(live).some(key => live[key] !== pinned[key])) throw SellerAgentsExecutionContext.error();
   return store;
 }
@@ -65,8 +72,9 @@ async function saStoreForPending(tab, intent) {
   return pending.store_context;
 }
 async function saPendingGuard(pending) {
+  await saAssertWorkAuthority();
   if (pending?.store_context) await saAssertStore(pending.store_context);
-  else if (await saEnabled()) throw SellerAgentsExecutionContext.error();
+  else throw SellerAgentsExecutionContext.error();
 }
 async function saReadContext(key, immutable, ownerIdentity) {
   const data = await storageGet([KEYS.CONVERSATION_BINDINGS, KEYS.WORK_SESSIONS]);
@@ -75,12 +83,12 @@ async function saReadContext(key, immutable, ownerIdentity) {
   const p = binding?.store_context;
   let store = null;
   try { store = await saAssertStore(p); } catch (_) {}
-  const current = manualContextOwners.get(key);
+  const current = manualContextOwners.get(key), workAllowed = await SellerAgentsControlClient.canWork();
   const ownerActive = !ownerIdentity || current?.operation_id === ownerIdentity.operation_id && manualOperationActive(current) &&
     SellerAgentsExecutionContext.fields.every(field => current.execution_context?.[field] === ownerIdentity.execution_context[field]);
-  return { ...immutable, ...(store ? saStoreContext(store) : p), accountId: store?.accountId || "unavailable",
+  return { ...immutable, ...(store ? await saAuthorityStoreContext(store) : p), accountId: store?.accountId || "unavailable",
     conversationKey: key, bindingId: binding?.binding_id || "unbound", bindingRevision: binding?.revision || 0,
-    workSessionId: work.start_intent_id || "inactive", active: Boolean(store && ownerActive &&
+    workSessionId: work.start_intent_id || "inactive", active: Boolean(workAllowed && store && ownerActive &&
       [OzonWorkSessionModel.STATES.ACTIVE_VISIBLE, OzonWorkSessionModel.STATES.ACTIVE_HIDDEN, OzonWorkSessionModel.STATES.RECOVERING].includes(work.state)) };
 }
 async function saSettings(pinned) {
@@ -93,6 +101,7 @@ async function saSettings(pinned) {
 async function saGuard(owner) {
   const p = owner?.execution_context;
   if (!p) throw SellerAgentsExecutionContext.error("EXECUTION_CONTEXT_MISSING");
+  await saAssertWorkAuthority();
   const readCurrent = () => saReadContext(owner.conversation_key, { commandHash: p.commandHash, requestId: p.requestId }, owner);
   if (owner.payload_expires_at_ms && owner.payload_expires_at_ms <= Date.now()) throw saError("RESULT_EXPIRED");
   const guard = SellerAgentsExecutionContext.createGuard(p, readCurrent);
@@ -106,9 +115,10 @@ async function saGuard(owner) {
 async function saPublicContext(key) {
   const binding = key ? await bindingForConversationKey(key) : null;
   const work = key ? await workSessionFor(key) : null;
+  const allowed = await SellerAgentsControlClient.canWork();
   return { marketplace: binding?.store_context?.marketplace || "ozon", store_id: binding?.store_context?.storeId || null,
-    work_session_id: work?.start_intent_id || null, work_active: Boolean(work && ["active_visible", "active_hidden", "recovering"].includes(work.state)),
-    button_visible: work?.state === "active_visible", assistant_baseline_ids: binding?.assistant_baseline_ids || [] };
+    work_session_id: allowed ? work?.start_intent_id || null : null, work_active: Boolean(allowed && work && ["active_visible", "active_hidden", "recovering"].includes(work.state)),
+    button_visible: Boolean(allowed && work?.state === "active_visible"), assistant_baseline_ids: allowed ? binding?.assistant_baseline_ids || [] : [] };
 }
 async function saInvalidateStore(id) {
   const bindings = await getConversationBindings();
@@ -122,17 +132,44 @@ async function saInvalidateStore(id) {
   for (const [tab, start] of Object.entries(pending)) if (start.store_context?.storeId === id)
     await clearPendingWorkStart(Number(tab), start.intent_id, start.revision, "store_changed");
 }
+async function saInvalidateAuthority() {
+  const bindings = await getConversationBindings();
+  for (const [key, raw] of Object.entries(bindings)) {
+    const work = await workSessionFor(key);
+    if (["active_visible", "active_hidden", "recovering", "error"].includes(work.state)) {
+      try { await saLegacyMessage({ type: "OZ_WORK_FINISH", conversation_key: key, tab_id: work.tab_id }, {}); } catch (_) { /* the context guard remains closed */ }
+    }
+  }
+  const pending = await getPendingWorkStarts();
+  for (const [tab, start] of Object.entries(pending)) {
+    try { await clearPendingWorkStart(Number(tab), start.intent_id, start.revision, "authority_changed"); } catch (_) { /* stale pending state is harmless */ }
+  }
+}
+SellerAgentsControlClient.onAuthorityChanged(() => saInvalidateAuthority());
 async function saPopupState(tabId) {
-  const live = await tabIdentity(normalizeTabId(tabId));
-  const key = live.conversation_id ? conversationKeyFromIdentity(live) : null;
+  let live = { ai_id: null, origin: null, conversation_id: null, status: "unavailable", source: "none", chat_path: "" };
+  let usableIdentity = false;
+  try {
+    live = await tabIdentity(normalizeTabId(tabId));
+    usableIdentity = true;
+  } catch (_) {}
+  const key = usableIdentity && live.conversation_id ? conversationKeyFromIdentity(live) : null;
   const context = await saPublicContext(key);
-  const pending = (await getPendingWorkStarts())[String(tabId)] || null;
-  return { ok: true, pending: pending ? { intent_id: pending.intent_id, send_outcome: pending.send_outcome, expires_at: pending.expires_at } : null, stores: await saCatalog.list(), account: { kind: "local_development", label: "Локальная разработка · вход подключается на I1" },
-    identity: live, conversation_key: key, context, work: key ? await workSessionFor(key) : null,
+  const pending = usableIdentity ? (await getPendingWorkStarts())[String(tabId)] || null : null;
+  const auth = await SellerAgentsControlClient.status();
+  const work = key ? await workSessionFor(key) : null;
+  const publicWork = auth.workAllowed ? work : work ? { ...work, state: OzonWorkSessionModel.STATES.INACTIVE } : null;
+  let stores = [];
+  if (auth.authenticated) stores = await saCatalog.list();
+  return { ok: true, auth, pending: pending ? { intent_id: pending.intent_id, send_outcome: pending.send_outcome, expires_at: pending.expires_at } : null, stores,
+    account: auth.account || { kind: "signed_out", label: "Вход не выполнен" },
+    identity: live, conversation_key: key, context, work: publicWork,
     operation: key ? publicManualOperation(await getManualOperation(key)) : null };
 }
 async function saWorkStart(message, sender) {
   return singleFlight(saStartFlights, String(message.tab_id), async () => {
+    await SellerAgentsControlClient.ensureForIdentity(await tabIdentity(normalizeTabId(message.tab_id)));
+    if (!await SellerAgentsControlClient.canWork()) throw saError("WORK_POLICY_BLOCKED");
     const store = await saCatalog.get(message.store_id);
     const live = await tabIdentity(normalizeTabId(message.tab_id));
     const key = live.conversation_id ? conversationKeyFromIdentity(live) : null;
@@ -145,7 +182,7 @@ async function saWorkStart(message, sender) {
       if (["active_visible", "active_hidden", "error"].includes(work?.state))
         await saLegacyMessage({ type: "OZ_WORK_FINISH", tab_id: message.tab_id, conversation_key: key }, sender);
     }
-    saStarts.set(Number(message.tab_id), saStoreContext(store));
+    saStarts.set(Number(message.tab_id), await saAuthorityStoreContext(store));
     try { return await saLegacyMessage({ type: "OZ_WORK_START", tab_id: message.tab_id, start_intent_id: message.start_intent_id }, sender); }
     finally { saStarts.delete(Number(message.tab_id)); }
   });
@@ -156,6 +193,11 @@ async function saHandleMessage(message, sender) {
   if (/^OZ_AUTO_/.test(message?.type || "")) throw saError("LEGACY_ACTION_DISABLED");
   if (message?.type?.startsWith("SA_")) {
     if (!saPopupSender(sender)) throw saError("POPUP_SENDER_REQUIRED");
+    if (message.type === "SA_AUTH_STATE") return { ok: true, auth: await SellerAgentsControlClient.status() };
+    if (message.type === "SA_AUTH_START") return { ok: true, auth: await SellerAgentsControlClient.startActivation() };
+    if (message.type === "SA_AUTH_OPEN_PORTAL") return { ok: true, portalUrl: await SellerAgentsControlClient.openPortal() };
+    if (message.type === "SA_AUTH_CANCEL") return { ok: true, auth: await SellerAgentsControlClient.cancelActivation() };
+    if (message.type === "SA_AUTH_RESET") return { ok: true, auth: await SellerAgentsControlClient.localReset() };
     await saInitialize();
     switch (message.type) {
       case "SA_POPUP_STATE": return saPopupState(message.tab_id);
@@ -173,6 +215,7 @@ async function saHandleMessage(message, sender) {
       case "SA_WORK_START": return saWorkStart(message, sender);
       case "SA_STORE_CHECK": return saCheckStore(message);
       case "SA_RESUME_QUOTA": {
+        await saAssertWorkAuthority();
         const state = await saPopupState(message.tab_id), key = state.conversation_key;
         const owner = await getManualOperation(key);
         if (!owner || owner.batch?.request_state !== "quota_waiting") throw saError("NO_QUOTA_WAIT");
@@ -184,6 +227,8 @@ async function saHandleMessage(message, sender) {
     }
   }
   if (enabled) {
+    const workMessage = message?.type === "OZ_EXECUTE_COMMAND" || message?.type === "OZ_WORK_START" || message?.type?.startsWith("OZ_WORK_START_") || message?.type === "OZ_WORK_PENDING_IDENTITY" || message?.type === "OZ_BATCH_DELIVERY_RESUME";
+    if (workMessage) await saAssertWorkAuthority();
     if (/^OZ_(?:GET_SETTINGS_STATE|GET_GLOBAL_SETTINGS_STATE|GET_DIAGNOSTICS)/.test(message.type) && !saPopupSender(sender)) throw saError("POPUP_SENDER_REQUIRED");
     if (/^OZ_(?:AUTO_|BIND_CONVERSATION|SAVE_.*SETTINGS|TEST_CONNECTION|WORK_RESUME|SET_MANUAL_MODE|SAVE_REPORT_PREFIX|SAVE_.*START_PROMPT|RESET_.*START_PROMPT|REFRESH_SELLER_API_METADATA)/.test(message?.type || "")) throw saError("LEGACY_ACTION_DISABLED");
     if (["OZ_WORK_DELIVERY_ASSERT", "OZ_WORK_SEND_COMMIT"].includes(message.type)) {
@@ -228,6 +273,7 @@ async function saHandleMessage(message, sender) {
       return { ok: true };
     }
     if (message.type === "OZ_EXECUTE_COMMAND") {
+      await saAssertWorkAuthority();
       await assertTabConversation(sender?.tab?.id, message.conversation_key);
       const binding = await bindingForConversationKey(message.conversation_key);
       await saAssertStore(binding?.store_context);
@@ -278,7 +324,8 @@ function saPrunePayload(owner, now = Date.now()) {
     completed_at: owner.completed_at || new Date(now).toISOString(), last_error: { code: "RESULT_EXPIRED" } };
 }
 async function saAssertDeliveryOwner(owner) {
-  if (!owner?.execution_context || !await saEnabled()) return;
+  if (!owner?.execution_context) throw SellerAgentsExecutionContext.error("EXECUTION_CONTEXT_MISSING");
+  await saAssertWorkAuthority();
   if (owner.payload_expires_at_ms <= Date.now()) throw saError("RESULT_EXPIRED");
   const guard = await saGuard(owner);
   await guard.assertCurrent();
@@ -299,7 +346,8 @@ setTimeout(() => { void saCleanupExpiredPayloads(); }, 0);
 const saFileOwners = SellerAgentsLocalOperations.createRecordStore({ read: keys => chrome.storage.session.get(keys),
   write: values => chrome.storage.session.set(values), namespace: "seller_agents_file_owners_v1" });
 async function saCheckOzonFileRef(command, context) {
-  if (!await saEnabled() || command.operation !== "report_file_get") return;
+  if (command.operation !== "report_file_get") return;
+  await saAssertWorkAuthority();
   const owner = await saFileOwners.get(command.params.file_ref), pinned = context?.snapshot;
   if (!pinned || !owner || owner.expires_at_ms <= Date.now() ||
     ["accountId", "storeId", "credentialRevision"].some(field => owner[field] !== pinned[field]))
@@ -307,7 +355,8 @@ async function saCheckOzonFileRef(command, context) {
   await context.assertCurrent();
 }
 async function saRememberOzonFileRefs(response, context) {
-  if (!await saEnabled() || !context) return;
+  if (!context) return;
+  await saAssertWorkAuthority();
   let envelope;
   try { envelope = JSON.parse(String(response.report_text).slice(String(response.report_text).indexOf("\n") + 1)); } catch (_) { return; }
   for (const ref of [envelope?.result?.report_file_ref, envelope?.result?.generated_file_ref]) {

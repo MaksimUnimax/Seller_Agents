@@ -1,0 +1,21 @@
+{
+  "task": "SA-I1-C1-R3-20260915-01",
+  "stage": "Seller Agents / D2-I1 / I1-C1",
+  "start_head": "0b2a1776ff484d2410b3a43d338ec5548e73f019",
+  "start_tree": "3a83601109f7cb643e06d923b1da36691f9b0014",
+  "status": "IMPLEMENTATION_CANDIDATE_FOR_REVIEW",
+  "criteria": {
+    "G1": {"criterion": "Client authority classification and account-only authority", "function": "client.js request/readLimitedBody/bootstrap/restore", "test": "client-r3.mjs account-only sessions, restore, oversized 2xx/401/403 and transient 503", "result": "PASS; starting-head RED reproduced for oversized 2xx and UNCONFIGURED account-only"},
+    "G2": {"criterion": "Generation/session/attempt/rotation ownership", "function": "client.js bootstrap, refresh, startActivation, queueMutation", "test": "client-races.mjs, client-lifecycle.mjs, client-r3.mjs held exchange, 401 rotation, lost-response key reuse", "result": "PASS"},
+    "G3": {"criterion": "Meaningful R2/R3 client controls on both routes", "function": "actual composed client source and extracted package", "test": "tooling/checks/extension_i1.py wires client-r2 and client-r3 on source/package; signed profile/top-level and Chromium version matrix", "result": "PASS; 92 gate processes"},
+    "G4": {"criterion": "Common-core fixture adaptation without gate removal", "function": "extension_import.py expected v0.2.4 full-worker route", "test": "full-worker-composed.mjs, ten aliases, exact-once planning/request/result, cd4bce38, provider identity, listener evidence, closed workers", "result": "PASS; common-core source/package 111 processes; frozen donor/RED routes retained"},
+    "G5": {"criterion": "Installed local auth synchronization and evidence safety", "function": "installed_local_integration.py", "test": "bounded auth-code/full redirect/preview/account waits, exact approval status, worker sentinel, identity/count booleans, logout HTTP status", "result": "IMPLEMENTED; local execution BLOCKED by PostgreSQL initdb disk exhaustion; remote job required"},
+    "G6": {"criterion": "Native fixture restart retention and signed version boundaries", "function": "client-r3.mjs plus existing browser_application.py", "test": "profile/top-level extension semver, alpha/hyphen/build/large-decimal, Chromium fourth/leading-zero/out-of-range, native source/extracted restart", "result": "PASS locally; native Chromium 151.0.7922.34, zero live provider calls"}
+  },
+  "red_green": {
+    "starting_head": "0b2a1776ff484d2410b3a43d338ec5548e73f019",
+    "oversized_2xx": {"red": "CONTROL_RESPONSE_TOO_LARGE with workAllowed:true", "green": "denied memory and persisted authority classification"},
+    "account_only_unconfigured": {"red": "BOOTSTRAP_PROFILE_INCOMPATIBLE", "green": "authenticated authority with workAllowed:false and requestedAi:null"}
+  },
+  "not_claimed": ["full I1", "C2/offline", "I1-SRV.5", "D3", "S1.2", "Health/P8", "real email", "preprod/production", "release/deployment"]
+}

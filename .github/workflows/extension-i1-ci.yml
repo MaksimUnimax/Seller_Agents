@@ -1,0 +1,100 @@
+name: Extension I1-C1 client
+
+on:
+  push:
+    branches: [main, "feature/extension-i1-*"]
+    paths:
+      - "apps/extension/**"
+      - "packages/control-client/**"
+      - "packages/bridge-core/src/{stores,execution,work}/**"
+      - "tooling/build/extension_composed.py"
+      - "tooling/checks/extension_i1.py"
+      - "tests/regression/extension-core/**"
+      - ".github/workflows/extension-i1-ci.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "apps/extension/**"
+      - "packages/control-client/**"
+      - "packages/bridge-core/src/{stores,execution,work}/**"
+      - "tooling/build/extension_composed.py"
+      - "tooling/checks/extension_i1.py"
+      - "tests/regression/extension-core/**"
+      - ".github/workflows/extension-i1-ci.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: extension-i1-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  client-i1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: python tooling/checks/extension_i1.py --output build/ci-extension-i1
+        env:
+          SA_NODE_BIN: node
+      - run: python -m pip install -r tooling/checks/extension-test-requirements.txt
+      - run: python -m playwright install --with-deps chromium
+      - run: python tests/regression/extension-core/client-i1/browser_verifier.py --runtime build/ci-extension-i1/package/runtime --output build/ci-extension-i1/browser
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: extension-i1-${{ github.sha }}
+          path: build/ci-extension-i1
+
+  installed-local-integration:
+    name: Installed local API / portal / PostgreSQL acceptance
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:18.0
+        env:
+          POSTGRES_USER: product_control_plane_ci
+          POSTGRES_PASSWORD: ci_development_only_password
+          POSTGRES_DB: seller_agents_i1_client
+        ports:
+          - 45432:5432
+        options: >-
+          --health-cmd "pg_isready -U product_control_plane_ci -d seller_agents_i1_client"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: python -m pip install -r tooling/checks/extension-test-requirements.txt
+      - run: python -m playwright install --with-deps chromium
+      - run: python tests/regression/extension-core/client-i1/installed_local_integration.py --output build/ci-installed-local
+        env:
+          PRODUCT_CONTROL_PLANE_E2E: "1"
+          DATABASE_URL: postgres://product_control_plane_ci:ci_development_only_password@127.0.0.1:45432/seller_agents_i1_client
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: extension-installed-local-${{ github.sha }}
+          path: build/ci-installed-local

@@ -1,0 +1,69 @@
+{
+  "task_id": "SA-I1-C2-2A-20260916-01",
+  "status": "IMPLEMENTED_CANDIDATE_ARCHITECT_REVIEW_PENDING",
+  "refs": {
+    "start": "4acc5fb3336e3e38fa30d6a7ec16c80730bcd7e1",
+    "start_tree": "14e8e61d86b955b8a8f22b0c9e24f255654e92f7",
+    "parent_code": "6dc770ec30fe7c7165f4c14ff8b6356cd55937d6",
+    "branch": "integration/i1-c1-srv5-2026-09-16",
+    "code_commits": [
+      "7f4be0caa93dd3380b31822da572feb97e47fbc2",
+      "a553d1f80769528544ee1c90d1305edb51d9d71f"
+    ]
+  },
+  "changed_paths": [
+    "packages/control-client/src/client.js",
+    "tests/regression/extension-core/client-i1/client-offline-policy.mjs",
+    "tooling/checks/extension_i1.py",
+    "docs/development/client-i1/C2_OFFLINE_POLICY_2026-09-16.md",
+    "docs/development/client-i1/C2_CACHE_TIME_2026-09-16.md",
+    "docs/migration/evidence/extension-i1-c2-2a-2026-09-16/README.md",
+    "docs/migration/evidence/extension-i1-c2-2a-2026-09-16/results.json",
+    "docs/migration/evidence/extension-i1-c2-1-2026-09-16/r3/README.md",
+    "docs/STATUS.md",
+    "docs/ROADMAP.md"
+  ],
+  "focused": {
+    "source": "PASS",
+    "extracted": "PASS",
+    "processes": 100,
+    "node": "v22.22.2",
+    "A": "PASS",
+    "B": "PASS",
+    "C": "PASS",
+    "D": "PASS",
+    "E": "PASS",
+    "F": "PASS",
+    "G": "PASS",
+    "H": "PASS",
+    "live_provider_calls": 0
+  },
+  "gates": {
+    "existing_i1_core": "PASS",
+    "browser_verifier": "PASS (Chromium 151.0.7922.34)",
+    "native_source_extracted": "UNKNOWN",
+    "installed_local_api_portal_postgresql": "UNKNOWN",
+    "docs_check": "PASS",
+    "bridge_guard": "PASS",
+    "openapi_check": "UNKNOWN",
+    "remote_ci": "UNKNOWN"
+  },
+  "packages": {
+    "default_development": "UNKNOWN",
+    "ephemeral_key_native": "UNKNOWN",
+    "historical_c2_1_default_receipt": {
+      "artifact": "10433241137",
+      "bytes": 1822450,
+      "sha256": "ceede563a4869184f26d161875ce6ca39f12c37245ee49c2917302d3a4ea4e59",
+      "runtime_files": 39,
+      "byte_parity": "39/39"
+    }
+  },
+  "scope": {
+    "offline_work_grant": "NOT_IMPLEMENTED",
+    "profile_capability_consumption": "OPEN",
+    "server_runtime": "UNCHANGED",
+    "domain_migration": "OUT_OF_SCOPE",
+    "architect_review": "REQUIRED"
+  }
+}

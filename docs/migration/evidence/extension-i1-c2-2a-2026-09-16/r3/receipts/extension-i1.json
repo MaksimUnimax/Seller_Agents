@@ -1,0 +1,21 @@
+{
+  "checker":"tooling/checks/extension_i1.py",
+  "status":"PASS",
+  "node":"v22.22.2",
+  "gate_processes":100,
+  "source_route":"PASS",
+  "extracted_route":"PASS",
+  "docs_check":"PASS",
+  "bridge_guard":"PASS",
+  "openapi_check":"PASS",
+  "docs_files":476,
+  "docs_markdown_files":248,
+  "docs_relative_links":364,
+  "package_bytes":1834654,
+  "package_sha256":"2c1f5765b0eb382d9387e3ea1a59e71bd549344f10c107a39069d92719f341de",
+  "repeat_archive_match":true,
+  "source_extracted_bytes_match":true,
+  "production_client_blob":"5f6a195048e257304c16fb92a25c4ff772d98fe0",
+  "remote_ci":"UNKNOWN",
+  "native_and_installed_suites":"not rerun per task scope"
+}
