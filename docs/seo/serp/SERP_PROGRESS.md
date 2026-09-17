@@ -2,7 +2,7 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M3 / R05 CLOSED / R06 NEXT CANDIDATE / R06 PRE-STEP REQUIRED**.
+Status: **M3 / R05 CLOSED / R06 PRE-STEP PASS / R06 LOCAL START RELEASED**.
 
 ## Closed Search evidence
 
@@ -17,77 +17,65 @@ R04 аналитика маркетплейсов для селлеров = CLOS
 R05 отчеты для селлеров маркетплейсов = CLOSED / 20
 ```
 
-## R05 closure authority
-
-Accepted job:
-
-```text
-JOB_ID = octoport-serp-r05-20260917
-OPERATION_ID = sprsofoaue000d4c9epd
-REVISION = 5
-SUCCEEDED = 1
-UNRESOLVED = 0
-ALL_SUCCESSFUL = true
-RESULT_COUNT = 20
-```
+## R05 accepted closure
 
 Authorities:
 
-- `raw/R05_07_EXPORT_MANIFEST_2026-09-17.md` — complete source identity plus ten verified lossless chunks;
+- `raw/R05_07_EXPORT_MANIFEST_2026-09-17.md` — full revision-5 export persisted losslessly as ten verified chunks;
 - `analysis/R05_07_EXPORT_ANALYSIS_2026-09-17.md` — all 20 results reviewed.
 
-R05 aggregate:
-
 ```text
-SELLER_OPERATIONAL_BUSINESS_REPORTING = 3/20
-MARKETPLACE_FINANCIAL_REALIZATION_REPORTING = 4/20
-ACCOUNTING_1C_COMMISSION_AGENT_REPORTING = 3/20
-TAX_STATUTORY_REPORTING = 4/20
-REPORTING_AUTOMATION_OR_INTEGRATION_SAAS = 5/20
-EXTERNAL_MARKET_ANALYTICAL_REPORTING = 1/20
-GENERIC_SELLER_REPORTING_CONTENT = 0/20
-NOISE_OTHER_INTENT = 0/20
-SELLER_OPERATIONAL_PLUS_NATIVE_MARKETPLACE_REPORTING = 7/20
-ACCOUNTING_PLUS_TAX = 7/20
-```
-
-Verdict:
-
-```text
+R05_SELLER_OPERATIONAL_BUSINESS = 3/20
+R05_MARKETPLACE_FINANCIAL_REALIZATION = 4/20
+R05_ACCOUNTING_1C_COMMISSION = 3/20
+R05_TAX_STATUTORY = 4/20
+R05_REPORTING_AUTOMATION_SAAS = 5/20
+R05_EXTERNAL_MARKET_ANALYTICAL = 1/20
+R05_ACCOUNTING_PLUS_TAX = 7/20
+R05_SELLER_PLUS_NATIVE_REPORTING = 7/20
 R05_VERDICT = FINANCE_ACCOUNTING_HEAVY_SELLER_REPORTING_SERP_WITH_MIXED_NATIVE_REPORT_AND_AUTOMATION_INTENT
 R05_MORE_SEARCH_NOW = NO
-R05_INFORMATION_SATURATED_FOR_CURRENT_DECISION = YES
-R05_PAGE_OWNERSHIP_DECISION = DEFERRED TO M9/M11
 R05 = CLOSED
 ```
 
-Product boundary: generic `отчеты/отчетность` language is materially contaminated by accounting, tax/FNS, commission-agent documents and reporting automation. Octoport may use report language only with explicit seller-authorized-data and supported-output scope. Search does not authorize tax filing, bookkeeping, 1C replacement or unsupported marketplace report endpoints.
+## R06 release
 
-## Current cursor — R06 preparation
+Query-specific authority:
 
-Matrix authority confirms:
+`R06_PRE_STEP_RESEARCH_AND_RELEASE_2026-09-17.md`
+
+Query:
 
 ```text
 R06_QUERY = помощник селлера маркетплейсов
 R06_FAMILY = F4
-R06_OPEN_DECISION = human employee/service versus software/AI-helper intent
-R06_INFORMATION_GAIN = HIGH
-R06_BOUNDARY = vacancies / hiring / human manager services
-R06_MARKETPLACE_PAIR = NO unless Search creates a named split question
+R06_JOB_ID = octoport-serp-r06-20260917
 ```
+
+The pre-step passed remote readback after fresh Yandex deferred-provider research, current human seller-assistant terminology research, current AI/software seller-helper research, current Bridge-head verification and durable-job conflict check.
+
+R06 will measure current Search collision between human assistant/employee, human marketplace manager/service, AI seller copilot, general software helper, specialized automation utility and support/helper surfaces.
 
 ## Current hard gate
 
 ```text
 CURRENT_STAGE = M3 ORDINARY YANDEX SERP COLLECTION
-CURRENT_QUERY = R06 PREPARATION
-R05 = CLOSED / PERSISTED / REMOTE READBACK
-R06_PROVIDER_ACTION = NOT YET RELEASED
-R06_REQUIRES_QUERY_SPECIFIC_PRE_STEP = true
-R06_START = BLOCKED UNTIL R06 PRE-STEP PERSISTENCE + REMOTE READBACK
+CURRENT_QUERY = R06
+R06_PRE_STEP = PASS / PERSISTED / REMOTE READBACK
+R06_JOB_ID = octoport-serp-r06-20260917
+R06_EXISTING_START_CONFLICT = NONE
+R06_START = RELEASED EXACTLY ONCE
+R06_SUBMIT = BLOCKED UNTIL START PERSISTENCE + READBACK + ANALYSIS
+R06_COLLECT = BLOCKED
+R06_EXPORT = BLOCKED
 R08 = BLOCKED UNTIL R06 QUERY CLOSURE
 M7_COLLECTION_FREEZE = BLOCKED
 M8_SEMANTIC_MASTER = BLOCKED
+NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE LOCAL START FOR R06 AND RETURN COMPLETE SEARCH_ASYNC_BATCH_RESULT_V1
 ```
 
-No provider command is currently released.
+## Exact released command
+
+```text
+SEARCH_ASYNC_BATCH_API_V1 {"action":"start","jobId":"octoport-serp-r06-20260917","queries":["помощник селлера маркетплейсов"],"confirmBillable":true,"maxRequests":1,"maxCostRub":0.0305,"searchType":"SEARCH_TYPE_RU","region":"225","page":0,"groupsOnPage":20,"docsInGroup":1,"groupMode":"GROUP_MODE_FLAT","familyMode":"FAMILY_MODE_MODERATE","fixTypoMode":"FIX_TYPO_MODE_OFF","sortMode":"SORT_MODE_BY_RELEVANCE","sortOrder":"SORT_ORDER_DESC"}
+```
