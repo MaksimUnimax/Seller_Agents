@@ -1,6 +1,6 @@
 # C2.2-B signed bootstrap metadata projection
 
-Status: `IMPLEMENTATION_CANDIDATE / ACCEPTANCE_PENDING`
+Status: `ACCEPTED / REMOTE VERIFIED`
 
 Task scope: expose already verified Bootstrap V2 metadata to later client consumers without turning that metadata into Work, dispatch, replay, provider, scheduler, or local-capability authority.
 
@@ -37,7 +37,7 @@ The wrapper is loaded immediately after the existing control client in the compo
 
 ## Explicit non-goals
 
-This candidate does **not**:
+This acceptance does **not**:
 
 - grant stale-cache/offline Work;
 - alter `authority.workAllowed`, `runtimeLastCheckpointAllowed`, or cache freshness rules;
@@ -60,8 +60,26 @@ This candidate does **not**:
 4. cached AI context is exact and a ChatGPT snapshot cannot be borrowed as Alice metadata;
 5. account-only signed configuration remains `UNCONFIGURED` and does not fabricate a profile or Work grant.
 
-The full Extension I1 checker registers this gate for both source and extracted runtimes. Existing C2.1/C2.2-A, C1, application, Ozon/WB, native/browser, installed-local, documentation, server, and packaging gates remain required for architect acceptance.
+Exact tested implementation head: `8a5d9e6ca611d69512ad28fc00684c63bdc87324`, tree `1fb11a510d6dd314a0647c5348e56d1a26bc007e`.
 
-## Acceptance rule
+Remote evidence on that exact implementation tree:
 
-C2.2-B may be accepted only after exact-tree local/remote evidence is green and the final diff confirms that no Work/application/provider/scheduler execution path acquired a new permission from this metadata projection. A later step that wants executable capabilities must first define and package an independent local capability authority and then intersect it with signed feature/entitlement permission as required by the server handoff.
+- focused signed-metadata gate: `5/5 PASS` on source and `5/5 PASS` on extracted package;
+- full Extension I1 checker: `102/102 PASS`;
+- Extension I1 run `35187262735`: SUCCESS, including browser verifier and installed-local API/portal/PostgreSQL acceptance;
+- Documentation run `35187264986`: SUCCESS;
+- Extension CI PR run `35187264983`: SUCCESS, including Ozon/WB preserved baselines, WB browser fixture, common core source/package and native Chromium application fixture;
+- Extension CI push run `35187262733`: SUCCESS on the same implementation head;
+- browser verifier: Chromium `151.0.7922.34`, valid signed snapshot accepted and tamper rejected;
+- installed-local: PASS, two distinct fixture accounts/device-session/authorization tuples, logout cleanup PASS, beta state unchanged, live provider calls `0`;
+- deterministic package: `SELLER_AGENTS_I1_C1_v0.2.4_LOCAL_DEVELOPMENT.zip`, `1,837,324` bytes, SHA-256 `5badfd1a67a824ecd160694fdb45ee25fb2dac27386e22ab93145eeaca4b6afa`, source/extracted/ZIP `39/39/39` files with zero byte mismatches.
+
+Server CI was not re-triggered for C2.2-B because the exact diff contains no server, contract, schema, migration, OpenAPI, or server-document change. The accepted base server authority remains unchanged; the exact C2.2-B head still passed installed-local API/portal/PostgreSQL integration. No meaningless server-file touch is introduced only to force a path-filtered workflow.
+
+Full acceptance receipt: `docs/migration/evidence/extension-i1-c2-2b-2026-09-17/r1/`.
+
+## Acceptance rule and next boundary
+
+C2.2-B is accepted only for the signed metadata projection above. The final implementation diff confirms that no Work/application/provider/scheduler execution path acquired a new permission from this layer.
+
+A later step that wants executable capabilities must first define and package an independent local capability authority and then intersect that packaged authority with signed feature/entitlement permission as required by the server handoff. Offline Work remains closed until separately designed, implemented, and accepted.
