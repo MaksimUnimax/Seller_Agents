@@ -1,6 +1,6 @@
 # C2.2-C packaged local capability authority
 
-Status: `IMPLEMENTATION_CANDIDATE / ACCEPTANCE_PENDING`
+Status: `ACCEPTED / REMOTE VERIFIED`
 
 Task scope: define the independent local/package side of the server-owned rule `effective capability = packaged local capability AND signed feature/entitlement permission` without yet defining the signed-permission mapping or granting any execution authority.
 
@@ -8,7 +8,7 @@ Task scope: define the independent local/package side of the server-owned rule `
 
 C2.2-B proved that Bootstrap V2 signed `features`, `entitlements`, and AI profile metadata can be exposed after the accepted verification/cache policy without becoming executable authority. The server handoff separately requires a local packaged-capability intersection before cached/signed policy can authorize execution.
 
-The current package already contains reviewed Ozon and Wildberries marketplace adapters and local ChatGPT/Alice web adapter identities, but before C2.2-C there is no independent canonical packaged capability registry. Remote feature/entitlement keys are server-owned machine identifiers and are not assumed to have the same namespace or meaning as local package capability ids.
+The current package already contains reviewed Ozon and Wildberries marketplace adapters and local ChatGPT/Alice web adapter identities, but before C2.2-C there was no independent canonical packaged capability registry. Remote feature/entitlement keys are server-owned machine identifiers and are not assumed to have the same namespace or meaning as local package capability ids.
 
 C2.2-C therefore creates only the local half of the future intersection.
 
@@ -19,7 +19,7 @@ C2.2-C therefore creates only the local half of the future intersection.
 Schema: `packaged_capability_manifest_v1`.
 Authority marker: `PACKAGED_LOCAL_ONLY`.
 
-The initial reviewed registry contains exactly four adapter-presence capabilities that are already evidenced by the current composed package:
+The accepted registry contains exactly four adapter-presence capabilities already evidenced by the current composed package:
 
 - `marketplace.ozon.adapter` — the Ozon marketplace adapter is packaged;
 - `marketplace.wildberries.adapter` — the Wildberries marketplace adapter is packaged;
@@ -38,7 +38,7 @@ The public API is intentionally small and pure:
 - `has(id)` answers only whether a reviewed local capability id is packaged;
 - `describe(id)` returns only the frozen local row or `null`.
 
-It performs no network, storage, auth, bootstrap, cache, clock, provider, or scheduler operation.
+The API object, manifest, arrays and rows are frozen. The global authority slot is published as non-writable and non-configurable. It performs no network, storage, auth, bootstrap, cache, clock, provider, or scheduler operation.
 
 ## Composition
 
@@ -48,7 +48,7 @@ C2.2-C does not modify the donor runtime, application Work implementation, marke
 
 ## Explicit non-goals
 
-This candidate does **not**:
+This acceptance does **not**:
 
 - bind a signed feature or entitlement key to any local capability id;
 - compute `effective capability`;
@@ -62,7 +62,7 @@ This candidate does **not**:
 - change server/contracts/schema/migrations/OpenAPI;
 - close full C2, I1, D2, D3/S2, S1.2, beta, release, deployment, or live-provider acceptance.
 
-The historical WB `entitlement_policy.js` remains donor/reference evidence and is not promoted to this new control-plane capability authority.
+The historical WB `entitlement_policy.js` remains donor/reference evidence and is not promoted to this control-plane capability authority.
 
 ## Focused acceptance gate
 
@@ -70,14 +70,33 @@ The historical WB `entitlement_policy.js` remains donor/reference evidence and i
 
 1. exact registry/schema/authority with the four reviewed packaged adapter-presence facts;
 2. strict lookup with no inference for unknown, remote-looking, or malformed ids;
-3. the API, manifest, arrays, and rows are frozen inside the extension realm;
+3. the API, manifest, arrays and rows are frozen, and the global authority slot cannot be replaced;
 4. even a correctly signed bootstrap whose remote keys happen to equal local capability ids remains separate: signed metadata has `executionAuthority: false`, local `signedPermissionBindings` remains empty, and no binding/grant is inferred;
 5. local capability lookup performs zero storage/network work after normal control-client initialization.
 
-The focused gate is registered in the full Extension I1 source + extracted-package checker. Existing C1/C2.1/C2.2-A/C2.2-B, common application, Ozon/WB, browser, installed-local, documentation, and packaging gates remain required.
+Exact tested implementation head: `a1d0a9dc83daf80536f58bf56d498206da8a1eb3`, tree `1f7a54c0ac0c1c95b680071f7036f084715bac4c`.
+
+Remote exact-tree evidence:
+
+- focused packaged-capability gate: `5/5 PASS` on source and `5/5 PASS` on extracted package;
+- full Extension I1 checker: `104/104 PASS`;
+- Extension I1 run `35190621200`: SUCCESS, including browser verifier and installed-local API/portal/PostgreSQL acceptance;
+- Documentation run `35190625142`: SUCCESS;
+- Extension CI push run `35190621221`: SUCCESS, including common core, Ozon, WB Node, native Chromium application fixture and WB browser baseline;
+- Extension CI PR run `35190625256`: SUCCESS with the same preserved baseline groups;
+- browser verifier: Chromium `151.0.7922.34`, valid signed snapshot accepted and tamper rejected;
+- installed-local: PASS, two distinct accounts/device-session/authorization tuples, logout cleanup PASS, beta state unchanged, live provider calls `0`;
+- deterministic package: `SELLER_AGENTS_I1_C1_v0.2.4_LOCAL_DEVELOPMENT.zip`, `1,839,269` bytes, SHA-256 `61e992cc28323c68bb2f448d88bb2d9ecc7ce2e0f1c9ced5de82b4ac2d123057`, runtime/extracted/ZIP `39/39/39` with zero byte mismatches;
+- packaged authority source input: `2,072` bytes, SHA-256 `17783d63479ab5282b0414fd83bfcecbb8d0ed86f272c5e2f2005a081466e927`.
+
+Server CI was not artificially re-triggered because the exact C2.2-C diff contains no server, contract, schema, migration, OpenAPI, or server-document path. Accepted server authority remains unchanged; the exact implementation head still passed installed-local API/portal/PostgreSQL integration.
+
+The final implementation diff from the accepted C2.2-B integration base `27d1b1a1ec1fac15d284d20a42a27f95e1514924` contains only five paths: composition, the new packaged authority, its focused test, I1 test registration, and this design/acceptance document. No Work/application/provider/server execution file changed.
+
+Full receipt: `docs/migration/evidence/extension-i1-c2-2c-2026-09-17/r1/`.
 
 ## Acceptance rule and next boundary
 
-C2.2-C may be accepted only after exact-tree source/package/browser/installed-local/remote evidence is green and the final diff confirms that no execution path consumes the new manifest as permission.
+C2.2-C is accepted only for independent packaged-local capability presence authority. It does not grant execution.
 
-After C2.2-C, the next step is still **not automatically offline Work**. A separate bounded design must identify explicit, reviewed server signed-permission keys and define a fail-closed mapping/intersection with this packaged authority. Unknown/missing signed keys must remain unable to activate a local capability, and a signed allow must never manufacture a capability absent from the package.
+The next step is still **not automatically offline Work**. A separate bounded design must identify explicit, reviewed server signed-permission keys and define a fail-closed mapping/intersection with this packaged authority. Unknown/missing signed keys must remain unable to activate a local capability, a signed allow must never manufacture a capability absent from the package, and signed denial must win. Prefer keeping that next step read-only/non-executing until its own acceptance is complete.
