@@ -2,7 +2,7 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M2R RECONCILED / S01-S03 CLOSED / R01 COLLECT SUCCEEDED / ONE EXPORTPAGE RELEASED**.
+Status: **M2R RECONCILED / S01-S03 CLOSED / R01 EXPORT RECEIVED / RAW FULL EXPORT PERSIST IN PROGRESS**.
 
 Authorities:
 
@@ -32,76 +32,69 @@ No blind retry. A provider action is never released merely because it appears in
 - M7 Collection Freeze remains BLOCKED;
 - M8 Semantic Master remains BLOCKED.
 
-Current new representative candidates remain R01-R12 under `M3_QUERY_MATRIX_2026-09-17.md`; they are candidates, not automatically released actions.
-
 ## R01 — `подключить chatgpt к маркетплейсу`
 
-Job:
+Job: `octoport-serp-r01-20260917`  
+Operation: `sprsmko0p531abn82fmk`  
+Revision: `5`.
 
-`octoport-serp-r01-20260917`
-
-Lifecycle authorities:
-
-- start raw: `raw/R01_01_START_2026-09-17.md`;
-- start analysis: `analysis/R01_01_START_2026-09-17.md`;
-- submit raw: `raw/R01_02_SUBMIT_2026-09-17.md`;
-- submit analysis: `analysis/R01_02_SUBMIT_2026-09-17.md`;
-- first not-due collect raw: `raw/R01_03_COLLECT_NOT_DUE_2026-09-17.md`;
-- first not-due analysis: `analysis/R01_03_COLLECT_NOT_DUE_2026-09-17.md`;
-- second not-due collect raw: `raw/R01_04_COLLECT_NOT_DUE_2026-09-17.md`;
-- second not-due analysis: `analysis/R01_04_COLLECT_NOT_DUE_2026-09-17.md`;
-- successful collect raw: `raw/R01_05_COLLECT_SUCCEEDED_2026-09-17.md`;
-- successful collect analysis: `analysis/R01_05_COLLECT_SUCCEEDED_2026-09-17.md`.
-
-Authoritative provider operation:
-
-`sprsmko0p531abn82fmk`
-
-Successful collection state:
+Lifecycle through collect:
 
 ```text
-request_executed = true
-provider_calls = 1
-processed = 1
-normalized = 1
-outcome = received
-WAITING = 0
+START = PASS / PERSISTED / READBACK
+SUBMIT = ACCEPTED / PERSISTED / READBACK
+FIRST_COLLECT = LOCAL NO_DUE_OPERATIONS / PERSISTED / READBACK
+SECOND_COLLECT = LOCAL NO_DUE_OPERATIONS / PERSISTED / READBACK
+FINAL_COLLECT = SUCCEEDED / PERSISTED / READBACK
 SUCCEEDED = 1
-PARSE_FAILED = 0
-FAILED = 0
-UNKNOWN = 0
-requests_started = 1
-operations_accepted = 1
-polls_started = 1
-unresolved = 0
-all_successful = true
+UNRESOLVED = 0
+ALL_SUCCESSFUL = true
+```
+
+Export received:
+
+```text
+schema = YMB_SEARCH_ASYNC_EXPORT_PAGE_V1
+job_id = octoport-serp-r01-20260917
 revision = 5
+total_items = 1
+item_count = 1
+result_row_count = 20
+items_with_raw = 1
+items_with_normalized = 1
+state = SUCCEEDED
+has_more = false
+all_job_items_in_this_file = true
+validation.document_count = 20
+validation.empty_proven = false
+validation.usable_for_url_comparison = true
+validation.missing_url_ranks = []
+validation.unsafe_url_ranks = []
 ```
 
-Interpretation: provider collection is complete. The two preceding `NO_DUE_OPERATIONS` responses were local timing guards and did not contact Yandex. No additional `submitN`, new start, or normal collect is authorized.
+The complete user-returned export file was received as:
 
-## Export release
+`search-octoport-serp-r01-20260917-r5-0-0.json`
 
-The accepted Search bridge export contract used by S01-S03 is revision-bound and has the exact shape:
+Local exact-byte QA before persistence:
 
 ```text
-SEARCH_ASYNC_BATCH_API_V1 {"action":"exportPage","jobId":"<job>","after":-1,"limit":1,"revision":5}
+original_size_bytes = 98455
+original_sha256 = 1c3cf6ae186bcfd07924a183209130cfb38f7af16e533acf864762973c4dfb7e
 ```
 
-R01 current revision is also `5`, so exactly one R01 export is released:
+To avoid lossy truncation through the text-only GitHub connector, the exact JSON bytes were gzip-compressed deterministically (`gzip -9`, mtime 0) and stored as a binary Git blob under:
+
+`raw/search-octoport-serp-r01-20260917-r5-0-0.json.gz`
+
+Compressed artifact QA:
 
 ```text
-SEARCH_ASYNC_BATCH_API_V1 {"action":"exportPage","jobId":"octoport-serp-r01-20260917","after":-1,"limit":1,"revision":5}
+gzip_size_bytes = 28228
+gzip_sha256 = 3fa45c263cc56f8672713ce379b1d8766440f4230e9011d5aabf4757a98c27ab
 ```
 
-This export is expected to return the normalized one-query Search artifact containing the bounded top-20 organic surface. The returned artifact/envelope must be persisted and remote-read back before semantic analysis.
-
-Not released before export/readback and full R01 analysis:
-
-- R02 or later queries;
-- any second submit;
-- new start;
-- final cluster/page/IA decisions.
+The semantic R01 analysis and final next-action decision remain blocked until the persisted raw blob is attached to the branch and remote readback/integrity is verified.
 
 ## Current hard gate
 
@@ -110,16 +103,10 @@ CURRENT_STAGE = M3 ORDINARY YANDEX SERP COLLECTION
 S01_S03 = CLOSED
 M2R_RECONCILIATION = ACCEPTED
 CURRENT_QUERY = R01
-R01_QUERY = подключить chatgpt к маркетплейсу
-R01_START = PASS / PERSISTED / READBACK
-R01_SUBMIT = ACCEPTED / PERSISTED / READBACK
-R01_OPERATION_ID = sprsmko0p531abn82fmk
-R01_COLLECT = SUCCEEDED / PERSISTED / READBACK
-R01_SUCCEEDED = 1
-R01_UNRESOLVED = 0
-R01_REVISION = 5
-R01_EXPORTPAGE_AFTER_MINUS_1_LIMIT_1_REV_5 = RELEASED
+R01_EXPORT = RECEIVED / 20 RESULTS / LOCAL QA PASS
+R01_FULL_RAW_PERSIST = IN PROGRESS
+R01_SEMANTIC_ANALYSIS = BLOCKED UNTIL REMOTE READBACK
 R02 = BLOCKED
-NEXT_PHYSICAL_ACTION = EXECUTE EXACTLY ONE R01 exportPage AND RETURN THE COMPLETE RESULT/ATTACHED EXPORT ARTIFACT
+NEXT_PHYSICAL_ACTION = ATTACH FULL EXPORT BLOB TO BRANCH, VERIFY REMOTE READBACK, THEN ANALYZE ALL 20 RESULTS
 M7_COLLECTION_FREEZE = BLOCKED
 ```
