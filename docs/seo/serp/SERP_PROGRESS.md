@@ -2,7 +2,7 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M3 / R06 CLOSED / R08 PRE-STEP PASS / START PASS / SUBMIT ACCEPTED / FIRST COLLECT RELEASED**.
+Status: **M3 / R06 CLOSED / R08 PRE-STEP PASS / START PASS / SUBMIT ACCEPTED / FIRST COLLECT LOCAL NO_DUE / SECOND COLLECT RELEASED**.
 
 ## Closed Search evidence
 
@@ -50,6 +50,7 @@ R08_PRE_STEP = PASS / PERSISTED / REMOTE READBACK
 R08_START = PASS / PERSISTED / REMOTE READBACK
 R08_OPERATION_ID = sprvt6p3aq5uj96uqs0b
 R08_SUBMIT = PASS / ACCEPTED / PERSISTED / REMOTE READBACK
+R08_COLLECT_1 = LOCAL NO_DUE / PERSISTED / REMOTE READBACK
 R08_PENDING = 0
 R08_WAITING = 1
 R08_SUCCEEDED = 0
@@ -61,12 +62,16 @@ R08_UNRESOLVED = 1
 R08_REVISION = 2
 ```
 
-Submit authorities:
+Lifecycle authorities:
 
+- `raw/R08_01_START_2026-09-17.md`;
+- `analysis/R08_01_START_2026-09-17.md`;
 - `raw/R08_02_SUBMIT_2026-09-17.md`;
-- `analysis/R08_02_SUBMIT_2026-09-17.md`.
+- `analysis/R08_02_SUBMIT_2026-09-17.md`;
+- `raw/R08_03_COLLECT_NO_DUE_2026-09-17.md`;
+- `analysis/R08_03_COLLECT_NO_DUE_2026-09-17.md`.
 
-The existing R08 job was submitted exactly once. Yandex accepted deferred operation `sprvt6p3aq5uj96uqs0b`; no UNKNOWN/failure state exists and no provider poll has yet executed.
+The first bounded collect returned local `NO_DUE_OPERATIONS` with `request_executed=false` and `provider_calls=0`. No Yandex operation poll executed. Accepted operation `sprvt6p3aq5uj96uqs0b` remains `WAITING=1` with no failure or UNKNOWN state.
 
 Marketplace-specific `аналитика рекламы wildberries` / `аналитика рекламы ozon` remain HOLD. They are released only if the complete generic R08 SERP leaves one named marketplace divergence unresolved.
 
@@ -79,9 +84,10 @@ R06 = CLOSED / PERSISTED / READBACK
 R08_PRE_STEP = PASS / PERSISTED / READBACK
 R08_START = PASS / PERSISTED / READBACK
 R08_SUBMIT = PASS / ACCEPTED / PERSISTED / READBACK
+R08_COLLECT_1 = LOCAL NO_DUE / PERSISTED / READBACK
 R08_SECOND_START = FORBIDDEN
 R08_SECOND_SUBMIT = FORBIDDEN
-R08_COLLECT_1 = RELEASED EXACTLY ONCE
+R08_COLLECT_2 = RELEASED EXACTLY ONCE
 R08_EXPORT = BLOCKED UNTIL TERMINAL COLLECT + PERSISTENCE + READBACK
 R08_MARKETPLACE_SPECIFIC_PAIR = HOLD
 R09 = BLOCKED UNTIL R08 QUERY CLOSURE
