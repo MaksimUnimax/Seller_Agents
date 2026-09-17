@@ -2,7 +2,7 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M3 / R05 CLOSED / R06 START RECOVERED / SUBMIT ACCEPTED / FIRST COLLECT RELEASED**.
+Status: **M3 / R05 CLOSED / R06 START RECOVERED / SUBMIT ACCEPTED / FIRST COLLECT LOCAL NO_DUE / SECOND COLLECT RELEASED**.
 
 ## Closed Search evidence
 
@@ -27,6 +27,7 @@ R06_PRE_STEP = PASS / PERSISTED / READBACK
 R06_START = PASS / RECOVERED BY STATUS / PERSISTED / READBACK
 R06_OPERATION_ID = sprdv3pu6m66t214aidj
 R06_SUBMIT = PASS / ACCEPTED / PERSISTED / READBACK
+R06_COLLECT_1 = LOCAL NO_DUE / PERSISTED / READBACK
 R06_PENDING = 0
 R06_WAITING = 1
 R06_SUCCEEDED = 0
@@ -38,12 +39,14 @@ R06_UNRESOLVED = 1
 R06_REVISION = 2
 ```
 
-Submit authority:
+Authorities:
 
 - `raw/R06_05_SUBMIT_2026-09-17.md`;
-- `analysis/R06_05_SUBMIT_2026-09-17.md`.
+- `analysis/R06_05_SUBMIT_2026-09-17.md`;
+- `raw/R06_06_COLLECT_NO_DUE_2026-09-17.md`;
+- `analysis/R06_06_COLLECT_NO_DUE_2026-09-17.md`.
 
-The recovered R06 job was submitted exactly once. Yandex accepted deferred operation `sprdv3pu6m66t214aidj`; no UNKNOWN/failure state exists and no poll has yet executed.
+The first bounded collect returned local `NO_DUE_OPERATIONS` with `request_executed=false` and `provider_calls=0`. No Yandex poll executed. The accepted operation remains `WAITING=1` with no UNKNOWN/failure state.
 
 ## Current hard gate
 
@@ -52,7 +55,7 @@ CURRENT_STAGE = M3 ORDINARY YANDEX SERP COLLECTION
 CURRENT_QUERY = R06
 R06_SECOND_START = FORBIDDEN
 R06_SECOND_SUBMIT = FORBIDDEN
-R06_COLLECT_1 = RELEASED EXACTLY ONCE
+R06_COLLECT_2 = RELEASED EXACTLY ONCE
 R06_EXPORT = BLOCKED UNTIL TERMINAL COLLECT + PERSISTENCE + READBACK
 R08 = BLOCKED UNTIL R06 QUERY CLOSURE
 M7_COLLECTION_FREEZE = BLOCKED
