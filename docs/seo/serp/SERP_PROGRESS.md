@@ -2,7 +2,7 @@
 
 Date: 2026-09-17.  
 Branch: `seo/wordstat-batch-01-2026-09-16`.  
-Status: **M3 / R04 CLOSED / R05 WAITING / TWO LOCAL NO_DUE COLLECTS / THIRD COLLECT RELEASED**.
+Status: **M3 / R04 CLOSED / R05 WAITING / THREE LOCAL NO_DUE COLLECTS / FOURTH COLLECT RELEASED**.
 
 ## Closed Search evidence
 
@@ -27,25 +27,28 @@ R05_START = PASS / PERSISTED / READBACK
 R05_SUBMIT = PASS / PERSISTED / READBACK
 R05_COLLECT_1 = LOCAL NO_DUE / PERSISTED / READBACK
 R05_COLLECT_2 = LOCAL NO_DUE / PERSISTED / READBACK
+R05_COLLECT_3 = LOCAL NO_DUE / PERSISTED / READBACK
 R05_WAITING = 1
 R05_UNKNOWN = 0
 R05_POLLS_STARTED = 0
 R05_REVISION = 2
 ```
 
-Both bounded collects returned only the local `NO_DUE_OPERATIONS` guard with `request_executed=false` and `provider_calls=0`. Neither contacted Yandex. The accepted operation remains waiting and unchanged.
+All three bounded collects returned the same local `NO_DUE_OPERATIONS` envelope with `request_executed=false`, `provider_calls=0`. None contacted Yandex. The accepted operation remains unchanged and waiting.
 
 Raw authorities:
 
 - `raw/R05_03_COLLECT_NO_DUE_2026-09-17.b64`;
-- `raw/R05_04_COLLECT_NO_DUE_2026-09-17.b64`.
+- `raw/R05_04_COLLECT_NO_DUE_2026-09-17.b64`;
+- `raw/R05_05_COLLECT_NO_DUE_2026-09-17.b64`.
 
-Both decode to the same exact 634-byte envelope with SHA256 `112b8445b3797482dee304aa2410eacd524834da993dda7bfe6118cec6baacc0`.
+Each decodes to the same exact 634-byte envelope with SHA256 `112b8445b3797482dee304aa2410eacd524834da993dda7bfe6118cec6baacc0`.
 
 Analysis authorities:
 
 - `analysis/R05_03_COLLECT_NO_DUE_2026-09-17.md`;
-- `analysis/R05_04_COLLECT_NO_DUE_2026-09-17.md`.
+- `analysis/R05_04_COLLECT_NO_DUE_2026-09-17.md`;
+- `analysis/R05_05_COLLECT_NO_DUE_2026-09-17.md`.
 
 ## Current hard gate
 
@@ -54,7 +57,7 @@ CURRENT_STAGE = M3 ORDINARY YANDEX SERP COLLECTION
 CURRENT_QUERY = R05
 R05_SECOND_START = FORBIDDEN
 R05_SECOND_SUBMIT = FORBIDDEN
-R05_COLLECT_3 = RELEASED EXACTLY ONCE
+R05_COLLECT_4 = RELEASED EXACTLY ONCE
 R05_EXPORT = BLOCKED UNTIL TERMINAL COLLECT + PERSISTENCE + READBACK
 R06 = BLOCKED UNTIL R05 QUERY CLOSURE
 M7_COLLECTION_FREEZE = BLOCKED
