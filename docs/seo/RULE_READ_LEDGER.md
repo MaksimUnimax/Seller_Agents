@@ -122,3 +122,45 @@ RETRO VERDICTS:
 NO FULL REPLAY AUTHORIZED.
 M4A must close M3 analytical hardening from existing rows.
 M6 must close full-SERP/device/region/time controls.
+
+
+## 2026-09-18 — R0 M0 scope/source consolidation execution
+
+LIVE_HEAD:
+cb793c6fff50addcafb531bd2d28ce3f15e15f8e
+
+CURRENT_MAIN_CHAT_ACTION:
+execute mandatory R0 before M4A re-preparation.
+
+LEVEL1_FILES_READ:
+- LEVEL1/README.md
+- EXECUTION_RULES.md
+- QUALITY_FIRST_RESOURCE_RULE.md
+- WORK_HANDOFF_RULE.md
+
+LEVEL2_FILES_READ:
+- LEVEL2/README.md
+- LEVEL2/OCTOPORT_STEP_RULES_INDEX.md (M0)
+- LEVEL2/OCTOPORT_M0_M3_COMPLETED_STAGE_KW002_RETRO_AUDIT_2026-09-18.md
+
+WORK_EVIDENCE_FILES_READ:
+- PRODUCT_TRUTH.md
+- technical/CURRENT_SITE_BASELINE_2026-09-16.md
+- SEO_MASTER_ROADMAP_2026-09-16.md
+- README.md
+- current RULE_READ_LEDGER.md
+
+FAILURE_HISTORY:
+- completed-stage KW-002 retrospective
+- rule-memory / authority-drift controls already transferred
+
+EXTERNAL_RESEARCH:
+not required for this docs-only consolidation because no changing provider/search-engine claim is newly introduced; current external-method facts are not being re-decided here.
+
+OUTPUT:
+evidence/M0_SCOPE_SOURCE_RETRO_CONSOLIDATION_2026-09-18.md
+
+RESULT:
+M0_SCOPE_SOURCE_RETRO_CONSOLIDATION = PASS
+M0_CURRENT_SCORE = 9.7/10
+M4A_REPREPARATION_ALLOWED_AFTER_REMOTE_READBACK = true

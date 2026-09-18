@@ -483,3 +483,19 @@ M7_ALLOWED
 => CURRENT M0/M1/M2/M3 SCORES >= 9.0
 => OPEN_CRITICAL_RETRO_DEBT = 0
 ```
+
+
+## 2026-09-18 — R0 M0 scope/source consolidation acceptance
+
+Authority:
+`evidence/M0_SCOPE_SOURCE_RETRO_CONSOLIDATION_2026-09-18.md`
+
+```text
+M0_PRODUCT_TRUTH = PASS
+M0_SCOPE_SOURCE_RETRO_CONSOLIDATION = PASS
+M0_CURRENT_SCORE = 9.7/10
+M0_HARD_GATES = PASS
+M4A_REPREPARATION_ALLOWED = true
+```
+
+R0 used only existing accepted authorities; no provider replay or new market evidence was created.

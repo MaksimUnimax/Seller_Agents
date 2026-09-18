@@ -403,3 +403,30 @@ Roadmap now has one mandatory remediation schedule:
 
 M4A re-preparation is now explicitly blocked until R0 passes.
 M7 is explicitly blocked while M1 is OPEN or any current M0-M3 authority remains below normal stage threshold/hard gates.
+
+
+## 2026-09-18 — R0 M0 scope/source consolidation
+
+Executed the first mandatory remediation item before M4A.
+
+Created:
+`evidence/M0_SCOPE_SOURCE_RETRO_CONSOLIDATION_2026-09-18.md`.
+
+The file consolidates existing accepted M0 facts into one Step00/01-style authority:
+- product definition and launch action boundary;
+- Russian-language / Russia search baseline;
+- SEO research goal;
+- allowed evidence source classes;
+- prohibited/non-authoritative inputs;
+- current site-state pointer;
+- material unknown/HOLD ledger;
+- evidence-class boundaries;
+- dependency/reopen policy.
+
+No new provider calls and no new market/product facts were invented.
+
+Result:
+`M0_SCOPE_SOURCE_RETRO_CONSOLIDATION = PASS`.
+Current M0 score: `9.7/10`.
+M1 remains OPEN.
+After remote readback, M4A re-preparation is released.

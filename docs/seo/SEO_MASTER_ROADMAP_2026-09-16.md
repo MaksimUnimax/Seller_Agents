@@ -125,7 +125,7 @@ Current retrospective:
 
 This schedule makes the retrospective debt executable. It is not optional background work.
 
-### R0 — M0 scope/source consolidation — DO NOW, BEFORE M4A RE-PREPARATION
+### R0 — M0 scope/source consolidation — **COMPLETE / PASS**
 
 Why now:
 M4A is about competitor/search authority and must not start from a product/source scope that is only implicitly distributed across several files.
@@ -147,7 +147,9 @@ Exit:
 `M0_SCOPE_SOURCE_RETRO_CONSOLIDATION = PASS`
 and M0 re-score/hard-gate check remains at least `9.0/10`.
 
-**M4A re-preparation is blocked until R0 is persisted and remote-read back.**
+R0 authority: `evidence/M0_SCOPE_SOURCE_RETRO_CONSOLIDATION_2026-09-18.md`.
+
+**M4A re-preparation is released after R0 remote readback.**
 
 ### R1 — M1 live/measurement baseline completion — AFTER M4/M5, BEFORE M6 FINAL CLOSURE / M7
 
@@ -256,7 +258,9 @@ Only after R4:
 
 # M0 — Governance + product truth
 
-Status: **PASS**.
+Status: **PASS / RETRO CONSOLIDATION PASS / CURRENT SCORE 9.7/10**.
+
+Current M0 consolidation authority: `evidence/M0_SCOPE_SOURCE_RETRO_CONSOLIDATION_2026-09-18.md`.
 
 Freeze brand/domain, current capabilities, Ozon/Wildberries scope, read-only launch promise, chosen external LLM model, credential/storage truth, beta/public availability, unsupported actions, evidence authorities and parallel-work isolation.
 

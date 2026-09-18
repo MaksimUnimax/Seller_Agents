@@ -68,7 +68,9 @@ No blind retry. Pending/waiting/unknown не являются отрицател
 
 ### M0 — Product truth/governance
 
-`PASS`.
+`PASS / RETRO CONSOLIDATION PASS / 9.7/10`.
+
+Current consolidated authority: `evidence/M0_SCOPE_SOURCE_RETRO_CONSOLIDATION_2026-09-18.md`.
 
 ### M1 — Current-site + measurement baseline
 
