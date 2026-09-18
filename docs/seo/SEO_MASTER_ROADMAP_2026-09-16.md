@@ -423,7 +423,7 @@ M4 is split into bounded substeps so competitor research cannot drift into a rem
 
 ### M4A — full-volume recurring competitor registry
 
-Status: **REOPENED — prior M4A preparation invalidated because explicit LEVEL 1 / LEVEL 2 gate was not present/read; re-preparation required from live HEAD**.
+Status: **R2 PREPARED / WORK NOT STARTED / OLD PROMPT SUPERSEDED**.
 
 Derive the registry from the complete accepted M3 authority set:
 
@@ -433,11 +433,11 @@ Derive the registry from the complete accepted M3 authority set:
 - original unreliable R04 excluded;
 - R04R1 is authority.
 
-M4A is a cross-file recurrence/lineage task. Before any Work prompt is executable, Main Chat must read live LEVEL 1 plus LEVEL2/M4_SEARCH_COMPETITOR_LANDING_RULES.md, record the rule-read gate, and rebuild M4A preparation from current HEAD. Only then may Work process the complete accepted M3 corpus. Sampling, first-N analysis and a preselected brand shortlist are forbidden.
+M4A is a cross-file recurrence/lineage task. R2 has now passed Main Chat Level1/Level2/research/release preparation after R0. Work processes the complete accepted M3 corpus: 300 occurrence rows plus all 105 unique Top10 query pairs. Sampling, first-N analysis and a preselected brand shortlist are forbidden.
 
 Required M4A result:
 
-`complete occurrence ledger -> URL/domain recurrence registry -> candidate classification -> exact proposed M4B page-candidate manifest -> Main Chat return QA`.
+`300-row classified occurrence authority -> Top3/Top10/11-20 query profiles -> 105-pair exact-URL/domain similarity -> collision ledger -> complete domain recurrence -> curated competitor registry -> M4B anchor manifest -> Main Chat return QA`.
 
 M4A does **not** browse current competitor sites and does not decide final page architecture.
 

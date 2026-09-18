@@ -73,3 +73,43 @@ M4B must implement transferred Step07 controls:
 
 CURRENT_CURSOR:
 M4 CURRENT -> M4A REPREPARATION REQUIRED UNDER UPDATED LEVEL2 -> NO WORK PROMPT RELAY YET.
+
+
+## 2026-09-18 — M4A R2 re-prepared after R0 and full KW-002 hardening transfer
+
+R0 prerequisite:
+M0_SCOPE_SOURCE_RETRO_CONSOLIDATION = PASS
+M0_CURRENT_SCORE = 9.7/10
+
+New current M4A execution authorities:
+- M4A_PRE_STEP_RESEARCH_AND_EXECUTION_GATE_2026-09-18_R2.md
+- M4A_EXECUTION_RELEASE_2026-09-18_R2.md
+- M4A_WORK_PROMPT_2026-09-18_R2.md
+
+The old M4A gate/prompt remains SUPERSEDED / DO NOT EXECUTE.
+
+R2 execution unit:
+- 15 accepted authority queries;
+- 20 rows each;
+- 300 occurrences;
+- 105 unique unordered Top10 query pairs;
+- no new provider calls;
+- no external vendor browsing.
+
+R2 adds the missing hardened Step06 layer:
+- Top3 / Top10 / 11-20;
+- complete occurrence classification;
+- query profiles;
+- collision/uncertainty ledger;
+- exact-URL and domain pairwise Top10 similarity;
+- explicit recurrence granularity;
+- complete domain recurrence universe;
+- curated competitor registry;
+- exact M4B ranking-URL anchors.
+
+Role correction:
+Main Chat has already performed Level1/Level2/research/release governance.
+Work performs only the released full-volume execution plus narrow live-HEAD/input-drift preflight.
+
+CURRENT_CURSOR:
+M4 CURRENT -> M4A R2 PREPARED -> REMOTE READBACK -> OWNER RELAYS R2 WORK PROMPT -> WORK RETURN -> OWNER ONE-STAGING UPLOAD -> MAIN CHAT RETURN QA -> only then M4B.

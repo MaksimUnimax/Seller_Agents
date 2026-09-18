@@ -430,3 +430,28 @@ Result:
 Current M0 score: `9.7/10`.
 M1 remains OPEN.
 After remote readback, M4A re-preparation is released.
+
+
+## 2026-09-18 — M4A R2 prepared under corrected two-level architecture
+
+After R0 passed, Main Chat re-read live Level1, the full applicable M4 Level2 stack, current M3/M2R evidence and failure history, then repeated fresh external M4 method research.
+
+R2 replaces the earlier invalid M4A prompt.
+
+Key hardened additions:
+- 300-row occurrence classification;
+- Top3/Top10/11-20 separation;
+- query-level Top10 analytical profiles;
+- complete 105-pair exact-URL/domain similarity matrix;
+- collision/uncertainty ledger;
+- recurrence universe with explicit metric granularity;
+- curated Search-competitor registry;
+- M4B anchor manifest.
+
+Work-role boundary fixed:
+Main Chat does governance/research/release once.
+Work receives execution-only prompt and narrow drift/input preflight.
+
+No provider calls or external competitor browsing are authorized in M4A.
+
+M4B remains blocked until Main Chat independently accepts the R2 Work return.

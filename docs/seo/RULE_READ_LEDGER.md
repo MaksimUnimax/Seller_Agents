@@ -164,3 +164,61 @@ RESULT:
 M0_SCOPE_SOURCE_RETRO_CONSOLIDATION = PASS
 M0_CURRENT_SCORE = 9.7/10
 M4A_REPREPARATION_ALLOWED_AFTER_REMOTE_READBACK = true
+
+
+## 2026-09-18 — M4A R2 re-preparation
+
+LIVE_HEAD_AT_START:
+2612c3268de5d8fd30221057e10ad552f15bd37d
+
+CURRENT_MAIN_CHAT_ACTION:
+re-prepare M4A after R0 and full KW-002 Step06/07 transfer.
+
+LEVEL1_FILES_READ:
+LEVEL1/README.md
+EXECUTION_RULES.md
+QUALITY_FIRST_RESOURCE_RULE.md
+WORK_HANDOFF_RULE.md
+
+LEVEL2_FILES_READ:
+LEVEL2/README.md
+LEVEL2/OCTOPORT_STEP_RULES_INDEX.md
+LEVEL2/OCTOPORT_KW002_RULE_TRANSFER_AUDIT_2026-09-18.md
+LEVEL2/M4_SEARCH_COMPETITOR_LANDING_RULES.md
+LEVEL2/OCTOPORT_M0_M3_COMPLETED_STAGE_KW002_RETRO_AUDIT_2026-09-18.md
+
+WORK_EVIDENCE_FILES_READ:
+evidence/M0_SCOPE_SOURCE_RETRO_CONSOLIDATION_2026-09-18.md
+SEO_MASTER_ROADMAP_2026-09-16.md
+serp/M3_QUERY_MATRIX_2026-09-16.md
+serp/SERP_PROGRESS.md
+serp/M3_METHOD_RETROSPECTIVE_AND_CONTROL_DEBT_2026-09-18.md
+work/M2R_RECONCILIATION_MAIN_CHAT_RETURN_QA_2026-09-17.md
+serp/competitors/M4_PROGRESS.md
+
+FAILURE_HISTORY_READ:
+two-level-rule flattening
+Main Chat memory/re-read failures
+Work-governance duplication
+M2R independent return-QA defects
+M3 incomplete DoD
+KW-002 hardened Step06 analysis requirements
+
+FRESH_EXTERNAL_SOURCES_CHECKED:
+Yandex Webmaster query selection / market analysis
+Yandex Webmaster Search quality
+Ahrefs keyword clustering as industry corroboration
+
+WORK_TRIGGER_DECISION:
+MET for complete 300-row + 105-pair cross-file analysis.
+
+EXACT_OUTPUTS:
+11 files frozen in M4A R2 gate.
+
+HARD_GATES:
+300 rows, 15x20, 105 pairs, R04 excluded/R04R1 accepted, no provider/web, no final page decisions.
+
+PUBLICATION_PATH:
+one owner staging upload to work_return/M4A_HARDENED_2026-09-18_R2/
+
+MAIN_CHAT_EXECUTION_ALLOWED = true after publication + remote readback of R2 release set.
