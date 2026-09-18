@@ -2,7 +2,7 @@
 
 Date: 2026-09-18
 Branch: seo/wordstat-batch-01-2026-09-16
-Status: **M4A R3 ACCEPTED 9.8/10 / M4B1 AUTHORIZED / M4B2 BLOCKED**
+Status: **M4A R3 ACCEPTED 9.8/10 / M4B1 RECOVERY CURRENT / M4B2 BLOCKED**
 
 ## Current cursor
 
@@ -269,3 +269,34 @@ M4C_ALLOWED = false
 
 Current next action:
 owner relays `M4B1_WORK_PROMPT_2026-09-18_R1.md`.
+
+
+## 2026-09-18 — M4B1 Work partial return accepted for recovery only
+
+Owner upload HEAD:
+`ddb7ce16f325f92014de383039400523a7de7742`
+
+Independent Main Chat QA:
+- output hash mismatches: 0;
+- 45 scope rows;
+- 100/100 anchors;
+- 372 URL rows;
+- 249 inspected/page-evidence rows;
+- 390 candidate terms;
+- 45 residual URL rows;
+- 23 navigation-enumeration entities;
+- joins: PASS.
+
+Decision:
+
+```text
+M4B1_PARTIAL_EVIDENCE = ACCEPTED_FOR_RECOVERY
+M4B1_FINAL_ACCEPTANCE = false
+M4B1_RECOVERY = CURRENT
+M4B2_ALLOWED = false
+```
+
+Exact recovery is frozen in:
+- M4B1_RECOVERY_URL_QUEUE_2026-09-18.tsv
+- M4B1_NAVIGATION_RECOVERY_QUEUE_2026-09-18.tsv
+- M4B1_BROWSER_RECOVERY_GATE_2026-09-18.md

@@ -552,3 +552,16 @@ Every entity receives a frozen scope policy before expansion. Broad sites use ev
 Every discovered eligible URL must receive a terminal state. Work browser/tool failures are explicitly kept separate from real site unavailability and are returned for Main Chat/browser recovery.
 
 Competitor content is structured evidence only; full page text is not stored and competitor-derived terms remain M6 candidates rather than proven demand.
+
+
+## 2026-09-18 — M4B1 partial Work return enters bounded browser recovery
+
+Work correctly returned PARTIAL / RECOVERY_REQUIRED.
+
+Main Chat independently verified output hashes, row counts and joins. Existing 249 inspected pages are retained and will not be recrawled as a substitute for targeted recovery.
+
+Frozen recovery:
+- 45 residual URL rows;
+- 23 entities lacking navigation enumeration.
+
+M4B1 remains open. M4B2 remains blocked.

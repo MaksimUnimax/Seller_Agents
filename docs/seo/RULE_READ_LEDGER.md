@@ -387,3 +387,26 @@ roadmap/progress = PASS
 RESULT:
 M4B1_WORK_START_ALLOWED = true
 M4B2_WORK_START_ALLOWED = false
+
+
+## 2026-09-18 — M4B1 Work partial-return QA
+
+UPLOAD_HEAD:
+ddb7ce16f325f92014de383039400523a7de7742
+
+INDEPENDENT CHECKS:
+8/8 non-self output hashes match manifest
+45 scope rows
+372 URL rows
+100 accepted anchors
+249 inspected/page rows
+45 entity synthesis rows
+390 candidate rows
+45 residual URLs
+23 navigation recovery entities
+TSV shape errors = 0
+broken joins = 0
+
+VERDICT:
+M4B1 partial evidence valid; final PASS forbidden.
+Browser recovery released on exact frozen residual units only.
