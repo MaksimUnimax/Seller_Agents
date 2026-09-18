@@ -265,3 +265,33 @@ Updated authorities:
 - `STAGE_GATES_M0_M7.md`;
 - `README.md`;
 - `serp/M3_METHOD_RETROSPECTIVE_AND_CONTROL_DEBT_2026-09-18.md`.
+
+
+## 2026-09-18 — M4A preparation / competitor registry before landing crawl
+
+Next roadmap step was prepared under the current execution rules.
+
+Before preparation Main Chat re-read the current repository authorities, checked fresh external M4 method guidance, evaluated the Work trigger and verified the remote branch base.
+
+Key correction to the earlier conversational plan:
+
+- M4 does **not** start from a hand-picked list such as Selsup/MPSTATS/etc.;
+- search competitors must first be derived from the complete accepted M3 corpus;
+- accepted M3 authority = 15 queries × 20 rows = 300 organic occurrences, with R04R1 replacing unreliable original R04;
+- full-volume cross-file recurrence/URL/domain lineage is assigned to ChatGPT Work;
+- no sampling, first-N or remembered-brand filtering;
+- M4A performs no vendor browsing and no new Search/Wordstat/Alice/provider acquisition;
+- M4B landing-page collection remains blocked until Main Chat accepts the M4A return.
+
+Prepared and published:
+
+- `serp/competitors/M4A_PRE_STEP_RESEARCH_AND_EXECUTION_GATE_2026-09-18.md`;
+- `serp/competitors/M4A_WORK_PROMPT_2026-09-18.md`;
+- `serp/competitors/M4_PROGRESS.md`;
+- `serp/competitors/work_return/M4A_REGISTRY_2026-09-18/README.md`.
+
+The M4A Work return must contain seven final deliverables and reconcile exactly 15 authority queries / 300 accepted occurrence rows or stop with HOLD.
+
+Current cursor:
+
+`M4 CURRENT -> M4A PREPARED -> OWNER RELAYS WORK PROMPT -> WORK FULL-VOLUME RETURN -> OWNER UPLOADS UNPACKED RETURN -> MAIN CHAT REMOTE READBACK + QA -> only then M4B`.

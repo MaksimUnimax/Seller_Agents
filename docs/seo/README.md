@@ -98,7 +98,11 @@ Authority: `serp/M3_METHOD_RETROSPECTIVE_AND_CONTROL_DEBT_2026-09-18.md`.
 
 ### M4 — Search competitor + landing corpus
 
-`CURRENT` — next active stage; строится из recurring live SERP evidence.
+`CURRENT / M4A PREPARED / WORK NOT STARTED`.
+
+M4A first derives the recurring competitor/page registry from the **complete accepted M3 corpus** (15 authority queries × 20 rows = 300 occurrences). A remembered/preselected brand list is not authority. M4B current landing-page collection is blocked until the M4A Work return is uploaded, remote-read back and accepted by Main Chat.
+
+Authorities: `serp/competitors/M4A_PRE_STEP_RESEARCH_AND_EXECUTION_GATE_2026-09-18.md`, `serp/competitors/M4A_WORK_PROMPT_2026-09-18.md`, `serp/competitors/M4_PROGRESS.md`.
 
 ### M5 — Alice AI
 

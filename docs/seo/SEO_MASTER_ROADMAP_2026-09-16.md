@@ -246,11 +246,44 @@ M3 remains closed for the primary organic corpus. Its control debt is a mandator
 
 # M4 — Search competitor + landing corpus
 
-Status: **OPEN**.
+Status: **CURRENT / M4A PREPARED / WORK NOT STARTED**.
 
-Build the recurring competitor registry from M3, not from preselected business rivals.
+Authorities:
 
-For materially recurring/relevant ranking pages preserve URL/query/rank lineage and collect:
+- `serp/competitors/M4A_PRE_STEP_RESEARCH_AND_EXECUTION_GATE_2026-09-18.md`;
+- `serp/competitors/M4A_WORK_PROMPT_2026-09-18.md`;
+- `serp/competitors/M4_PROGRESS.md`;
+- accepted M3 authority corpus.
+
+M4 is split into bounded substeps so competitor research cannot drift into a remembered brand list or an uncontrolled crawl.
+
+### M4A — full-volume recurring competitor registry
+
+Status: **PREPARED / NEXT PHYSICAL ACTION = OWNER RELAYS WORK PROMPT**.
+
+Derive the registry from the complete accepted M3 authority set:
+
+- 15 accepted query authorities;
+- 20 accepted organic rows per query;
+- expected occurrence universe = 300 rows before analytical deduplication;
+- original unreliable R04 excluded;
+- R04R1 is authority.
+
+M4A is a cross-file recurrence/lineage task. Under the quality-first and Work rules, ChatGPT Work processes the complete accepted M3 corpus. Sampling, first-N analysis and a preselected brand shortlist are forbidden.
+
+Required M4A result:
+
+`complete occurrence ledger -> URL/domain recurrence registry -> candidate classification -> exact proposed M4B page-candidate manifest -> Main Chat return QA`.
+
+M4A does **not** browse current competitor sites and does not decide final page architecture.
+
+### M4B — current official/vendor landing acquisition
+
+Status: **BLOCKED UNTIL M4A RETURN IS REMOTE-READ BACK AND ACCEPTED BY MAIN CHAT**.
+
+For accepted M4A page candidates, collect current official/vendor evidence while preserving URL/query/rank lineage.
+
+For materially recurring/relevant ranking pages preserve and analyze:
 
 - page type/intent;
 - Title/H1/category language;
@@ -266,7 +299,26 @@ For materially recurring/relevant ranking pages preserve URL/query/rank lineage 
 - observable structured-data/content architecture;
 - gaps/overlap against Octoport truth.
 
-Competitor content is evidence, not copy source. Large corpus -> Work, not sampling.
+Native marketplace surfaces remain a separate baseline class and are not automatically third-party competitors.
+
+### M4C — complete competitor-page synthesis and closure
+
+Status: **BLOCKED ON M4B**.
+
+Reconcile the complete captured competitor-page corpus, produce recurring competitor authority, task/capability/claim matrices, terminology/proof/CTA/content-pattern findings, Octoport gaps/overlap, M5 candidate cases and M6 evidence gaps.
+
+If full treatment becomes unsafe in ordinary chat, Work is mandatory; no sampling.
+
+### M4 hard boundaries
+
+- `SEARCH COMPETITOR != BUSINESS RIVAL`.
+- `ONE SERP APPEARANCE != RECURRING COMPETITOR`.
+- Recurrence does not decide final page ownership.
+- Competitor content is evidence, not copy source.
+- No final URL/H1/Title/IA in M4.
+- No competitor capability may be attributed to Octoport without product authority.
+- A prior chat shortlist is hypothesis only and cannot seed/filter M4A.
+- Every M4 artifact must be durable in GitHub and remote-read back before dependent work.
 
 # M5 — Alice AI / generative-search evidence
 
