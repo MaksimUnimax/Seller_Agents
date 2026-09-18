@@ -248,3 +248,27 @@ Decision:
 M4A R2 SUSPENDED.
 Provider replay NOT authorized.
 First attempt deterministic derived transport recovery from immutable Git chunks.
+
+
+## 2026-09-18 — R06 recovery acceptance
+
+RECOVERY_COMMIT:
+d8a7c6498db95b9564218317fa0b0cceb59222bc
+
+REMOTE_READBACK:
+PASS
+
+Recovery c01-c06 reuse exact historical blobs; recovery c07 = f8763ca95ff7bc42e6710d11c51d35836e2d19bc.
+
+Current recovered source:
+73385 bytes
+SHA256 78759292ba7f23ad741329cc631b9ec90b26abcff4e0b97fc81ff5289d0708f6
+
+Current recovered gzip:
+20604 bytes
+SHA256 f764c509f47f0a53a33b90a7c3dc5c8f61d62137da1b339360acb9c844a1b608
+
+Decision:
+R06 derived recovery authority ACCEPTED.
+Provider replay NOT required.
+R2 remains suspended; issue new release revision instead of resuming stale prompt.

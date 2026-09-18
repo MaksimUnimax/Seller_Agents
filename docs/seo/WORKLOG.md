@@ -475,3 +475,21 @@ Therefore this is a durable-transport authority defect, not a reason for blind S
 
 R2 is suspended.
 Next action: materialize a new derived recovery transport with correct integrity metadata, independently QA it, then issue a new M4A release revision.
+
+
+## 2026-09-18 — R06 durable transport recovered without provider replay
+
+The R06 M4A blocker was repaired from immutable Git evidence.
+
+Only the corrupt gzip trailer was replaced. The original compressed DEFLATE body remained unchanged. The new transport validates normally and reconstructs the independently verified 73,385-byte JSON.
+
+Remote recovery chunk readback passed.
+
+The historical R06 exact-byte manifest remains superseded and preserved as incident history.
+
+Current R06 transport authority is the derived recovery manifest + QA under:
+`serp/raw/recovery/R06_2026-09-18/`.
+
+No Search provider call was repeated, so the original R06 SERP snapshot remains the observed evidence.
+
+R2 is not resumed. A fresh M4A R3 release is required.

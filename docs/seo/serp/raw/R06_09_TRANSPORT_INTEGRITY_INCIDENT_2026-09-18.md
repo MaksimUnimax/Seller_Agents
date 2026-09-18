@@ -1,6 +1,6 @@
 # R06 durable-export transport integrity incident — 2026-09-18
 
-Status: **ACTIVE / R06 HISTORICAL TRANSPORT AUTHORITY INVALIDATED / PROVIDER LIFECYCLE RETAINED**
+Status: **RESOLVED / HISTORICAL TRANSPORT SUPERSEDED / DERIVED RECOVERY AUTHORITY ACCEPTED**
 Detected by: ChatGPT Work M4A R2 narrow input-integrity preflight
 Affected stage: M3 R06 durable export -> M4A R2 input authority
 Provider replay authorized: **NO**
@@ -153,4 +153,23 @@ R06_RECOVERED_JSON = DERIVED / PENDING DURABLE RECOVERY MATERIALIZATION
 M4A_R2 = HOLD / SUSPENDED
 M4B = BLOCKED
 NEW_PROVIDER_CALLS = 0
+```
+
+
+## 8. Resolution
+
+Current R06 durable transport authority:
+
+`recovery/R06_2026-09-18/R06_10_RECOVERED_EXPORT_MANIFEST_2026-09-18.md`
+
+Recovery QA:
+
+`recovery/R06_2026-09-18/R06_11_RECOVERY_QA_2026-09-18.md`
+
+Remote readback: PASS.
+
+```text
+R06_INPUT_INTEGRITY_FAILURE = CLOSED
+NEW_PROVIDER_CALLS = 0
+M4A_CAN_BE_RE-RELEASED_WITH_EXPLICIT_RECOVERY_AUTHORITY = true
 ```

@@ -132,3 +132,23 @@ Important:
 
 CURRENT_CURSOR:
 M4 CURRENT -> R06 TRANSPORT RECOVERY -> MAIN CHAT RECOVERY QA -> NEW M4A RELEASE -> WORK.
+
+
+## 2026-09-18 — R06 provider-free transport recovery ACCEPTED
+
+Current R06 transport authority:
+`../raw/recovery/R06_2026-09-18/R06_10_RECOVERED_EXPORT_MANIFEST_2026-09-18.md`
+
+Recovery QA:
+`../raw/recovery/R06_2026-09-18/R06_11_RECOVERY_QA_2026-09-18.md`
+
+The historical R06 manifest is superseded for exact-byte identity.
+
+No Search replay occurred.
+
+```text
+R06_DERIVED_RECOVERY_AUTHORITY = ACCEPTED
+R06_INPUT_INTEGRITY_BLOCKER = CLOSED
+M4A_R2 = remains SUSPENDED/HISTORICAL
+NEXT = issue fresh M4A R3 release
+```
