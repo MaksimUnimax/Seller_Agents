@@ -295,3 +295,32 @@ R2 remains suspended and must not be resumed.
 RESULT:
 M4A_R3_WORK_START_ALLOWED = true
 M4B_ALLOWED = false
+
+
+## 2026-09-18 — M4A R3 Main Chat return QA
+
+UPLOAD_HEAD:
+9b19cc669bdecdb7b04d9817cd41ca22dbd54701
+
+Remote output SHA256 recomputation:
+10/10 non-self-referential files match Work return manifest.
+
+Independent accounting:
+300 occurrences / 15 queries / ranks 1-20 each / 105 unique pairs / 127 domains / 92 collision rows / 60 registry rows / 143 page anchors.
+
+Independent metric recomputation:
+query-profile errors = 0
+pairwise URL/domain overlap/Jaccard errors = 0
+domain recurrence metric errors = 0
+registry/page join errors = 0
+
+S03 upstream defect:
+one valid 9406-char object + exactly one surplus trailing brace.
+Work handling correct and deterministic.
+Main Chat materialized exact-object recovery; no rerun required.
+
+RESULT:
+M4A_R3 = ACCEPTED
+QUALITY_SCORE = 9.8/10
+M3_STEP06_ANALYTICAL_HARDENING_VIA_M4A = PASS
+M4B_ALLOWED = true

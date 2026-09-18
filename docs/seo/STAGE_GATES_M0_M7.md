@@ -499,3 +499,20 @@ M4A_REPREPARATION_ALLOWED = true
 ```
 
 R0 used only existing accepted authorities; no provider replay or new market evidence was created.
+
+
+## 2026-09-18 — M4A R3 acceptance
+
+Authority:
+`serp/competitors/M4A_R3_MAIN_CHAT_RETURN_QA_2026-09-18.md`
+
+```text
+M4A_R3 = ACCEPTED
+M4A_QUALITY_SCORE = 9.8/10
+M3_STEP06_ANALYTICAL_HARDENING_VIA_M4A = PASS
+S03_NORMALIZED_TRANSPORT_RECOVERY = PASS
+R06_RECOVERY_AUTHORITY = PASS
+M4B_ALLOWED = true
+M3_CONTROL_DEBT = STILL OPEN FOR M6 FULL-SERP/DEVICE/REGION/TIME CONTROLS
+M7_ALLOWED = false
+```

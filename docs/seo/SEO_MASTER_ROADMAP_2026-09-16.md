@@ -423,7 +423,7 @@ M4 is split into bounded substeps so competitor research cannot drift into a rem
 
 ### M4A — full-volume recurring competitor registry
 
-Status: **R3 AUTHORIZED / WORK NOT STARTED / R06 RECOVERY ACCEPTED / R2 SUSPENDED**.
+Status: **M4A R3 ACCEPTED / M4B CURRENT / R06 RECOVERY ACCEPTED**.
 
 Derive the registry from the complete accepted M3 authority set:
 
@@ -447,7 +447,7 @@ M4A does **not** browse current competitor sites and does not decide final page 
 
 ### M4B — current official/vendor landing acquisition
 
-Status: **BLOCKED UNTIL M4A RETURN IS REMOTE-READ BACK AND ACCEPTED BY MAIN CHAT**.
+Status: **CURRENT / RELEASED BY ACCEPTED M4A R3**.
 
 For accepted M4A page candidates, collect current official/vendor evidence while preserving URL/query/rank lineage.
 

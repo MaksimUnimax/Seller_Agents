@@ -2,7 +2,7 @@
 
 Date: 2026-09-18
 Branch: seo/wordstat-batch-01-2026-09-16
-Status: **M4A R3 AUTHORIZED / R06 RECOVERY ACCEPTED / R2 SUSPENDED**
+Status: **M4A R3 ACCEPTED 9.8/10 / M4B CURRENT / R2 SUSPENDED**
 
 ## Current cursor
 
@@ -10,11 +10,11 @@ Status: **M4A R3 AUTHORIZED / R06 RECOVERY ACCEPTED / R2 SUSPENDED**
 M3_PRIMARY_ORGANIC = CLOSED
 M3_CONTROL_DEBT = OPEN UNTIL M6
 M4 = CURRENT
-M4A = R3_AUTHORIZED
-M4A_WORK_RETURN = NONE_R3_NOT_STARTED
+M4A = R3_ACCEPTED
+M4A_WORK_RETURN = UPLOADED_AND_ACCEPTED
 M4A_RELEASE_READBACK = PASS
-M4A_MAIN_CHAT_QA = NOT STARTED
-M4B_LANDING_ACQUISITION = BLOCKED
+M4A_MAIN_CHAT_QA = PASS
+M4B_LANDING_ACQUISITION = CURRENT
 M5 = NOT STARTED
 M7 = BLOCKED
 ~~~
@@ -178,3 +178,30 @@ M4A_R2_WORK_START_ALLOWED = false
 
 CURRENT_CURSOR:
 M4 CURRENT -> OWNER RELAYS M4A R3 WORK PROMPT -> WORK EXECUTES COMPLETE 300/105 UNIT -> OWNER ONE-STAGING UPLOAD -> MAIN CHAT RETURN QA -> only then M4B.
+
+
+## 2026-09-18 — M4A R3 Main Chat ACCEPT
+
+Authority:
+`M4A_R3_MAIN_CHAT_RETURN_QA_2026-09-18.md`
+
+Independent Main Chat QA:
+- all remote output hashes match manifest;
+- 300/300 occurrences;
+- 15/15 profiles;
+- 105/105 pairwise rows and metrics independently recomputed;
+- 127/127 domain recurrence metrics independently recomputed;
+- 92 collision rows fully reconciled;
+- 60 registry rows traceable;
+- 143 M4B anchors traceable;
+- R06 recovery verified;
+- S03 one-character normalized transport defect repaired provider-free/content-equivalently.
+
+Score:
+`9.8/10`.
+
+```text
+M4A_R3 = ACCEPTED
+M3_STEP06_ANALYTICAL_HARDENING_VIA_M4A = PASS
+M4B = CURRENT
+```

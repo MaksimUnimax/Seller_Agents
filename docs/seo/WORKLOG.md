@@ -510,3 +510,27 @@ Work must use the accepted derived recovery transport and verify its exact sourc
 R3 release/readback passed and Work may start.
 
 M4B remains blocked until R3 Work return receives independent Main Chat QA.
+
+
+## 2026-09-18 — M4A R3 accepted after independent Main Chat QA
+
+Owner uploaded all 11 unpacked Work deliverables in one GitHub UI action.
+
+Main Chat did not trust Work PASS_CANDIDATE blindly. It independently:
+- recomputed all 10 output SHA-256 values covered by the manifest;
+- reconciled 300 rows across 15 queries;
+- verified every rank 1-20;
+- recomputed all 105 exact-URL/domain Top10 overlap and Jaccard metrics;
+- recomputed all 127 domain recurrence metrics;
+- reconciled collision/query-scope rows;
+- checked registry source lineage and M4B anchor joins;
+- verified all source/analysis authority paths.
+
+One upstream transport defect was confirmed:
+S03 normalized evidence had exactly one extra trailing closing brace. Work handled it deterministically and disclosed it. Main Chat persisted a content-equivalent recovered normalized file containing exactly the sole complete object. No row/semantic change and no Work rerun were required.
+
+M4A R3 score: 9.8/10.
+M4A accepted.
+M3 Step06 analytical hardening via M4A is PASS.
+M4B is now CURRENT.
+M3 full-SERP/device/region/temporal debt remains assigned to M6.
