@@ -45,3 +45,14 @@ No GitHub write by Work.
 
 Staging:
 `docs/seo/serp/competitors/work_return/M4B1_RECOVERY_2026-09-18_R2/`
+
+
+## Authority correction
+
+A Work preflight HOLD exposed one TSV/prose mismatch. Main Chat reverified Mayak `/webinars_mayak` and corrected the canonical residual row:
+
+- row ID: `M4B1U0293`;
+- state: `NOT_FOUND`;
+- structured page evidence required: `false`.
+
+Expected residual counts are now exactly `43 INSPECTED / 1 AUTH_REQUIRED / 1 NOT_FOUND`.

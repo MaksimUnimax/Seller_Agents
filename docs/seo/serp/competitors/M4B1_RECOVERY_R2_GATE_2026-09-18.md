@@ -353,3 +353,29 @@ Owner uploads all 9 unpacked files together to:
 `docs/seo/serp/competitors/work_return/M4B1_RECOVERY_2026-09-18_R2/`
 
 Main Chat independently QA's the merged R1+R2 authority before M4B1 acceptance.
+
+
+## 18. Authority mismatch correction
+
+Work R2 preflight correctly found a mismatch in the residual TSV. Main Chat reverified the public Mayak URL and corrected the residual authority row.
+
+Canonical row:
+
+`M4B1U0293 | REG023 | Mayak | https://mayak.bz/webinars_mayak | NOT_FOUND | needs_structured_page_evidence=false`
+
+Reason: current public Mayak page is a branded soft-not-found surface (`Вы нашли страницу, которой нет`).
+
+Root cause: earlier overlay-generation special-case used wrong URL ID `M4B1U0231` instead of actual `M4B1U0293`.
+
+Required preflight after this correction:
+
+```text
+RESIDUAL_TOTAL = 45
+RESIDUAL_INSPECTED = 43
+RESIDUAL_AUTH_REQUIRED = 1
+RESIDUAL_NOT_FOUND = 1
+MAYAK_WEBINARS_ROW_ID = M4B1U0293
+MAYAK_WEBINARS_STATE = NOT_FOUND
+MAYAK_WEBINARS_NEEDS_PAGE_EVIDENCE = false
+NAVIGATION_DELTA_ROWS = 835
+```

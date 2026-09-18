@@ -345,3 +345,21 @@ M4B1_RECOVERY_R2_WORK_START_ALLOWED = true
 M4B1_ACCEPTED = false
 M4B2_ALLOWED = false
 ```
+
+
+## 2026-09-18 — R2 preflight HOLD resolved: Mayak authority correction
+
+Work correctly stopped on authority mismatch.
+
+Reverification in Opera:
+- Mayak `/webinars_mayak` renders branded not-found surface;
+- canonical row is `M4B1U0293`;
+- authoritative terminal = `NOT_FOUND`;
+- no structured page evidence required.
+
+Root cause: wrong special-case URL ID was used when generating the first residual overlay.
+
+Correct residual equation:
+`43 INSPECTED + 1 AUTH_REQUIRED + 1 NOT_FOUND = 45`.
+
+835-row navigation delta unchanged.

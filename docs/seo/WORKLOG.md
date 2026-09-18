@@ -580,3 +580,12 @@ This volume is not manually sampled. Recovery returns to Work with:
 - recursive frontier closure requirement.
 
 R1 history remains immutable. R2 is overlay-only.
+
+
+## 2026-09-18 — Work R2 HOLD resolved before execution
+
+Work performed the correct preflight action and stopped before browsing because the residual TSV contradicted the R2 gate.
+
+Main Chat reverified the current Mayak public page and confirmed a branded soft-not-found surface. The TSV mismatch was caused by an incorrect recovery special-case ID: M4B1U0231 was used, while the real residual row is M4B1U0293.
+
+The canonical TSV is corrected to NOT_FOUND. No R2 execution evidence existed, so no work product was discarded and the 835-row delta remains unchanged.

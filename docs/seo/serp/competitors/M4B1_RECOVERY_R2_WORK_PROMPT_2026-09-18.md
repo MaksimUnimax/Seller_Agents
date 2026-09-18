@@ -31,9 +31,14 @@ Read in full:
 Verify:
 - initial delta = 835 rows;
 - Opera residual outcome rows = 45;
-- 43 post-recovery INSPECTED;
+- exactly 43 post-recovery INSPECTED;
+- exactly 1 AUTH_REQUIRED;
+- exactly 1 NOT_FOUND;
 - Berkuz LK = AUTH_REQUIRED;
-- Mayak /webinars_mayak = NOT_FOUND.
+- Mayak row ID M4B1U0293 /webinars_mayak = NOT_FOUND;
+- Mayak M4B1U0293 needs_structured_page_evidence = false.
+
+A previous preflight HOLD caught a now-corrected authority mismatch. Do not use the obsolete interpretation that Mayak M4B1U0293 is INSPECTED.
 
 If authority mismatches, HOLD.
 

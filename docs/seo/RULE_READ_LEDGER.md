@@ -449,3 +449,24 @@ RESULT:
 M4B1_RECOVERY_R2_WORK_START_ALLOWED = true
 M4B1_FINAL_ACCEPTANCE = false
 M4B2_ALLOWED = false
+
+
+## 2026-09-18 — M4B1 R2 authority mismatch correction
+
+WORK_PREFLIGHT_HOLD = VALID
+
+Mismatch:
+prose/gate said Mayak /webinars_mayak NOT_FOUND; residual TSV said INSPECTED.
+
+Independent Opera recheck:
+page title = Мы не нашли страницу, которую вы ищет
+body = Вы нашли страницу, которой нет
+
+ROOT_CAUSE:
+overlay special-case keyed M4B1U0231, actual frozen Mayak row M4B1U0293.
+
+CANONICAL:
+M4B1U0293 = NOT_FOUND
+needs_structured_page_evidence = false
+residual counts = 43 INSPECTED / 1 AUTH_REQUIRED / 1 NOT_FOUND
+navigation delta = 835 unchanged

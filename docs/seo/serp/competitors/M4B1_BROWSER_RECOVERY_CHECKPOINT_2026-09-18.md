@@ -49,3 +49,20 @@ The next recovery step must:
 5. merge via overlay, never rewrite Work history.
 
 No whole-domain recrawl and no repeat of the original 249 Work-inspected pages is allowed.
+
+
+## 2026-09-18 — authority correction after Work R2 preflight HOLD
+
+Work correctly HOLDed because the prose authorities said Mayak `/webinars_mayak` = `NOT_FOUND`, while the residual TSV incorrectly said `INSPECTED`.
+
+Main Chat re-opened the current public URL in Opera. The rendered page title is `Мы не нашли страницу, которую вы ищет`; the body explicitly says `Вы нашли страницу, которой нет`. This is a site-branded soft-not-found surface.
+
+Root cause of the mismatch: the overlay-generation special case was keyed to the wrong URL identity (`M4B1U0231`) while the actual frozen residual row is `M4B1U0293`.
+
+Authoritative correction:
+
+- `M4B1U0293 / https://mayak.bz/webinars_mayak` = `NOT_FOUND`;
+- `needs_structured_page_evidence = false`;
+- residual totals = `43 INSPECTED + 1 AUTH_REQUIRED + 1 NOT_FOUND = 45`.
+
+No 835-row navigation delta identity changed.
