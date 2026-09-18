@@ -1,10 +1,16 @@
 # Octoport SEO — M4A pre-step research and execution gate
 
 Date: 2026-09-18
-Status: PREPARED / WORK NOT STARTED
+Status: SUPERSEDED / NOT EXECUTABLE / REPREPARATION REQUIRED
 Stage: M4 — Search competitor + landing corpus
 Substep: M4A — full-volume recurring competitor registry from accepted M3
 Preparation base HEAD: 0da33edf5abe7aff519ade0880920d5d2c2ebf93
+
+## 0. Two-level authority supersession
+
+This preparation was authored before explicit LEVEL 1 / LEVEL 2 authority was restored in Octoport. It is history only and MUST NOT be executed.
+
+A new M4A preparation must be authored from live HEAD after reading docs/seo/LEVEL1/README.md and docs/seo/LEVEL2/M4_SEARCH_COMPETITOR_LANDING_RULES.md, recording the read gate, persisting it, and remote-readback.
 
 ## 1. Goal-first restoration
 
@@ -255,10 +261,10 @@ Work does not self-accept. Main Chat performs return QA.
 
 ## 10. Release state
 
-M4A_PREPARED = true
+M4A_PREPARED = false
 M4A_WORK_STARTED = false
 M4A_ACCEPTED = false
 M4B_ALLOWED = false
 
 Next physical action:
-owner relays the canonical prompt in M4A_WORK_PROMPT_2026-09-18.md to ChatGPT Work.
+Main Chat re-prepares M4A from live HEAD under explicit LEVEL 1 + M4 LEVEL 2. Owner must NOT relay the superseded prompt.

@@ -2,7 +2,7 @@
 
 Date: 2026-09-18
 Branch: seo/wordstat-batch-01-2026-09-16
-Status: M4A PREPARED / WORK NOT STARTED
+Status: M4A PREPARATION REOPENED / PRIOR PROMPT SUPERSEDED / WORK NOT STARTED
 
 ## Current cursor
 
@@ -10,7 +10,7 @@ Status: M4A PREPARED / WORK NOT STARTED
 M3_PRIMARY_ORGANIC = CLOSED
 M3_CONTROL_DEBT = OPEN UNTIL M6
 M4 = CURRENT
-M4A = PREPARED
+M4A = REPREPARATION_REQUIRED
 M4A_WORK_RETURN = NONE
 M4A_MAIN_CHAT_QA = NOT STARTED
 M4B_LANDING_ACQUISITION = BLOCKED
@@ -20,8 +20,10 @@ M7 = BLOCKED
 
 ## Current authorities
 
-- M4A_PRE_STEP_RESEARCH_AND_EXECUTION_GATE_2026-09-18.md
-- M4A_WORK_PROMPT_2026-09-18.md
+- docs/seo/LEVEL1/README.md
+- docs/seo/LEVEL2/M4_SEARCH_COMPETITOR_LANDING_RULES.md
+- M4A_PRE_STEP_RESEARCH_AND_EXECUTION_GATE_2026-09-18.md = SUPERSEDED HISTORY
+- M4A_WORK_PROMPT_2026-09-18.md = DO NOT EXECUTE
 
 ## Why M4A is next
 
@@ -35,6 +37,6 @@ Full-volume cross-file recurrence/lineage analysis is assigned to ChatGPT Work u
 
 ## Next physical action
 
-Owner relays M4A_WORK_PROMPT_2026-09-18.md to ChatGPT Work.
+Main Chat re-prepares M4A from live HEAD after explicit LEVEL 1 + M4 LEVEL 2 read, persists/readbacks the new preparation, and only then may a new Work prompt be relayed.
 
 No competitor/vendor landing collection is released before the M4A return is uploaded, remote-read back and independently accepted by Main Chat.

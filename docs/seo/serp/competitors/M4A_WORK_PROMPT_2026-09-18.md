@@ -2,7 +2,11 @@
 
 Date: 2026-09-18
 WORK_ID: OCTOPORT_SEO_M4A_REGISTRY_2026-09-18_W0
-Status: READY FOR OWNER RELAY / NOT EXECUTED
+Status: SUPERSEDED / DO NOT EXECUTE / NOT RELAYABLE
+
+DO NOT EXECUTE THIS PROMPT.
+
+It is retained only as historical preparation evidence because the explicit LEVEL 1 / LEVEL 2 gate had not yet been restored when it was authored.
 
 CONTINUE THE EXISTING OCTOPORT SEO PROGRAM.
 
