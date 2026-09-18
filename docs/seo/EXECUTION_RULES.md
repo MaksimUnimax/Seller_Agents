@@ -26,6 +26,38 @@ OWNER = product/business truth / authorization / Work prompt relay / final comme
 
 Bridge does not decide SEO strategy. Work does not create new methodology. Main Chat controls method and accepts/rejects Work output.
 
+## 1A. GitHub-first persistence — OWNER-LOCKED
+
+The repository is the durable project memory. Chat is control/communication only.
+
+```text
+CHAT != STORAGE
+LOCAL/SANDBOX FILE != ACCEPTED PROJECT STATE
+WRITTEN IN CHAT != PERSISTED
+```
+
+For every material change to roadmap, rules, evidence, analysis, progress, acceptance state or current cursor:
+
+```text
+CREATE/UPDATE REPOSITORY ARTIFACT
+-> COMMIT TO CURRENT AUTHORIZED BRANCH
+-> UPDATE REF FAST-FORWARD ONLY
+-> REMOTE READBACK / VERIFY
+-> ONLY THEN REPORT AS SAVED/ACCEPTED
+```
+
+Hard requirements:
+
+- do not leave the only copy of a project change in chat, a writing block, local sandbox or temporary generated file;
+- when Main Chat creates or changes a project document, publish that exact change to GitHub in the same work cycle whenever repository write access is available;
+- if publication is technically impossible, label the result `NOT PERSISTED / NOT ACCEPTED` and do not claim the repository was updated;
+- never substitute “I wrote it in chat” for repository persistence;
+- append/update the relevant durable authority rather than relying on conversational memory;
+- use fast-forward Git publication; no force-push;
+- after every write, read back the remote branch/file/commit before continuing dependent work.
+
+This repeats an existing project principle deliberately because failure to persist a roadmap correction outside chat creates authority drift and causes the next session to restore stale state.
+
 ## 2. Goal-first before every major stage
 
 Before a major stage, restore explicitly:

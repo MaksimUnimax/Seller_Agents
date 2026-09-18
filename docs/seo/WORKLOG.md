@@ -241,3 +241,27 @@ Product-adjacent наблюдаемые фразы:
 - provider failures: `0`;
 - accumulated estimated cost: `0.04 ₽`;
 - current cursor: `B01-03`.
+
+
+## 2026-09-18 — M3 retrospective / repository-persistence rule reinforced
+
+Owner instruction re-locked: chat is not project storage. Any roadmap/rule/evidence/analysis/progress change must be written to the active GitHub branch and remote-readback before it is reported as accepted.
+
+A method audit of completed M3 found valid organic top-20 evidence but an incomplete historical Definition of Done. Missing hard controls: full HTML/SERP-feature representation, device/browser sensitivity, bounded regional sensitivity, temporal repeat for ambiguous/high-value queries, and complete cross-query URL/domain overlap QA.
+
+Decision:
+
+- do not invalidate or blindly replay the accepted M3 organic corpus;
+- keep M4 as current stage;
+- record explicit M3 control debt;
+- require a bounded M3 control patch in M6;
+- block M7 Collection Freeze until `M3_CONTROL_DEBT = CLOSED`.
+
+Updated authorities:
+
+- `SEO_MASTER_ROADMAP_2026-09-16.md`;
+- `EXECUTION_RULES.md`;
+- `METHODOLOGY.md`;
+- `STAGE_GATES_M0_M7.md`;
+- `README.md`;
+- `serp/M3_METHOD_RETROSPECTIVE_AND_CONTROL_DEBT_2026-09-18.md`.

@@ -62,7 +62,7 @@ FULL RESPONSE / EXPORT
 -> NEXT PROVIDER ACTION
 ```
 
-No blind retry. Pending/waiting/unknown не являются отрицательным evidence. Chat не является единственным raw-хранилищем. Большие данные не урезаются ради контекста. Work output не является текущей truth до return QA.
+No blind retry. Pending/waiting/unknown не являются отрицательным evidence. **Chat вообще не является принятым project storage: любые изменения roadmap/rules/evidence/analysis/progress должны быть записаны в GitHub и remote-readback до статуса accepted.** Большие данные не урезаются ради контекста. Work output не является текущей truth до return QA.
 
 ## Текущий cursor
 
@@ -88,19 +88,17 @@ No blind retry. Pending/waiting/unknown не являются отрицател
 
 ### M3 — Ordinary Yandex SERP collection
 
-`IN PROGRESS`.
+`CLOSED FOR PRIMARY ORGANIC ACQUISITION / CONTROL DEBT OPEN UNTIL M6`.
 
-S01 `ии агенты для маркетплейсов` закрыт: 20 нормализованных результатов, source export hash-pinned, normalized authority сохранена. S02 `ии агент для озон` — следующий released bounded query.
+S01–S03 and R01–R12 are accepted; R04R1 is authority instead of the unreliable original R04 transport run.
 
-Authorities:
+Post-close method audit found that the old M3 DoD proved the organic top-20 intent layer and durable lifecycle, but did not require full HTML/SERP-feature, device, regional, temporal-stability and complete cross-query overlap controls. Valid organic evidence is preserved. The missing controls are mandatory in M6 and block M7.
 
-- `serp/M3_QUERY_MATRIX_2026-09-16.md`;
-- `serp/M3_PRE_STEP_RESEARCH_AND_EXECUTION_GATE_2026-09-16.md`;
-- `serp/SERP_PROGRESS.md`.
+Authority: `serp/M3_METHOD_RETROSPECTIVE_AND_CONTROL_DEBT_2026-09-18.md`.
 
 ### M4 — Search competitor + landing corpus
 
-`OPEN` — строится из recurring live SERP evidence.
+`CURRENT` — next active stage; строится из recurring live SERP evidence.
 
 ### M5 — Alice AI
 
@@ -108,7 +106,7 @@ Authorities:
 
 ### M6–M7
 
-Blocked until M3–M5 collection/gaps are sufficient.
+M6 is blocked until M4–M5 evidence is sufficient. M6 must then execute the mandatory M3 control patch. M7 is blocked until `M3_CONTROL_DEBT = CLOSED` plus all other collection-freeze gates.
 
 ### M8+
 

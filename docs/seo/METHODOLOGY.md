@@ -172,16 +172,44 @@ Bridge поддерживает четыре разрешённых метода
 
 ### Phase 8 — SERP verification
 
-SERP проверяется приоритетно для:
+SERP verification must explicitly distinguish:
 
-- главной категории;
-- Ozon и WB кластеров;
-- high-frequency/high-business-value кластеров;
-- неоднозначных intent merges;
-- случаев, где решается `CREATE` vs `OPTIMIZE`;
-- возможной каннибализации.
+`ORGANIC_RESULT_CORPUS` from `FULL_SERP_REPRESENTATION`.
 
-Фиксируются дата, поисковая система, регион/локализация, формулировка запроса, типы результатов и вывод об интенте. Сниппеты конкурентов не копируются в тексты Октопорта.
+SERP is checked with priority for:
+
+- main category;
+- Ozon and WB clusters;
+- high-frequency/high-business-value clusters;
+- ambiguous intent merges;
+- cases deciding `CREATE` vs `OPTIMIZE`;
+- possible cannibalization.
+
+Minimum controls must be decided **before** collection:
+
+- date/time;
+- search system/search type;
+- exact region/localization;
+- exact query;
+- result depth;
+- response format;
+- device/browser context where supported;
+- whether temporal repeat is required;
+- whether the task needs organic-only evidence or full SERP features.
+
+Yandex Search API XML is suitable for organic result acquisition but does not include all additional SERP elements. When ads, quick answers or other SERP features may change interpretation, preserve an authorized HTML/full-SERP snapshot as a separate evidence layer.
+
+For decision-sensitive queries, use bounded sensitivity controls rather than assuming one snapshot is universal:
+
+- device/browser sensitivity where supported;
+- regional sensitivity where geography may matter;
+- repeated snapshot for ambiguous/high-value queries where temporal volatility could change the conclusion.
+
+Before closing the acquisition stage, produce cross-query URL/domain overlap QA from the accepted organic corpus. This does not replace later semantic/task clustering; it is an early control for hidden equivalence/divergence.
+
+Persist raw/full response, normalized rows, analysis, parameters and hashes in GitHub. Remote readback is mandatory before downstream use.
+
+Competitor snippets/content remain evidence and are not copied into Octoport text.
 
 ### Phase 9 — page specification
 

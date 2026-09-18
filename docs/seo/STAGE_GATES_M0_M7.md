@@ -363,6 +363,9 @@ WORDSTAT_PERSISTENCE_RETRO_AUDIT = PASS | EXPLICIT_LIMITATION_ACCEPTED
 WORDSTAT_DEPTH/COVERAGE_RETRO_AUDIT = PASS
 SEED/INFO_GAIN_RETRO_AUDIT = PASS
 REPRESENTATIVE_SERP_MATRIX = COMPLETE FOR DECISIONS
+M3_CONTROL_DEBT = CLOSED
+M3_FULL_SERP / DEVICE / REGION / TEMPORAL_CONTROLS = ACCEPTED OR EXPLICIT HOLD
+M3_CROSS_QUERY_OVERLAP_QA = PASS
 SEARCH_COMPETITOR_REGISTRY = STABLE ENOUGH
 RELEVANT_COMPETITOR_CORPUS = CAPTURED
 ALICE_CORE_CASES = CAPTURED
@@ -392,3 +395,27 @@ Required artifacts before Collection Freeze:
 5. decision whether any limitation actually requires new provider acquisition.
 
 No historical provider replay is automatic.
+
+
+## 2026-09-18 — M3 retrospective control migration
+
+M3 primary organic acquisition was accepted before the current full-SERP control requirements were made explicit.
+
+This does not invalidate the accepted organic top-20 corpus. It creates mandatory control debt:
+
+- full-SERP HTML feature sample;
+- device/browser sensitivity where supported;
+- bounded regional sensitivity;
+- bounded temporal repeat;
+- complete cross-query URL/domain overlap QA;
+- explicit closure artifact explaining whether any original M3 conclusion changed.
+
+The cause is an incomplete historical M3 Definition of Done: it verified organic intent, lifecycle, persistence and readback, but did not require those control dimensions.
+
+Therefore:
+
+```text
+M4/M5 MAY PROCEED
+M6 MUST REOPEN M3 FOR CONTROL PATCH
+M7 MUST NOT FREEZE WHILE M3_CONTROL_DEBT != CLOSED
+```
