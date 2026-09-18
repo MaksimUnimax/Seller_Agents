@@ -410,3 +410,24 @@ broken joins = 0
 VERDICT:
 M4B1 partial evidence valid; final PASS forbidden.
 Browser recovery released on exact frozen residual units only.
+
+
+## 2026-09-18 — M4B1 Recovery R2 release preparation
+
+BASE_HEAD:
+ce7672e4572da22ce9b1c5045541a239394dcd54
+
+BROWSER RECOVERY:
+45/45 R1 residual decisions
+23/23 navigation entities enumerated
+
+DETERMINISTIC NAV DIFF:
+INITIAL_NAV_DELTA_ROWS = 835
+NEEDS_SCOPE_CLASSIFICATION = 649
+NON_HTML_CANDIDATE = 111
+LEGAL_OR_CORPORATE_CANDIDATE = 44
+AUTH_OR_PRIVATE_CANDIDATE = 31
+
+WORK_TRIGGER = MET.
+
+Recovery R2 does not restart R1. It consumes immutable R1 + browser overlay and closes only the new delta/frontier.

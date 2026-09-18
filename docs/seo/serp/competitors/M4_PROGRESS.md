@@ -300,3 +300,29 @@ Exact recovery is frozen in:
 - M4B1_RECOVERY_URL_QUEUE_2026-09-18.tsv
 - M4B1_NAVIGATION_RECOVERY_QUEUE_2026-09-18.tsv
 - M4B1_BROWSER_RECOVERY_GATE_2026-09-18.md
+
+
+## 2026-09-18 — M4B1 Recovery R2 prepared
+
+Opera browser recovery closed:
+- 45/45 original residual decisions;
+- 23/23 navigation enumerations.
+
+Navigation evidence created 835 new same-entity URL delta rows after conservative deduplication against R1.
+
+Triage only:
+- 649 NEEDS_SCOPE_CLASSIFICATION;
+- 111 NON_HTML_CANDIDATE;
+- 44 LEGAL_OR_CORPORATE_CANDIDATE;
+- 31 AUTH_OR_PRIVATE_CANDIDATE.
+
+Because 835 + recursive frontier is a new large-data execution unit, full-volume handling returns to Work.
+
+R2 must:
+- structure 43 recovered pages;
+- disposition all 835 initial delta rows;
+- recursively close all admitted in-scope URLs;
+- produce current 45-entity synthesis and frontier reconciliation.
+
+M4B1 remains NOT ACCEPTED.
+M4B2 remains blocked.

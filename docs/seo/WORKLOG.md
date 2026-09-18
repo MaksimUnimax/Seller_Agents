@@ -565,3 +565,18 @@ Frozen recovery:
 - 23 entities lacking navigation enumeration.
 
 M4B1 remains open. M4B2 remains blocked.
+
+
+## 2026-09-18 — M4B1 Recovery R2 full-volume delta prepared
+
+Main Chat completed browser recovery of the exact R1 residual set and enumeration of all 23 missing navigation surfaces.
+
+A conservative diff against the original 372-row R1 URL ledger produced 835 new same-entity URL identities.
+
+This volume is not manually sampled. Recovery returns to Work with:
+- exact 835-row initial delta;
+- exact 43 Opera-readable residual pages needing structured evidence;
+- frozen per-entity scope policies;
+- recursive frontier closure requirement.
+
+R1 history remains immutable. R2 is overlay-only.

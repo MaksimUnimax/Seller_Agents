@@ -459,7 +459,7 @@ Classes: editorial/publisher, native marketplace baseline, aggregator/directory.
 
 The split is deterministic full-coverage chunking, not sampling.
 
-M4B1 is the current physical unit. Work acquisition is PARTIAL; bounded Main Chat/browser recovery is CURRENT. M4B2 remains blocked until M4B1 acceptance.
+M4B1 is the current physical unit. R1 Work was PARTIAL; Main Chat completed 45/45 residual decisions and 23/23 browser navigation enumerations. Navigation produced an 835-row new delta, so full-volume Recovery R2 Work is CURRENT. M4B2 remains blocked until M4B1 acceptance.
 
 For accepted M4A page candidates, collect current official/vendor evidence while preserving URL/query/rank lineage.
 
