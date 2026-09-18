@@ -589,3 +589,18 @@ Work performed the correct preflight action and stopped before browsing because 
 Main Chat reverified the current Mayak public page and confirmed a branded soft-not-found surface. The TSV mismatch was caused by an incorrect recovery special-case ID: M4B1U0231 was used, while the real residual row is M4B1U0293.
 
 The canonical TSV is corrected to NOT_FOUND. No R2 execution evidence existed, so no work product was discarded and the 835-row delta remains unchanged.
+
+
+## 2026-09-18 — M4B1 R2 partial accepted; infinite-crawl gate corrected
+
+Main Chat independently verified every R2 input/output hash and full-volume accounting.
+
+R2 preserved 1612 current URL identities across R1 + initial nav delta + recursive delta and produced 579 structured inspected-page rows with no URL-level unresolved state.
+
+The Work PARTIAL was caused by a job-specific requirement to prove child-link enumeration on every inspected page. Re-reading current M4 Level2 and KW-002 Step07 showed that canonical closure is bounded by declared discovery channels — anchors, public navigation/taxonomy/breadcrumbs, scoped sitemap and pagination — not by the complete transitive internal-link graph.
+
+Therefore the 416 flags remain diagnostic history but are not individually replayed.
+
+M4B1 R3 will close only the real discovery channels across all 45 entities and terminalize any new delta.
+
+The same rule reread exposed a second omission: current KW-002 Step07 has a mandatory Yandex-organic ranking-query discovery lane. Octoport M4 now includes M4Q before M4C, with documented source-unavailable fallback rather than fabricated data or access bypass.

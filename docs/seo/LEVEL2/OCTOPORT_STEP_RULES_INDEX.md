@@ -23,7 +23,7 @@ M0 PRODUCT TRUTH / SCOPE
 -> M1 CURRENT SITE + MEASUREMENT BASELINE
 -> M2 DEMAND / WORDSTAT
 -> M3 CURRENT ORDINARY SEARCH BASELINE
--> M4 SEARCH COMPETITOR REGISTRY + COMPETITOR PAGE EXPANSION
+-> M4 SEARCH COMPETITOR REGISTRY + PAGE-SURFACE EXPANSION + ORGANIC RANKING-QUERY DISCOVERY
 -> M5 AI-DIAGNOSTIC HYPOTHESIS REGISTER ONLY; NO AI PROVIDER ACQUISITION
 -> M6 NAMED GAP CLOSURE + COMPETITOR-DERIVED DEMAND VALIDATION + M3 CONTROL PATCH
 -> M7 SEARCH-SIDE COLLECTION FREEZE
@@ -106,13 +106,13 @@ accepted organic baseline plus required control debt closure before M7. Organic-
 KW-002 analog: Step06 + Step07.
 
 WHY:
-Derive actual current Search competitors, then discover page-level terminology/tasks/gaps from the authorized competitor universe.
+Derive actual current Search competitors, then run two governed competitor-discovery lanes: bounded public page surfaces and current Yandex-organic domain/page→query discovery (or a documented legitimate source-unavailable limitation).
 
 Dedicated authority:
 M4_SEARCH_COMPETITOR_LANDING_RULES.md.
 
 PASS:
-recurrence/lineage and authorized-competitor coverage pass; competitor-derived topics remain hypotheses, not proven demand.
+recurrence/lineage and authorized-competitor coverage pass; bounded page-surface channels are complete; ranking-query lane is COMPLETE or validly limitation-closed; competitor-derived topics/queries remain hypotheses, not proven demand.
 
 ## M5 — AI diagnostic hypothesis register
 

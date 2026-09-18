@@ -166,7 +166,32 @@ DISCOVERED
 
 No arbitrary sample/top-N is a completion substitute. If too large, use deterministic complete chunks and remain INCOMPLETE until reconciled.
 
-### 4.5 Candidate/provenance boundary
+### 4.5 Bounded discovery-channel closure
+
+The complete page-surface universe is defined by declared channels, not by the transitive closure of every internal link.
+
+Per authorized competitor, account for:
+
+- accepted ranking anchors;
+- public navigation / relevant taxonomy;
+- breadcrumb or local subtree discovery where material;
+- scoped public sitemap / sitemap index where available;
+- sequential pagination or public load-more required to enumerate an eligible collection;
+- redirects from already eligible URLs.
+
+Every URL discovered through an applicable bounded channel must become terminal.
+
+Repeated sitewide navigation does not need to be independently re-enumerated on every inspected page.
+
+Ordinary body links, footer links, recommendation widgets and unrelated corporate/media links do not automatically become frontier-expansion authority.
+
+~~~text
+COMPLETE_BOUNDED_FRONTIER != COMPLETE_INTERNAL_LINK_GRAPH
+~~~
+
+If a job-level gate requires unrestricted recursive child-link closure without a separate bounded collection rationale, that gate is defective and must be corrected before further execution.
+
+### 4.6 Candidate/provenance boundary
 
 Terminology/topic/use-case candidates retain raw wording, page URL, page section/location/context, normalized comparison key and transformation rule.
 
@@ -179,7 +204,55 @@ ALREADY_PRESENT, NEW_CANDIDATE, NORMALIZED_DUPLICATE, POSSIBLE_VARIANT, OUT_OF_S
 
 Only genuinely new eligible candidates route to M6 for demand validation.
 
+## 4Q. M4Q — organic ranking-query discovery lane
+
+Current KW-002 Step07 requires a second discovery lane in addition to page-surface mining.
+
+For every materially relevant authorized competitor, attempt a current method-approved source that can expose:
+
+```text
+authorized competitor domain/page
+-> raw query
+-> Yandex organic visibility / ranking URL
+```
+
+Minimum provenance where supplied:
+
+- competitor/registry ID;
+- source system;
+- snapshot/timestamp;
+- raw query;
+- normalized comparison key;
+- ranking URL;
+- position/visibility metric if available;
+- source evidence identity;
+- candidate relation;
+- notes.
+
+Hard boundaries:
+
+- ranking-query evidence is discovery evidence, not Wordstat demand;
+- source traffic/volume estimates are not Yandex Wordstat authority;
+- no query becomes a production keyword in M4;
+- access/login/token controls may not be bypassed;
+- Google-only ranking evidence may not be relabelled as Yandex organic evidence;
+- candidates retain the same provenance/reconciliation rules as page-surface candidates.
+
+Every M4 release must terminate this lane as exactly one of:
+
+```text
+RANKING_QUERY_LANE = COMPLETE
+RANKING_QUERY_LANE = SOURCE_UNAVAILABLE_DECLARED_LIMITATION
+RANKING_QUERY_LANE = PRE_FROZEN_PRODUCT_MODE_EXCEPTION
+```
+
+`SOURCE_UNAVAILABLE_DECLARED_LIMITATION` requires documented source recovery, no access bypass, explicit recall limitation and a reopen condition.
+
+Page-surface completion alone must not be described as complete competitor-semantic recall.
+
 ## 5. M4C — synthesis
+
+M4C is blocked until both the M4B page-surface lane and M4Q ranking-query lane have terminal accepted states.
 
 Produce:
 - hardened competitor registry;
@@ -209,6 +282,9 @@ PAIRWISE_SERP_SIMILARITY = COMPLETE_FOR_FROZEN_SET
 CURATED_REGISTRY_TRACEABLE = true
 ONLY_AUTHORIZED_COMPETITORS_IN_M4B = true
 ALL_AUTHORIZED_COMPETITORS_ACCOUNTED = true
+PAGE_SURFACE_DISCOVERY_LANE_COMPLETE = true
+RANKING_QUERY_LANE = COMPLETE or SOURCE_UNAVAILABLE_DECLARED_LIMITATION or PRE_FROZEN_PRODUCT_MODE_EXCEPTION
+SEMANTIC_RECALL_CHANNELS_DECLARED = true
 ALL_DISCOVERED_ELIGIBLE_URLS_TERMINAL = true or explicit blocking/inaccessible state
 ARBITRARY_SAMPLING = 0
 EVERY_CANDIDATE_HAS_PROVENANCE = true

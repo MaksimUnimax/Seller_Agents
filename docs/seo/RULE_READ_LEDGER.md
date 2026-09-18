@@ -470,3 +470,29 @@ M4B1U0293 = NOT_FOUND
 needs_structured_page_evidence = false
 residual counts = 43 INSPECTED / 1 AUTH_REQUIRED / 1 NOT_FOUND
 navigation delta = 835 unchanged
+
+
+## 2026-09-18 — M4B1 R2 merged QA and method correction
+
+UPLOAD_HEAD:
+96d1483822c48d63e4474f4e4a65d6eed48f4204
+
+INPUT_SHA_QA = 13/13 PASS
+OUTPUT_SHA_QA = 8/8 PASS
+INITIAL_DELTA = 835/835
+RECURSIVE_NEW_URLS = 405
+MERGED_UNIQUE_URLS = 1612
+R2_INSPECTED_WITH_EVIDENCE = 579/579
+RECOVERED_R1_PAGES_WITH_EVIDENCE = 43/43
+ENTITY_RECONCILIATION = 45/45
+OPEN_UNRESOLVED_URLS = 0
+
+R2 416 child-link residuals are valid diagnostics but the local recursive child-link hard gate was stricter than current M4 Level2/KW-002 Step07.
+
+Canonical remaining page-surface closure = entity-level navigation/taxonomy + scoped sitemap + pagination channel accounting.
+
+Current KW-002 Step07 re-read also found a missing transferred dual-lane amendment:
+M4Q organic ranking-query discovery is mandatory before M4C or must close with a valid SOURCE_UNAVAILABLE_DECLARED_LIMITATION.
+
+External current check:
+Keys.so and SpyWords expose Yandex-organic domain/page→query functionality; access is controlled by account/token and must not be bypassed.

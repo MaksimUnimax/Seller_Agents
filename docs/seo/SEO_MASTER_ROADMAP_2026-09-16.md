@@ -410,7 +410,7 @@ M3 remains closed for the primary organic corpus. Compared with hardened KW-002 
 
 # M4 — Search competitor + landing corpus
 
-Status: **CURRENT / M4A PREPARATION REOPENED / PRIOR PROMPT NOT EXECUTABLE**.
+Status: **CURRENT / M4A ACCEPTED / M4B1 PAGE-SURFACE CLOSURE CURRENT / M4Q REQUIRED BEFORE M4C**.
 
 Authorities:
 
@@ -459,7 +459,16 @@ Classes: editorial/publisher, native marketplace baseline, aggregator/directory.
 
 The split is deterministic full-coverage chunking, not sampling.
 
-M4B1 is the current physical unit. R1 Work was PARTIAL; Main Chat completed 45/45 residual decisions and 23/23 browser navigation enumerations. Navigation produced an 835-row new delta, so full-volume Recovery R2 Work is CURRENT. M4B2 remains blocked until M4B1 acceptance.
+M4B1 is the current physical unit.
+
+R1 Work was PARTIAL. Main Chat completed 45/45 residual decisions and 23/23 browser navigation enumerations. R2 then processed 835/835 navigation-delta URLs plus 405 recursive discoveries and produced complete URL/page/entity accounting.
+
+R2 is accepted as partial evidence, but its job-specific `every inspected page must close all child links` rule was stricter than M4 Level2. The 416 child-link residual flags remain diagnostics, not 416 mandatory revisits.
+
+M4B1 R3 now performs the real canonical closure across 45 entities:
+`navigation/taxonomy + scoped sitemap + pagination/load-more + terminal new delta`.
+
+M4B2 remains blocked until M4B1 page-surface acceptance.
 
 For accepted M4A page candidates, collect current official/vendor evidence while preserving URL/query/rank lineage.
 
@@ -481,9 +490,27 @@ For materially recurring/relevant ranking pages preserve and analyze:
 
 Native marketplace surfaces remain a separate baseline class and are not automatically third-party competitors.
 
+### M4Q — Yandex-organic competitor ranking-query discovery
+
+Status: **REQUIRED / NOT STARTED / BLOCKS M4C**.
+
+This is the second competitor-semantic discovery lane transferred from the current KW-002 Step07 amendment.
+
+For every materially relevant authorized competitor, attempt a current legitimate source that exposes real Yandex-organic domain/page → raw query → ranking URL/visibility evidence.
+
+Current potential source classes include services such as Keys.so and SpyWords, but access is account/token controlled and must be verified by a fresh source-recovery gate. No login/paywall/access control may be bypassed.
+
+If no legitimately accessible approved source is available, M4Q may close only as:
+
+`SOURCE_UNAVAILABLE_DECLARED_LIMITATION`
+
+with documented source recovery, explicit recall limitation and reopen condition.
+
+M4Q does not create demand authority. Any genuinely new query candidate still routes to M6/Wordstat validation when justified.
+
 ### M4C — complete competitor-page synthesis and closure
 
-Status: **BLOCKED ON M4B**.
+Status: **BLOCKED ON M4B PAGE-SURFACE + M4Q RANKING-QUERY LANE**.
 
 Reconcile the complete captured competitor-page corpus, produce recurring competitor authority, task/capability/claim matrices, terminology/proof/CTA/content-pattern findings, Octoport gaps/overlap, M5 candidate cases and M6 evidence gaps.
 

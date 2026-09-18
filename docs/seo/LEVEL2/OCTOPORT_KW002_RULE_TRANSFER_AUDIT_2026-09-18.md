@@ -131,3 +131,21 @@ SEARCH_ONLY_BASELINE_BEFORE_AI_DELTA = REQUIRED
 M4A_OLD_PREPARATION = STILL SUPERSEDED
 NEW_M4A_PREPARATION = ONLY AFTER UPDATED LEVEL2 READ
 ~~~
+
+
+## 2026-09-18 — post-transfer Step07 amendment correction
+
+During M4B1 Recovery R2 Main Chat QA, current KW-002 `LEVEL2/STEP_07_COMPETITOR_SEMANTIC_EXPANSION.md` was re-read.
+
+Two omissions in the earlier Octoport transfer were found:
+
+1. the later Step07 amendment requires a distinct `ORGANIC_RANKING_QUERY_DISCOVERY` lane in addition to page-surface mining;
+2. bounded URL-frontier closure is channel-based and must not be strengthened into an unrestricted transitive internal-link graph.
+
+Corrections:
+- Octoport M4 Level2 now distinguishes bounded page-surface discovery channels from complete internal-link graph crawling;
+- M4Q organic ranking-query lane is mandatory before M4C;
+- source-unavailable fallback follows the same explicit limitation/reopen logic as current KW-002;
+- page-surface M4B1 R3 will close navigation/taxonomy + scoped sitemap + pagination channels, not revisit all 416 R2 child-link diagnostics.
+
+Current external source check confirms Yandex-organic reverse-index capability exists in Keys.so and SpyWords, but access is account/token controlled and must be handled by a later fresh M4Q source-recovery gate without bypass.

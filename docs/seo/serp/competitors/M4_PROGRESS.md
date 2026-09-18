@@ -363,3 +363,40 @@ Correct residual equation:
 `43 INSPECTED + 1 AUTH_REQUIRED + 1 NOT_FOUND = 45`.
 
 835-row navigation delta unchanged.
+
+
+## 2026-09-18 — M4B1 R2 merged QA / frontier-method correction
+
+Owner upload HEAD:
+`96d1483822c48d63e4474f4e4a65d6eed48f4204`
+
+Independent QA:
+- 13/13 input SHA match;
+- 8/8 output SHA match;
+- 835/835 initial delta IDs accounted exactly once;
+- 405 recursive new URL identities;
+- current non-residual URL universe = 1612 unique normalized URLs;
+- 579/579 R2 INSPECTED URLs have page evidence;
+- 43/43 Opera-recovered pages have structured evidence;
+- 45/45 entity/reconciliation rows;
+- count equation failures = 0;
+- open unresolved URL count = 0.
+
+R2 execution/data quality = 9.7/10.
+
+Method correction:
+the R2 local per-page child-link recursion gate exceeded the canonical M4 Level2. The 416 child-link flags remain diagnostics, not a 416-page mandatory revisit set.
+
+Real remaining M4B1 page-surface closure:
+45-entity discovery-channel audit for navigation/taxonomy + scoped sitemap + pagination.
+
+Current KW-002 Step07 re-read also exposed a missing transferred amendment:
+M4Q Yandex-organic ranking-query discovery/source-unavailable lane is required before M4C.
+
+```text
+M4B1_R2_PARTIAL_EVIDENCE = ACCEPTED
+M4B1_FINAL_ACCEPTANCE = false
+M4B1_R3_COVERAGE_CLOSURE = NEXT
+M4B2_ALLOWED = false
+M4Q_REQUIRED_BEFORE_M4C = true
+```
