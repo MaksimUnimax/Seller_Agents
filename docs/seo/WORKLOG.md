@@ -386,3 +386,20 @@ Correction:
 
 Authority:
 LEVEL2/OCTOPORT_M0_M3_COMPLETED_STAGE_KW002_RETRO_AUDIT_2026-09-18.md.
+
+
+## 2026-09-18 — retrospective remediation timing made explicit
+
+Owner correctly noted that the previous retrofit audit said WHAT remained weak but scattered WHEN those repairs would be executed.
+
+Roadmap now has one mandatory remediation schedule:
+
+- R0 M0 scope/source consolidation = immediately, before M4A re-preparation;
+- R1 M1 live/measurement completion = after M4/M5 and before M6 final closure/M7;
+- R2 historical M2 is not rewritten; M2R already is the correction. Pre-M7 only current-authority cleanup/check;
+- R3A M3 Step06 analytical hardening = inside M4A now, using existing 300 rows;
+- R3B M3 full-SERP/device/region/temporal controls = inside M6 before M7;
+- R4 current-authority M0/M1/M2/M3 re-score = immediately before M7; each current stage >=9.0/10 and all hard gates PASS.
+
+M4A re-preparation is now explicitly blocked until R0 passes.
+M7 is explicitly blocked while M1 is OPEN or any current M0-M3 authority remains below normal stage threshold/hard gates.

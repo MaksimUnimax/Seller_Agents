@@ -442,3 +442,44 @@ M3_FULL_SERP_DEVICE_REGION_TEMPORAL_CONTROL = PASS or explicit blocking HOLD
 ~~~
 
 Historical evidence is preserved. These requirements do not authorize blind provider replay.
+
+
+## 2026-09-18 — exact retrospective remediation timing
+
+The completed-stage retrospective debt is executed at fixed roadmap points:
+
+```text
+R0 M0 consolidation
+= NOW / BEFORE M4A REPREPARATION
+
+R1 M1 completion
+= AFTER M4/M5 / BEFORE M6 FINAL CLOSURE AND M7
+
+R2 M2 historical repair
+= ALREADY DONE BY M2R
+= only authority-cleanup verification before M7
+
+R3A M3 analytical hardening
+= M4A / NOW
+
+R3B M3 full-SERP/device/region/time controls
+= M6 / BEFORE M7
+
+R4 CURRENT-AUTHORITY RESCORE
+= IMMEDIATELY BEFORE M7
+```
+
+Additional hard gates:
+
+```text
+M4A_REPREPARATION_ALLOWED
+=> M0_SCOPE_SOURCE_RETRO_CONSOLIDATION = PASS
+
+M7_ALLOWED
+=> M1 = PASS
+=> M2_CURRENT_AUTHORITY_CLEAN = PASS
+=> M3_STEP06_ANALYTICAL_HARDENING_VIA_M4A = PASS
+=> M3_CONTROL_DEBT = CLOSED
+=> CURRENT M0/M1/M2/M3 SCORES >= 9.0
+=> OPEN_CRITICAL_RETRO_DEBT = 0
+```

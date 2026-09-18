@@ -450,11 +450,11 @@ M7 remains blocked.
 | M3 primary organic | Step06 acquisition/analysis | 8.3/10 | primary corpus accepted; hardening debt open |
 | KW-002 hardened Step06 benchmark | Step06 | 9.3/10 | reference benchmark, not Octoport score |
 
-## 9. Required retrospective actions before M7
+## 9. Required retrospective actions and exact timing
 
-### R0 — M0 scope/source consolidation
+### R0 — M0 scope/source consolidation — IMMEDIATE, BEFORE M4A RE-PREPARATION
 
-Create one compact current manifest using existing facts:
+This is the first physical action before rebuilding M4A. Create one compact current manifest using existing facts:
 - product/business definition;
 - geography/language;
 - SEO research goal;
@@ -466,7 +466,11 @@ Create one compact current manifest using existing facts:
 
 No provider replay.
 
-### R2 — M2/M2R authority cleanup
+### R1 — M1 completion — AFTER M4/M5, BEFORE M6 FINAL CLOSURE / M7
+
+Finish the live/measurement baseline and close M1 to >=9.0/10 or blocking HOLD. M1 is not repaired inside M4 because it does not affect competitor evidence, but M7 is forbidden while M1 remains OPEN.
+
+### R2 — M2/M2R authority cleanup — PRE-M7, NO PROVIDER
 
 No broad replay.
 
@@ -475,7 +479,7 @@ Before M7, ensure:
 - old B02 aggregate association counts are marked superseded where still used;
 - M2/M2R current authority chain is unambiguous.
 
-### R3A — M3 analytical hardening in M4A
+### R3A — M3 analytical hardening in M4A — NOW, AFTER R0
 
 Using existing 300 rows:
 - Top3/Top10/11-20;
@@ -486,7 +490,7 @@ Using existing 300 rows:
 
 No new Search calls.
 
-### R3B — M3 control patch in M6
+### R3B — M3 control patch in M6 — AFTER M4/M5, BEFORE M7
 
 - full-SERP features;
 - device;
@@ -494,6 +498,12 @@ No new Search calls.
 - temporal stability;
 - reuse accepted M4A pairwise matrix rather than recomputing ritualistically;
 - targeted reacquisition only on demonstrated material change/gap.
+
+### R4 — current-authority re-score before M7
+
+Re-score current M0, completed M1, current effective M2/M2R authority and fully hardened M3. Each current stage must satisfy the normal >=9.0/10 major-stage threshold plus hard gates.
+
+Historical M2 B01+B02 keeps its historical 8.3/10; it is not rewritten. The current M2 authority is the accepted M2R-corrected layer.
 
 ## 10. Final retrospective verdict
 

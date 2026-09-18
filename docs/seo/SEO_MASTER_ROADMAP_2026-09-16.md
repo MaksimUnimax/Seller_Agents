@@ -121,6 +121,139 @@ Current retrospective:
 - M3 primary organic corpus remains accepted, but hardened KW-002 Step06 analytical equivalence is completed only through M4A + M6 controls;
 - no full replay of M0-M3 is authorized merely to conform to newer documentation.
 
+## Mandatory retrospective remediation schedule for completed/partial M0-M3
+
+This schedule makes the retrospective debt executable. It is not optional background work.
+
+### R0 — M0 scope/source consolidation — DO NOW, BEFORE M4A RE-PREPARATION
+
+Why now:
+M4A is about competitor/search authority and must not start from a product/source scope that is only implicitly distributed across several files.
+
+Action:
+create one compact current M0 scope/source manifest from already accepted authorities:
+- product definition/capability boundary;
+- geography/language;
+- SEO research goal;
+- allowed source classes;
+- sealed/prohibited source classes;
+- current site-state pointer;
+- material unknowns;
+- dependency-reopen rule.
+
+No provider calls. No product re-research unless a genuine unresolved owner fact is discovered.
+
+Exit:
+`M0_SCOPE_SOURCE_RETRO_CONSOLIDATION = PASS`
+and M0 re-score/hard-gate check remains at least `9.0/10`.
+
+**M4A re-preparation is blocked until R0 is persisted and remote-read back.**
+
+### R1 — M1 live/measurement baseline completion — AFTER M4/M5, BEFORE M6 FINAL CLOSURE / M7
+
+Why not now:
+M1 does not block competitor evidence collection, and a live baseline is more useful closer to Search-side freeze/implementation planning.
+
+Action:
+complete the still-open M1 items:
+- live production URL/HTTP/redirect/indexability;
+- live render/indexable main content;
+- crawlable links/orphan checks as applicable;
+- robots/Sitemap live state;
+- Yandex Webmaster readiness/ownership/current observable states;
+- Google Search Console readiness/ownership/current observable states;
+- Metrika/approved conversion-measurement readiness;
+- indexed/branded baseline where legitimately available;
+- source-vs-live divergence.
+
+Exit:
+`M1 = PASS`, all hard gates PASS, stage quality score >= `9.0/10`, or explicit blocking HOLD.
+
+**M7 cannot start while M1 is still OPEN.**
+
+### R2 — M2 historical 8.3 is NOT separately repaired; M2R is the repair and is already complete
+
+The old B01+B02 execution remains historical evidence and keeps its historical score `8.3/10`.
+
+We do NOT rewrite history to make that old run look better.
+
+The current effective M2 authority is:
+
+`M2 historical evidence + accepted M2R corrective overlay + Main Chat corrections`.
+
+Current corrective quality:
+`M2R = 9.7/10`.
+
+Before M7 only a no-provider authority-cleanup check is required:
+- M2R Main Chat return QA is the current correction authority;
+- old B02 `245/152` association counts are not used as current truth;
+- corrected `246/153` and combined corrected counts are current;
+- no superseded M2 synthesis overrides M2R.
+
+No new Wordstat unless M6 proves a named information gap.
+
+### R3A — M3 analytical hardening — EXECUTE NOW INSIDE M4A
+
+The M3 `8.3/10` score is not raised by words; M4A must add the missing hardened Step06 analysis from the existing 300 accepted rows.
+
+M4A must produce:
+- one full 300-row occurrence/classification authority;
+- Top3 strength layer;
+- Top10 primary analytical profiles;
+- 11-20 secondary discovery layer;
+- collision/uncertainty ledger;
+- explicit recurrence metric granularity/denominators;
+- complete pairwise Top10 exact-URL + domain similarity for all accepted query pairs;
+- complete recurrence universe;
+- curated material competitor registry.
+
+No Search replay is authorized for these derivative analytics.
+
+Exit:
+`M3_STEP06_ANALYTICAL_HARDENING_VIA_M4A = PASS`.
+
+M4B is blocked until this passes because its authorized competitor universe comes from that hardened registry.
+
+### R3B — M3 full-SERP/sensitivity hardening — EXECUTE IN M6 BEFORE M7
+
+After M4/M5 expose the decisions that are actually sensitive, M6 performs the bounded controls that require new observation:
+
+- full-SERP HTML/features on justified subset;
+- device/browser sensitivity where supported;
+- regional sensitivity where material;
+- temporal repeat for high-value/mixed cases;
+- reuse/verify M4A pairwise overlap authority;
+- targeted new Search only if a control demonstrates material information gain.
+
+Exit:
+`M3_CONTROL_DEBT = CLOSED`
+and final M3 re-score >= `9.0/10` with all hard gates PASS.
+
+### R4 — pre-M7 retrospective acceptance sweep
+
+Immediately before M7, Main Chat re-scores/rechecks the **current authorities**, not historical runs:
+
+- M0 current consolidated authority;
+- M1 completed current baseline;
+- M2 current authority = historical provider evidence + accepted M2R corrections;
+- M3 current authority = original organic evidence + M4A analytical hardening + M6 controls.
+
+Required:
+
+```text
+M0_CURRENT_STAGE_SCORE >= 9.0
+M1_CURRENT_STAGE_SCORE >= 9.0
+M2_CURRENT_EFFECTIVE_AUTHORITY_SCORE >= 9.0
+M3_CURRENT_HARDENED_STAGE_SCORE >= 9.0
+ALL_HARD_GATES = PASS
+OPEN_CRITICAL_RETRO_DEBT = 0
+```
+
+A historical sub-run may keep a lower historical score if a later accepted correction supersedes it. We do not falsify history by rescoring the old run as if it had used rules that did not yet exist.
+
+Only after R4:
+`M7_SEARCH_SIDE_COLLECTION_FREEZE_ALLOWED = true`.
+
 # M0 — Governance + product truth
 
 Status: **PASS**.
