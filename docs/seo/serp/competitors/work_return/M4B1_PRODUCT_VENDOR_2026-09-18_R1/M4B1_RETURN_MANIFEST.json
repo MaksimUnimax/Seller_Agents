@@ -1,0 +1,73 @@
+{
+  "work_id": "OCTOPORT_SEO_M4B1_PRODUCT_VENDOR_2026-09-18_R1",
+  "repository": "MaksimUnimax/runtime-fixtures",
+  "branch": "seo/wordstat-batch-01-2026-09-16",
+  "actual_start_live_head": "d9432e997a6b0e8a7086c142309665882c67e4fe",
+  "end_observed_remote_head": "d9432e997a6b0e8a7086c142309665882c67e4fe",
+  "authority_drift_detected": false,
+  "authority_drift_notes": "Live M4B1 release and accepted M4A R3 authority remained current; frozen blobs matched the release.",
+  "frozen_authority": {
+    "registry_entities": 45,
+    "accepted_anchors": 100,
+    "allowed_candidate_classes": [
+      "RECURRING_PRODUCT_VENDOR",
+      "RELEVANT_ONE_OFF_PRODUCT_VENDOR",
+      "SERVICE_OR_AGENCY",
+      "OTHER_RELEVANT_CONTEXT"
+    ]
+  },
+  "output_files": [
+    "M4B1_SOURCE_MANIFEST.md",
+    "M4B1_SCOPE_LEDGER.tsv",
+    "M4B1_URL_LEDGER.tsv",
+    "M4B1_PAGE_EVIDENCE.tsv",
+    "M4B1_ENTITY_SYNTHESIS.tsv",
+    "M4B1_CANDIDATE_TERMS.tsv",
+    "M4B1_ANALYSIS.md",
+    "M4B1_QA.md",
+    "M4B1_RETURN_MANIFEST.json"
+  ],
+  "sha256_by_output_file": {
+    "M4B1_SOURCE_MANIFEST.md": "e734c152cf432e7e82a806eb20579612514b5ead534b14b664630f5fa38c74ae",
+    "M4B1_SCOPE_LEDGER.tsv": "3c0ddecf99d966fe322a626526c9768b9fdd9f486d366a6c8ccc84c9130c2b62",
+    "M4B1_URL_LEDGER.tsv": "914621843753639b79014bff97b6b7684563cb6746c33e00eee9d698eeaa6d8c",
+    "M4B1_PAGE_EVIDENCE.tsv": "6774317600770a6d307af4d2f6673658b976d40861949826fbe1758de15a4594",
+    "M4B1_ENTITY_SYNTHESIS.tsv": "b418aacee4830c1b65d9e90b4bf3e8c3ab87b0d8d5b0ea56d750f1220299adb0",
+    "M4B1_CANDIDATE_TERMS.tsv": "84a64e1bc2d3296714b259726c6fc79193dc1b08c41fd5cdf1064d4f4545189f",
+    "M4B1_ANALYSIS.md": "30469ab94fe10fcbba09156d687a83234b35ed52e17993421ff26361916c4b41",
+    "M4B1_QA.md": "d5d292a0820a457317ee56ab807765a92cbed18fcdc24ddc59461e46c9691e28",
+    "M4B1_RETURN_MANIFEST.json": null
+  },
+  "output_row_counts": {
+    "scope_ledger": 45,
+    "url_ledger": 372,
+    "accepted_anchor_rows": 100,
+    "discovered_url_rows": 272,
+    "page_evidence": 249,
+    "entity_synthesis": 45,
+    "candidate_terms": 390
+  },
+  "terminal_state_counts": {
+    "INSPECTED": 249,
+    "EXECUTION_ENVIRONMENT_FAILURE": 38,
+    "DYNAMIC_UNRESOLVED": 5,
+    "ROBOTS_OR_SITE_POLICY_BLOCKED": 2,
+    "OUT_OF_SCOPE": 71,
+    "AUTH_REQUIRED": 3,
+    "NON_HTML": 4
+  },
+  "qa_verdict": "PARTIAL / RECOVERY_REQUIRED",
+  "residual_url_count": 45,
+  "entities_requiring_recovery": 33,
+  "entities_with_browser_enumerated_navigation": 22,
+  "public_page_reader_url_attempts": 387,
+  "browser_navigation_attempts": 73,
+  "search_provider_calls_executed": 0,
+  "wordstat_provider_calls_executed": 0,
+  "alice_provider_calls_executed": 0,
+  "external_public_web_browsing_executed": true,
+  "git_writes_executed": 0,
+  "final_cluster_decisions": 0,
+  "final_page_ownership_decisions": 0,
+  "timestamp": "2026-09-18T05:16:57.172Z"
+}
