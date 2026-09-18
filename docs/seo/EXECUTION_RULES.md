@@ -15,6 +15,37 @@ Companion authorities:
 - `PRODUCT_TRUTH.md`;
 - `EXTERNAL_METHOD_RESEARCH_2026-09-16.md`.
 
+## 0. Two-level authority model — OWNER-LOCKED
+
+~~~text
+LEVEL 1 = universal mandatory rules for the whole SEO program
+LEVEL 2 = methodology/gates/contract for the exact roadmap step
+work/evidence/state/results = factual execution data, not LEVEL 2
+~~~
+
+Canonical indexes:
+- LEVEL1/README.md
+- LEVEL2/README.md
+
+Before any material step or material step preparation:
+~~~text
+RESTORE CONTEXT
+-> VERIFY LIVE GITHUB HEAD
+-> READ LEVEL 1
+-> READ APPLICABLE LEVEL 2
+-> READ CURRENT WORK/EVIDENCE/STATE
+-> READ FAILURE HISTORY
+-> FRESH EXTERNAL METHOD CHECK WHERE REQUIRED
+-> FREEZE EXACT INPUTS/OUTPUTS/SCHEMA/QA/STOP RULES
+-> RECORD IN GITHUB
+-> REMOTE READBACK
+-> ONLY THEN PREPARE/EXECUTE
+~~~
+
+If applicable LEVEL 2 is missing/stale/contradictory/unread, preparation, Work prompt, Bridge/provider, execution, QA acceptance and cursor advance are forbidden.
+
+Memory, summary, earlier-step rules or job results do not substitute for live LEVEL 1 + exact LEVEL 2.
+
 ## 1. Roles
 
 ```text
