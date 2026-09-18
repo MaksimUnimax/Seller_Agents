@@ -534,3 +534,21 @@ M4A accepted.
 M3 Step06 analytical hardening via M4A is PASS.
 M4B is now CURRENT.
 M3 full-SERP/device/region/temporal debt remains assigned to M6.
+
+
+## 2026-09-18 — M4B prepared as deterministic full-coverage units
+
+After M4A R3 acceptance Main Chat reread the M4 Level2 stack and refreshed current Yandex page-quality/site-structure method sources.
+
+The 60-entity / 143-anchor M4B authority is split without sampling:
+
+- M4B1 product/vendor/service context = 45 entities / 100 anchors;
+- M4B2 editorial/native/aggregator context = 15 entities / 43 anchors.
+
+M4B1 is current.
+
+Every entity receives a frozen scope policy before expansion. Broad sites use evidence-anchored subtrees; specialized sites may use their complete relevant public taxonomy.
+
+Every discovered eligible URL must receive a terminal state. Work browser/tool failures are explicitly kept separate from real site unavailability and are returned for Main Chat/browser recovery.
+
+Competitor content is structured evidence only; full page text is not stored and competitor-derived terms remain M6 candidates rather than proven demand.

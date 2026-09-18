@@ -324,3 +324,46 @@ M4A_R3 = ACCEPTED
 QUALITY_SCORE = 9.8/10
 M3_STEP06_ANALYTICAL_HARDENING_VIA_M4A = PASS
 M4B_ALLOWED = true
+
+
+## 2026-09-18 — M4B1 preparation
+
+LIVE_HEAD:
+cb7ac5304381ffa16b13219dc38bdc8e8a38fcc6
+
+LEVEL1 READ:
+LEVEL1/README.md
+EXECUTION_RULES.md
+QUALITY_FIRST_RESOURCE_RULE.md
+WORK_HANDOFF_RULE.md
+
+LEVEL2 READ:
+LEVEL2/README.md
+LEVEL2/OCTOPORT_STEP_RULES_INDEX.md
+LEVEL2/M4_SEARCH_COMPETITOR_LANDING_RULES.md
+
+UPSTREAM READ:
+M4A R3 Main Chat acceptance
+M4A registry
+M4A page candidates
+M4A occurrence ledger
+M4 progress / roadmap
+
+FRESH EXTERNAL SOURCES:
+Yandex Search quality
+Yandex EPOS
+Yandex site structure
+Yandex title/description
+Ahrefs Content Gap secondary corroboration
+
+UNIT DECISION:
+M4B1 = 45 product/vendor/service/context entities / 100 anchors
+M4B2 = 15 editorial/native/aggregator entities / 43 anchors
+
+WORK_TRIGGER = MET for M4B1.
+
+BROWSER FAILURE RULE:
+EXECUTION_ENVIRONMENT_FAILURE must remain separate from site-side terminal states.
+
+NEXT:
+persist/readback M4B1 release, then owner relays Work prompt.

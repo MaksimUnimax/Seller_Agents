@@ -445,9 +445,21 @@ Required M4A result:
 
 M4A does **not** browse current competitor sites and does not decide final page architecture.
 
-### M4B — current official/vendor landing acquisition
+### M4B — current public competitor/landing acquisition
 
-Status: **CURRENT / RELEASED BY ACCEPTED M4A R3**.
+Status: **CURRENT / SPLIT INTO TWO COMPLETE EXECUTION UNITS**.
+
+M4B1 — product/vendor surfaces:
+45 entities / 100 accepted M4A anchors.
+Classes: recurring vendors, relevant one-off vendors, services/agencies, other relevant context.
+
+M4B2 — editorial/native/context baseline:
+15 entities / 43 anchors.
+Classes: editorial/publisher, native marketplace baseline, aggregator/directory.
+
+The split is deterministic full-coverage chunking, not sampling.
+
+M4B1 is the current physical unit.
 
 For accepted M4A page candidates, collect current official/vendor evidence while preserving URL/query/rank lineage.
 

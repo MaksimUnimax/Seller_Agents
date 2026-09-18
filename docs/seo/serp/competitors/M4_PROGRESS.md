@@ -205,3 +205,42 @@ M4A_R3 = ACCEPTED
 M3_STEP06_ANALYTICAL_HARDENING_VIA_M4A = PASS
 M4B = CURRENT
 ```
+
+
+## 2026-09-18 — M4B deterministic split and M4B1 preparation
+
+Accepted M4A registry:
+60 entities / 143 anchors.
+
+M4B is split into complete deterministic units:
+
+M4B1 PRODUCT/VENDOR:
+- 30 recurring product vendors;
+- 12 relevant one-off product vendors;
+- 2 services/agencies;
+- 1 other relevant context;
+- total = 45 entities / 100 anchors.
+
+M4B2 CONTEXT/BASELINE:
+- 12 editorial/publishers;
+- 2 native marketplace baselines;
+- 1 aggregator/directory;
+- total = 15 entities / 43 anchors.
+
+This is chunking, not sampling. M4B cannot close until both units and M4C are accepted.
+
+M4B1 Work trigger = MET.
+
+M4B1 hard method:
+- every anchor accounted;
+- deterministic per-entity host scope;
+- complete bounded URL frontier;
+- every eligible URL terminal;
+- environment failure != site failure;
+- no CAPTCHA/auth/private bypass;
+- no whole-domain crawl for broad sites;
+- no full-page copy storage;
+- competitor topic != proven demand.
+
+Current next action:
+owner relays M4B1 Work prompt after release remote readback.
