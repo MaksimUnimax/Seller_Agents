@@ -68,4 +68,20 @@ Health, S1.2/D3, full I1/D2, the Octoport domain migration, beta, deployment and
 
 Chrome, Opera, Yandex, Firefox и Safari — архитектурные цели. Принятая поддержка фиксируется по фактическому браузеру/ОС/ИИ/пакету.
 Отсутствие Mac не разрешает назвать Safari проверенным. До реальной приёмки отображается соответствующий статус.
-Новые ИИ подключаются отдельными адаптерами после проверки; их число не является мерой готовности беты.
+
+Для Stream 2 LLM-monitor target matrix уже фиксирована владельцем и не является открытым «когда-нибудь добавим другие ИИ»:
+
+- ChatGPT;
+- Alice;
+- DeepSeek;
+- Grok;
+- Claude;
+- Gemini;
+- Qwen;
+- Kimi.
+
+ChatGPT Standard и Work считаются отдельными monitoring surfaces там, где их можно надёжно различить.
+
+Порядок мониторинговой разработки: сначала `ALL_8_LLM_NO_SESSION_MONITOR` — максимальный автоматический публичный/no-session контроль сразу по всей восьмёрке. Только после его приёмки добавляются технические авторизованные сессии и глубокие authenticated probes. Требование логина без сессии не равно BROKEN и не превращается в ручной Health-тест владельца.
+
+Это уточнение относится к monitoring scope и само по себе не расширяет production extension capability/entitlement authority Stream 1.

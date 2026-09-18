@@ -244,16 +244,35 @@ P7 execution decomposition (frozen by ADR-0031):
 
 ## P8 — AI Compatibility Health v1 `[ACTIVE]`
 
-Goal: detect AI UI changes before widespread user breakage.
+Goal: detect AI UI changes before widespread user breakage across the complete accepted monitoring target matrix.
+
+Mandatory LLM target matrix:
+
+- ChatGPT;
+- Alice;
+- DeepSeek;
+- Grok;
+- Claude;
+- Gemini;
+- Qwen;
+- Kimi.
+
+ChatGPT Standard and ChatGPT Work are separate monitoring surfaces where the runner can reliably distinguish them.
+
+Owner correction dated 2026-09-18 establishes **NO-SESSION FIRST** as the required execution order. The monitor must first implement the maximum legitimate public/no-session observation for all eight LLMs. Authenticated technical accounts/sessions and deep behavioral probes are a later layer and must not block completion of the no-session matrix.
 
 Scope:
 
 - health orchestrator;
-- controlled Chrome runner first;
+- controlled browser runner;
 - browser-driver abstraction;
+- provider-specific target strategies behind common Health semantics;
 - critical contours;
-- structural + behavioral checks;
-- daily scheduled H3 smoke;
+- structural + behavioral checks where available;
+- public/no-session origin/page/composer/access/auth-wall/blocker observation for every target;
+- safe classification when deeper behavior is not observable without authentication;
+- authenticated controlled prompts/deep probes only after all-8 no-session acceptance;
+- scheduled smoke after runner breadth is accepted;
 - on-demand/candidate/post-rollout runs;
 - evidence sanitization/storage;
 - `HEALTHY|DRIFT|DEGRADED|BROKEN|UNKNOWN|MAINTENANCE`;
@@ -261,14 +280,18 @@ Scope:
 - candidate profile validation;
 - rollout/rollback hooks.
 
+No-session absence of authenticated capability is not automatically BROKEN. A provider requiring login may yield a bounded environment/access observation while the public surface itself remains healthy.
+
+The owner does not manually execute recurring Health scenarios. Later owner participation is limited to unavoidable initial technical-session provisioning such as OTP/CAPTCHA where legitimate automation is unavailable.
+
 Exit examples:
 
 - primary selector fail + fallback pass => DRIFT;
-- core contour fail => BROKEN;
-- expired health account => UNKNOWN;
+- core contour fail on a confidently established observable surface => BROKEN;
+- login/auth requirement or controlled browser/environment uncertainty without proof of product drift => UNKNOWN/bounded access state;
 - candidate profile fixes incident without regression.
 
-P8 execution decomposition (frozen by ADR-0036):
+P8 execution decomposition:
 
 - P8.1 `[DONE / REMOTE ACCEPTED]` health domain,
   deterministic classifier, suite registry, and H0 profile-candidate boundary.
@@ -283,12 +306,12 @@ P8 execution decomposition (frozen by ADR-0036):
   when the commit containing this final documentation rematerialization
   satisfies the exact-SHA Server CI condition in
   `P8_3_REMOTE_ACCEPTANCE_2026-09-13.md`.
-- P8.4 `[PLANNED]` ChatGPT Standard/Work H3 and sanitized evidence.
-- P8.5 `[PLANNED]` scheduling, orchestration, and health incidents.
-- P8.6 `[PLANNED]` H4/H5, P7 availability-restriction hooks, and minimal
-  Health admin API/UI.
-- P8.7 `[PLANNED]` whole-P8 security, privacy, architecture, regression, and
-  final acceptance.
+- P8.4 `[ACTIVE / OWNER-CORRECTED]` LLM monitoring foundation and target-specific runner behavior.
+- P8.4-NOSESSION `[NEXT OWNER PRIORITY]` complete automatic no-session monitoring for ChatGPT, Alice, DeepSeek, Grok, Claude, Gemini, Qwen and Kimi; Standard/Work are separated where public evidence permits.
+- P8.4-AUTH `[DEFERRED UNTIL NOSESSION ACCEPTED]` technical authenticated sessions and deeper controlled Send/generation/response/completion/code/Copy/delivery probes where applicable.
+- P8.5 `[PLANNED]` durable scheduling, orchestration, and health incidents after the accepted monitoring runner is broad enough for the full target matrix.
+- P8.6 `[PLANNED]` H4/H5, P7 availability-restriction hooks, and minimal Health admin API/UI.
+- P8.7 `[PLANNED]` whole-P8 security, privacy, architecture, regression, and final acceptance across all eight LLM targets, including authenticated surfaces only where that later layer has been explicitly enabled.
 
 ## P9 — Diagnostics, notifications and operational visibility `[PLANNED]`
 
