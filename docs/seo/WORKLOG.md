@@ -357,3 +357,32 @@ ROADMAP DESCRIPTION != TRANSFERRED EXECUTABLE LEVEL2 METHOD.
 
 Regression:
 NO APPLICABLE STEP INDEX + LEVEL2 READ -> NO PREPARATION / NO EXECUTION.
+
+
+## 2026-09-18 — completed M0-M3 retrospective against hardened KW-002
+
+Owner required the same KW-002 comparison for already executed stages, not only future roadmap steps.
+
+Main Chat read actual Octoport M0/M1/M2/M2R/M3 artifacts plus KW-002 Step00-Step06, dedicated gates, failure ledgers and hardened Step06 output.
+
+Scores:
+- M0 Product Truth: 9.0/10. Product truth remains PASS; one compact Step00/01-style scope/source consolidation is required before M7.
+- M1 source/measurement baseline: 7.7/10 readiness only; correctly remains OPEN.
+- Historical M2 B01+B02: 8.3/10 historical. Evidence valid, but initial coverage/schema/persistence were weaker than hardened KW-002 and insufficient alone.
+- M2R full-volume reconciliation: 9.7/10 after Main Chat corrections. This is the strongest completed evidence stage and remains ACCEPTED.
+- M3 primary organic: 8.3/10. Strong acquisition/lifecycle/persistence, but not yet hardened Step06-equivalent.
+
+Important M2R finding:
+Main Chat did not trust Work's 98/100 self-score. Return QA corrected three real defects: matrix accounting 12/9/3 -> 15/12/3; R07 relation R10 -> R11; B02 association occurrence/unique counts 245/152 -> 246/153.
+
+Important M3 comparison:
+KW-002 hardened Step06 at 9.3/10 included Top3/Top10/11-20 profiles, collision ledger, explicit recurrence granularity, complete pairwise exact-URL/domain Top10 similarity and curated competitor registry. Octoport M3 did not yet contain that complete derivative layer.
+
+Correction:
+- no Search replay for this analytical debt;
+- M4A derives Step06 hardening from existing 300 accepted M3 rows;
+- M6 closes full-SERP/device/region/temporal controls;
+- M7 remains blocked until those debts plus M0 scope/source consolidation close.
+
+Authority:
+LEVEL2/OCTOPORT_M0_M3_COMPLETED_STAGE_KW002_RETRO_AUDIT_2026-09-18.md.

@@ -25,9 +25,10 @@ Missing/unread applicable Level2 = HOLD.
 
 - OCTOPORT_STEP_RULES_INDEX.md
 
-## KW-002 transfer audit
+## KW-002 transfer audits
 
-- OCTOPORT_KW002_RULE_TRANSFER_AUDIT_2026-09-18.md
+- OCTOPORT_KW002_RULE_TRANSFER_AUDIT_2026-09-18.md — future-stage Step06-22 transfer.
+- OCTOPORT_M0_M3_COMPLETED_STAGE_KW002_RETRO_AUDIT_2026-09-18.md — completed-stage M0-M3 retrospective.
 
 ## Dedicated high-risk stage rules
 

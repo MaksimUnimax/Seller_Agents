@@ -73,3 +73,52 @@ CURRENT RESULT:
 KW002_RULE_TRANSFER_M4_M18 = PASS FOR METHOD SCAFFOLD
 M4A_PREPARATION = STILL INVALID / MUST BE REBUILT FROM NEW LIVE HEAD
 M4A_WORK_EXECUTION_ALLOWED = false
+
+
+## 2026-09-18 — completed M0-M3 comparison against KW-002
+
+CURRENT_MAIN_CHAT_ACTION:
+retrospectively assess already executed Octoport stages against hardened KW-002 Step00-Step06 and record only necessary corrective debt.
+
+OCTOPORT AUTHORITIES READ:
+- PRODUCT_TRUTH.md;
+- technical/CURRENT_SITE_BASELINE_2026-09-16.md;
+- SEED_UNIVERSE.md;
+- BATCH_01_BROAD_DISCOVERY.md + synthesis;
+- BATCH_02_TARGETED_EXPANSION.md + synthesis;
+- M2_WORDSTAT_RETRO_GATE_AUDIT_2026-09-16.md;
+- M2_WORDSTAT_VOLUME_ACCOUNTING_2026-09-16.md;
+- M2R_FULL_VOLUME_RECONCILIATION_2026-09-17.md;
+- M2R 1123-row phrase-lineage ledger;
+- M2R family matrix;
+- M2R Work QA/manifest;
+- M2R_RECONCILIATION_MAIN_CHAT_RETURN_QA_2026-09-17.md;
+- M3 revised query matrix;
+- SERP_PROGRESS.md;
+- M3_METHOD_RETROSPECTIVE_AND_CONTROL_DEBT_2026-09-18.md.
+
+KW-002 AUTHORITIES READ:
+- Step00-Step06 universal index and inherited rules;
+- dedicated Step02 seed-quality gate;
+- Step03 depth/persistence gates;
+- Step04 family gate;
+- Step05 info-gain/provider gate;
+- Step06 hardened Search competitor/SERP rule;
+- Step06 hardened analysis/final closure;
+- relevant failure ledgers and return-QA patterns.
+
+FRESH EXTERNAL METHOD CHECK:
+- current Yandex Webmaster query selection / market analysis;
+- current Wordstat operator/API documentation;
+- current Yandex search-quality guidance.
+
+RETRO VERDICTS:
+- M0 = 9.0/10 product truth valid; compact scope/source consolidation required before M7.
+- M1 = 7.7/10 readiness only; remains OPEN.
+- M2 historical B01+B02 = 8.3/10 historical; valid evidence but not sole current demand authority.
+- M2R = 9.7/10 after Main Chat corrections; ACCEPTED.
+- M3 primary organic = 8.3/10; accepted corpus, hardened Step06 equivalence incomplete.
+
+NO FULL REPLAY AUTHORIZED.
+M4A must close M3 analytical hardening from existing rows.
+M6 must close full-SERP/device/region/time controls.

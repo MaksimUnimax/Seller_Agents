@@ -108,6 +108,19 @@ Expected Work points:
 15. SEO stream changes only `docs/seo/**` until explicit implementation handoff.
 16. `CHAT != DURABLE STORAGE`: every accepted roadmap/rule/evidence/analysis/progress change must be written to the active GitHub branch and remote-readback; chat-only state is not accepted project state.
 
+## Completed-stage KW-002 retrospective
+
+Authority:
+`LEVEL2/OCTOPORT_M0_M3_COMPLETED_STAGE_KW002_RETRO_AUDIT_2026-09-18.md`.
+
+Current retrospective:
+- M0 product truth remains valid, but compact Step00/01-style scope/source consolidation is required before M7;
+- M1 remains correctly OPEN / partial;
+- historical M2 B01+B02 evidence remains valid but was not sufficient as sole demand authority;
+- M2R is the accepted strong current demand/reconciliation overlay after independent Main Chat corrections;
+- M3 primary organic corpus remains accepted, but hardened KW-002 Step06 analytical equivalence is completed only through M4A + M6 controls;
+- no full replay of M0-M3 is authorized merely to conform to newer documentation.
+
 # M0 — Governance + product truth
 
 Status: **PASS**.
@@ -115,6 +128,8 @@ Status: **PASS**.
 Freeze brand/domain, current capabilities, Ozon/Wildberries scope, read-only launch promise, chosen external LLM model, credential/storage truth, beta/public availability, unsupported actions, evidence authorities and parallel-work isolation.
 
 Output: `PRODUCT_TRUTH.md` and current authority chain.
+
+KW-002 retrospective: product truth PASS, but `M0_SCOPE_SOURCE_RETRO_CONSOLIDATION` is required before M7 to materialize one current Step00/01-style scope/source manifest from already accepted facts. This is docs-only unless a genuine owner/product unknown is discovered.
 
 Reopen only after explicit product/source change.
 
@@ -151,7 +166,11 @@ Completed:
 - B02 targeted product-fit expansion;
 - strict retrospective seed/depth/persistence audit under transferred KW-002 gates.
 
-Authority: `wordstat/M2_WORDSTAT_RETRO_GATE_AUDIT_2026-09-16.md`.
+Authorities:
+
+- `wordstat/M2_WORDSTAT_RETRO_GATE_AUDIT_2026-09-16.md`;
+- `work/M2R_RECONCILIATION_MAIN_CHAT_RETURN_QA_2026-09-17.md` as the current correction/acceptance overlay;
+- M2R full-volume lineage/family/revised-M3 artifacts under `work/`.
 
 Historical limitation:
 
@@ -250,7 +269,7 @@ Method references used for this correction:
 - Yandex Webmaster site regionality: https://www.yandex.ru/support/webmaster/en/site-geography/site-region
 - Ahrefs SERP-overlap clustering industry corroboration: https://ahrefs.com/blog/keyword-clustering/
 
-M3 remains closed for the primary organic corpus. Its control debt is a mandatory M6 dependency and blocks M7.
+M3 remains closed for the primary organic corpus. Compared with hardened KW-002 Step06, additional derivative analytical hardening is required from the existing 300 accepted rows: Top3/Top10/11-20 profiling, collision/uncertainty control, recurrence granularity, pairwise Top10 exact-URL/domain similarity and curated competitor registry. These are assigned to M4A without Search replay. Full-SERP/device/region/time controls remain M6 debt. M7 is blocked until both layers close.
 
 # M4 — Search competitor + landing corpus
 
