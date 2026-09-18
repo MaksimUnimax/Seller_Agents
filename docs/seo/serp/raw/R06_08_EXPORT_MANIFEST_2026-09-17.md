@@ -4,7 +4,13 @@ Date: 2026-09-17.
 Query: `помощник селлера маркетплейсов`.  
 Job: `octoport-serp-r06-20260917`.  
 Operation: `sprdv3pu6m66t214aidj`.  
-Status: **PASS / FULL EXPORT PERSISTED / VERIFIED REMOTE READBACK**.
+Status: **SUPERSEDED / INVALID EXACT-BYTE TRANSPORT CLAIM**.
+
+## Supersession notice
+
+2026-09-18 integrity QA proved that the seven chunks below do not reconstruct the claimed gzip/source identity. Current transport authority is `recovery/R06_2026-09-18/R06_10_RECOVERED_EXPORT_MANIFEST_2026-09-18.md`.
+
+The original values below are preserved as historical claims only. Do not use their SOURCE/GZIP hashes or source byte count as current authority.
 
 ## Source export identity
 

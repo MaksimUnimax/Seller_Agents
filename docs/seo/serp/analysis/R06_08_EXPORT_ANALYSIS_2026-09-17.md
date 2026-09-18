@@ -7,7 +7,11 @@ Operation: `sprdv3pu6m66t214aidj`.
 Revision: `5`.  
 Status: **PASS / ALL 20 RESULTS REVIEWED / R06 CLOSED FOR CURRENT M3 PASS**.
 
-Raw/export authority: `../raw/R06_08_EXPORT_MANIFEST_2026-09-17.md`.
+Historical raw/export manifest: `../raw/R06_08_EXPORT_MANIFEST_2026-09-17.md` — exact-byte identity superseded.
+
+Current transport authority: `../raw/recovery/R06_2026-09-18/R06_10_RECOVERED_EXPORT_MANIFEST_2026-09-18.md`.
+
+The all-20 semantic analysis remains current because the recovered JSON preserves the same R06 job/revision/operation, 20 ranks and rank/domain sequence. Historical source SHA `d16ae...` is not current transport authority.
 
 ## 1. Export QA
 
