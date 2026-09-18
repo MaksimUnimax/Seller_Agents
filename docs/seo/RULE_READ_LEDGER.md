@@ -367,3 +367,23 @@ EXECUTION_ENVIRONMENT_FAILURE must remain separate from site-side terminal state
 
 NEXT:
 persist/readback M4B1 release, then owner relays Work prompt.
+
+
+## 2026-09-18 — M4B1 release remote-readback
+
+RELEASE_COMMIT:
+5fd04afe5eebd3467a657bc8bc33f3aebb10488e
+
+REMOTE_BRANCH_COMPARE:
+identical / ahead_by=0 / behind_by=0
+
+READBACK:
+M4B1 gate = PASS
+M4B1 release = PASS
+M4B1 Work prompt = PASS
+M4B1 staging README = PASS
+roadmap/progress = PASS
+
+RESULT:
+M4B1_WORK_START_ALLOWED = true
+M4B2_WORK_START_ALLOWED = false

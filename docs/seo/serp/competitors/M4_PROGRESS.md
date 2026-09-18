@@ -2,7 +2,7 @@
 
 Date: 2026-09-18
 Branch: seo/wordstat-batch-01-2026-09-16
-Status: **M4A R3 ACCEPTED 9.8/10 / M4B CURRENT / R2 SUSPENDED**
+Status: **M4A R3 ACCEPTED 9.8/10 / M4B1 AUTHORIZED / M4B2 BLOCKED**
 
 ## Current cursor
 
@@ -244,3 +244,28 @@ M4B1 hard method:
 
 Current next action:
 owner relays M4B1 Work prompt after release remote readback.
+
+
+## 2026-09-18 — M4B1 release remote-readback PASS
+
+Release commit:
+`5fd04afe5eebd3467a657bc8bc33f3aebb10488e`
+
+Branch compare:
+`identical / ahead_by=0 / behind_by=0`.
+
+Readback:
+- M4B1 gate: PASS;
+- execution release: PASS;
+- Work prompt: PASS;
+- staging target: PASS;
+- roadmap/progress: PASS.
+
+```text
+M4B1_WORK_START_ALLOWED = true
+M4B2_WORK_START_ALLOWED = false
+M4C_ALLOWED = false
+```
+
+Current next action:
+owner relays `M4B1_WORK_PROMPT_2026-09-18_R1.md`.
