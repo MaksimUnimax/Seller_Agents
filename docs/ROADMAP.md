@@ -60,6 +60,196 @@ C2.2-A is closed only for online-first verified cached-bootstrap configuration a
 
 The next capability-related dependency is now server-side and remains **before** Work/offline wiring. Current `beta-access` resolves only `BETA | NONE` and contains no per-capability permission policy. Current Bootstrap signs commercial entitlements only when commercial access is independently eligible; beta-only snapshots therefore currently sign `entitlements: {}` and D2 correctly denies. The next bounded step must define an explicit reviewed Seller Agents capability-permission policy for the authorized access bases and emit only that reviewed policy through the existing signed entitlement map. It must not infer capability permission from beta status, signed feature names, provider-specific entitlement keys or package-local ids. `NONE` and malformed/unknown policy remain fail-closed; commercial plan entitlements remain authoritative for commercial access; beta/commercial overlap must be explicit. Only after this server result is separately accepted may a later step make D2 participate in executable Work authority while retaining account/session generation, compatibility, AI-profile, Health, freshness and state-machine gates. Offline Work, provider replay, joint offline command-result completion and scheduler integration remain closed.
 
+
+## Forward-only correction insertion — full autonomy recovery (owner correction 2026-09-18)
+
+This block is inserted into the existing Early I1 sequence **after the current local C2.3-C3A command-predispatch work and before provider replay / joint offline command-result recovery**.
+
+It is a FORWARD-ONLY correction lane. It does not delete, rename or pretend that already completed bounded steps never happened. C1, C2 and the current C3A work remain historical/technical milestones with their original evidence. The new steps below explicitly supersede only the too-narrow autonomy semantics that were introduced later.
+
+The product source of truth is the previously accepted autonomy/synchronization model in `docs/architecture/SYNC.md` and the verified cached-bootstrap/offline-grace semantics in `docs/development/client-i1/C2_OFFLINE_POLICY_2026-09-16.md`:
+
+- ordinary work has zero mandatory Seller Agents server call per command/delivery;
+- the server is not a proxy for marketplace business traffic;
+- temporary server unavailability is not itself a global Work denial;
+- extensions initiate occasional synchronization; the server does not poll extensions;
+- two installations may temporarily execute independently during partition;
+- pending sync uses bounded retry/backoff and compact metadata, not raw seller reports;
+- explicit Finish/store change wins over late delivery markers;
+- preferred executor/last-delivered reconciliation converges gradually and must not flap on every report;
+- `FRESH`, `STALE_BUT_OFFLINE_GRACE_ELIGIBLE` and `CACHE_EXPIRED` remain distinct signed-cache states; later Work logic must not silently collapse the accepted offline-grace state into immediate denial.
+
+### Absolute architecture-quality rule for this correction lane
+
+This correction is **not allowed to be implemented as patches/exceptions layered on top of the wrong active-session-only model**.
+
+Forbidden:
+
+- keeping the wrong premise and adding special-case `if server unavailable` branches around it;
+- treating the current active-only `admission_provenance` mechanism as untouchable if it structurally prevents correct autonomy;
+- bolting offline Start/Resume/rebind onto C1/C2/C3A without redesigning the authority model that made them impossible;
+- preserving an incorrect dependency merely to minimize diff size;
+- adding hidden bypasses, dev flags or duplicate authority paths;
+- trading architecture quality for speed, token cost, line count or implementation convenience.
+
+Required:
+
+- recover the intended autonomy model from product truth and accepted earlier contracts first;
+- redesign or replace the affected C1/C2/C3A authority/provenance/Health/sync dependencies wherever needed;
+- remove obsolete wrong-path logic rather than leave it alive beside the corrected path;
+- keep one coherent source of authority and one coherent state machine;
+- run full affected RED→GREEN regression across all rewritten dependencies;
+- prefer a larger fundamental rewrite over a smaller workaround when the smaller change preserves the wrong abstraction.
+
+Priority for this lane is:
+
+**QUALITY > ARCHITECTURAL CORRECTNESS > COMPLETENESS > COST > SPEED.**
+
+No time estimate or "minimal diff" objective may override this rule.
+
+### C2.3-C3B — autonomy source-of-truth recovery and dependency audit
+
+Goal: formally reconcile current local C1/C2/C3A behavior with the already accepted product autonomy and synchronization contract.
+
+Required work:
+
+- map every current server dependency for Start, Resume, store change, marketplace change, ordinary command, report lifecycle and recovery;
+- identify every place where later code incorrectly assumes "offline means only an already-active session may continue";
+- identify every place where Health freshness is incorrectly coupled to permission to work;
+- map the accepted cached-bootstrap offline-grace states through to Work authority;
+- determine which C1/C2/C3A pieces remain valid, which must be refactored and which must be removed/replaced;
+- produce the replacement architecture before coding later corrective steps.
+
+Acceptance: there is one explicit authority/state model supporting autonomous local creation and continuation of Work while preserving revocation, expiry, account/device/session and capability safety.
+
+### C2.3-C3C — fundamental autonomous authority rewrite
+
+Goal: replace the too-narrow active-session-only continuation model with an installation-local autonomous authority derived from previously verified signed server authority and its accepted offline-grace policy.
+
+Required semantics:
+
+- server reachability is not itself an authorization gate;
+- a valid locally held signed authority/grace may authorize local Work creation and continuation within its exact account/device/session/AI/capability scope;
+- `STALE_BUT_OFFLINE_GRACE_ELIGIBLE` must be handled according to the accepted signed-cache policy instead of being collapsed into immediate expiry;
+- known local logout/reset/revocation/account/device/session mismatch still denies immediately;
+- actual signed grace expiry denies;
+- no unlimited grace;
+- no raw Health/B2 envelope persistence;
+- no locally invented permissions;
+- no silent auto-upgrade of data outside the new coherent model.
+
+The existing active-session admission provenance may be retained only if it remains useful as lifecycle evidence. It must not remain the sole reason that new local Work is impossible.
+
+### C2.3-C3D — autonomous Start / Resume / store and marketplace rebind
+
+Goal: make the normal user control surface work during temporary Seller Agents server outage when local signed authority/grace permits it.
+
+Must cover:
+
+- Start in a new dialogue;
+- Start in a historical dialogue;
+- Resume;
+- explicit store change with warning and a new Work context;
+- explicit marketplace change with warning and a new Work context;
+- multiple local stores;
+- Ozon Seller + Performance credential requirements;
+- WB provider-specific requirements;
+- restart/service-worker suspension;
+- old commands never autorun;
+- Finish remains local and immediate.
+
+The extension must not need a control-server round trip merely to create the new local dialogue/store binding while valid autonomous authority exists.
+
+### C2.3-C3E — rare extension-initiated synchronization journal
+
+Goal: restore the intended rare-sync architecture rather than centralized live coordination.
+
+Required:
+
+- extension-originated sync only; server never polls extensions;
+- compact dirty metadata/pending operations with `baseRevision` and idempotent `requestId`;
+- bounded retry/backoff consistent with `architecture/SYNC.md`;
+- no frequent timer when nothing is pending;
+- periodic compact snapshot/dirty merge only at low frequency;
+- no raw seller report archive;
+- no marketplace tokens on server;
+- offline local changes remain usable before ACK;
+- ACK compacts/removes pending entries without replaying business commands.
+
+### C2.3-C3F — multi-browser / multi-dialogue reconciliation and last-delivered semantics
+
+Goal: preserve autonomous parallel operation and deterministic convergence after connectivity returns.
+
+Must cover:
+
+- two browsers may temporarily work independently;
+- different dialogues/stores remain isolated;
+- no global exclusive lease/heartbeat per dialogue;
+- explicit Finish/store change/binding revision outranks late delivery markers;
+- "last delivered report" applies only to the same valid binding/store context;
+- preferred executor must not flip on every report;
+- late/out-of-order markers cannot reopen completed transfer/switch operations;
+- clock skew cannot change store binding or restart Work;
+- reconciliation gradually converges as installations contact the server;
+- a browser that has not contacted the server remains unknowable rather than falsely revoked.
+
+### C2.3-C3G — reconcile command predispatch with corrected autonomy
+
+Goal: adapt the C3A marketplace predispatch gate to the corrected autonomy authority.
+
+The current C3A work remains a historical bounded step; this step must rewrite its authority dependency if required.
+
+Required:
+
+- ordinary Ozon/WB commands remain zero-mandatory-control-call;
+- commands created from a valid locally autonomous new Start/Resume/rebind must dispatch normally;
+- each command still re-fences dialogue/store/binding/credential/account context before provider side effect;
+- multi-command blocks re-check each command;
+- report START/STATUS/DOWNLOAD re-check each provider request;
+- known revocation or expired signed grace denies;
+- no automatic replay of UNKNOWN provider outcomes;
+- no authority bypass merely because server is offline.
+
+### C2.3-C3H — corrected autonomy full acceptance
+
+This is the mandatory acceptance gate for the correction lane.
+
+Automate at minimum:
+
+- server outage before opening a new dialogue;
+- new Start while server unavailable;
+- historical-dialogue Start while unavailable;
+- Resume while unavailable;
+- store change while unavailable;
+- marketplace change while unavailable;
+- multiple stores and dialogues while unavailable;
+- two browsers working independently during partition;
+- service-worker/browser restart during partition;
+- ordinary commands and report lifecycle during partition;
+- signed-grace boundary before/at/after expiry;
+- local logout/reset/revocation during partition;
+- credential revision/store deletion during partition;
+- server recovery with pending synchronization;
+- duplicate/retried sync request IDs;
+- late and out-of-order ACK/delivery markers;
+- last-delivered/preferred-executor stabilization;
+- no raw report/server secret persistence;
+- no control call per ordinary command;
+- no regression of online behavior.
+
+Acceptance must be demonstrated on source and packaged runtime in the strongest available browser harness, with real browser-family claims kept separate.
+
+### Resume original Early I1 chain after C3H
+
+Only after C3B→C3H are accepted does the original sequence continue forward:
+
+provider outcome/replay integration where required
+→ joint offline command/result completion and recovery
+→ scheduler/integration dependencies
+→ full automated Early-I1/D2 pre-handoff acceptance.
+
+The correction lane remains permanently in roadmap/history as completed work once accepted; it is never erased by later cleanup.
+
 Health, S1.2/D3, full I1/D2, the Octoport domain migration, beta, deployment and release remain separate open work.
 Расширенное администрирование мониторинга и платежи не предшествуют первому общему сценарию.
 Минимальный сайт регистрации/установки/обратной связи обязателен до B1; продающие воронки развиваются позже.
