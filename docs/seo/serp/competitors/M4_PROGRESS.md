@@ -2,7 +2,7 @@
 
 Date: 2026-09-18
 Branch: seo/wordstat-batch-01-2026-09-16
-Status: **M4A R3 ACCEPTED 9.8/10 / M4B1 COVERAGE R3 PREPARED / M4B2 BLOCKED / M4Q REQUIRED**
+Status: **M4A R3 ACCEPTED 9.8/10 / M4B1 COVERAGE R3 AUTHORIZED / M4B2 BLOCKED / M4Q REQUIRED**
 
 ## Current cursor
 
@@ -424,3 +424,27 @@ Work trigger = MET because sitemap/pagination discovery may generate a large ful
 
 M4B2 remains blocked until M4B1 page-surface acceptance.
 M4Q organic ranking-query lane is required before M4C.
+
+
+## 2026-09-18 — M4B1 Coverage Closure R3 release readback PASS
+
+Release commit:
+`be483ce2ba1036829e80148c157e6bd7591bdcc0`
+
+Branch compare:
+`identical / ahead_by=0 / behind_by=0`.
+
+Readback:
+- R3 gate = PASS;
+- R3 release = PASS;
+- R3 Work prompt = PASS;
+- R3 staging README = PASS;
+- corrected M4 Level2 = PASS;
+- roadmap/progress = PASS.
+
+```text
+M4B1_COVERAGE_R3_WORK_START_ALLOWED = true
+M4B1_FINAL_ACCEPTANCE = false
+M4B2_ALLOWED = false
+M4Q_REQUIRED_BEFORE_M4C = true
+```

@@ -523,3 +523,26 @@ WORK_TRIGGER = MET.
 R3 explicitly forbids complete internal-link graph replay.
 
 M4Q ranking-query lane remains separate and required before M4C.
+
+
+## 2026-09-18 — M4B1 Coverage Closure R3 release readback
+
+RELEASE_COMMIT:
+be483ce2ba1036829e80148c157e6bd7591bdcc0
+
+REMOTE_BRANCH_COMPARE:
+identical / ahead_by=0 / behind_by=0
+
+READBACK:
+R3 gate = PASS
+R3 release = PASS
+R3 Work prompt = PASS
+R3 staging = PASS
+M4 Level2 correction = PASS
+roadmap/progress = PASS
+
+RESULT:
+M4B1_COVERAGE_R3_WORK_START_ALLOWED = true
+M4B1_FINAL_ACCEPTANCE = false
+M4B2_ALLOWED = false
+M4Q_REQUIRED_BEFORE_M4C = true
