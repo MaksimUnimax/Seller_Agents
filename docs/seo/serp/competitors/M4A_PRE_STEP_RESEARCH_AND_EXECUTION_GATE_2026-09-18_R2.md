@@ -1,7 +1,7 @@
 # Octoport SEO — M4A R2 pre-step research and execution gate
 
 Date: 2026-09-18
-Status: **AUTHORIZED / REMOTE READBACK PASS / WORK NOT STARTED**
+Status: **HOLD / RELEASE SUSPENDED / R06 AUTHORITY INPUT INTEGRITY FAILURE**
 WORK_ID: OCTOPORT_SEO_M4A_HARDENED_2026-09-18_R2
 Stage: M4 — Search competitor + landing corpus
 Substep: M4A — hardened current-search competitor derivation from accepted M3
@@ -470,3 +470,21 @@ M4A_R2_PREPARED = true
 M4A_R2_WORK_STARTED = false
 M4A_R2_ACCEPTED = false
 M4B_ALLOWED = false
+
+
+## 18. R2 post-release integrity incident
+
+The Work narrow preflight found that R06 cannot satisfy the frozen exact-authority input gate under its historical manifest.
+
+Authority:
+`../raw/R06_09_TRANSPORT_INTEGRITY_INCIDENT_2026-09-18.md`
+
+Therefore:
+
+```text
+M4A_R2_WORK_START_ALLOWED = false
+M4A_R2 = HOLD
+R06_RECOVERY_REQUIRED = true
+```
+
+Do not resume this R2 prompt after repair. Main Chat must publish a fresh release revision referencing the accepted recovery authority.

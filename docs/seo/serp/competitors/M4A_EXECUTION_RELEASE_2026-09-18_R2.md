@@ -1,7 +1,7 @@
 # Octoport SEO — M4A R2 execution release
 
 Date: 2026-09-18
-Status: **AUTHORIZED / REMOTE READBACK PASS / WORK MAY START**
+Status: **SUSPENDED / DO NOT START OR RESUME / R06 INPUT AUTHORITY HOLD**
 WORK_ID: OCTOPORT_SEO_M4A_HARDENED_2026-09-18_R2
 Preparation base HEAD: 2612c3268de5d8fd30221057e10ad552f15bd37d
 
@@ -82,3 +82,14 @@ Owner uploads unpacked files once to:
 docs/seo/serp/competitors/work_return/M4A_HARDENED_2026-09-18_R2/
 
 Main Chat owns return QA and acceptance.
+
+
+## Suspension — 2026-09-18
+
+Work input-integrity preflight detected the R06 durable-export transport defect recorded in:
+
+`../raw/R06_09_TRANSPORT_INTEGRITY_INCIDENT_2026-09-18.md`
+
+This release is no longer executable even after R06 repair.
+
+After recovery Main Chat must issue a new M4A release revision with the repaired/recovered R06 authority explicitly frozen.

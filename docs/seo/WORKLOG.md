@@ -455,3 +455,23 @@ Work receives execution-only prompt and narrow drift/input preflight.
 No provider calls or external competitor browsing are authorized in M4A.
 
 M4B remains blocked until Main Chat independently accepts the R2 Work return.
+
+
+## 2026-09-18 — M4A R2 HOLD exposed R06 export transport defect
+
+ChatGPT Work correctly stopped during narrow input-integrity preflight.
+
+R06 historical manifest claimed a 73,361-byte source and gzip SHA a3df7f3b..., but its seven immutable Git chunks reconstruct a different gzip SHA and fail standard CRC validation.
+
+Main Chat independently verified that:
+- the terminal provider collect is valid and uses the same R06 operation/revision;
+- the seven chunks themselves have the historical Git blob identities;
+- the raw DEFLATE payload is intact and yields a valid 73,385-byte JSON;
+- recovered JSON has correct R06 job, revision, operation, query, SUCCEEDED state and 20 complete ranks;
+- historical exact-byte manifest claim is invalid;
+- no separately persisted historical full JSON/gzip exists at the expected paths.
+
+Therefore this is a durable-transport authority defect, not a reason for blind Search replay.
+
+R2 is suspended.
+Next action: materialize a new derived recovery transport with correct integrity metadata, independently QA it, then issue a new M4A release revision.

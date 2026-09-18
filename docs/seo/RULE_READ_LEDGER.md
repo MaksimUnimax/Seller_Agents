@@ -222,3 +222,29 @@ PUBLICATION_PATH:
 one owner staging upload to work_return/M4A_HARDENED_2026-09-18_R2/
 
 MAIN_CHAT_EXECUTION_ALLOWED = true after publication + remote readback of R2 release set.
+
+
+## 2026-09-18 — M4A R2 Work HOLD / R06 authority integrity failure
+
+WORK_RESULT:
+STATUS = HOLD / AUTHORITY_INPUT_INTEGRITY_FAILURE
+
+Work correctly performed no classification, registry, provider call, external browse or repository mutation.
+
+Main Chat independent verification:
+- current seven R06 chunk blob SHAs match historical manifest;
+- reconstructed gzip = 20,604 bytes;
+- actual gzip SHA256 = 7eae84ffb5492d015e69aa4937a5da5bff36d45444c533853d35dec98b29a655;
+- historical gzip SHA claim a3df7f3b... is false for those chunks;
+- raw DEFLATE body is intact;
+- recovered JSON = 73,385 bytes;
+- recovered CRC32 = 0x95252f95;
+- recovered SHA256 = 78759292ba7f23ad741329cc631b9ec90b26abcff4e0b97fc81ff5289d0708f6;
+- JSON structural identity matches R06 job/revision/operation/query and 20 complete ranks;
+- R06 terminal collect authority remains valid;
+- no separately persisted historical full JSON/gzip was found under the expected source paths.
+
+Decision:
+M4A R2 SUSPENDED.
+Provider replay NOT authorized.
+First attempt deterministic derived transport recovery from immutable Git chunks.

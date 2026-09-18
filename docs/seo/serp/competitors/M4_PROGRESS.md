@@ -2,7 +2,7 @@
 
 Date: 2026-09-18
 Branch: seo/wordstat-batch-01-2026-09-16
-Status: **M4A R2 AUTHORIZED / WORK NOT STARTED / OLD PROMPT SUPERSEDED**
+Status: **M4A R2 HOLD / R06 AUTHORITY INPUT INTEGRITY FAILURE / OLD PROMPT SUPERSEDED**
 
 ## Current cursor
 
@@ -10,8 +10,8 @@ Status: **M4A R2 AUTHORIZED / WORK NOT STARTED / OLD PROMPT SUPERSEDED**
 M3_PRIMARY_ORGANIC = CLOSED
 M3_CONTROL_DEBT = OPEN UNTIL M6
 M4 = CURRENT
-M4A = R2_AUTHORIZED
-M4A_WORK_RETURN = NONE
+M4A = R2_HOLD_R06_INPUT_INTEGRITY
+M4A_WORK_RETURN = HOLD_NO_DELIVERABLES
 M4A_RELEASE_READBACK = PASS
 M4A_MAIN_CHAT_QA = NOT STARTED
 M4B_LANDING_ACQUISITION = BLOCKED
@@ -114,3 +114,21 @@ Work performs only the released full-volume execution plus narrow live-HEAD/inpu
 
 CURRENT_CURSOR:
 M4 CURRENT -> M4A R2 PREPARED -> REMOTE READBACK -> OWNER RELAYS R2 WORK PROMPT -> WORK RETURN -> OWNER ONE-STAGING UPLOAD -> MAIN CHAT RETURN QA -> only then M4B.
+
+
+## 2026-09-18 — M4A R2 Work preflight HOLD / R06 transport incident
+
+Work correctly stopped before classification because R06 historical export transport failed exact-byte verification.
+
+Current incident authority:
+`../raw/R06_09_TRANSPORT_INTEGRITY_INCIDENT_2026-09-18.md`
+
+Important:
+- R06 provider collect/lifecycle remains valid;
+- seven chunk blobs are unchanged and match their historical manifest identities;
+- their reconstructed gzip SHA/CRC/ISIZE do not match the historical manifest;
+- raw DEFLATE body is recoverable as valid 73,385-byte R06 JSON with the correct job/revision/operation and complete 20 ranks;
+- no new provider call is authorized while deterministic provider-free recovery is available.
+
+CURRENT_CURSOR:
+M4 CURRENT -> R06 TRANSPORT RECOVERY -> MAIN CHAT RECOVERY QA -> NEW M4A RELEASE -> WORK.
