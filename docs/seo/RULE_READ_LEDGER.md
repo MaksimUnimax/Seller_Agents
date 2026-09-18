@@ -496,3 +496,30 @@ M4Q organic ranking-query discovery is mandatory before M4C or must close with a
 
 External current check:
 Keys.so and SpyWords expose Yandex-organic domain/page→query functionality; access is controlled by account/token and must not be bypassed.
+
+
+## 2026-09-18 — M4B1 Coverage Closure R3 preparation
+
+BASE_HEAD:
+c852ff094864b56093848a04f142e2f146576a62
+
+CURRENT_UNIVERSE:
+372 R1 + 835 initial nav delta + 405 R2 recursive = 1612 unique normalized URL identities.
+
+R2 URL unresolved = 0.
+R2 416 child-link flags = nonblocking diagnostics after method correction.
+
+R3 exact unit:
+45 entities / discovery-channel closure.
+
+Channels:
+anchors
+primary navigation/taxonomy
+breadcrumb/local subtree
+scoped sitemap
+pagination/load-more
+
+WORK_TRIGGER = MET.
+R3 explicitly forbids complete internal-link graph replay.
+
+M4Q ranking-query lane remains separate and required before M4C.

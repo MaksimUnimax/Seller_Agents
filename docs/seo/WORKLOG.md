@@ -604,3 +604,15 @@ Therefore the 416 flags remain diagnostic history but are not individually repla
 M4B1 R3 will close only the real discovery channels across all 45 entities and terminalize any new delta.
 
 The same rule reread exposed a second omission: current KW-002 Step07 has a mandatory Yandex-organic ranking-query discovery lane. Octoport M4 now includes M4Q before M4C, with documented source-unavailable fallback rather than fabricated data or access bypass.
+
+
+## 2026-09-18 — M4B1 Coverage Closure R3 prepared
+
+After correcting the R2 anti-pattern, Main Chat prepared a narrow canonical closure pass over all 45 M4B1 entities.
+
+R3 does not revisit the 416 diagnostic pages as a set. It proves entity-level discovery completeness through the channels required by M4 Level2 and current KW-002 Step07: anchors, navigation/taxonomy, breadcrumb/local subtree, scoped sitemap and pagination/load-more.
+
+Existing R1/R2 page evidence is reused. Only new URLs discovered by the missing channels are acquired.
+
+M4B2 remains blocked until R3 allows M4B1 page-surface acceptance.
+M4Q is now a separate mandatory ranking-query lane before M4C.

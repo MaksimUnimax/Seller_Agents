@@ -6,10 +6,11 @@ KW-002 analog: Step06 + Step07
 
 ## 1. Purpose
 
-M4 has two distinct jobs:
+M4 has three distinct jobs:
 
 1. derive a current Search-competitor authority from accepted M3 ranking evidence;
-2. inspect only that authorized competitor universe to discover page-level tasks, terminology, proof patterns and candidate semantic gaps.
+2. inspect only that authorized competitor universe through bounded public page-surface discovery;
+3. run the separate Yandex-organic ranking-query discovery lane, or close it with an explicit valid source-unavailable limitation.
 
 ~~~text
 BUSINESS RIVAL != SEARCH COMPETITOR

@@ -465,8 +465,10 @@ R1 Work was PARTIAL. Main Chat completed 45/45 residual decisions and 23/23 brow
 
 R2 is accepted as partial evidence, but its job-specific `every inspected page must close all child links` rule was stricter than M4 Level2. The 416 child-link residual flags remain diagnostics, not 416 mandatory revisits.
 
-M4B1 R3 now performs the real canonical closure across 45 entities:
-`navigation/taxonomy + scoped sitemap + pagination/load-more + terminal new delta`.
+M4B1 R3 is prepared to perform the real canonical closure across 45 entities:
+`navigation/taxonomy + breadcrumb/local subtree + scoped sitemap + pagination/load-more + terminal new delta`.
+
+R3 does not replay the 416 R2 child-link diagnostic pages as a set.
 
 M4B2 remains blocked until M4B1 page-surface acceptance.
 
