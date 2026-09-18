@@ -431,3 +431,21 @@ AUTH_OR_PRIVATE_CANDIDATE = 31
 WORK_TRIGGER = MET.
 
 Recovery R2 does not restart R1. It consumes immutable R1 + browser overlay and closes only the new delta/frontier.
+
+
+## 2026-09-18 — M4B1 Recovery R2 release readback
+
+RELEASE_COMMIT:
+0d29e898fed8389570db9e662cdbb0792d58fac0
+
+BRANCH_COMPARE:
+identical / ahead_by=0 / behind_by=0
+
+DELTA:
+835 data rows / 836 lines including header
+blob 9ec4cf1c72531e7e0e937fe576cfa116c7effed9
+
+RESULT:
+M4B1_RECOVERY_R2_WORK_START_ALLOWED = true
+M4B1_FINAL_ACCEPTANCE = false
+M4B2_ALLOWED = false

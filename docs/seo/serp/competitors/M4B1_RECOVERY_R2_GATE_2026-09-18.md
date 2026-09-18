@@ -1,7 +1,7 @@
 # Octoport SEO — M4B1 recovery R2 full-volume delta gate
 
 Date: 2026-09-18
-Status: **PREPARED / RELEASE CANDIDATE / WORK NOT STARTED**
+Status: **AUTHORIZED / REMOTE READBACK PASS / WORK MAY START**
 WORK_ID: `OCTOPORT_SEO_M4B1_RECOVERY_2026-09-18_R2`
 Stage: M4B1 recovery overlay
 Preparation base HEAD: `ce7672e4572da22ce9b1c5045541a239394dcd54`

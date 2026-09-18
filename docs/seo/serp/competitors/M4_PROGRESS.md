@@ -2,7 +2,7 @@
 
 Date: 2026-09-18
 Branch: seo/wordstat-batch-01-2026-09-16
-Status: **M4A R3 ACCEPTED 9.8/10 / M4B1 RECOVERY CURRENT / M4B2 BLOCKED**
+Status: **M4A R3 ACCEPTED 9.8/10 / M4B1 RECOVERY R2 AUTHORIZED / M4B2 BLOCKED**
 
 ## Current cursor
 
@@ -326,3 +326,22 @@ R2 must:
 
 M4B1 remains NOT ACCEPTED.
 M4B2 remains blocked.
+
+
+## 2026-09-18 — M4B1 Recovery R2 remote-readback PASS
+
+Release commit:
+`0d29e898fed8389570db9e662cdbb0792d58fac0`
+
+Readback:
+- navigation delta: 835 data rows / blob `9ec4cf1c72531e7e0e937fe576cfa116c7effed9`;
+- R2 gate: PASS;
+- R2 release: PASS;
+- R2 Work prompt: PASS;
+- R2 staging README: PASS.
+
+```text
+M4B1_RECOVERY_R2_WORK_START_ALLOWED = true
+M4B1_ACCEPTED = false
+M4B2_ALLOWED = false
+```
