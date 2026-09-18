@@ -423,7 +423,7 @@ M4 is split into bounded substeps so competitor research cannot drift into a rem
 
 ### M4A — full-volume recurring competitor registry
 
-Status: **R2 PREPARED / WORK NOT STARTED / OLD PROMPT SUPERSEDED**.
+Status: **R3 AUTHORIZED / WORK NOT STARTED / R06 RECOVERY ACCEPTED / R2 SUSPENDED**.
 
 Derive the registry from the complete accepted M3 authority set:
 
@@ -433,7 +433,11 @@ Derive the registry from the complete accepted M3 authority set:
 - original unreliable R04 excluded;
 - R04R1 is authority.
 
-M4A is a cross-file recurrence/lineage task. R2 has now passed Main Chat Level1/Level2/research/release preparation after R0. Work processes the complete accepted M3 corpus: 300 occurrence rows plus all 105 unique Top10 query pairs. Sampling, first-N analysis and a preselected brand shortlist are forbidden.
+M4A is a cross-file recurrence/lineage task. R3 is the current authorized release after provider-free R06 transport recovery. Work processes the complete accepted M3 corpus: 300 occurrence rows plus all 105 unique Top10 query pairs. Sampling, first-N analysis and a preselected brand shortlist are forbidden.
+
+R06 current transport authority for M4A:
+
+`serp/raw/recovery/R06_2026-09-18/R06_10_RECOVERED_EXPORT_MANIFEST_2026-09-18.md` + recovery QA. The historical R06 exact-byte manifest is superseded. No Search replay was performed.
 
 Required M4A result:
 

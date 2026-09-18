@@ -493,3 +493,20 @@ Current R06 transport authority is the derived recovery manifest + QA under:
 No Search provider call was repeated, so the original R06 SERP snapshot remains the observed evidence.
 
 R2 is not resumed. A fresh M4A R3 release is required.
+
+
+## 2026-09-18 — M4A R3 authorized after R06 recovery
+
+R06 transport integrity incident is closed without a new Search provider call.
+
+R2 remains a correct failed-preflight attempt and is not resumed.
+
+R3 freezes the same M4A analytical method and complete execution unit:
+15 queries × 20 rows = 300 occurrences, 105 Top10 query pairs.
+
+The only authority correction is R06:
+Work must use the accepted derived recovery transport and verify its exact source/gzip identities before classification.
+
+R3 release/readback passed and Work may start.
+
+M4B remains blocked until R3 Work return receives independent Main Chat QA.

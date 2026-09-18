@@ -272,3 +272,26 @@ Decision:
 R06 derived recovery authority ACCEPTED.
 Provider replay NOT required.
 R2 remains suspended; issue new release revision instead of resuming stale prompt.
+
+
+## 2026-09-18 — M4A R3 final authorization
+
+R06_RECOVERY_AUTHORITY = ACCEPTED
+R06_PROVIDER_REPLAY = 0
+
+R3_RELEASE_COMMIT:
+0369e0556bbee9728dd148a3e8452958e8479087
+
+R3_STATUS_SYNC_COMMIT:
+21abcdb2d9a108c561f9d6e0e06bb5a2128efc73
+
+R3 release set was remotely read back before authorization.
+
+Current executable prompt:
+docs/seo/serp/competitors/M4A_WORK_PROMPT_2026-09-18_R3.md
+
+R2 remains suspended and must not be resumed.
+
+RESULT:
+M4A_R3_WORK_START_ALLOWED = true
+M4B_ALLOWED = false
