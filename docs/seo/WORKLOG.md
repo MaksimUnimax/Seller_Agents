@@ -295,3 +295,29 @@ The M4A Work return must contain seven final deliverables and reconcile exactly 
 Current cursor:
 
 `M4 CURRENT -> M4A PREPARED -> OWNER RELAYS WORK PROMPT -> WORK FULL-VOLUME RETURN -> OWNER UPLOADS UNPACKED RETURN -> MAIN CHAT REMOTE READBACK + QA -> only then M4B`.
+
+
+## 2026-09-18 — two-level rule architecture restored; M4A preparation reopened
+
+Owner correction: the transferred KW-002 process is explicitly two-level and should already have existed in Octoport.
+
+Canonical structure:
+- LEVEL 1 = universal mandatory project rules;
+- LEVEL 2 = methodology/gates/contract for the exact step;
+- work/evidence/state/results = factual execution layer, not LEVEL 2.
+
+Root cause:
+Octoport imported many universal controls and stage gates, but the explicit LEVEL 1 / LEVEL 2 authority architecture and fail-closed pre-step requirement were flattened. This allowed Main Chat to prepare M4A without proving an explicit read of a dedicated M4 LEVEL 2 authority.
+
+Correction:
+- LEVEL1/README.md created;
+- LEVEL2/README.md created;
+- LEVEL2/M4_SEARCH_COMPETITOR_LANDING_RULES.md created;
+- EXECUTION_RULES.md now contains the fail-closed two-level gate;
+- RULE_READ_LEDGER.md created;
+- prior M4A gate/prompt marked SUPERSEDED / NOT EXECUTABLE;
+- M4A preparation reopened from live HEAD;
+- no Work/Bridge/provider execution had started from the invalid prompt.
+
+Regression rule:
+NO EXPLICIT LEVEL2 READ -> PREPARATION INVALID -> PROMPT NOT EXECUTABLE -> REPREPARE.

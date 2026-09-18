@@ -98,11 +98,11 @@ Authority: `serp/M3_METHOD_RETROSPECTIVE_AND_CONTROL_DEBT_2026-09-18.md`.
 
 ### M4 — Search competitor + landing corpus
 
-`CURRENT / M4A PREPARED / WORK NOT STARTED`.
+`CURRENT / M4A PREPARATION REOPENED / PRIOR PROMPT NOT EXECUTABLE`.
 
 M4A first derives the recurring competitor/page registry from the **complete accepted M3 corpus** (15 authority queries × 20 rows = 300 occurrences). A remembered/preselected brand list is not authority. M4B current landing-page collection is blocked until the M4A Work return is uploaded, remote-read back and accepted by Main Chat.
 
-Authorities: `serp/competitors/M4A_PRE_STEP_RESEARCH_AND_EXECUTION_GATE_2026-09-18.md`, `serp/competitors/M4A_WORK_PROMPT_2026-09-18.md`, `serp/competitors/M4_PROGRESS.md`.
+Mandatory authority order: LEVEL1/README.md -> LEVEL2/M4_SEARCH_COMPETITOR_LANDING_RULES.md -> current M4A preparation -> execution evidence. The earlier M4A prompt is superseded/non-executable and must be rebuilt from live HEAD.
 
 ### M5 — Alice AI
 

@@ -8,6 +8,9 @@ This roadmap supersedes the earlier coarse `SEO_ROADMAP.md`.
 
 Mandatory companion authorities:
 
+- `LEVEL1/README.md`;
+- `LEVEL2/README.md`;
+- applicable `LEVEL2/<STEP>_*.md`;
 - `EXECUTION_RULES.md`;
 - `WORK_HANDOFF_RULE.md`;
 - `STAGE_GATES_M0_M7.md`;
@@ -246,7 +249,7 @@ M3 remains closed for the primary organic corpus. Its control debt is a mandator
 
 # M4 — Search competitor + landing corpus
 
-Status: **CURRENT / M4A PREPARED / WORK NOT STARTED**.
+Status: **CURRENT / M4A PREPARATION REOPENED / PRIOR PROMPT NOT EXECUTABLE**.
 
 Authorities:
 
@@ -259,7 +262,7 @@ M4 is split into bounded substeps so competitor research cannot drift into a rem
 
 ### M4A — full-volume recurring competitor registry
 
-Status: **PREPARED / NEXT PHYSICAL ACTION = OWNER RELAYS WORK PROMPT**.
+Status: **REOPENED — prior M4A preparation invalidated because explicit LEVEL 1 / LEVEL 2 gate was not present/read; re-preparation required from live HEAD**.
 
 Derive the registry from the complete accepted M3 authority set:
 
@@ -269,7 +272,7 @@ Derive the registry from the complete accepted M3 authority set:
 - original unreliable R04 excluded;
 - R04R1 is authority.
 
-M4A is a cross-file recurrence/lineage task. Under the quality-first and Work rules, ChatGPT Work processes the complete accepted M3 corpus. Sampling, first-N analysis and a preselected brand shortlist are forbidden.
+M4A is a cross-file recurrence/lineage task. Before any Work prompt is executable, Main Chat must read live LEVEL 1 plus LEVEL2/M4_SEARCH_COMPETITOR_LANDING_RULES.md, record the rule-read gate, and rebuild M4A preparation from current HEAD. Only then may Work process the complete accepted M3 corpus. Sampling, first-N analysis and a preselected brand shortlist are forbidden.
 
 Required M4A result:
 
