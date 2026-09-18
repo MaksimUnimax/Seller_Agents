@@ -9,6 +9,30 @@ SEO Октопорта строится target-first, evidence-first и product-
 
 Нельзя начинать с заранее придуманного дерева страниц, а затем натягивать на него ключи. Сначала собирается полный поисковый universe, затем определяется интент и только после этого создаются/оптимизируются target pages.
 
+## 1A. Current execution-order authority
+
+The numbered phases below describe semantic concepts. The current executable order is controlled by:
+
+- `LEVEL2/OCTOPORT_STEP_RULES_INDEX.md`;
+- applicable dedicated `LEVEL2/*.md`;
+- `SEO_MASTER_ROADMAP_2026-09-16.md`.
+
+Important correction adopted 2026-09-18:
+
+```text
+SEARCH-SIDE EVIDENCE
+-> SEARCH FREEZE
+-> SEARCH-ONLY SEMANTIC MASTER
+-> SEARCH-ONLY CLUSTERING
+-> SEARCH-ONLY QUERY->PAGE / IA BASELINE
+-> ALICE DIAGNOSTIC CASES
+-> ALICE EVIDENCE
+-> SEARCH-vs-AI RECONCILIATION
+-> FINAL IA
+```
+
+Alice is a diagnostic layer over an independently recoverable Search baseline. It is not an input to M8 Search semantic truth.
+
 ## 2. Канонический конвейер
 
 ### Phase 0 — product truth

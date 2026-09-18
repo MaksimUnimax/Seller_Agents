@@ -42,7 +42,7 @@ CHATGPT WORK
 
 ## Цель
 
-`product truth → Wordstat → Yandex SERP → search competitors → Alice AI → M7 Collection Freeze → Work semantic master → clustering → page ownership → page specs → technical SEO → implementation → live/indexing → Yandex/Google/Alice measurement`.
+`product truth → Wordstat → Yandex Search → search competitors → M5 AI hypotheses only → M6 gap closure → M7 Search freeze → M8 Search-only semantic master → M9 Search clustering → M10A Search-only page/IA baseline → M10B/C/D Alice diagnostics + reconciliation → M11 final IA → M12 page specs → technical SEO → implementation → live/indexing → measurement`.
 
 Финальная структура сайта заблокирована до M7.
 
@@ -104,13 +104,15 @@ M4A first derives the recurring competitor/page registry from the **complete acc
 
 Mandatory authority order: LEVEL1/README.md -> LEVEL2/M4_SEARCH_COMPETITOR_LANDING_RULES.md -> current M4A preparation -> execution evidence. The earlier M4A prompt is superseded/non-executable and must be rebuilt from live HEAD.
 
-### M5 — Alice AI
+### M5 — AI diagnostic hypothesis preparation
 
-`OPEN / NOT STARTED`.
+`OPEN / NOT STARTED / NO ALICE PROVIDER ACQUISITION`.
+
+M5 records candidate future Alice questions only. Actual Alice evidence is deferred until a frozen Search-only page/IA baseline exists in M10A.
 
 ### M6–M7
 
-M6 is blocked until M4–M5 evidence is sufficient. M6 must then execute the mandatory M3 control patch. M7 is blocked until `M3_CONTROL_DEBT = CLOSED` plus all other collection-freeze gates.
+M6 is blocked until M4 is accepted and M5 hypothesis preparation is sufficient. M6 then closes named Search-side gaps and executes the mandatory M3 control patch. M7 is blocked until `M3_CONTROL_DEBT = CLOSED` plus all other collection-freeze gates.
 
 ### M8+
 
@@ -139,7 +141,7 @@ Before M7 closes:
 - representative Yandex SERP matrix complete for decisions;
 - recurring search competitor set stable enough;
 - relevant competitor page corpus collected;
-- representative Alice cases collected;
+- AI diagnostic hypothesis register prepared, but Alice provider evidence excluded from Search freeze;
 - high-value evidence gaps closed/HOLD with reason;
 - unknown provider outcomes = 0;
 - downstream-required evidence durably read back;

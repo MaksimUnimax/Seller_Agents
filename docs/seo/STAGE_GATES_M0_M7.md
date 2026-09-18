@@ -339,19 +339,21 @@ Large page corpora go to Work for full-volume extraction/systematization rather 
 
 ## Gate 6A — Alice/AI-search preparation boundary
 
-Alice collection is M5, after enough ordinary Search evidence exists to select representative cases. The Search-only baseline must remain separately recoverable.
+M5 may create only a provisional AI diagnostic hypothesis register. **Alice/GenSearch provider acquisition is forbidden before a frozen Search-only page/IA baseline exists.**
 
-Alice evidence may later:
+Correct sequence:
 
 ```text
-CHANGE
-ENRICH
-DE-RISK
-NO-CHANGE
-HOLD
+SEARCH-SIDE FREEZE
+-> SEARCH-ONLY SEMANTIC MASTER
+-> SEARCH-ONLY CLUSTERING
+-> SEARCH-ONLY QUERY->PAGE / IA BASELINE
+-> FINAL AI CASE SELECTION
+-> ALICE EVIDENCE
+-> CHANGE | ENRICH | DE-RISK | NO-CHANGE | HOLD
 ```
 
-a Search-derived decision. It does not automatically create an AI-specific page.
+Alice evidence never retroactively rewrites the Search-only baseline. It produces an explicit later delta or NO_CHANGE.
 
 ## M7 — Collection Freeze acceptance
 
@@ -368,7 +370,8 @@ M3_FULL_SERP / DEVICE / REGION / TEMPORAL_CONTROLS = ACCEPTED OR EXPLICIT HOLD
 M3_CROSS_QUERY_OVERLAP_QA = PASS
 SEARCH_COMPETITOR_REGISTRY = STABLE ENOUGH
 RELEVANT_COMPETITOR_CORPUS = CAPTURED
-ALICE_CORE_CASES = CAPTURED
+AI_DIAGNOSTIC_HYPOTHESIS_REGISTER = PREPARED
+ALICE_PROVIDER_EVIDENCE_USED_IN_SEARCH_FREEZE = 0
 OPEN_HIGH_VALUE_ACQUISITION_GAPS = 0
 OUTCOME_UNKNOWN_PROVIDER_ACTIONS = 0
 REQUIRED EVIDENCE DURABLE/READBACK = PASS

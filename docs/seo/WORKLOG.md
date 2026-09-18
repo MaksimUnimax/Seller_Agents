@@ -321,3 +321,39 @@ Correction:
 
 Regression rule:
 NO EXPLICIT LEVEL2 READ -> PREPARATION INVALID -> PROMPT NOT EXECUTABLE -> REPREPARE.
+
+
+## 2026-09-18 — full KW-002 Step06-22 transfer audit and Alice sequence correction
+
+Owner required verification that upcoming Octoport stages had actually inherited the rules already learned in KW-002.
+
+Audit found:
+- roadmap M4-M18 descriptions existed;
+- dedicated Level2 transfer after M4 was incomplete;
+- M4 lacked several hardened Step06/Step07 controls;
+- M5/M7/M8 sequence allowed Alice evidence before a frozen Search-only semantic/page baseline, unlike KW-002 Step14-17.
+
+Corrections published:
+- universal Octoport M0-M18 Level2 step index;
+- KW-002->Octoport transfer audit matrix;
+- hardened M4 Step06/07 rule;
+- M5/M10 Search-only-before-Alice rule;
+- M6 gap/provider rule;
+- M7/M8 Search freeze + semantic-master rule;
+- M9/M11 clustering/IA rule;
+- M12 page-spec/content rule;
+- M13-M18 technical/implementation/launch/measurement rule.
+
+Roadmap correction:
+M5 now prepares AI diagnostic hypotheses only; no Alice provider call.
+M7 is Search-side Collection Freeze.
+M8/M9 are Search-only.
+M10A freezes Search-only page/IA baseline.
+M10B/C/D then select AI cases, collect Alice evidence and reconcile.
+M11 is final architecture after accepted AI delta.
+
+Root cause:
+ROADMAP DESCRIPTION != TRANSFERRED EXECUTABLE LEVEL2 METHOD.
+
+Regression:
+NO APPLICABLE STEP INDEX + LEVEL2 READ -> NO PREPARATION / NO EXECUTION.

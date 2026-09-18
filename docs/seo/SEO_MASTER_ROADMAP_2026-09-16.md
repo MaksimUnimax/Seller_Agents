@@ -41,19 +41,24 @@ The final product is not a keyword spreadsheet. It is a correctly structured, us
 ## Global execution order
 
 ```text
-COLLECT COMPLETE NEEDED EVIDENCE
--> M7 COLLECTION FREEZE
--> HAND LARGE FROZEN CROSS-SOURCE DATA TO CHATGPT WORK
--> MAIN CHAT RETURN QA / ACCEPTANCE
--> SEMANTIC MASTER
--> CLUSTERING
--> SEARCH-vs-ALICE RECONCILIATION
--> PAGE OWNERSHIP / IA
--> PAGE SPECS
--> TECHNICAL SEO SPEC
--> BOUNDED SITE IMPLEMENTATION
--> LIVE QA / INDEXING
--> MEASUREMENT / ITERATION
+COLLECT COMPLETE SEARCH-SIDE EVIDENCE
+-> M5 PREPARES AI DIAGNOSTIC HYPOTHESES ONLY
+-> M6 CLOSES NAMED SEARCH GAPS + M3 CONTROL DEBT
+-> M7 SEARCH-SIDE COLLECTION FREEZE
+-> M8 SEARCH-ONLY SEMANTIC MASTER
+-> M9 SEARCH-ONLY CLUSTERING
+-> M10A SEARCH-ONLY QUERY->PAGE / IA BASELINE
+-> M10B FINAL AI CASE SELECTION
+-> M10C ALICE / AI-SEARCH EVIDENCE
+-> M10D SEARCH-vs-AI RECONCILIATION
+-> M11 FINAL PAGE OWNERSHIP / IA
+-> M12 PAGE SPECS
+-> M13 TECHNICAL SEO SPEC
+-> M14 BOUNDED SITE IMPLEMENTATION
+-> M15 LIVE QA
+-> M16 LAUNCH / INDEXING
+-> M17 MEASUREMENT / ITERATION
+-> M18 FINISHED ACCEPTANCE
 ```
 
 Owner instruction is explicit: first collect and durably save the evidence needed for correct semantics/landings/optimization; only after M7 design final semantic architecture.
@@ -323,28 +328,34 @@ If full treatment becomes unsafe in ordinary chat, Work is mandatory; no samplin
 - A prior chat shortlist is hypothesis only and cannot seed/filter M4A.
 - Every M4 artifact must be durable in GitHub and remote-read back before dependent work.
 
-# M5 — Alice AI / generative-search evidence
+# M5 — AI diagnostic hypothesis preparation
 
-Status: **OPEN / NOT STARTED**.
+Status: **OPEN / NOT STARTED / NO ALICE PROVIDER ACQUISITION ALLOWED**.
 
-Select cases from M3/M4 while preserving Search-only baseline. Likely families include category definition/choice, Ozon, Wildberries, connection of AI/ChatGPT to store data, marketplace analytics/seller data, comparison, and security/API questions discovered by Search/competitors.
+Authority:
 
-For every case preserve:
+- `LEVEL2/M5_M10_SEARCH_ONLY_AND_ALICE_SEQUENCE_RULES.md`.
 
-- exact prompt/query/date;
-- allowed answer evidence;
-- cited source URLs/pages/domains;
-- follow-up/subquestion decomposition;
-- product/article/source mix;
-- repeated entities/category language;
-- gaps/contradictions;
-- variability/repeat snapshots when material.
+Purpose: record provisional questions where later Alice/AI evidence could materially test a Search-derived decision.
 
-Alice is not a deterministic ranking list. After launch, Yandex Webmaster Alice visibility/Share of Voice becomes longitudinal evidence when available.
+Input: accepted M3/M4 evidence only.
+
+Output: provisional `AI_DIAGNOSTIC_HYPOTHESIS_REGISTER` containing the future question, current uncertainty, expected information gain and likely affected Search decision.
+
+Hard boundary:
+
+```text
+M5 AI HYPOTHESIS != AI EVIDENCE
+M5 ALICE/GENSEARCH PROVIDER CALLS = 0
+M5 MAY NOT CHANGE CLUSTER/PAGE/IA
+FINAL AI CASE SELECTION OCCURS ONLY AFTER M10A SEARCH-ONLY BASELINE
+```
+
+Reason for correction: the earlier roadmap placed Alice collection before a frozen Search semantic/page baseline. That made causal `CHANGE | ENRICH | DE_RISK | NO_CHANGE | HOLD` reconciliation methodologically weaker. The transferred KW-002 Step14–17 sequence requires Search-only baseline first.
 
 # M6 — Incremental gap acquisition
 
-Status: **BLOCKED ON M4–M5 / M3 CONTROL PATCH MANDATORY BEFORE M7**.
+Status: **BLOCKED ON M4 / M5 HYPOTHESIS REGISTER + M3 CONTROL PATCH MANDATORY BEFORE M7**.
 
 Create one explicit gap register. Every gap closes by existing evidence reuse, targeted Wordstat, targeted Search, targeted Alice, owner/product fact, or HOLD.
 
@@ -417,7 +428,8 @@ M3_FULL_SERP / DEVICE / REGION / TEMPORAL CONTROLS = ACCEPTED OR EXPLICIT HOLD
 M3_CROSS_QUERY_OVERLAP_QA = PASS
 SEARCH COMPETITOR REGISTRY = STABLE ENOUGH
 RELEVANT COMPETITOR CORPUS = CAPTURED
-ALICE CORE CASES = CAPTURED
+AI DIAGNOSTIC HYPOTHESIS REGISTER = PREPARED
+ALICE PROVIDER EVIDENCE USED IN SEARCH FREEZE = 0
 OPEN HIGH-VALUE ACQUISITION GAPS = 0
 OUTCOME_UNKNOWN PROVIDER ACTIONS = 0
 DOWNSTREAM-REQUIRED EVIDENCE DURABLE/READBACK = PASS
@@ -426,13 +438,18 @@ WORK W1 PRE-HANDOFF MANIFEST = READY
 
 Only then set `EVIDENCE_COLLECTION_COMPLETE = true` and release M8.
 
-# M8 — Full semantic master
+# M8 — Search-only semantic master
 
 Status: **BLOCKED UNTIL M7**.
 
-Default large-data execution: **ChatGPT Work W1** under an exact Main Chat prompt.
+Authorities:
 
-Inputs: all authorized Wordstat, Search, competitor, Alice and product-truth evidence.
+- `LEVEL2/M7_M8_SEARCH_FREEZE_AND_SEMANTIC_MASTER_RULES.md`;
+- frozen M7 Search-side manifest.
+
+Default large-data execution: **ChatGPT Work W1** under an exact Main Chat contract.
+
+Inputs: authorized product truth + Wordstat/Search/competitor/M6 Search-side evidence. **Alice/AI evidence is prohibited as an M8 semantic input.**
 
 Outputs:
 
@@ -442,11 +459,12 @@ Outputs:
 - `EXCLUDED`;
 - `BRAND_DEFENSE`;
 - raw→normalized→decision lineage;
+- user task / intent / priority;
 - reason-code accounting;
 - known-failure regressions;
 - independent semantic QA.
 
-Rules: no substring-only destructive verdict, no frequency-only decision, no silent row loss, uncertainty remains explicit.
+Rules: no substring-only destructive verdict, no frequency-only decision, no silent row loss, no default KEEP, uncertainty remains explicit.
 
 Main Chat performs return QA before M9.
 
@@ -454,27 +472,61 @@ Main Chat performs return QA before M9.
 
 Status: **BLOCKED**.
 
-Combine user task, product answer, current SERP URL/domain overlap, dominant page/content type, marketplace specificity, funnel stage and cannibalization risk.
+Authority: `LEVEL2/M9_M11_CLUSTER_IA_RULES.md`.
+
+Combine user task, product answer, current exact-URL/domain SERP evidence, dominant page/content type, marketplace specificity, funnel stage and cannibalization risk. Alice evidence is prohibited from M9 cluster formation.
 
 Use Work W2 when full overlap/cluster matrix requires large-data processing.
 
-Output: cluster authority + explicit merge/split/HOLD rationale.
+Output: **Search-only** cluster authority + explicit merge/split/HOLD rationale.
 
-# M10 — Search vs Alice reconciliation
+# M10 — Search-only baseline → Alice diagnostics → reconciliation
 
 Status: **BLOCKED**.
 
-For high-value clusters classify Alice effect as `CHANGE | ENRICH | DE-RISK | NO-CHANGE | HOLD`.
+Authorities:
 
-Determine whether the same commercial page needs richer explanatory/source-ready coverage, a supporting guide, clearer entity/API/security material, or no structural change.
+- `LEVEL2/M5_M10_SEARCH_ONLY_AND_ALICE_SEQUENCE_RULES.md`;
+- `LEVEL2/M9_M11_CLUSTER_IA_RULES.md`.
 
-No AI-specific page merely to manufacture AI value.
+### M10A — freeze Search-only query→page / IA baseline
+
+From accepted M9 clusters, record what ordinary Search evidence alone would implement: primary page owner, page role/type, parent/child IA, cannibalization boundary, internal-link responsibility and HOLDs.
+
+No Alice evidence is allowed in M10A.
+
+### M10B — final AI diagnostic case selection
+
+Reconcile the M5 hypothesis register against the frozen Search-only baseline. Select only cases with named information gain for an actual Search decision.
+
+### M10C — Alice / AI-search evidence acquisition
+
+Acquire governed current Alice/GenSearch evidence with exact prompt/date/provider/source provenance and variability controls where material.
+
+```text
+ASSISTANT ANSWER != YANDEX AI EVIDENCE
+ONE AI SNAPSHOT != PERMANENT TRUTH
+```
+
+### M10D — Search-vs-AI reconciliation
+
+For each diagnostic case classify exactly one:
+
+`CHANGE | ENRICH | DE_RISK | NO_CHANGE | HOLD`.
+
+Every changed final decision must retain the causal chain:
+
+`Search-only baseline → Alice evidence → accepted delta`.
+
+Supported `NO_CHANGE` is a valid result. No AI-specific page is created merely to manufacture AI value.
 
 # M11 — Page ownership + information architecture
 
 Status: **BLOCKED**.
 
-Assign one primary page owner per cluster unless evidence justifies a split.
+Authority: `LEVEL2/M9_M11_CLUSTER_IA_RULES.md`.
+
+Assign final page ownership and IA from the frozen M10A Search baseline plus only accepted M10D AI deltas. One primary page owner per cluster unless evidence justifies a split.
 
 Possible roles: HOME/category, Ozon, Wildberries, capability/use-case, LLM/integration, how-it-works/security/privacy/support, comparison/discovery guide, educational guide/article, brand/about/trust, or `NO_PAGE / COVER_ELSEWHERE / HOLD`.
 
@@ -568,21 +620,24 @@ M1 = OPEN / SOURCE BASELINE PARTIAL PASS
 M2 = PASS WITH EXPLICIT HISTORICAL PERSISTENCE LIMITATION / NO REPLAY REQUIRED
 M3 = CLOSED FOR PRIMARY ORGANIC ACQUISITION / CONTROL DEBT OPEN UNTIL M6
 M4 = CURRENT / SEARCH COMPETITOR + LANDING CORPUS
-M5 = NOT STARTED
-M6 = BLOCKED ON M4-M5 / M3 CONTROL PATCH MANDATORY BEFORE M7
+M5 = NOT STARTED / AI HYPOTHESIS PREPARATION ONLY / NO PROVIDER
+M6 = BLOCKED ON M4 + M5 HYPOTHESIS REGISTER / M3 CONTROL PATCH MANDATORY BEFORE M7
 M7 = BLOCKED
 M8+ = BLOCKED UNTIL COLLECTION FREEZE
 ```
 
 ## Next physical sequence
 
-1. execute M4 Search competitor + landing corpus from the accepted M3 candidate set;
-2. persist/readback every M4 evidence artifact in GitHub;
-3. select and collect M5 Alice/generative-search cases;
-4. enter M6 gap closure;
-5. execute the mandatory M3 control patch in M6 and close `M3_CONTROL_DEBT`;
-6. close any other named M6 gaps;
-7. freeze M7 only after the M3 control blocker and all other gates pass;
-8. write exact W1 prompt and hand the complete frozen evidence corpus to ChatGPT Work;
-9. Main Chat QA/accepts Work semantic master;
-10. proceed M9–M18.
+1. re-prepare and execute M4 under current Level1 + revised M4 Level2;
+2. persist/readback and accept M4 competitor registry/page corpus;
+3. execute M5 hypothesis register only — no Alice provider call;
+4. execute M6 named gap closure + competitor-derived demand validation where justified + mandatory M3 control patch;
+5. freeze M7 Search-side evidence only;
+6. execute M8 Search-only semantic master in Work when triggered;
+7. execute M9 Search-only clustering;
+8. freeze M10A Search-only query→page/IA baseline;
+9. select M10B final AI diagnostic cases;
+10. acquire M10C Alice evidence;
+11. execute M10D Search-vs-AI reconciliation;
+12. finalize M11 page ownership/IA;
+13. proceed M12–M18 under their Level2 authorities.
